@@ -35,6 +35,8 @@ class AddQuoteAuthorPage extends StatelessWidget {
     this.authorSuggestions = const [],
     this.nameController,
     this.summaryController,
+    this.floatingActionButton,
+    this.authorNameErrorText,
   });
 
   /// Expand metadata widget if true.
@@ -48,6 +50,8 @@ class AddQuoteAuthorPage extends StatelessWidget {
 
   /// Random int for displaying hint texts.
   final int randomAuthorInt;
+
+  final FloatingActionButton? floatingActionButton;
 
   /// Focus node for author's name input.
   final FocusNode? nameFocusNode;
@@ -101,6 +105,9 @@ class AddQuoteAuthorPage extends StatelessWidget {
   /// Last used urls.
   final List<String> lastUsedUrls;
 
+  /// Name error text.
+  final String? authorNameErrorText;
+
   /// Author's name input controller.
   final TextEditingController? nameController;
 
@@ -110,6 +117,7 @@ class AddQuoteAuthorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: floatingActionButton,
       body: CustomScrollView(
         slivers: [
           ApplicationBar(
@@ -154,6 +162,7 @@ class AddQuoteAuthorPage extends StatelessWidget {
                     contentPadding: const EdgeInsets.only(
                       bottom: 12.0,
                     ),
+                    errorText: authorNameErrorText,
                     hintText: "quote.add.author.names.$randomAuthorInt".tr(),
                     hintMaxLines: null,
                     border: const OutlineInputBorder(

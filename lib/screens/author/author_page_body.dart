@@ -120,22 +120,24 @@ class AuthorPageBody extends StatelessWidget {
               left: leftPadding,
               right: rightPadding,
             ),
-            child: AnimatedTextKit(
-              isRepeatingAnimation: false,
-              displayFullTextOnTap: true,
-              animatedTexts: [
-                TypewriterAnimatedText(
-                  author.summary,
-                  speed: const Duration(milliseconds: 10),
-                  curve: Curves.decelerate,
-                  textStyle: Utils.calligraphy.body(
-                    textStyle: TextStyle(
-                      fontSize: isMobileSize ? 16.0 : 24.0,
-                      color: foregroundColor.withOpacity(0.6),
-                    ),
-                  ),
+            child: DefaultTextStyle(
+              style: Utils.calligraphy.body(
+                textStyle: TextStyle(
+                  fontSize: isMobileSize ? 16.0 : 24.0,
+                  color: foregroundColor.withOpacity(0.6),
                 ),
-              ],
+              ),
+              child: AnimatedTextKit(
+                isRepeatingAnimation: false,
+                displayFullTextOnTap: true,
+                animatedTexts: [
+                  TypewriterAnimatedText(
+                    author.summary,
+                    speed: const Duration(milliseconds: 10),
+                    curve: Curves.decelerate,
+                  ),
+                ],
+              ),
             ),
           ),
           AuthorMetadaRow(

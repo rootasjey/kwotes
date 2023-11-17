@@ -10,9 +10,11 @@ import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
+import "package:kwotes/screens/published/header_filter_listview.dart";
 import "package:kwotes/screens/reference/reference_quotes_page_body.dart";
 import "package:kwotes/screens/reference/reference_quotes_page_header.dart";
 import "package:kwotes/types/alias/json_alias.dart";
+import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/firestore/query_doc_snap_map.dart";
@@ -46,6 +48,9 @@ class _ReferenceQuotesPageState extends State<ReferenceQuotesPage>
   /// This is true by default.
   bool _hasMoreResults = true;
 
+  /// Language selection.
+  EnumLanguageSelection _selectedLanguage = EnumLanguageSelection.en;
+
   /// Page's state (e.g. idle, loading, ...).
   EnumPageState _pageState = EnumPageState.idle;
 
@@ -64,13 +69,16 @@ class _ReferenceQuotesPageState extends State<ReferenceQuotesPage>
   @override
   void initState() {
     super.initState();
+    initProps();
     fetch();
   }
 
   @override
   Widget build(BuildContext context) {
     if (_pageState == EnumPageState.loading) {
-      return LoadingView.scaffold();
+      return LoadingView.scaffold(
+        message: "${"loading".tr()}...",
+      );
     }
 
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
@@ -90,11 +98,25 @@ class _ReferenceQuotesPageState extends State<ReferenceQuotesPage>
                 onTapName: onTapReferenceName,
                 onTapPoster: onTapReferencePoster,
               ),
+              HeaderFilterListView(
+                margin: const EdgeInsets.only(
+                  left: 24.0,
+                  top: 12.0,
+                  right: 12.0,
+                ),
+                showAllLanguage: false,
+                showLanguageSelector: true,
+                showOwnershipSelector: false,
+                onSelectLanguage: onSelectQuoteLanguage,
+                selectedLanguage: _selectedLanguage,
+                useSliver: true,
+              ),
               ReferenceQuotesPageBody(
                 accentColor: Constants.colors.getRandomFromPalette(
                   withGoodContrast: true,
                 ),
                 isMobileSize: isMobileSize,
+                pageState: _pageState,
                 quotes: _quotes,
                 onTapBackButton: Beamer.of(context).beamBack,
                 onTapQuote: onTapQuote,
@@ -152,9 +174,9 @@ class _ReferenceQuotesPageState extends State<ReferenceQuotesPage>
     }
 
     try {
-      setState(() => _pageState = EnumPageState.loading);
+      setState(() => _pageState = EnumPageState.loadingQuotes);
 
-      final String language = await Utils.linguistic.getLanguage();
+      final String language = _selectedLanguage.name;
       final QueryMap query = getQuotesQuery(language: language);
       final QuerySnapMap snapshot = await query.get();
       if (snapshot.docs.isEmpty) {
@@ -194,6 +216,11 @@ class _ReferenceQuotesPageState extends State<ReferenceQuotesPage>
     return query;
   }
 
+  /// Initialize props.
+  void initProps() {
+    _selectedLanguage = Utils.linguistic.getLanguageSelection();
+  }
+
   void onScroll(double offset) {
     if (!_hasMoreResults) {
       return;
@@ -209,6 +236,17 @@ class _ReferenceQuotesPageState extends State<ReferenceQuotesPage>
     if (_pageScrollController.position.maxScrollExtent - offset <= 200) {
       fetchQuotes();
     }
+  }
+
+  /// Callback fired when a new quote's language is selected.
+  void onSelectQuoteLanguage(EnumLanguageSelection language) {
+    setState(() {
+      _lastDocument = null;
+      _quotes.clear();
+      _selectedLanguage = language;
+    });
+
+    fetchQuotes();
   }
 
   void onTapQuote(Quote quote) {

@@ -3,9 +3,11 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/widgets.dart";
 import "package:kwotes/screens/author/author_page.dart";
 import "package:kwotes/screens/author/author_quotes_page.dart";
+import "package:kwotes/screens/author/edit_author_page.dart";
 import "package:kwotes/screens/home/mobile_home_page.dart";
 import "package:kwotes/screens/home/responsive_app_container.dart";
 import "package:kwotes/screens/quote_page/quote_page.dart";
+import "package:kwotes/screens/reference/edit_reference_page.dart";
 import "package:kwotes/screens/topic_page/topic_page.dart";
 import "package:kwotes/screens/reference/reference_page.dart";
 import "package:kwotes/screens/reference/reference_quotes_page.dart";
@@ -51,6 +53,12 @@ class HomeContentLocation extends BeamLocation<BeamState> {
   /// Useful to keep previous author page(s) below this one.
   static const String authorQuoteRoute = "$authorRoute/quotes/:quoteId";
 
+  /// Edit author route location.
+  static const String editAuthorRoute = "$route/edit/author/:authorId";
+
+  /// Edit reference route location.
+  static const String editReferenceRoute = "$route/edit/reference/:referenceId";
+
   /// Quote route location.
   static const String quoteRoute = "$route/quote/:quoteId";
 
@@ -76,6 +84,8 @@ class HomeContentLocation extends BeamLocation<BeamState> {
         authorRoute,
         authorQuotesRoute,
         authorQuoteRoute,
+        editAuthorRoute,
+        editReferenceRoute,
         quoteRoute,
         referenceRoute,
         referenceQuotesRoute,
@@ -146,6 +156,30 @@ class HomeContentLocation extends BeamLocation<BeamState> {
             referenceId: state.pathParameters["referenceId"] ?? "",
           ),
           key: const ValueKey(referenceQuotesRoute),
+          title: "page_title.any".tr(),
+          type: BeamPageType.fadeTransition,
+          fullScreenDialog: false,
+          opaque: false,
+        ),
+      if (state.pathPatternSegments.contains("edit") &&
+          state.pathPatternSegments.contains(":authorId"))
+        BeamPage(
+          child: EditAuthorPage(
+            authorId: state.pathParameters["authorId"] ?? "",
+          ),
+          key: const ValueKey(editAuthorRoute),
+          title: "page_title.any".tr(),
+          type: BeamPageType.fadeTransition,
+          fullScreenDialog: false,
+          opaque: false,
+        ),
+      if (state.pathPatternSegments.contains("edit") &&
+          state.pathPatternSegments.contains(":referenceId"))
+        BeamPage(
+          child: EditReferencePage(
+            referenceId: state.pathParameters["referenceId"] ?? "",
+          ),
+          key: const ValueKey(editReferenceRoute),
           title: "page_title.any".tr(),
           type: BeamPageType.fadeTransition,
           fullScreenDialog: false,

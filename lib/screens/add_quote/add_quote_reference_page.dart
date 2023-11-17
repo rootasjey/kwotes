@@ -35,6 +35,8 @@ class AddQuoteReferencePage extends StatelessWidget {
     this.referenceSuggestions = const [],
     this.onTapSuggestion,
     this.summaryController,
+    this.floatingActionButton,
+    this.referenceNameErrorText,
   });
 
   /// Expand metadata widget if true.
@@ -94,11 +96,17 @@ class AddQuoteReferencePage extends StatelessWidget {
   /// Main page data.
   final Reference reference;
 
+  /// Name error text.
+  final String? referenceNameErrorText;
+
   /// Input controller for reference's name.
   final TextEditingController? nameController;
 
   /// Input controller for reference's summary.
   final TextEditingController? summaryController;
+
+  /// Floating action button.
+  final Widget? floatingActionButton;
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +118,7 @@ class AddQuoteReferencePage extends StatelessWidget {
         : Jiffy.parseFromDateTime(reference.release.original).yMMMMd;
 
     return Scaffold(
+      floatingActionButton: floatingActionButton,
       body: CustomScrollView(
         slivers: [
           ApplicationBar(
@@ -154,6 +163,7 @@ class AddQuoteReferencePage extends StatelessWidget {
                       left: 0.0,
                       bottom: 12.0,
                     ),
+                    errorText: referenceNameErrorText,
                     hintText:
                         "quote.add.reference.names.$randomReferenceInt".tr(),
                     border: const OutlineInputBorder(

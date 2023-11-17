@@ -12,8 +12,10 @@ import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/author/author_quotes_page_body.dart";
 import "package:kwotes/screens/author/author_quotes_page_header.dart";
+import "package:kwotes/screens/published/header_filter_listview.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/author.dart";
+import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/firestore/query_doc_snap_map.dart";
@@ -45,7 +47,10 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
   bool _hasMoreResults = true;
 
   /// Page's state (e.g. idle, loading, ...).
-  EnumPageState _pageState = EnumPageState.idle;
+  EnumPageState _pageState = EnumPageState.loading;
+
+  /// Language selection.
+  EnumLanguageSelection _selectedLanguage = EnumLanguageSelection.all;
 
   /// List of quotes associated with the author.
   final List<Quote> _quotes = [];
@@ -62,13 +67,16 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
   @override
   void initState() {
     super.initState();
+    initProps();
     fetch();
   }
 
   @override
   Widget build(BuildContext context) {
     if (_pageState == EnumPageState.loading) {
-      return LoadingView.scaffold();
+      return LoadingView.scaffold(
+        message: "${"loading".tr()}...",
+      );
     }
 
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
@@ -88,12 +96,26 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
                 onTapName: onTapAuthorName,
                 onTapAvatar: onTapAuthorAvatar,
               ),
+              HeaderFilterListView(
+                margin: const EdgeInsets.only(
+                  left: 24.0,
+                  top: 12.0,
+                  right: 12.0,
+                ),
+                showAllLanguage: false,
+                showLanguageSelector: true,
+                showOwnershipSelector: false,
+                onSelectLanguage: onSelectQuoteLanguage,
+                selectedLanguage: _selectedLanguage,
+                useSliver: true,
+              ),
               AuthorQuotesPageBody(
                 accentColor: Constants.colors.getRandomFromPalette(
                   withGoodContrast: true,
                 ),
-                quotes: _quotes,
                 isMobileSize: isMobileSize,
+                pageState: _pageState,
+                quotes: _quotes,
                 onTapQuote: onTapQuote,
                 onTapBackButton: Beamer.of(context).beamBack,
               ),
@@ -112,14 +134,10 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
       return;
     }
 
-    setState(() => _pageState = EnumPageState.loading);
-
     await Future.any([
       fetchAuthor(),
       fetchQuotes(),
     ]);
-
-    setState(() => _pageState = EnumPageState.idle);
   }
 
   /// Fetch author's data if not in cache.
@@ -142,7 +160,7 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
       setState(() => _author = Author.fromMap(doc.data()));
     } catch (error) {
       loggy.error(error);
-      setState(() => _pageState = EnumPageState.idle);
+      // setState(() => _pageState = EnumPageState.idle);
     }
   }
 
@@ -153,12 +171,13 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
     }
 
     try {
-      setState(() => _pageState = EnumPageState.loading);
+      setState(() => _pageState = EnumPageState.loadingQuotes);
 
-      final String language = await Utils.linguistic.getLanguage();
+      final String language = _selectedLanguage.name;
       final QueryMap query = getQuotesQuery(language: language);
       final QuerySnapMap snapshot = await query.get();
       if (snapshot.docs.isEmpty) {
+        setState(() => _pageState = EnumPageState.idle);
         return;
       }
 
@@ -196,6 +215,11 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
     return query;
   }
 
+  /// Initialize props.
+  void initProps() {
+    _selectedLanguage = Utils.linguistic.getLanguageSelection();
+  }
+
   /// Callback fired when the user scrolls.
   void onScroll(double offset) {
     if (!_hasMoreResults) {
@@ -212,6 +236,17 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
     if (_pageScrollController.position.maxScrollExtent - offset <= 200) {
       fetchQuotes();
     }
+  }
+
+  /// Callback fired when a new quote's language is selected.
+  void onSelectQuoteLanguage(EnumLanguageSelection language) {
+    setState(() {
+      _lastDocument = null;
+      _quotes.clear();
+      _selectedLanguage = language;
+    });
+
+    fetchQuotes();
   }
 
   /// Callback fired when the author avatar is tapped.

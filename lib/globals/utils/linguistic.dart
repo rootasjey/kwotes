@@ -16,6 +16,14 @@ class Linguistic {
   /// French full length language.
   static const String french = "Français";
 
+  /// Current language.
+  static String currentLanguage = "en";
+
+  /// Initialize the current language.
+  Future<void> initCurrentLanguage() async {
+    currentLanguage = await getLanguage();
+  }
+
   /// List of available languages in the app.
   List<EnumLanguageSelection> available() {
     return [
@@ -32,6 +40,29 @@ class Linguistic {
     }
 
     return "en";
+  }
+
+  /// Return the current language as enum [EnumLanguageSelection].
+  EnumLanguageSelection getLanguageSelection() {
+    switch (currentLanguage) {
+      case "en":
+        return EnumLanguageSelection.en;
+      case "fr":
+        return EnumLanguageSelection.fr;
+      default:
+        return EnumLanguageSelection.en;
+    }
+  }
+
+  EnumLanguageSelection getLanguageFromString(String language) {
+    switch (language) {
+      case "en":
+        return EnumLanguageSelection.en;
+      case "fr":
+        return EnumLanguageSelection.fr;
+      default:
+        return EnumLanguageSelection.en;
+    }
   }
 
   // List<String> available() {

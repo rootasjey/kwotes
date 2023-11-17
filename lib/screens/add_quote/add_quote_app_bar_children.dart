@@ -13,41 +13,117 @@ class AddQuoteAppBarChildren {
     JustTheController? tooltipController,
     void Function()? onClearAll,
     void Function()? onDeleteQuote,
+    void Function()? onResetAuthor,
+    void Function()? onResetReference,
+    void Function()? onDeleteAuthor,
+    void Function()? onDeleteReference,
   }) {
     return [
-      JustTheTooltip(
-        isModal: true,
-        controller: tooltipController,
-        triggerMode: TooltipTriggerMode.tap,
-        content: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextButton(
-            onPressed: onDeleteQuote,
-            child: Text(
-              "quote.delete.confirm".tr(),
-              style: Utils.calligraphy.body(
-                textStyle: const TextStyle(
-                  fontWeight: FontWeight.w500,
+      if (onClearAll != null)
+        IconButton(
+          onPressed: onClearAll,
+          tooltip: "quote.erase_all".tr(),
+          color: Theme.of(context).textTheme.bodyMedium?.color,
+          icon: const Icon(TablerIcons.eraser),
+        ),
+      if (onResetAuthor != null)
+        IconButton(
+          onPressed: onResetAuthor,
+          tooltip: "author.reset".tr(),
+          color: Theme.of(context).textTheme.bodyMedium?.color,
+          icon: const Icon(TablerIcons.rotate),
+        ),
+      if (onResetReference != null)
+        IconButton(
+          onPressed: onResetReference,
+          tooltip: "reference.reset".tr(),
+          color: Theme.of(context).textTheme.bodyMedium?.color,
+          icon: const Icon(TablerIcons.rotate),
+        ),
+      if (onDeleteQuote != null)
+        JustTheTooltip(
+          isModal: true,
+          controller: tooltipController,
+          triggerMode: TooltipTriggerMode.tap,
+          content: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextButton(
+              onPressed: onDeleteQuote,
+              child: Text(
+                "quote.delete.confirm".tr(),
+                style: Utils.calligraphy.body(
+                  textStyle: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ),
           ),
+          child: IconButton(
+            onPressed: () {
+              tooltipController?.showTooltip();
+            },
+            tooltip: "quote.delete.name".tr(),
+            color: Theme.of(context).textTheme.bodyMedium?.color,
+            icon: const Icon(UniconsLine.trash),
+          ),
         ),
-        child: IconButton(
-          onPressed: () {
-            tooltipController?.showTooltip();
-          },
-          tooltip: "quote.delete.name".tr(),
-          color: Theme.of(context).textTheme.bodyMedium?.color,
-          icon: const Icon(UniconsLine.trash),
+      if (onDeleteAuthor != null)
+        JustTheTooltip(
+          isModal: true,
+          controller: tooltipController,
+          triggerMode: TooltipTriggerMode.tap,
+          content: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextButton(
+              onPressed: onDeleteAuthor,
+              child: Text(
+                "author.delete.confirm".tr(),
+                style: Utils.calligraphy.body(
+                  textStyle: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          child: IconButton(
+            onPressed: () {
+              tooltipController?.showTooltip();
+            },
+            tooltip: "author.delete.name".tr(),
+            color: Theme.of(context).textTheme.bodyMedium?.color,
+            icon: const Icon(UniconsLine.trash),
+          ),
         ),
-      ),
-      IconButton(
-        onPressed: onClearAll,
-        tooltip: "quote.erase_all".tr(),
-        color: Theme.of(context).textTheme.bodyMedium?.color,
-        icon: const Icon(TablerIcons.eraser),
-      ),
+      if (onDeleteReference != null)
+        JustTheTooltip(
+          isModal: true,
+          controller: tooltipController,
+          triggerMode: TooltipTriggerMode.tap,
+          content: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextButton(
+              onPressed: onDeleteReference,
+              child: Text(
+                "reference.delete.confirm".tr(),
+                style: Utils.calligraphy.body(
+                  textStyle: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          child: IconButton(
+            onPressed: () {
+              tooltipController?.showTooltip();
+            },
+            tooltip: "reference.delete.name".tr(),
+            color: Theme.of(context).textTheme.bodyMedium?.color,
+            icon: const Icon(UniconsLine.trash),
+          ),
+        ),
     ];
   }
 

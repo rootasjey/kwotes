@@ -105,7 +105,8 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
   /// Used to request focus on the reference name input.
   final FocusNode _referenceNameFocusNode = FocusNode();
 
-  /// Tooltip controller.
+  /// Tooltip controller to confirm important action
+  /// (e.g. delete quote).
   final JustTheController _tooltipController = JustTheController();
 
   /// Last used urls (from cloud).
@@ -117,6 +118,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
   /// List of reference results for a specific search (algolia).
   final List<Reference> _referenceSearchResults = [];
 
+  /// Shortcuts map.
   final Map<LogicalKeySet, Intent> _shortcuts = {
     LogicalKeySet(
       LogicalKeyboardKey.meta,
@@ -290,22 +292,23 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
         },
         child: Scaffold(
           floatingActionButton: SignalBuilder(
-              signal: userSignalFirestore,
-              builder: (
-                BuildContext context,
-                UserFirestore userFirestore,
-                Widget? child,
-              ) {
-                return AddQuoteFAB(
-                  fabForegroundColor: fabForegroundColor,
-                  fabBackgroundColor: fabBackgroundColor,
-                  isQuoteValid: isQuoteValid,
-                  isMobileSize: isMobileSize,
-                  quote: quote,
-                  onSubmitQuote: onSubmitQuote,
-                  canManageQuotes: userFirestore.rights.canManageQuotes,
-                );
-              }),
+            signal: userSignalFirestore,
+            builder: (
+              BuildContext context,
+              UserFirestore userFirestore,
+              Widget? child,
+            ) {
+              return AddQuoteFAB(
+                fabForegroundColor: fabForegroundColor,
+                fabBackgroundColor: fabBackgroundColor,
+                isQuoteValid: isQuoteValid,
+                isMobileSize: isMobileSize,
+                quote: quote,
+                onSubmitQuote: onSubmitQuote,
+                canManageQuotes: userFirestore.rights.canManageQuotes,
+              );
+            },
+          ),
           body: Stack(
             children: [
               PageView(
@@ -385,7 +388,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                     onSecondaryGenreChanged: onSecondaryGenreChanged,
                     onSummaryChanged: onReferenceSummaryChanged,
                     onTapSuggestion: onTapReferenceSuggestion,
-                    onTapReleaseDate: onTapReleasehDate,
+                    onTapReleaseDate: onTapReleaseDate,
                     onToggleMetadata: onToggleReferenceMetadata,
                     onToggleNagativeReleaseDate: onToggleNagativeReleaseDate,
                     onUrlChanged: onReferenceUrlChanged,
@@ -1269,7 +1272,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
   }
 
   /// Callback fired when release date chip is tapped.
-  void onTapReleasehDate() async {
+  void onTapReleaseDate() async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialEntryMode: DatePickerEntryMode.input,
@@ -1352,6 +1355,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     updateQuoteDoc();
   }
 
+  /// Switch between before and after common era.
   void onToggleNagativeReleaseDate() {
     setState(() {
       NavigationStateHelper.quote = NavigationStateHelper.quote.copyWith(

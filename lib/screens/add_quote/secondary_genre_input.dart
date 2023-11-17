@@ -25,13 +25,7 @@ class SecondaryGenreInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      // width: width,
-      // hideCloseIcon: true,
-      // borderSide: chipBorderSide,
-      // backgroundColor: chipBackgroundColor,
-      // textEditingController: _secondaryGenreTextController,
-      // tooltip: "quote.add.reference.genre.secondary".tr(),
-      // hintText: widget.secondaryHintText,
+      initialValue: selectedSecondaryGenre,
       onChanged: onSecondaryGenreChanged,
       decoration: InputDecoration(
         border: const OutlineInputBorder(

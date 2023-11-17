@@ -2,6 +2,7 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:kwotes/components/empty_view.dart";
 import "package:kwotes/screens/search/search_quote_text.dart";
+import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/quote.dart";
 
 class ReferenceQuotesPageBody extends StatelessWidget {
@@ -12,6 +13,7 @@ class ReferenceQuotesPageBody extends StatelessWidget {
     this.quotes = const [],
     this.onTapBackButton,
     this.onTapQuote,
+    this.pageState = EnumPageState.idle,
   });
 
   /// Whether to use mobile layout.
@@ -19,6 +21,9 @@ class ReferenceQuotesPageBody extends StatelessWidget {
 
   /// Random accent color for some UI elements.
   final Color? accentColor;
+
+  /// Page's state (e.g. loading, idle, ...).
+  final EnumPageState pageState;
 
   /// List of quotes.
   final List<Quote> quotes;
@@ -34,12 +39,12 @@ class ReferenceQuotesPageBody extends StatelessWidget {
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
 
-    if (quotes.isEmpty) {
+    if (pageState == EnumPageState.idle && quotes.isEmpty) {
       return EmptyView.quotes(
         context,
         title: "${"quote.empty.there".tr()}\n",
-        description:
-            "${"quote.empty.reference".tr()}\n${"language.this_parenthesis".tr()}",
+        description: "${"quote.empty.reference".tr()}\n"
+            "${"language.this_parenthesis".tr()}",
         buttonTextValue: "back".tr(),
         onTapBackButton: onTapBackButton,
         foregroundColor: foregroundColor,

@@ -30,6 +30,9 @@ enum EnumPageState {
   /// Loading author's data.
   loadingAuthor,
 
+  /// Loading quotes.
+  loadingQuotes,
+
   /// Loading reference's data.
   loadingReference,
 

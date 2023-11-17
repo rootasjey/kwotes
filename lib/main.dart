@@ -82,6 +82,7 @@ void main() async {
   }
 
   await langdetect.initLangDetect();
+  await Utils.linguistic.initCurrentLanguage();
 
   return runApp(
     EasyLocalization(

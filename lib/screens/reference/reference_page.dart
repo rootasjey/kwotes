@@ -160,6 +160,17 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
     setState(() => _pageState = EnumPageState.idle);
   }
 
+  /// Returns navigation route for the given suffix.
+  /// This is necessary to keep the navigation context (e.g. home, search).
+  /// E.g.: author/123 -> /h/author/123
+  String getEditRoute(String suffix) {
+    final BeamerDelegate beamer = Beamer.of(context);
+    final BeamState beamState = beamer.currentBeamLocation.state as BeamState;
+    final List<String> pathSegments = beamState.pathPatternSegments;
+    final String prefix = pathSegments.first;
+    return "/$prefix/$suffix";
+  }
+
   DocumentMap getQuery(String referenceId) {
     return FirebaseFirestore.instance.collection("references").doc(referenceId);
   }
@@ -238,11 +249,7 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
       }
 
       authorMap["id"] = authorSnapshot.id;
-      final reference = Reference.fromMap(authorMap);
-
-      setState(() {
-        _reference = reference;
-      });
+      setState(() => _reference = Reference.fromMap(authorMap));
     }, onError: (error) {
       loggy.error(error);
     }, onDone: () {
@@ -250,7 +257,9 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
     });
   }
 
-  /// Navigate back.
+  /// Custom back navigation.
+  /// If canBeamBack is true, then beam back.
+  /// If canBeamBack is false, then go to home.
   void navigateBack() {
     if (context.canBeamBack) {
       context.beamBack();
@@ -268,9 +277,9 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
   }
 
   void onEditReference() {
-    Beamer.of(context).beamToNamed(
-      "/dashboard/edit/reference/${_reference.id}",
-    );
+    NavigationStateHelper.reference = _reference;
+    final String suffix = "edit/reference/${_reference.id}";
+    Beamer.of(context).beamToNamed(getEditRoute(suffix));
   }
 
   void onTapReferenceName() {

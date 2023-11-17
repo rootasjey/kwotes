@@ -3,6 +3,7 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:kwotes/router/locations/signin_location.dart";
+import "package:kwotes/screens/author/edit_author_page.dart";
 import "package:kwotes/screens/color_palette/color_detail_page.dart";
 import "package:kwotes/screens/color_palette/color_palette_page.dart";
 import "package:kwotes/screens/add_quote/add_quote_page.dart";
@@ -15,6 +16,7 @@ import "package:kwotes/screens/list/list_page.dart";
 import "package:kwotes/screens/lists/lists_page.dart";
 import "package:kwotes/screens/published/published_page.dart";
 import "package:kwotes/screens/quote_page/quote_page.dart";
+import "package:kwotes/screens/reference/edit_reference_page.dart";
 import "package:kwotes/screens/settings/about/terms_of_service_page.dart";
 import "package:kwotes/screens/settings/about/the_purpose_page.dart";
 import "package:kwotes/screens/settings/delete_account/delete_account_page.dart";
@@ -71,8 +73,8 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
   static const String colorDetailRoute = "$colorPaletteRoute/:topicName";
   static const String deleteAccountRoute = "$settingsRoute/delete-account";
   static const String draftsRoute = "$route/drafts";
-  static const String editAuthor = "$route/edit/author/:authorId";
-  static const String editReference = "$route/edit/reference/:referenceId";
+  static const String editAuthorRoute = "$route/edit/author/:authorId";
+  static const String editReferenceRoute = "$route/edit/reference/:referenceId";
   static const String favouritesRoute = "$route/favourites";
   static const String favouritesQuoteRoute = "$favouritesRoute/:quoteId";
   static const String inValidationRoute = "$route/in-validation";
@@ -95,6 +97,8 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
         colorDetailRoute,
         deleteAccountRoute,
         draftsRoute,
+        editAuthorRoute,
+        editReferenceRoute,
         favouritesQuoteRoute,
         favouritesRoute,
         listQuoteRoute,
@@ -249,6 +253,30 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
             args: [extractTopicName(state.routeState)],
           ),
           type: BeamPageType.fadeTransition,
+          opaque: false,
+        ),
+      if (state.pathPatternSegments.contains("edit") &&
+          state.pathPatternSegments.contains(":authorId"))
+        BeamPage(
+          child: EditAuthorPage(
+            authorId: state.pathParameters["authorId"] ?? "",
+          ),
+          key: const ValueKey(editAuthorRoute),
+          title: "page_title.any".tr(),
+          type: BeamPageType.fadeTransition,
+          fullScreenDialog: false,
+          opaque: false,
+        ),
+      if (state.pathPatternSegments.contains("edit") &&
+          state.pathPatternSegments.contains(":referenceId"))
+        BeamPage(
+          child: EditReferencePage(
+            referenceId: state.pathParameters["referenceId"] ?? "",
+          ),
+          key: const ValueKey(editReferenceRoute),
+          title: "page_title.any".tr(),
+          type: BeamPageType.fadeTransition,
+          fullScreenDialog: false,
           opaque: false,
         ),
       if (state.pathPatternSegments.contains(":quoteId"))

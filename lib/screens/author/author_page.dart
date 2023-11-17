@@ -224,11 +224,23 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
     }
   }
 
+  /// Returns navigation route for the given suffix.
+  /// This is necessary to keep the navigation context (e.g. home, search).
+  /// E.g.: author/123 -> /h/author/123
+  String getEditRoute(String suffix) {
+    final BeamerDelegate beamer = Beamer.of(context);
+    final BeamState beamState = beamer.currentBeamLocation.state as BeamState;
+    final List<String> pathSegments = beamState.pathPatternSegments;
+    final String prefix = pathSegments.first;
+    return "/$prefix/$suffix";
+  }
+
   /// Initialize properties.
   void initProps() async {
     _metadataOpened = await Utils.vault.getAuthorMetadataOpened();
   }
 
+  /// Listen to author data.
   void listenToAuthor(DocumentMap query) {
     _authorSubscription?.cancel();
     _authorSubscription =
@@ -241,11 +253,7 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
       }
 
       authorMap["id"] = authorSnapshot.id;
-      final author = Author.fromMap(authorMap);
-
-      setState(() {
-        _author = author;
-      });
+      setState(() => _author = Author.fromMap(authorMap));
     }, onError: (error) {
       loggy.error(error);
     }, onDone: () {
@@ -253,6 +261,9 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
     });
   }
 
+  /// Custom back navigation.
+  /// If canBeamBack is true, then beam back.
+  /// If canBeamBack is false, then go to home.
   void navigateBack() {
     if (context.canBeamBack) {
       context.beamBack();
@@ -271,7 +282,9 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
 
   /// Callback fired to edit author.
   void onEditAuthor() {
-    Beamer.of(context).beamToNamed("/dashboard/edit/author/${_author.id}");
+    NavigationStateHelper.author = _author;
+    final String suffix = "edit/author/${_author.id}";
+    Beamer.of(context).beamToNamed(getEditRoute(suffix));
   }
 
   /// Callback fired when the author name is tapped.

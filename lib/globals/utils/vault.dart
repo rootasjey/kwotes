@@ -86,13 +86,14 @@ class Vault {
   }
 
   /// Return the last saved value for app language.
+  /// Retrieve the index of EnumLanguageSelection and return enum value.
   Future<EnumLanguageSelection> getLanguage() async {
-    // return await Glutton.vomit(StorageKeys.language, "en");
     final int index = await Glutton.vomit(StorageKeys.language, 0);
     return EnumLanguageSelection.values[index];
   }
 
   /// Saves the app language.
+  /// Use index of EnumLanguageSelection.
   void setLanguage(EnumLanguageSelection locale) {
     Glutton.eat(StorageKeys.language, locale.index);
   }

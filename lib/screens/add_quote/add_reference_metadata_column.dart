@@ -163,7 +163,7 @@ class AddReferenceMetadaColumn extends StatelessWidget {
           onSecondaryGenreChanged: onSecondaryGenreChanged,
           secondaryHintText: reference.type.secondary.isEmpty
               ? "genre.secondary.name".tr()
-              : "genre.secondary.${reference.type.secondary}".tr(),
+              : reference.type.secondary,
         ),
       ),
     ];
