@@ -10,9 +10,9 @@ class ShowcaseText extends StatefulWidget {
     this.isMobileSize = false,
     this.margin = EdgeInsets.zero,
     this.padding = const EdgeInsets.all(2.0),
-    this.foregroundColor,
     this.onTap,
     this.docId = "",
+    this.index = 0,
   });
 
   /// Whether to adapt UI to dark theme.
@@ -21,8 +21,8 @@ class ShowcaseText extends StatefulWidget {
   /// Adapt UI to mobile size.
   final bool isMobileSize;
 
-  /// Text color.
-  final Color? foregroundColor;
+  /// Index.
+  final int index;
 
   /// Spacing around this widget.
   final EdgeInsets margin;
@@ -45,15 +45,15 @@ class ShowcaseText extends StatefulWidget {
 
 class _ShowcaseTextState extends State<ShowcaseText> {
   Color? _foregroundColor = Colors.black;
-
-  @override
-  void initState() {
-    super.initState();
-    _foregroundColor = widget.foregroundColor;
-  }
+  Color? _initialForegroundColor = Colors.black;
 
   @override
   Widget build(BuildContext context) {
+    final Color? fColor = Theme.of(context).textTheme.bodyMedium?.color;
+    _initialForegroundColor = widget.index % 2 == 0
+        ? fColor?.withOpacity(0.4)
+        : fColor?.withOpacity(0.8);
+
     return Padding(
       padding: widget.margin,
       child: InkWell(
@@ -70,9 +70,7 @@ class _ShowcaseTextState extends State<ShowcaseText> {
             return;
           }
 
-          setState(() {
-            _foregroundColor = widget.foregroundColor;
-          });
+          setState(() => _foregroundColor = _initialForegroundColor);
         },
         child: Padding(
           padding: widget.padding,

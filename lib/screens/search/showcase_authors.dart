@@ -31,9 +31,6 @@ class ShowcaseAuthors extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color? foregroundColor =
-        Theme.of(context).textTheme.bodyMedium?.color;
-
     int index = -1;
 
     return SliverToBoxAdapter(
@@ -50,9 +47,7 @@ class ShowcaseAuthors extends StatelessWidget {
                   isDark: isDark,
                   textValue: author.name.toLowerCase(),
                   isMobileSize: isMobileSize,
-                  foregroundColor: index % 2 == 0
-                      ? foregroundColor?.withOpacity(0.4)
-                      : foregroundColor?.withOpacity(0.8),
+                  index: index,
                   onTap: onTapAuthor != null
                       ? () => onTapAuthor?.call(author)
                       : null,

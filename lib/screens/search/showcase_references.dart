@@ -31,9 +31,6 @@ class ShowcaseReferences extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color? foregroundColor =
-        Theme.of(context).textTheme.bodyMedium?.color;
-
     int index = -1;
 
     return SliverToBoxAdapter(
@@ -51,9 +48,7 @@ class ShowcaseReferences extends StatelessWidget {
                     isDark: isDark,
                     textValue: reference.name,
                     isMobileSize: isMobileSize,
-                    foregroundColor: index % 2 == 0
-                        ? foregroundColor?.withOpacity(0.4)
-                        : foregroundColor?.withOpacity(0.8),
+                    index: index,
                     onTap: onTapReference != null
                         ? () => onTapReference?.call(reference)
                         : null,
