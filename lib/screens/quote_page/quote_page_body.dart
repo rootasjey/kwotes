@@ -52,16 +52,16 @@ class QuotePageBody extends StatelessWidget {
   final void Function(Quote quote, String language)? onChangeLanguage;
 
   /// Callback fired to copy quote's author content.
-  final void Function()? onCopyAuthor;
+  final void Function(Author author)? onCopyAuthor;
 
   /// Callback fired when author's url is copied.
-  final void Function()? onCopyAuthorUrl;
+  final void Function(Author author)? onCopyAuthorUrl;
 
   /// Callback fired to copy quote's name.
-  final void Function()? onCopyQuote;
+  final void Function(Quote quote)? onCopyQuote;
 
   /// Callback fired to copy quote's url.
-  final void Function()? onCopyQuoteUrl;
+  final void Function(Quote quote)? onCopyQuoteUrl;
 
   /// Callback fired to copy quote's reference content.
   final void Function()? onCopyReference;
@@ -70,7 +70,7 @@ class QuotePageBody extends StatelessWidget {
   final void Function()? onCopyReferenceUrl;
 
   /// Callback fired when quote's name is double tapped.
-  final void Function()? onDoubleTapQuote;
+  final void Function(Quote quote)? onDoubleTapQuote;
 
   /// Callback fired when image is shared.
   final void Function(Quote quote)? onShareImage;
@@ -119,7 +119,7 @@ class QuotePageBody extends StatelessWidget {
               ),
               child: ContextMenuWidget(
                 child: GestureDetector(
-                  onDoubleTap: onDoubleTapQuote,
+                  onDoubleTap: () => onDoubleTapQuote?.call(quote),
                   child: AnimatedTextKit(
                     isRepeatingAnimation: false,
                     displayFullTextOnTap: true,
@@ -134,42 +134,20 @@ class QuotePageBody extends StatelessWidget {
                     ],
                   ),
                 ),
-                menuProvider: (MenuRequest request) {
-                  return Menu(
-                    children: [
-                      MenuAction(
-                        title: "quote.copy.name".tr(),
-                        image: MenuImage.icon(TablerIcons.copy),
-                        callback: () => onCopyQuote?.call(),
-                      ),
-                      MenuAction(
-                        title: "quote.copy.url".tr(),
-                        image: MenuImage.icon(TablerIcons.link),
-                        callback: () => onCopyQuoteUrl?.call(),
-                      ),
-                      if (authenticated)
-                        ContextMenuComponents.addToList(
-                          context,
-                          quote: quote,
-                          selectedColor: selectedColor,
-                          userId: userFirestore.id,
-                        ),
-                      if (onChangeLanguage != null)
-                        ContextMenuComponents.changeLanguage(
-                          context,
-                          quote: quote,
-                          onChangeLanguage: onChangeLanguage,
-                        ),
-                      ContextMenuComponents.share(
-                        context,
-                        quote: quote,
-                        onShareImage: onShareImage,
-                        onShareLink: onShareLink,
-                        onShareText: onShareText,
-                      ),
-                    ],
-                  );
-                },
+                menuProvider: (MenuRequest menuRequest) =>
+                    ContextMenuComponents.quoteMenuProvider(
+                  context,
+                  quote: quote,
+                  onCopyQuote: onCopyQuote,
+                  onCopyQuoteUrl: onCopyQuoteUrl,
+                  authenticated: authenticated,
+                  selectedColor: selectedColor,
+                  userId: userFirestore.id,
+                  onChangeLanguage: onChangeLanguage,
+                  onShareImage: onShareImage,
+                  onShareLink: onShareLink,
+                  onShareText: onShareText,
+                ),
               ),
             ),
           ),
@@ -203,22 +181,13 @@ class QuotePageBody extends StatelessWidget {
                     ),
                   ),
                 ),
-                menuProvider: (MenuRequest request) {
-                  return Menu(
-                    children: [
-                      MenuAction(
-                        title: "author.copy.name".tr(),
-                        image: MenuImage.icon(TablerIcons.copy),
-                        callback: () => onCopyAuthor?.call(),
-                      ),
-                      MenuAction(
-                        title: "author.copy.url".tr(),
-                        image: MenuImage.icon(TablerIcons.link),
-                        callback: () => onCopyAuthorUrl?.call(),
-                      ),
-                    ],
-                  );
-                },
+                menuProvider: (MenuRequest request) =>
+                    ContextMenuComponents.authorMenuProvider(
+                  context,
+                  author: quote.author,
+                  onCopyAuthor: onCopyAuthor,
+                  onCopyAuthorUrl: onCopyAuthorUrl,
+                ),
               ),
             ).animate(delay: 350.ms).slideY(begin: 0.8, end: 0.0).fadeIn(),
           ),

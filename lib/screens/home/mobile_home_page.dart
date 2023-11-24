@@ -4,11 +4,11 @@ import "package:beamer/beamer.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:flutter/services.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:infinite_carousel/infinite_carousel.dart";
 import "package:kwotes/actions/quote_actions.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
+import "package:kwotes/components/context_menu_components.dart";
 import "package:kwotes/components/hero_quote.dart";
 import "package:kwotes/components/icons/app_icon.dart";
 import "package:kwotes/components/loading_view.dart";
@@ -113,6 +113,10 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
             ? NavigationStateHelper.randomQuotes.sublist(1)
             : [];
 
+    final Quote firstQuote = NavigationStateHelper.randomQuotes.isNotEmpty
+        ? NavigationStateHelper.randomQuotes.first
+        : Quote.empty();
+
     return BasicShortcuts(
       child: Scaffold(
         backgroundColor: isDark ? Colors.black26 : Colors.white,
@@ -138,11 +142,21 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
                 loading: _pageState == EnumPageState.loadingRandomQuotes,
                 backgroundColor: topBackgroundColor,
                 foregroundColor: foregroundColor,
-                quote: NavigationStateHelper.randomQuotes.isNotEmpty
-                    ? NavigationStateHelper.randomQuotes.first
-                    : Quote.empty(),
+                quote: firstQuote,
                 onTapAuthor: onTapAuthor,
                 onTapQuote: onTapQuote,
+                authorMenuProvider: (MenuRequest menuRequest) =>
+                    ContextMenuComponents.authorMenuProvider(
+                  context,
+                  author: firstQuote.author,
+                ),
+                quoteMenuProvider: (MenuRequest menuRequest) =>
+                    ContextMenuComponents.quoteMenuProvider(
+                  context,
+                  quote: firstQuote,
+                  onCopyQuote: onCopyQuote,
+                  onCopyQuoteUrl: onCopyQuoteUrl,
+                ),
                 margin: const EdgeInsets.only(
                   top: 16.0,
                   left: 26.0,
@@ -163,27 +177,23 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
                   itemBuilder: (BuildContext context, int index) {
                     final Quote quote = subRandomQuotes[index];
 
-                    return ContextMenuWidget(
-                      child: RandomQuoteText(
-                        quote: quote,
-                        foregroundColor: foregroundColor,
-                        onTapQuote: onTapQuote,
-                        onTapAuthor: onTapAuthor,
+                    return RandomQuoteText(
+                      quote: quote,
+                      foregroundColor: foregroundColor,
+                      onTapQuote: onTapQuote,
+                      onTapAuthor: onTapAuthor,
+                      authorMenuProvider: (MenuRequest menuRequest) =>
+                          ContextMenuComponents.authorMenuProvider(
+                        context,
+                        author: quote.author,
                       ),
-                      menuProvider: (MenuRequest menuRequest) {
-                        return Menu(children: [
-                          MenuAction(
-                            callback: () => onCopyQuote.call(quote),
-                            title: "quote.copy.name".tr(),
-                            image: MenuImage.icon(TablerIcons.copy),
-                          ),
-                          MenuAction(
-                            callback: () => onCopyQuoteUrl.call(quote),
-                            title: "quote.copy.url".tr(),
-                            image: MenuImage.icon(TablerIcons.link),
-                          ),
-                        ]);
-                      },
+                      quoteMenuProvider: (MenuRequest menuRequest) =>
+                          ContextMenuComponents.quoteMenuProvider(
+                        context,
+                        quote: quote,
+                        onCopyQuote: onCopyQuote,
+                        onCopyQuoteUrl: onCopyQuoteUrl,
+                      ),
                     );
                   },
                   itemCount: subRandomQuotes.length,
@@ -435,7 +445,7 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
   }
 
   void onCopyQuoteUrl(Quote quote) {
-    Clipboard.setData(ClipboardData(text: "${Constants.quoteUrl}/${quote.id}"));
+    QuoteActions.copyQuoteUrl(quote);
   }
 
   void onTapQuote(Quote quote) {

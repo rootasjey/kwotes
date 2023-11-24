@@ -129,7 +129,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
       additionalShortcuts: _shortcuts,
       additionalActions: {
         CopyIntent: CallbackAction<CopyIntent>(
-          onInvoke: (CopyIntent intent) => onCopyQuote(),
+          onInvoke: (CopyIntent intent) => onCopyQuote(_quote),
         ),
         AddToListIntent: CallbackAction<AddToListIntent>(
           onInvoke: (AddToListIntent intent) => onAddToList(),
@@ -165,7 +165,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
                     onCopyQuote: onCopyQuote,
                     onCopyAuthor: onCopyAuthorName,
                     onCopyAuthorUrl: onCopyAuthorUrl,
-                    onCopyQuoteUrl: onCopyQuoteUrl,
+                    onCopyQuoteUrl: QuoteActions.copyQuoteUrl,
                     onCopyReference: onCopyReference,
                     onCopyReferenceUrl: onCopyReferenceUrl,
                     onDoubleTapQuote: onCopyQuote,
@@ -569,8 +569,8 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   }
 
   /// Callback fired to copy quote's name.
-  void onCopyQuote() {
-    QuoteActions.copyQuote(_quote);
+  void onCopyQuote(Quote quote) {
+    QuoteActions.copyQuote(quote);
 
     setState(() {
       copyIcon = UniconsLine.check;
@@ -595,21 +595,14 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   }
 
   /// Callback fired to copy author name.
-  void onCopyAuthorName() {
-    Clipboard.setData(ClipboardData(text: _quote.author.name));
+  void onCopyAuthorName(Author author) {
+    Clipboard.setData(ClipboardData(text: author.name));
   }
 
   /// Callback fired to author url.
-  void onCopyAuthorUrl() {
+  void onCopyAuthorUrl(Author author) {
     Clipboard.setData(
-        ClipboardData(text: "${Constants.authorUrl}/${_quote.author.id}"));
-  }
-
-  /// Callback fired to copy quote url.
-  void onCopyQuoteUrl() {
-    Clipboard.setData(
-      ClipboardData(text: "${Constants.quoteUrl}/${_quote.id}"),
-    );
+        ClipboardData(text: "${Constants.authorUrl}/${author.id}"));
   }
 
   /// Callback fired to copy reference url.
@@ -679,7 +672,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   /// Callback fired to share quote as link.
   void onShareLink(Quote quote) {
     if (kIsWeb || Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
-      onCopyQuoteUrl();
+      QuoteActions.copyQuoteUrl(quote);
       Utils.graphic.showSnackbar(
         context,
         message: "quote.copy_link.success".tr(),
@@ -696,7 +689,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   /// Callback fired to share quote as text.
   void onShareText(Quote quote) {
     if (kIsWeb || Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
-      onCopyQuote();
+      onCopyQuote(quote);
       Utils.graphic.showSnackbar(
         context,
         message: "quote.copy.success".tr(),

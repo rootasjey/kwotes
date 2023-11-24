@@ -1,5 +1,6 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/services.dart";
+import "package:kwotes/globals/constants.dart";
 import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/quote.dart";
 
@@ -47,6 +48,11 @@ class QuoteActions {
     }
 
     Clipboard.setData(ClipboardData(text: textToCopy));
+  }
+
+  /// Copy a quote's url to clipboard.
+  static void copyQuoteUrl(Quote quote) {
+    Clipboard.setData(ClipboardData(text: "${Constants.quoteUrl}/${quote.id}"));
   }
 
   /// Remove a quote from an user's favourites

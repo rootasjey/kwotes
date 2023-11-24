@@ -1,8 +1,11 @@
+import "dart:async";
+
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/actions/user_actions.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/quote_list.dart";
@@ -115,6 +118,76 @@ class ContextMenuComponents {
     );
   }
 
+  /// A context menu for authors.
+  static FutureOr<Menu?> authorMenuProvider(
+    BuildContext context, {
+    required Author author,
+    void Function(Author author)? onCopyAuthor,
+    void Function(Author author)? onCopyAuthorUrl,
+  }) {
+    return Menu(children: [
+      MenuAction(
+        callback: () => onCopyAuthor?.call(author),
+        title: "author.copy.name".tr(),
+        image: MenuImage.icon(TablerIcons.clipboard_text),
+      ),
+      MenuAction(
+        callback: () => onCopyAuthorUrl?.call(author),
+        title: "author.copy.link".tr(),
+        image: MenuImage.icon(TablerIcons.link),
+      ),
+    ]);
+  }
+
+  /// A context menu for quotes.
+  static FutureOr<Menu?> quoteMenuProvider(
+    BuildContext context, {
+    required Quote quote,
+    bool authenticated = false,
+    Color? selectedColor,
+    void Function(Quote quote)? onCopyQuote,
+    void Function(Quote quote)? onCopyQuoteUrl,
+    void Function(Quote quote, String newLanguage)? onChangeLanguage,
+    void Function(Quote quote)? onShareImage,
+    void Function(Quote quote)? onShareLink,
+    void Function(Quote quote)? onShareText,
+    String userId = "",
+  }) {
+    return Menu(children: [
+      MenuAction(
+        callback: () => onCopyQuote?.call(quote),
+        title: "quote.copy.name".tr(),
+        image: MenuImage.icon(TablerIcons.blockquote),
+      ),
+      MenuAction(
+        callback: () => onCopyQuoteUrl?.call(quote),
+        title: "quote.copy.link".tr(),
+        image: MenuImage.icon(TablerIcons.link),
+      ),
+      MenuSeparator(),
+      if (authenticated)
+        addToList(
+          context,
+          quote: quote,
+          selectedColor: selectedColor,
+          userId: userId,
+        ),
+      if (onChangeLanguage != null)
+        changeLanguage(
+          context,
+          quote: quote,
+          onChangeLanguage: onChangeLanguage,
+        ),
+      share(
+        context,
+        quote: quote,
+        onShareImage: onShareImage,
+        onShareLink: onShareLink,
+        onShareText: onShareText,
+      ),
+    ]);
+  }
+
   /// A menu fore sharing a quote.
   static share(
     BuildContext context, {
@@ -129,12 +202,12 @@ class ContextMenuComponents {
       children: [
         MenuAction(
           title: "quote.share.link".tr(),
-          image: MenuImage.icon(TablerIcons.link),
+          image: MenuImage.icon(TablerIcons.share_3),
           callback: () => onShareLink?.call(quote),
         ),
         MenuAction(
           title: "quote.share.text".tr(),
-          image: MenuImage.icon(TablerIcons.text_caption),
+          image: MenuImage.icon(TablerIcons.message_share),
           callback: () => onShareText?.call(quote),
         ),
         MenuAction(

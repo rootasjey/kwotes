@@ -37,7 +37,7 @@ class QuotePageActions extends StatelessWidget {
   final Function()? onAddToList;
 
   /// Callback fired to copy quote's content.
-  final Function()? onCopyQuote;
+  final Function(Quote quote)? onCopyQuote;
 
   /// Callback fired to return to the previous page.
   final Function()? onNavigateBack;
@@ -83,7 +83,7 @@ class QuotePageActions extends StatelessWidget {
         if (!minimal)
           IconButton(
             color: iconColor,
-            onPressed: onCopyQuote,
+            onPressed: () => onCopyQuote?.call(quote),
             icon: Icon(copyIcon),
             tooltip: copyTooltip,
           ),
