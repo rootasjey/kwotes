@@ -1,3 +1,4 @@
+import "package:bottom_sheet/bottom_sheet.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
@@ -9,7 +10,6 @@ import "package:kwotes/types/enums/enum_snackbar_type.dart";
 import "package:kwotes/types/enums/enum_topic.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/topic.dart";
-import "package:modal_bottom_sheet/modal_bottom_sheet.dart";
 import "package:unicons/unicons.dart";
 
 /// Graphic utilities (everything associated with visual and UI).
@@ -260,23 +260,34 @@ class Graphic {
   }
 
   /// Show a dialog or a modal bottom sheet according to `isMobileSize` value.
-  void showAdaptiveDialog(
+  Future showAdaptiveDialog(
     BuildContext context, {
     required Widget Function(BuildContext) builder,
     bool isMobileSize = false,
     Color backgroundColor = Colors.white,
   }) {
     if (isMobileSize) {
-      showCupertinoModalBottomSheet(
+      return showModalBottomSheet(
         context: context,
-        expand: false,
-        backgroundColor: backgroundColor,
         builder: builder,
+        isDismissible: true,
+        isScrollControlled: true,
+        useSafeArea: true,
+        showDragHandle: true,
+        clipBehavior: Clip.hardEdge,
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height - 100.0,
+        ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(12.0),
+            topRight: Radius.circular(12.0),
+          ),
+        ),
       );
-      return;
     }
 
-    showDialog(
+    return showDialog(
       context: context,
       builder: builder,
     );
@@ -404,22 +415,56 @@ class Graphic {
     );
   }
 
-  void showAddToListDialog(
+  /// Show an add to list dialog.
+  Future showAddToListDialog(
     BuildContext context, {
-    required Quote quote,
+    required List<Quote> quotes,
     required String userId,
+    bool autofocus = false,
     bool isMobileSize = false,
+    bool startInCreate = false,
+
+    /// Selected list color.
+    Color? selectedColor,
   }) {
-    Utils.graphic.showAdaptiveDialog(
-      context,
-      isMobileSize: isMobileSize,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+    if (isMobileSize) {
+      return showFlexibleBottomSheet(
+        context: context,
+        minHeight: 0.0,
+        initHeight: 0.5,
+        maxHeight: 0.9,
+        anchors: [0.0, 0.9],
+        bottomSheetBorderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(12.0),
+          topRight: Radius.circular(12.0),
+        ),
+        builder: (
+          BuildContext context,
+          scrollController,
+          bottomSheetOffset,
+        ) {
+          return AddToListDialog(
+            asBottomSheet: isMobileSize,
+            autofocus: autofocus,
+            startInCreate: startInCreate,
+            userId: userId,
+            quotes: quotes,
+            scrollController: scrollController,
+            selectedColor: selectedColor,
+          );
+        },
+      );
+    }
+
+    return showDialog(
+      context: context,
       builder: (BuildContext context) => AddToListDialog(
         asBottomSheet: isMobileSize,
-        autoFocus: true,
-        startInCreate: false,
+        autofocus: autofocus,
+        selectedColor: selectedColor,
+        startInCreate: startInCreate,
         userId: userId,
-        quotes: [quote],
+        quotes: quotes,
       ),
     );
   }

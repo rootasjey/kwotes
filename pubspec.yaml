@@ -34,6 +34,7 @@ dependencies:
   algolia: ^1.1.2
   animated_text_kit: ^4.2.2
   beamer: ^1.5.6
+  bottom_sheet: ^4.0.0
   boxy: ^2.1.2
 
   # The following adds the Cupertino Icons font to your application.
@@ -44,6 +45,7 @@ dependencies:
   dismissible_page: ^1.0.2
   easy_image_viewer: ^1.2.1
   easy_localization: ^3.0.2
+  file_picker: ^6.1.1
   firebase_auth: ^4.7.1
   firebase_analytics: ^10.4.4
   firebase_core: ^2.15.0
@@ -69,11 +71,12 @@ dependencies:
   liquid_pull_to_refresh: ^3.0.1
   loggy: ^2.0.3
   lottie: ^2.5.0
-  modal_bottom_sheet: 3.0.0-pre
   photo_view: ^0.14.0
   random_text_reveal: ^0.0.6
   rive: ^0.11.17
   salomon_bottom_bar: ^3.3.2
+  screenshot: ^2.1.0
+  share_plus: ^7.2.1
   shimmer_animation: ^2.1.0+1
   simple_animations: ^5.0.2
   sliver_tools: ^0.2.12
