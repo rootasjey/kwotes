@@ -39,8 +39,9 @@
   "are_you_sure": "Are you sure?",
   "author": {
     "copy": {
-      "name": "Copy author's name",
-      "url": "Copy author's url"
+      "link": "Copy link",
+      "name": "Copy name",
+      "url": "Copy URL"
     },
     "delete": {
       "confirm": "Confirm delete?",
@@ -698,6 +699,7 @@
     "clear_all": "Clear all",
     "clear_topics": "Clear topics",
     "copy": {
+      "link": "Copy link",
       "name": "Copy quote",
       "success": "Quote successfully copied!",
       "url": "Copy quote URL"

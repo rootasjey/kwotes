@@ -39,8 +39,9 @@
   "are_you_sure": "Êtes-vous sûr(e) ?",
   "author": {
     "copy": {
-      "name": "Copier le nom de l'auteur",
-      "url": "Copier le lien de l'auteur"
+      "link": "Copier le lien",
+      "name": "Copier le nom",
+      "url": "Copier le l'URL"
     },
     "delete": {
       "confirm": "Confirmer la suppression ?",
@@ -712,6 +713,7 @@
     "clear_all": "Effacer tout",
     "clear_topics": "Effacer les thèmes",
     "copy": {
+      "link": "Copier le lien",
       "name": "Copier la citation",
       "success": "La citation a été copiée !",
       "url": "Copier le lien"
