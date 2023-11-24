@@ -123,23 +123,8 @@ class ListPageHeader extends StatelessWidget {
                   filled: true,
                   hintText: descriptionHintText,
                   fillColor: accentColor.withOpacity(0.1),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: accentColor.withOpacity(0.6),
-                      width: 2.0,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: accentColor.withOpacity(1.0),
-                      width: 2.2,
-                    ),
-                  ),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: accentColor.withOpacity(0.6),
-                      width: 2.0,
-                    ),
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide.none,
                   ),
                 ),
               ),
@@ -156,7 +141,7 @@ class ListPageHeader extends StatelessWidget {
                       style: TextButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 18.0,
-                          vertical: 14.0,
+                          vertical: 8.0,
                         ),
                         backgroundColor: Colors.black12,
                         foregroundColor:
@@ -176,7 +161,7 @@ class ListPageHeader extends StatelessWidget {
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 18.0,
-                        vertical: 14.0,
+                        vertical: 8.0,
                       ),
                       backgroundColor: onSave != null ? accentColor : null,
                       foregroundColor: accentColor.computeLuminance() > 0.4

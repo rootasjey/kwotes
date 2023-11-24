@@ -174,7 +174,7 @@ class HeaderFilterListView extends StatelessWidget {
     ];
 
     final Widget mainWidget = SizedBox(
-      height: 42.0,
+      height: 48.0,
       child: ListView.separated(
         shrinkWrap: true,
         padding: margin,

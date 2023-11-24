@@ -6,8 +6,10 @@ import "package:kwotes/components/context_menu_components.dart";
 import "package:kwotes/components/empty_view.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/components/texts/quote_text.dart";
+import "package:kwotes/globals/constants.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/quote.dart";
+import "package:kwotes/types/topic.dart";
 import "package:super_context_menu/super_context_menu.dart";
 
 /// Body component page displaying a user quote list content.
@@ -59,8 +61,9 @@ class ListPageBody extends StatelessWidget {
 
     if (quotes.isEmpty) {
       return EmptyView(
-        margin: const EdgeInsets.only(right: 24.0),
-        title: "list.empty".tr(),
+        margin: const EdgeInsets.symmetric(horizontal: 24.0),
+        title: "list.empty.name".tr(),
+        description: "list.empty.description".tr(),
       );
     }
 
@@ -70,9 +73,7 @@ class ListPageBody extends StatelessWidget {
           : const EdgeInsets.only(top: 6.0, left: 48.0, right: 72.0),
       sliver: SliverList.separated(
         separatorBuilder: (BuildContext context, int index) {
-          return const Divider(
-            height: 54.0,
-          );
+          return const Divider(height: 54.0);
         },
         itemBuilder: (BuildContext context, int index) {
           final Quote quote = quotes[index];
@@ -93,6 +94,10 @@ class ListPageBody extends StatelessWidget {
                 )
                 .fadeIn(),
             menuProvider: (MenuRequest menuRequest) {
+              final Topic topic = Constants.colors.topics.firstWhere(
+                (Topic x) => x.name == quote.topics.first,
+                orElse: () => Topic.empty(),
+              );
               return Menu(
                 children: [
                   MenuAction(
@@ -108,6 +113,7 @@ class ListPageBody extends StatelessWidget {
                   ContextMenuComponents.addToList(
                     context,
                     quote: quote,
+                    selectedColor: topic.color,
                     userId: userId,
                   ),
                 ],

@@ -27,9 +27,7 @@ class DashboardWelcomePage extends StatelessWidget {
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
 
-    final Color randomColor = Constants.colors.getRandomFromPalette(
-      withGoodContrast: true,
-    );
+    final Color randomColor = Constants.colors.primary;
 
     final UserFirestore userFirestore =
         context.observe<UserFirestore>(EnumSignalId.userFirestore);
