@@ -44,6 +44,7 @@ class ShowcaseAuthors extends StatelessWidget {
                 index++;
                 final Color? themeColor =
                     Theme.of(context).textTheme.bodyMedium?.color;
+
                 final Color? initialColor = index % 2 == 0
                     ? themeColor?.withOpacity(0.4)
                     : themeColor?.withOpacity(0.8);
@@ -51,13 +52,13 @@ class ShowcaseAuthors extends StatelessWidget {
                 return ShowcaseText(
                   docId: author.id,
                   isDark: isDark,
-                  textValue: author.name.toLowerCase(),
-                  isMobileSize: isMobileSize,
                   index: index,
                   initialForegroundColor: initialColor,
+                  isMobileSize: isMobileSize,
                   onTap: onTapAuthor != null
                       ? () => onTapAuthor?.call(author)
                       : null,
+                  textValue: author.name.toLowerCase(),
                 );
               })
               .toList()
