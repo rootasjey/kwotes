@@ -210,4 +210,17 @@ class Vault {
       true,
     );
   }
+
+  /// Saves minimal quote actions state.
+  void setMinimalQuoteActions(bool isActive) {
+    Glutton.eat(StorageKeys.minimalQuoteActions, isActive);
+  }
+
+  /// Retrieves minimal quote actions state.
+  Future<bool> getMinimalQuoteActions() async {
+    return await Glutton.vomit(
+      StorageKeys.minimalQuoteActions,
+      false,
+    );
+  }
 }

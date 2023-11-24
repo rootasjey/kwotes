@@ -1,3 +1,5 @@
+import "dart:io";
+
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
@@ -13,9 +15,11 @@ class QuotePageActions extends StatelessWidget {
     required this.quote,
     this.direction = Axis.vertical,
     this.authenticated = false,
+    this.minimal = false,
     this.onAddToList,
     this.onCopyQuote,
     this.onNavigateBack,
+    this.onShareQuote,
     this.onToggleFavourite,
     this.copyTooltip = "",
   });
@@ -26,17 +30,23 @@ class QuotePageActions extends StatelessWidget {
   /// Whether user is authenticated.
   final bool authenticated;
 
+  /// Hide duplicated actions (e.g. [close], [copy]) if this is true.
+  final bool minimal;
+
+  /// Callback fired to add quote to list.
+  final Function()? onAddToList;
+
   /// Callback fired to copy quote's content.
   final Function()? onCopyQuote;
 
   /// Callback fired to return to the previous page.
   final Function()? onNavigateBack;
 
+  /// Callback fired to share a quote.
+  final Function()? onShareQuote;
+
   /// Callback fired to toggle quote's favourite status.
   final Function()? onToggleFavourite;
-
-  /// Callback fired to add quote to list.
-  final Function()? onAddToList;
 
   /// Copy icon data.
   final IconData copyIcon;
@@ -52,25 +62,42 @@ class QuotePageActions extends StatelessWidget {
     final Color? iconColor =
         Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6);
 
+    // It seems that the button is not fully centered
+    // on android. This fixes it.
+    final EdgeInsets likeButtonMargin = Platform.isAndroid
+        ? const EdgeInsets.only(top: 6.0)
+        : const EdgeInsets.only(top: 2.0);
+
     return Wrap(
       direction: direction,
       alignment: WrapAlignment.center,
       spacing: direction == Axis.vertical ? 0.0 : 12.0,
       runSpacing: direction == Axis.vertical ? 0.0 : 12.0,
       children: [
+        if (!minimal)
+          IconButton(
+            color: iconColor,
+            onPressed: onNavigateBack,
+            icon: const Icon(UniconsLine.times),
+          ),
+        if (!minimal)
+          IconButton(
+            color: iconColor,
+            onPressed: onCopyQuote,
+            icon: Icon(copyIcon),
+            tooltip: copyTooltip,
+          ),
         IconButton(
           color: iconColor,
-          onPressed: onNavigateBack,
-          icon: const Icon(UniconsLine.times),
-        ),
-        IconButton(
-          color: iconColor,
-          onPressed: onCopyQuote,
-          icon: Icon(copyIcon),
-          tooltip: copyTooltip,
+          onPressed: onShareQuote,
+          icon: const Icon(UniconsLine.share),
+          tooltip: "quote.share.name".tr(),
         ),
         if (authenticated) ...[
           LikeButton(
+            color: iconColor,
+            onPressed: onToggleFavourite,
+            margin: likeButtonMargin,
             initialLiked: quote.starred,
             tooltip: quote.starred
                 ? "quote.unlike.name".tr()

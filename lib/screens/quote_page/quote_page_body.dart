@@ -22,6 +22,7 @@ class QuotePageBody extends StatelessWidget {
     required this.textWrapSolution,
     required this.userFirestore,
     this.authenticated = false,
+    this.selectedColor,
     this.pageState = EnumPageState.idle,
     this.onChangeLanguage,
     this.onCopyQuote,
@@ -31,12 +32,18 @@ class QuotePageBody extends StatelessWidget {
     this.onCopyAuthor,
     this.onCopyReference,
     this.onDoubleTapQuote,
+    this.onShareImage,
+    this.onShareLink,
+    this.onShareText,
     this.onTapAuthor,
     this.onTapReference,
   });
 
   /// Whether user is authenticated.
   final bool authenticated;
+
+  /// Selected list color.
+  final Color? selectedColor;
 
   /// Page's state (e.g. loading, idle, ...).
   final EnumPageState pageState;
@@ -65,6 +72,15 @@ class QuotePageBody extends StatelessWidget {
   /// Callback fired when quote's name is double tapped.
   final void Function()? onDoubleTapQuote;
 
+  /// Callback fired when image is shared.
+  final void Function(Quote quote)? onShareImage;
+
+  /// Callback fired when link is shared.
+  final void Function(Quote quote)? onShareLink;
+
+  /// Callback fired when text is shared.
+  final void Function(Quote quote)? onShareText;
+
   /// Callback fired when author's avatar or name is tapped.
   final void Function(Author author)? onTapAuthor;
 
@@ -91,6 +107,7 @@ class QuotePageBody extends StatelessWidget {
     return Center(
       child: CustomScrollView(
         shrinkWrap: true,
+        physics: const BouncingScrollPhysics(),
         slivers: [
           SliverToBoxAdapter(
             child: Padding(
@@ -134,6 +151,7 @@ class QuotePageBody extends StatelessWidget {
                         ContextMenuComponents.addToList(
                           context,
                           quote: quote,
+                          selectedColor: selectedColor,
                           userId: userFirestore.id,
                         ),
                       if (onChangeLanguage != null)
@@ -142,6 +160,13 @@ class QuotePageBody extends StatelessWidget {
                           quote: quote,
                           onChangeLanguage: onChangeLanguage,
                         ),
+                      ContextMenuComponents.share(
+                        context,
+                        quote: quote,
+                        onShareImage: onShareImage,
+                        onShareLink: onShareLink,
+                        onShareText: onShareText,
+                      ),
                     ],
                   );
                 },

@@ -23,6 +23,7 @@ class StorageKeys {
   static const String language = "language";
   static const String lastSearchType = "last_search_type";
   static const String onOpenNotificationPath = "on_open_notification_path";
+  static const String minimalQuoteActions = "minimal_quote_actions";
   static const String notificationsActivated = "notifications_activated";
   static const String quoteIdNotification = "quote_id_notification";
   static const String referenceMetadataOpened = "reference_metadata_opened";

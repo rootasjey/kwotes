@@ -12,9 +12,6 @@ class NavigationStateHelper {
   /// outside the page's state (because of the router behavior).
   static ImageProvider<Object>? imageToEdit;
 
-  /// Selected quote and passed through quote page.
-  static Quote quote = Quote.empty();
-
   /// Selected author and passed through author page.
   static Author author = Author.empty();
 
@@ -23,11 +20,9 @@ class NavigationStateHelper {
   /// in order to syncronously know where to navigate (with the router).
   static bool fullscreenQuotePage = true;
 
-  /// Selected reference and passed through reference page.
-  static Reference reference = Reference.empty();
-
-  /// Selected quote list and passed through quote list page.
-  static QuoteList quoteList = QuoteList.empty();
+  /// Hide duplicated actions (e.g. [close], [copy]) on quote page,
+  /// if this is true.
+  static bool minimalQuoteActions = false;
 
   /// Random quotes for home page.
   static List<Quote> randomQuotes = [];
@@ -37,6 +32,15 @@ class NavigationStateHelper {
 
   /// Latest added references.
   static List<Reference> latestAddedReferences = [];
+
+  /// Selected reference and passed through reference page.
+  static Reference reference = Reference.empty();
+
+  /// Selected quote and passed through quote page.
+  static Quote quote = Quote.empty();
+
+  /// Selected quote list and passed through quote list page.
+  static QuoteList quoteList = QuoteList.empty();
 
   /// Last random quote language.
   /// Useful for fetching new random quotes after a language change.

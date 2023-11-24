@@ -1,8 +1,12 @@
 import "dart:async";
+import "dart:io";
 
 import "package:beamer/beamer.dart";
+import "package:bottom_sheet/bottom_sheet.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
+import "package:file_picker/file_picker.dart";
+import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
@@ -15,6 +19,8 @@ import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/quote_page/quote_page_actions.dart";
 import "package:kwotes/screens/quote_page/quote_page_body.dart";
 import "package:kwotes/screens/quote_page/quote_page_container.dart";
+import "package:kwotes/screens/quote_page/share_quote_bottom_sheet.dart";
+import "package:kwotes/screens/quote_page/share_quote_template.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
@@ -29,6 +35,8 @@ import "package:kwotes/types/topic.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 import "package:kwotes/types/user/user_rights.dart";
 import "package:loggy/loggy.dart";
+import "package:screenshot/screenshot.dart";
+import "package:share_plus/share_plus.dart";
 import "package:text_wrap_auto_size/solution.dart";
 import "package:text_wrap_auto_size/text_wrap_auto_size.dart";
 import "package:unicons/unicons.dart";
@@ -62,12 +70,21 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
     LogicalKeySet(LogicalKeyboardKey.keyL): const LikeIntent(),
   };
 
+  final ScreenshotController _screenshotController = ScreenshotController();
+
   /// Signal for navigation bar.
   /// This is used to hide/show the navigation bar.
   /// We store the variable on initialization because
   /// we'll need to access it on dispose
   /// (and we can't access context on dispoe).
   Signal<bool>? _signalNavigationBar;
+
+  Solution _textWrapSolution = Solution(
+    const Text(""),
+    const TextStyle(),
+    const Size(0, 0),
+    const Size(0, 0),
+  );
 
   /// Copy icon tooltip.
   String copyTooltip = "quote.copy.name".tr();
@@ -95,7 +112,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
     double widthPadding = 192.0;
     double heightPadding = getHeightPadding();
 
-    final Solution textWrapSolution = TextWrapAutoSize.solution(
+    _textWrapSolution = TextWrapAutoSize.solution(
       Size(windowSize.width - widthPadding, windowSize.height - heightPadding),
       Text(_quote.name, style: Utils.calligraphy.body()),
     );
@@ -152,11 +169,15 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
                     onCopyReference: onCopyReference,
                     onCopyReferenceUrl: onCopyReferenceUrl,
                     onDoubleTapQuote: onCopyQuote,
+                    onShareImage: onOpenShareImage,
+                    onShareLink: onShareLink,
+                    onShareText: onShareText,
                     onTapAuthor: onTapAuthor,
                     onTapReference: onTapReference,
                     pageState: _pageState,
                     quote: _quote,
-                    textWrapSolution: textWrapSolution,
+                    selectedColor: getTopicColor(),
+                    textWrapSolution: _textWrapSolution,
                     userFirestore: userFirestore,
                   ),
                   Positioned(
@@ -170,7 +191,9 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
                       authenticated: userFirestore.id.isNotEmpty,
                       quote: _quote,
                       copyTooltip: copyTooltip,
+                      minimal: NavigationStateHelper.minimalQuoteActions,
                       onCopyQuote: onCopyQuote,
+                      onShareQuote: onShareQuote,
                       onToggleFavourite: onToggleFavourite,
                       onNavigateBack: () => Utils.passage.deepBack(context),
                       onAddToList: onAddToList,
@@ -340,6 +363,41 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
     }
   }
 
+  /// Generate file name for image to save on device.
+  String generateFileName() {
+    String name = "quote.name".tr();
+
+    if (_quote.author.name.isNotEmpty) {
+      name += " — ${_quote.author.name}";
+    }
+
+    if (_quote.reference.name.isNotEmpty) {
+      name += " — ${_quote.reference.name}";
+    }
+
+    return name;
+  }
+
+  /// Get label value according to the current platform.
+  /// e.g. "Share" for Android, iOS. "Download" for other platforms.
+  String getFabLabelValue() {
+    if (Platform.isAndroid || Platform.isIOS) {
+      return "quote.share.image".tr();
+    }
+
+    return "download.name".tr();
+  }
+
+  /// Get icon data according to the current platform.
+  /// e.g. "Share" for Android, iOS. "Download" for other platforms.
+  IconData getFabIconData() {
+    if (Platform.isAndroid || Platform.isIOS) {
+      return TablerIcons.share;
+    }
+
+    return TablerIcons.download;
+  }
+
   /// Returns the height padding for this widget according to available data
   /// (e.g. author, reference).
   double getHeightPadding() {
@@ -414,9 +472,69 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
     Utils.graphic.showAddToListDialog(
       context,
       isMobileSize: isMobileSize,
-      quote: _quote,
+      quotes: [_quote],
       userId: userId,
+      selectedColor: getTopicColor(),
     );
+  }
+
+  /// Callback fired to capture image and share it on mobile device,
+  /// or download it on other platforms.
+  /// [pop] if true, execute additional pop
+  /// (to close previous bottom sheet on mobile).
+  void onCaptureImage({bool pop = false}) {
+    _screenshotController.capture().then((Uint8List? image) async {
+      if (image == null) {
+        return;
+      }
+
+      if (Platform.isAndroid || Platform.isIOS) {
+        Share.shareXFiles(
+          [
+            XFile.fromData(
+              image,
+              name: "${generateFileName()}.png",
+              mimeType: "image/png",
+            ),
+          ],
+          sharePositionOrigin: const Rect.fromLTWH(0, 0, 0, 0),
+        );
+        return;
+      }
+
+      final String? prefix = await FilePicker.platform.getDirectoryPath();
+
+      if (prefix == null) {
+        loggy.info("`prefix` is null probably because the user cancelled. "
+            "Download cancelled.");
+
+        if (!mounted) return;
+        Utils.graphic.showSnackbar(
+          context,
+          message: "download.error.cancelled".tr(),
+        );
+        return;
+      }
+
+      final String path = "$prefix/${generateFileName()}.png";
+      await File(path).writeAsBytes(image);
+      if (!mounted) return;
+
+      Utils.graphic.showSnackbar(
+        context,
+        message: "download.success".tr(),
+      );
+
+      if (pop) {
+        Navigator.of(context).pop();
+      }
+    }).catchError((error) {
+      loggy.error(error);
+      Utils.graphic.showSnackbar(
+        context,
+        message: "download.failed".tr(),
+      );
+    }).whenComplete(() => Navigator.of(context).pop());
   }
 
   /// Callback to update a quote's language.
@@ -498,6 +616,113 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   void onCopyReferenceUrl() {
     Clipboard.setData(ClipboardData(
         text: "${Constants.referenceUrl}/${_quote.reference.id}"));
+  }
+
+  /// Callback fired to share quote.
+  onShareQuote() {
+    showModalBottomSheet(
+      context: context,
+      showDragHandle: true,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(12.0),
+          topRight: Radius.circular(12.0),
+        ),
+      ),
+      builder: (BuildContext context) {
+        return ShareQuoteBottomSheet(
+          quote: _quote,
+          onShareImage: onOpenShareImage,
+          onShareLink: onShareLink,
+          onShareText: onShareText,
+        );
+      },
+    );
+  }
+
+  /// Callback fired to share quote as image.
+  /// [pop] indicates if a bottom sheet should be popped after sharing.
+  void onOpenShareImage(Quote quote, {bool pop = false}) {
+    showFlexibleBottomSheet(
+      context: context,
+      minHeight: 0,
+      initHeight: 0.5,
+      maxHeight: 0.9,
+      anchors: [0.0, 0.9],
+      bottomSheetBorderRadius: const BorderRadius.only(
+        topLeft: Radius.circular(12.0),
+        topRight: Radius.circular(12.0),
+      ),
+      builder: (
+        BuildContext context,
+        ScrollController scrollController,
+        double bottomSheetOffset,
+      ) {
+        return ShareQuoteTemplate(
+          borderColor: getTopicColor(),
+          isMobileSize: Utils.measurements.isMobileSize(context),
+          quote: quote,
+          screenshotController: _screenshotController,
+          textWrapSolution: _textWrapSolution,
+          onBack: Navigator.of(context).pop,
+          fabLabelValue: getFabLabelValue(),
+          onTapShareImage: () => onCaptureImage(pop: pop),
+          fabIconData: getFabIconData(),
+          scrollController: scrollController,
+          margin: const EdgeInsets.only(top: 24.0),
+        );
+      },
+    );
+  }
+
+  /// Callback fired to share quote as link.
+  void onShareLink(Quote quote) {
+    if (kIsWeb || Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
+      onCopyQuoteUrl();
+      Utils.graphic.showSnackbar(
+        context,
+        message: "quote.copy_link.success".tr(),
+      );
+      return;
+    }
+
+    if (Platform.isAndroid || Platform.isIOS) {
+      Share.shareUri(Uri.parse("${Constants.quoteUrl}/${_quote.id}"));
+      return;
+    }
+  }
+
+  /// Callback fired to share quote as text.
+  void onShareText(Quote quote) {
+    if (kIsWeb || Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
+      onCopyQuote();
+      Utils.graphic.showSnackbar(
+        context,
+        message: "quote.copy.success".tr(),
+      );
+      return;
+    }
+
+    String textToShare = "«${_quote.name}»";
+
+    if (quote.author.name.isNotEmpty) {
+      textToShare += " — ${quote.author.name}";
+    }
+
+    if (quote.reference.name.isNotEmpty) {
+      textToShare += " — ${quote.reference.name}";
+    }
+
+    if (Platform.isAndroid || Platform.isIOS) {
+      final RenderBox? box = context.findRenderObject() as RenderBox?;
+      Share.share(
+        textToShare,
+        subject: "quote.name".tr(),
+        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+      );
+      return;
+    }
   }
 
   /// Callback fired to navigate to author page.

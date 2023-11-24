@@ -16,7 +16,6 @@ import "package:window_manager/window_manager.dart";
 
 import "package:kwotes/app.dart";
 import "package:kwotes/firebase_options.dart";
-import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 
 void main() async {
@@ -42,6 +41,9 @@ void main() async {
   NavigationStateHelper.fullscreenQuotePage =
       await Utils.vault.getFullscreenQuotePage();
 
+  NavigationStateHelper.minimalQuoteActions =
+      await Utils.vault.getMinimalQuoteActions();
+
   if (!kIsWeb) {
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
       await windowManager.ensureInitialized();
@@ -50,34 +52,8 @@ void main() async {
         const WindowOptions(
           titleBarStyle: TitleBarStyle.hidden,
         ),
-        () async {
-          await windowManager.show();
-        },
+        () async => await windowManager.show(),
       );
-    }
-
-    final Brightness savedBrightness = await Utils.vault.getBrightness();
-    final bool isDark = savedBrightness == Brightness.dark;
-
-    if (Platform.isAndroid || Platform.isIOS) {
-      final SystemUiOverlayStyle overlayStyle = isDark
-          ? SystemUiOverlayStyle(
-              statusBarColor: Constants.colors.dark,
-              systemNavigationBarColor: Color.alphaBlend(
-                Colors.black26,
-                Constants.colors.dark,
-              ),
-              systemNavigationBarDividerColor: Colors.transparent,
-              statusBarIconBrightness: Brightness.light,
-            )
-          : SystemUiOverlayStyle(
-              statusBarColor: Constants.colors.lightBackground,
-              systemNavigationBarColor: Colors.white,
-              systemNavigationBarDividerColor: Colors.transparent,
-              statusBarIconBrightness: Brightness.dark,
-            );
-
-      SystemChrome.setSystemUIOverlayStyle(overlayStyle);
     }
   }
 
