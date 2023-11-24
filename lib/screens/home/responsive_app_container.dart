@@ -1,5 +1,9 @@
+import "dart:io";
+
+import "package:adaptive_theme/adaptive_theme.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/globals/constants.dart";
@@ -23,6 +27,9 @@ class ResponsiveAppContainer extends StatefulWidget {
 }
 
 class _ResponsiveAppContainerState extends State<ResponsiveAppContainer> {
+  /// Previous brightness.
+  Brightness? _previousBrightness;
+
   /// Current page index.
   int _currentIndex = 0;
 
@@ -41,6 +48,7 @@ class _ResponsiveAppContainerState extends State<ResponsiveAppContainer> {
 
   @override
   Widget build(BuildContext context) {
+    adaptUiOverlayStyle();
     final bool isMobile = Utils.measurements.isMobileSize(context);
 
     if (!isMobile) {
@@ -102,5 +110,45 @@ class _ResponsiveAppContainerState extends State<ResponsiveAppContainer> {
   /// Initialize page properties.
   void initProps() async {
     _currentIndex = Passage.homePageTabIndex;
+  }
+
+  /// Adapt UI overlay style on Android and iOS.
+  void adaptUiOverlayStyle() {
+    if (!Platform.isAndroid && !Platform.isIOS) {
+      return;
+    }
+
+    final Brightness? currentBrightness =
+        AdaptiveTheme.maybeOf(context)?.brightness;
+
+    if (currentBrightness == null) {
+      return;
+    }
+
+    if (currentBrightness == _previousBrightness) {
+      return;
+    }
+
+    _previousBrightness = currentBrightness;
+
+    final SystemUiOverlayStyle overlayStyle =
+        currentBrightness == Brightness.dark
+            ? SystemUiOverlayStyle(
+                statusBarColor: Constants.colors.dark,
+                systemNavigationBarColor: Color.alphaBlend(
+                  Colors.black26,
+                  Constants.colors.dark,
+                ),
+                systemNavigationBarDividerColor: Colors.transparent,
+                statusBarIconBrightness: Brightness.light,
+              )
+            : SystemUiOverlayStyle(
+                statusBarColor: Constants.colors.lightBackground,
+                systemNavigationBarColor: Colors.white,
+                systemNavigationBarDividerColor: Colors.transparent,
+                statusBarIconBrightness: Brightness.dark,
+              );
+
+    SystemChrome.setSystemUIOverlayStyle(overlayStyle);
   }
 }
