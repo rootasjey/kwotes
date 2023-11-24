@@ -13,6 +13,7 @@ class ShowcaseText extends StatefulWidget {
     this.onTap,
     this.docId = "",
     this.index = 0,
+    this.initialForegroundColor,
   });
 
   /// Whether to adapt UI to dark theme.
@@ -20,6 +21,9 @@ class ShowcaseText extends StatefulWidget {
 
   /// Adapt UI to mobile size.
   final bool isMobileSize;
+
+  /// Initial foreground color.
+  final Color? initialForegroundColor;
 
   /// Index.
   final int index;
@@ -48,16 +52,19 @@ class _ShowcaseTextState extends State<ShowcaseText> {
   Color? _initialForegroundColor = Colors.black;
 
   @override
-  Widget build(BuildContext context) {
-    final Color? fColor = Theme.of(context).textTheme.bodyMedium?.color;
-    _initialForegroundColor = widget.index % 2 == 0
-        ? fColor?.withOpacity(0.4)
-        : fColor?.withOpacity(0.8);
+  void initState() {
+    super.initState();
+    _initialForegroundColor = widget.initialForegroundColor;
+    _foregroundColor = _initialForegroundColor;
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: widget.margin,
       child: InkWell(
         onTap: widget.onTap,
+        splashColor: _foregroundColor?.withOpacity(0.4),
         hoverColor: Colors.transparent,
         borderRadius: BorderRadius.circular(4.0),
         onHover: (bool isHover) {

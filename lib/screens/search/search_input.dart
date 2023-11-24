@@ -47,6 +47,11 @@ class SearchInput extends StatelessWidget {
     final Color backgroundColor =
         Theme.of(context).scaffoldBackgroundColor.withOpacity(0.7);
 
+    int hintMaxLines = 1;
+    if (inputController == null || inputController!.text.isEmpty) {
+      hintMaxLines = 2;
+    }
+
     return SliverAppBar(
       primary: false,
       backgroundColor: backgroundColor,
@@ -69,7 +74,7 @@ class SearchInput extends StatelessWidget {
               ? EdgeInsets.zero
               : padding.subtract(const EdgeInsets.only(left: 28.0)),
           child: Column(
-            mainAxisSize: MainAxisSize.max,
+            mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 maxLines: null,
@@ -90,7 +95,8 @@ class SearchInput extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: hintText,
                   border: const OutlineInputBorder(borderSide: BorderSide.none),
-                  hintMaxLines: 2,
+                  hintMaxLines: hintMaxLines,
+                  contentPadding: EdgeInsets.zero,
                 ),
               ),
               bottom ?? const SizedBox.shrink(),

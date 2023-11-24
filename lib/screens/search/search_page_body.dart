@@ -1,7 +1,7 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:kwotes/components/empty_view.dart";
 import "package:kwotes/components/loading_view.dart";
-import "package:kwotes/components/search_empty_view.dart";
 import "package:kwotes/screens/search/search_author_results_page.dart";
 import "package:kwotes/screens/search/search_quote_results_page.dart";
 import "package:kwotes/screens/search/search_reference_results_page.dart";
@@ -21,7 +21,8 @@ class SearchPageBody extends StatelessWidget {
     this.margin = EdgeInsets.zero,
     this.searchCategory = EnumSearchCategory.quote,
     this.authorResults = const [],
-    this.onReinitSearch,
+    this.onRefreshSearch,
+    this.onReinitializeSearch,
     this.onTapAuthor,
     this.onTapReference,
     this.onTapQuote,
@@ -54,8 +55,11 @@ class SearchPageBody extends StatelessWidget {
   /// The specific category we are searching.
   final EnumSearchCategory searchCategory;
 
+  /// Callback fired to refresh the search.
+  final void Function()? onRefreshSearch;
+
   /// Callback fired to reinit the search.
-  final void Function()? onReinitSearch;
+  final void Function()? onReinitializeSearch;
 
   /// Callback fired when author name is tapped.
   final void Function(Author author)? onTapAuthor;
@@ -79,10 +83,14 @@ class SearchPageBody extends StatelessWidget {
         authorResults.isEmpty &&
         referenceResults.isEmpty &&
         !isQueryEmpty) {
-      return SearchEmptyView(
-        margin: margin,
+      return EmptyView.searchEmptyView(
+        accentColor: Theme.of(context).colorScheme.secondary,
+        context,
         description: "search.empty.${searchCategory.name}".tr(),
-        onReinitSearch: onReinitSearch,
+        margin: margin,
+        onReinitializeSearch: onReinitializeSearch,
+        onRefresh: onRefreshSearch,
+        title: "search.empty.results".tr(),
       );
     }
 

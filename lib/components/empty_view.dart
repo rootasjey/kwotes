@@ -1,6 +1,9 @@
+import "package:animated_text_kit/animated_text_kit.dart";
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/buttons/colored_text_button.dart";
+import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 
 class EmptyView extends StatelessWidget {
@@ -35,9 +38,6 @@ class EmptyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color? foregroundColor =
-        Theme.of(context).textTheme.bodyMedium?.color;
-
     return SliverToBoxAdapter(
       child: Padding(
         padding: margin,
@@ -46,25 +46,30 @@ class EmptyView extends StatelessWidget {
             return onRefresh?.call();
           },
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.start,
-            // crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              icon ?? Container(),
+              icon ?? const SizedBox.shrink(),
               if (title.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(
-                    bottom: 10.0,
-                  ),
-                  child: Text(
-                    title,
-                    textAlign: TextAlign.center,
-                    style: Utils.calligraphy.body(
-                      textStyle: TextStyle(
-                        fontSize: 30.0,
-                        color: foregroundColor?.withOpacity(0.6),
+                AnimatedTextKit(
+                  repeatForever: true,
+                  isRepeatingAnimation: true,
+                  animatedTexts: [
+                    ColorizeAnimatedText(
+                      title,
+                      textStyle: Utils.calligraphy.code(
+                        textStyle: const TextStyle(
+                          fontSize: 54.0,
+                        ),
                       ),
+                      colors: [
+                        Constants.colors.foregroundPalette.first,
+                        Constants.colors.foregroundPalette[1],
+                        Constants.colors.foregroundPalette[2],
+                        Constants.colors.foregroundPalette[3],
+                        Constants.colors.foregroundPalette[4],
+                      ],
                     ),
-                  ),
+                  ],
                 ),
               if (description.isNotEmpty)
                 Opacity(
@@ -75,7 +80,6 @@ class EmptyView extends StatelessWidget {
                         : null,
                     child: Text(
                       description,
-                      textAlign: TextAlign.center,
                       style: Utils.calligraphy.body(
                         textStyle: const TextStyle(
                           fontSize: 20.0,
@@ -208,6 +212,113 @@ class EmptyView extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  /// Return a specific empty view for the search.
+  static Widget searchEmptyView(
+    BuildContext context, {
+    Color? foregroundColor,
+
+    /// Accent color.
+    Color? accentColor,
+
+    /// Space around this widget.
+    final EdgeInsets margin = EdgeInsets.zero,
+
+    /// Callback fired when the description is tapped.
+    void Function()? onTapDescription,
+
+    /// Callback fired when the description is tapped.
+    void Function()? onReinitializeSearch,
+
+    /// Callback called when the user wants to manually refresh the data.
+    final void Function()? onRefresh,
+
+    /// View's title.
+    String title = "",
+
+    /// View's description.
+    String description = "",
+
+    /// Text align.
+    TextAlign textAlign = TextAlign.center,
+
+    /// Icon to display on top.
+    Widget? icon,
+  }) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: margin,
+        child: RefreshIndicator(
+          onRefresh: () async {
+            return onRefresh?.call();
+          },
+          child: ListView(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            children: [
+              icon ?? const SizedBox.shrink(),
+              if (title.isNotEmpty)
+                AnimatedTextKit(
+                  repeatForever: true,
+                  isRepeatingAnimation: true,
+                  animatedTexts: [
+                    ColorizeAnimatedText(
+                      title,
+                      textAlign: textAlign,
+                      textStyle: Utils.calligraphy.code(
+                        textStyle: const TextStyle(
+                          fontSize: 54.0,
+                        ),
+                      ),
+                      colors: [
+                        Constants.colors.foregroundPalette.first,
+                        Constants.colors.foregroundPalette[1],
+                        Constants.colors.foregroundPalette[2],
+                        Constants.colors.foregroundPalette[3],
+                        Constants.colors.foregroundPalette[4],
+                      ],
+                    ),
+                  ],
+                ),
+              if (description.isNotEmpty)
+                Opacity(
+                  opacity: 0.6,
+                  child: TextButton(
+                    onPressed: onTapDescription,
+                    child: Text(
+                      description,
+                      textAlign: textAlign,
+                      style: Utils.calligraphy.body(
+                        textStyle: const TextStyle(
+                          fontSize: 20.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ColoredTextButton(
+                onPressed: onReinitializeSearch,
+                textValue: "search.reinitialize".tr(),
+                textAlign: TextAlign.center,
+                margin: const EdgeInsets.only(top: 24.0),
+                icon: Icon(
+                  TablerIcons.refresh,
+                  color: accentColor,
+                ),
+                style: TextButton.styleFrom(
+                  backgroundColor: accentColor?.withOpacity(0.2),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 12.0,
+                    horizontal: 24.0,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

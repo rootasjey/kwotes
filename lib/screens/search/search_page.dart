@@ -59,11 +59,38 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   /// True if more results can be loaded.
   bool _hasMoreResults = true;
 
+  /// Last author document for pagination.
+  DocumentSnapshot? _lastAuthorDocument;
+
   /// [Mobile] Show entity selector if true.
   bool _showEntitySelector = true;
 
   /// [Mobile] Save previous offset on scroll to show/hide entity selector.
   double _prevOffset = 0.0;
+
+  /// Page's state.
+  EnumPageState _pageState = EnumPageState.idle;
+
+  /// What type of category we are searching.
+  EnumSearchCategory _searchCategory = EnumSearchCategory.quote;
+
+  /// Search focus node.
+  final FocusNode _searchFocusNode = FocusNode();
+
+  /// Count limit for fetching authors in alphabetically order from firestore.
+  final int _limitFetchAuthors = 60;
+
+  /// Count limit for fetching references in alphabetically order from firestore.
+  final int _limitFetchReferences = 60;
+
+  /// Result count for a specific search.
+  int _resultCount = 0;
+
+  /// Search result count limit (algolia).
+  final int _searchLimit = 20;
+
+  /// Current search results page.
+  int _searchPage = 0;
 
   /// List of quotes results for a specific search (algolia).
   final List<Quote> _quoteResults = [];
@@ -80,36 +107,10 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   /// List of references in alphabetical order (from Firestore).
   final List<Reference> _referenceList = [];
 
-  /// Search result count limit (algolia).
-  final int _searchLimit = 20;
-
-  /// Count limit for fetching authors in alphabetically order from firestore.
-  final int _limitFetchAuthors = 60;
-
-  /// Count limit for fetching references in alphabetically order from firestore.
-  final int _limitFetchReferences = 60;
-
-  /// Current search results page.
-  int _searchPage = 0;
-
-  /// Last author document for pagination.
-  DocumentSnapshot? _lastAuthorDocument;
   // QueryDocSnapMap? _lastAuthorDocument;
 
   /// Last reference document for pagination.
   QueryDocSnapMap? _lastReferenceDocument;
-
-  /// Result count for a specific search.
-  int _resultCount = 0;
-
-  /// Search focus node.
-  final FocusNode _searchFocusNode = FocusNode();
-
-  /// Page's state.
-  EnumPageState _pageState = EnumPageState.idle;
-
-  /// What type of category we are searching.
-  EnumSearchCategory _searchCategory = EnumSearchCategory.quote;
 
   /// Scroll controller.
   final ScrollController _scrollController = ScrollController();
@@ -151,7 +152,8 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
         Theme.of(context).textTheme.bodyMedium?.color;
 
     final bool showResultCount =
-        removeSpecialKeywords(_searchInputController.text).isNotEmpty;
+        removeSpecialKeywords(_searchInputController.text).isNotEmpty &&
+            _resultCount > 0;
 
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -226,7 +228,8 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                         isMobileSize: isMobileSize,
                         isQueryEmpty: _searchInputController.text.isEmpty,
                         margin: padding,
-                        onReinitSearch: onClearInput,
+                        onRefreshSearch: search,
+                        onReinitializeSearch: onClearInput,
                         onTapQuote: onTapQuote,
                         onTapAuthor: onTapAuthor,
                         onTapReference: onTapReference,
