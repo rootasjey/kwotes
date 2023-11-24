@@ -44,6 +44,10 @@ class _SettingsPageState extends State<SettingsPage> {
   /// An enum representing the account displayed text value on settings page.
   EnumAccountDisplayed _enumAccountDisplayed = EnumAccountDisplayed.name;
 
+  /// List of accent colors.
+  /// For styling purpose.
+  final List<Color> _accentColors = [];
+
   @override
   void initState() {
     super.initState();
@@ -58,6 +62,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
     final Signal<UserFirestore> signalUserFirestore =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+
+    final Color? foregroundColor =
+        Theme.of(context).textTheme.bodyMedium?.color;
 
     final Widget scaffold = Scaffold(
       body: CustomScrollView(
@@ -82,7 +89,9 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
           ThemeSwitcher(
+            accentColor: _accentColors.elementAt(0),
             animateElements: _animateElements,
+            foregroundColor: foregroundColor,
             isMobileSize: isMobileSize,
             onTapLightTheme: onTapLightTheme,
             onTapDarkTheme: onTapDarkTheme,
@@ -97,17 +106,19 @@ class _SettingsPageState extends State<SettingsPage> {
               Widget? child,
             ) {
               if (userFirestore.id.isEmpty) {
-                return SliverToBoxAdapter(child: Container());
+                return const SliverToBoxAdapter(child: SizedBox.shrink());
               }
 
               return AccountSettings(
+                accentColor: _accentColors.elementAt(1),
                 animateElements: _animateElements,
                 enumAccountDisplayed: _enumAccountDisplayed,
+                foregroundColor: foregroundColor,
                 isMobileSize: isMobileSize,
                 onTapUpdateEmail: onTapUpdateEmail,
                 onTapUpdatePassword: onTapUpdatePassword,
                 onTapUpdateUsername: onTapUpdateUsername,
-                onTapLogout: onTapSignOut,
+                onTapSignout: onTapSignOut,
                 onTapDeleteAccount: onTapDeleteAccount,
                 onTapAccountDisplayedValue: onTapAccountDisplayedValue,
                 userFirestore: userFirestore,
@@ -115,19 +126,26 @@ class _SettingsPageState extends State<SettingsPage> {
             },
           ),
           AppLanguageSelection(
+            accentColor: _accentColors.elementAt(2),
             animateElements: _animateElements,
             currentLanguageCode: currentLanguageCode,
+            foregroundColor: foregroundColor,
             isMobileSize: isMobileSize,
             onSelectLanguage: onSelectLanguage,
           ),
           AppBehaviourSettings(
+            accentColor: _accentColors.elementAt(3),
             animateElements: _animateElements,
+            foregroundColor: foregroundColor,
             isMobileSize: isMobileSize,
             isFullscreenQuotePage: NavigationStateHelper.fullscreenQuotePage,
+            isMinimalQuoteActions: NavigationStateHelper.minimalQuoteActions,
             onToggleFullscreen: onToggleFullscreen,
+            onToggleMinimalQuoteActions: onToggleMinimalQuoteActions,
           ),
           AboutSettings(
             animateElements: _animateElements,
+            foregroundColor: foregroundColor,
             isMobileSize: isMobileSize,
             onTapColorPalette: onTapColorPalette,
             onTapTermsOfService: onTapTermsOfService,
@@ -150,6 +168,12 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void initProps() async {
+    _accentColors
+      ..add(Constants.colors.getRandomFromPalette(withGoodContrast: true))
+      ..add(Constants.colors.getRandomFromPalette(withGoodContrast: true))
+      ..add(Constants.colors.getRandomFromPalette(withGoodContrast: true))
+      ..add(Constants.colors.getRandomFromPalette(withGoodContrast: true));
+
     Future.delayed(const Duration(seconds: 1), () {
       if (!mounted) return;
       setState(() => _animateElements = false);
@@ -279,6 +303,16 @@ class _SettingsPageState extends State<SettingsPage> {
 
     setState(() {
       NavigationStateHelper.fullscreenQuotePage = newValue;
+    });
+  }
+
+  void onToggleMinimalQuoteActions() {
+    final bool newValue = !NavigationStateHelper.minimalQuoteActions;
+    Utils.vault.setMinimalQuoteActions(newValue);
+
+    setState(() {
+      NavigationStateHelper.minimalQuoteActions =
+          !NavigationStateHelper.minimalQuoteActions;
     });
   }
 

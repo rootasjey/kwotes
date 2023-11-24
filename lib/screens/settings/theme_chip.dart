@@ -9,6 +9,7 @@ class ThemeChip extends StatelessWidget {
     required this.accentColor,
     this.foregroundColor,
     this.onTap,
+    this.tooltip,
   });
 
   /// Theme name.
@@ -27,6 +28,9 @@ class ThemeChip extends StatelessWidget {
   /// Called when the chip is tapped.
   final void Function()? onTap;
 
+  /// Optional tooltip.
+  final String? tooltip;
+
   @override
   Widget build(BuildContext context) {
     return ActionChip(
@@ -39,6 +43,7 @@ class ThemeChip extends StatelessWidget {
       ),
       onPressed: onTap,
       backgroundColor: selected ? accentColor : null,
+      tooltip: tooltip,
     );
   }
 }

@@ -2,7 +2,6 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
-import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/enums/enum_accunt_displayed.dart";
 import "package:kwotes/types/user/user_firestore.dart";
@@ -14,10 +13,12 @@ class AccountSettings extends StatelessWidget {
     required this.userFirestore,
     this.animateElements = false,
     this.isMobileSize = false,
+    this.accentColor = Colors.blue,
+    this.foregroundColor,
     this.onTapUpdateEmail,
     this.onTapUpdatePassword,
     this.onTapUpdateUsername,
-    this.onTapLogout,
+    this.onTapSignout,
     this.onTapDeleteAccount,
     this.onTapAccountDisplayedValue,
     this.enumAccountDisplayed = EnumAccountDisplayed.name,
@@ -28,6 +29,12 @@ class AccountSettings extends StatelessWidget {
 
   /// Adapt the user interface to narrow screen's size if true.
   final bool isMobileSize;
+
+  /// Accent color.
+  final Color accentColor;
+
+  /// Text foreground color.
+  final Color? foregroundColor;
 
   /// Enum representing the account displayed text value on settings page.
   final EnumAccountDisplayed enumAccountDisplayed;
@@ -41,8 +48,8 @@ class AccountSettings extends StatelessWidget {
   /// Callback fired when "Update username" button is tapped.
   final void Function()? onTapUpdateUsername;
 
-  /// Callback fired when "Logout" button is tapped.
-  final void Function()? onTapLogout;
+  /// Callback fired when "sign out" button is tapped.
+  final void Function()? onTapSignout;
 
   /// Callback fired when "Delete account" button is tapped.
   final void Function()? onTapDeleteAccount;
@@ -55,13 +62,6 @@ class AccountSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color? foregroundColor =
-        Theme.of(context).textTheme.bodyMedium?.color;
-
-    final Color accentColor = Constants.colors.getRandomFromPalette(
-      withGoodContrast: true,
-    );
-
     return SliverPadding(
       padding: isMobileSize
           ? const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0)
@@ -95,7 +95,6 @@ class AccountSettings extends StatelessWidget {
             .slideY(begin: 0.8, end: 0.0),
         Wrap(
           spacing: 12.0,
-          runSpacing: 12.0,
           children: [
             ActionChip(
               onPressed: onTapUpdateUsername,
@@ -138,8 +137,8 @@ class AccountSettings extends StatelessWidget {
               ),
             ),
             ActionChip(
-              onPressed: onTapLogout,
-              label: Text("logout".tr()),
+              onPressed: onTapSignout,
+              label: Text("signout".tr()),
               labelStyle: Utils.calligraphy.body(
                 textStyle: TextStyle(
                   fontWeight: FontWeight.w500,

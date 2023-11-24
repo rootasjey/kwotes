@@ -2,7 +2,6 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
-import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/screens/settings/theme_chip.dart";
 
@@ -13,30 +12,39 @@ class AppBehaviourSettings extends StatelessWidget {
     this.isMobileSize = false,
     this.animateElements = false,
     this.isFullscreenQuotePage = false,
+    this.isMinimalQuoteActions = false,
+    this.accentColor = Colors.blue,
+    this.foregroundColor,
     this.onToggleFullscreen,
+    this.onToggleMinimalQuoteActions,
   });
 
   /// Animate elements on settings page if true.
   final bool animateElements;
 
+  /// Whether quote page is fullscreen.
+  final bool isFullscreenQuotePage;
+
   /// Adapt the user interface to narrow screen's size if true.
   final bool isMobileSize;
 
-  /// Whether quote page is fullscreen.
-  final bool isFullscreenQuotePage;
+  /// Hide [close], [copy] actions if this is true.
+  final bool isMinimalQuoteActions;
+
+  /// Accent color.
+  final Color accentColor;
+
+  /// Text foreground color.
+  final Color? foregroundColor;
 
   /// Callback fired to toggle quote page fullscreen.
   final void Function()? onToggleFullscreen;
 
+  /// Callback fired to toggle minimal quote action setting.
+  final void Function()? onToggleMinimalQuoteActions;
+
   @override
   Widget build(BuildContext context) {
-    final Color? foregroundColor =
-        Theme.of(context).textTheme.bodyMedium?.color;
-
-    final Color accentColor = Constants.colors.getRandomFromPalette(
-      withGoodContrast: true,
-    );
-
     final Color foregroundAccentColor =
         accentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
 
@@ -48,7 +56,7 @@ class AppBehaviourSettings extends StatelessWidget {
         Text.rich(
           TextSpan(text: "${"settings.behaviour.name".tr()}: ", children: [
             TextSpan(
-              text: "settings.fullscreen_quote_page.name".tr(),
+              text: "settings.ui".tr(),
               style: Utils.calligraphy.body(
                 textStyle: TextStyle(
                   color: accentColor,
@@ -62,7 +70,6 @@ class AppBehaviourSettings extends StatelessWidget {
             textStyle: TextStyle(
               fontSize: isMobileSize ? 42.0 : 72.0,
               fontWeight: FontWeight.w100,
-              color: foregroundColor?.withOpacity(0.6),
             ),
           ),
         )
@@ -74,22 +81,30 @@ class AppBehaviourSettings extends StatelessWidget {
           runSpacing: 12.0,
           children: [
             ThemeChip(
-              textLabel: "on".tr(),
+              tooltip: "settings.fullscreen_quote_page.description".tr(),
+              textLabel:
+                  "settings.behaviour.fullscreen_quote_page.$isFullscreenQuotePage"
+                      .tr(),
               selected: isFullscreenQuotePage,
               accentColor: accentColor,
-              foregroundColor: isFullscreenQuotePage
-                  ? foregroundAccentColor
-                  : foregroundColor?.withOpacity(0.6),
+              foregroundColor: foregroundAccentColor,
+              // foregroundColor: isFullscreenQuotePage
+              //     ? foregroundAccentColor
+              //     : foregroundColor?.withOpacity(0.6),
               onTap: onToggleFullscreen,
             ),
             ThemeChip(
-              textLabel: "off".tr(),
-              selected: !isFullscreenQuotePage,
+              tooltip: "settings.minimal_quote_actions.description".tr(),
+              textLabel:
+                  "settings.behaviour.minimal_quote_actions.$isMinimalQuoteActions"
+                      .tr(),
+              selected: isMinimalQuoteActions,
               accentColor: accentColor,
-              foregroundColor: !isFullscreenQuotePage
-                  ? foregroundAccentColor
-                  : foregroundColor?.withOpacity(0.6),
-              onTap: onToggleFullscreen,
+              foregroundColor: foregroundAccentColor,
+              // foregroundColor: isMinimalQuoteActions
+              //     ? foregroundAccentColor
+              //     : foregroundColor?.withOpacity(0.6),
+              onTap: onToggleMinimalQuoteActions,
             ),
           ]
               .animate(interval: animateElements ? 150.ms : 0.ms)

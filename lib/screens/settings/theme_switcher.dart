@@ -3,7 +3,6 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
-import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/screens/settings/theme_chip.dart";
 
@@ -12,6 +11,8 @@ class ThemeSwitcher extends StatelessWidget {
     super.key,
     this.animateElements = false,
     this.isMobileSize = false,
+    this.accentColor = Colors.amber,
+    this.foregroundColor,
     this.onTapLightTheme,
     this.onTapDarkTheme,
     this.onTapSystemTheme,
@@ -23,6 +24,12 @@ class ThemeSwitcher extends StatelessWidget {
 
   /// Adapt the user interface to narrow screen's size if true.
   final bool isMobileSize;
+
+  /// Accent color.
+  final Color accentColor;
+
+  /// Text foreground color.
+  final Color? foregroundColor;
 
   /// Callback fired when light theme is selected.
   final void Function()? onTapLightTheme;
@@ -38,9 +45,6 @@ class ThemeSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color? foregroundColor =
-        Theme.of(context).textTheme.bodyMedium?.color;
-
     final bool lightSelected =
         AdaptiveTheme.of(context).mode == AdaptiveThemeMode.light;
 
@@ -48,10 +52,6 @@ class ThemeSwitcher extends StatelessWidget {
         AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark;
     final bool systemSelected =
         AdaptiveTheme.of(context).mode == AdaptiveThemeMode.system;
-
-    final Color accentColor = Constants.colors.getRandomFromPalette(
-      withGoodContrast: true,
-    );
 
     final Color foregroundAccentColor =
         accentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
@@ -78,7 +78,6 @@ class ThemeSwitcher extends StatelessWidget {
             textStyle: TextStyle(
               fontSize: isMobileSize ? 42.0 : 72.0,
               fontWeight: FontWeight.w100,
-              color: foregroundColor?.withOpacity(0.6),
             ),
           ),
         )

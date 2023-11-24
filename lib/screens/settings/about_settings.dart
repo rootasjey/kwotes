@@ -2,7 +2,7 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
-import "package:kwotes/components/buttons/like_button.dart";
+import "package:kwotes/components/buttons/like_button_vanilla.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 
@@ -12,6 +12,7 @@ class AboutSettings extends StatefulWidget {
     super.key,
     this.animateElements = false,
     this.isMobileSize = false,
+    this.foregroundColor,
     this.onTapColorPalette,
     this.onTapTermsOfService,
     this.onTapGitHub,
@@ -23,6 +24,9 @@ class AboutSettings extends StatefulWidget {
 
   /// Adapt the user interface to narrow screen's size if true.
   final bool isMobileSize;
+
+  /// Text foreground color.
+  final Color? foregroundColor;
 
   /// Callback fired when "Color palette" button is tapped.
   final void Function()? onTapColorPalette;
@@ -43,9 +47,6 @@ class AboutSettings extends StatefulWidget {
 class _AboutSettingsState extends State<AboutSettings> {
   @override
   Widget build(BuildContext context) {
-    final Color? foregroundColor =
-        Theme.of(context).textTheme.bodyMedium?.color;
-
     return SliverPadding(
       padding: widget.isMobileSize
           ? const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0)
@@ -65,7 +66,7 @@ class _AboutSettingsState extends State<AboutSettings> {
                 child: SizedBox(
                   width: 56.0,
                   height: 56.0,
-                  child: LikeButton(
+                  child: LikeButtonVanilla(
                     size: Size(56.0, 56.0),
                   ),
                 ),
@@ -76,7 +77,7 @@ class _AboutSettingsState extends State<AboutSettings> {
             textStyle: TextStyle(
               fontSize: widget.isMobileSize ? 42.0 : 72.0,
               fontWeight: FontWeight.w100,
-              color: foregroundColor?.withOpacity(0.6),
+              color: widget.foregroundColor,
             ),
           ),
         )
@@ -85,7 +86,6 @@ class _AboutSettingsState extends State<AboutSettings> {
             .slideY(begin: 0.8, end: 0.0),
         Wrap(
           spacing: 12.0,
-          runSpacing: 12.0,
           children: [
             ActionChip(
               onPressed: widget.onTapColorPalette,
@@ -107,7 +107,7 @@ class _AboutSettingsState extends State<AboutSettings> {
                   const Text("GitHub"),
                   Icon(
                     TablerIcons.arrow_up_right,
-                    color: foregroundColor?.withOpacity(0.6),
+                    color: widget.foregroundColor?.withOpacity(0.6),
                   ),
                 ],
               ),
@@ -117,8 +117,8 @@ class _AboutSettingsState extends State<AboutSettings> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16.0),
                 side: BorderSide(
-                  color:
-                      foregroundColor?.withOpacity(0.6) ?? Colors.transparent,
+                  color: widget.foregroundColor?.withOpacity(0.6) ??
+                      Colors.transparent,
                 ),
               ),
               disabledColor: Theme.of(context).scaffoldBackgroundColor,
