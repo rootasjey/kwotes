@@ -57,39 +57,34 @@ class SigninPagePasswordInput extends StatelessWidget {
             ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(
-            bottom: 12.0,
+        TextField(
+          autofocus: false,
+          obscureText: true,
+          focusNode: focusNode,
+          controller: passwordController,
+          textInputAction: TextInputAction.go,
+          keyboardType: TextInputType.visiblePassword,
+          onSubmitted: (String password) => onSubmit?.call(
+            nameController.text,
+            password,
           ),
-          child: TextField(
-            autofocus: false,
-            obscureText: true,
-            focusNode: focusNode,
-            controller: passwordController,
-            textInputAction: TextInputAction.go,
-            keyboardType: TextInputType.visiblePassword,
-            onSubmitted: (String password) => onSubmit?.call(
-              nameController.text,
-              password,
-            ),
-            decoration: InputDecoration(
-              hintText: "•••••••••••",
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: randomColor,
-                  width: 4.0,
-                ),
+          decoration: InputDecoration(
+            hintText: "•••••••••••",
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: randomColor,
+                width: 4.0,
               ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.color
-                          ?.withOpacity(0.4) ??
-                      Colors.white12,
-                  width: 4.0,
-                ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.color
+                        ?.withOpacity(0.4) ??
+                    Colors.white12,
+                width: 4.0,
               ),
             ),
           ),

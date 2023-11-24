@@ -1,8 +1,8 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
+import "package:kwotes/components/buttons/colored_text_button.dart";
 import "package:kwotes/components/buttons/dark_elevated_button.dart";
-import "package:kwotes/globals/utils.dart";
 import "package:unicons/unicons.dart";
 
 class SigninPageFooter extends StatelessWidget {
@@ -39,43 +39,19 @@ class SigninPageFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isDark = Theme.of(context).brightness == Brightness.dark;
-
-    final Widget submitButton = ElevatedButton(
+    final submitButton = ColoredTextButton(
       onPressed: () => onSubmit?.call(
         nameController.text,
         passwordController.text,
       ),
-      style: ElevatedButton.styleFrom(
-        // backgroundColor: Colors.white,
-        backgroundColor: isDark ? Colors.white : Colors.black,
-        elevation: 0.0,
-        foregroundColor: randomColor,
+      textAlign: TextAlign.center,
+      textValue: "signin".tr(),
+      style: TextButton.styleFrom(
+        backgroundColor: randomColor.withOpacity(0.2),
         padding: const EdgeInsets.symmetric(
-          horizontal: 16.0,
-          vertical: 20.0,
+          horizontal: 6.0,
+          vertical: 12.0,
         ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "signin".tr(),
-            style: Utils.calligraphy.body(
-              textStyle: const TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: Icon(
-              UniconsLine.arrow_right,
-              color: randomColor,
-            ),
-          ),
-        ],
       ),
     );
 

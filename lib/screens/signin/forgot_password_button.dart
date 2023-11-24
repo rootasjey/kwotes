@@ -28,7 +28,6 @@ class ForgotPasswordButton extends StatelessWidget {
         TextButton(
           style: TextButton.styleFrom(
             foregroundColor: Theme.of(context).textTheme.bodyMedium?.color,
-            backgroundColor: randomColor.withOpacity(0.1),
           ),
           onPressed: onNavigateToForgotPassword,
           child: Opacity(
@@ -42,6 +41,7 @@ class ForgotPasswordButton extends StatelessWidget {
                     textStyle: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.w600,
+                      decoration: TextDecoration.underline,
                     ),
                   ),
                 ),
