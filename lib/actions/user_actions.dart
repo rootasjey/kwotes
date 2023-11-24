@@ -140,7 +140,7 @@ class UserActions {
           .add({
         "name": name,
         "description": description,
-        "isPublic": false,
+        "is_public": false,
       });
 
       final snapshot = await documentRef.get();
