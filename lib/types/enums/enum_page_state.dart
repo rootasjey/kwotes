@@ -33,6 +33,9 @@ enum EnumPageState {
   /// Loading quotes.
   loadingQuotes,
 
+  /// Loading random quotes.
+  loadingRandomQuotes,
+
   /// Loading reference's data.
   loadingReference,
 

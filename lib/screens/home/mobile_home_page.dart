@@ -9,7 +9,6 @@ import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:infinite_carousel/infinite_carousel.dart";
 import "package:kwotes/actions/quote_actions.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
-import "package:kwotes/components/empty_view.dart";
 import "package:kwotes/components/hero_quote.dart";
 import "package:kwotes/components/icons/app_icon.dart";
 import "package:kwotes/components/loading_view.dart";
@@ -95,12 +94,8 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
       );
     }
 
-    if (NavigationStateHelper.randomQuotes.isEmpty) {
-      return EmptyView.scaffold(
-        context,
-        description: "empty_quote.home".tr(),
-      );
-    }
+    final Color? foregroundColor =
+        Theme.of(context).textTheme.bodyMedium?.color;
 
     final Color? iconColor =
         Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6);
@@ -111,7 +106,12 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
         : Theme.of(context).scaffoldBackgroundColor;
 
     final Color backgroundColor =
-        isDark ? Colors.black26 : Constants.colors.getRandomPastel();
+        isDark ? Colors.black26 : Constants.colors.pastelPalette.first;
+
+    final List<Quote> subRandomQuotes =
+        NavigationStateHelper.randomQuotes.isNotEmpty
+            ? NavigationStateHelper.randomQuotes.sublist(1)
+            : [];
 
     return BasicShortcuts(
       child: Scaffold(
@@ -135,9 +135,12 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
               ),
               HeroQuote(
                 isBig: true,
+                loading: _pageState == EnumPageState.loadingRandomQuotes,
                 backgroundColor: topBackgroundColor,
-                quote: NavigationStateHelper.randomQuotes.first,
-                textColor: iconColor,
+                foregroundColor: foregroundColor,
+                quote: NavigationStateHelper.randomQuotes.isNotEmpty
+                    ? NavigationStateHelper.randomQuotes.first
+                    : Quote.empty(),
                 onTapAuthor: onTapAuthor,
                 onTapQuote: onTapQuote,
                 margin: const EdgeInsets.only(
@@ -158,14 +161,12 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
                     return const Divider();
                   },
                   itemBuilder: (BuildContext context, int index) {
-                    final int nextIndex = index + 1;
-                    final Quote quote =
-                        NavigationStateHelper.randomQuotes[nextIndex];
+                    final Quote quote = subRandomQuotes[index];
 
                     return ContextMenuWidget(
                       child: RandomQuoteText(
                         quote: quote,
-                        foregroundColor: iconColor,
+                        foregroundColor: foregroundColor,
                         onTapQuote: onTapQuote,
                         onTapAuthor: onTapAuthor,
                       ),
@@ -185,7 +186,7 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
                       },
                     );
                   },
-                  itemCount: _maxQuoteCount - 1,
+                  itemCount: subRandomQuotes.length,
                 ),
               ),
               SliverToBoxAdapter(
@@ -266,6 +267,8 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
 
   /// Fetches latest added authors.
   void fetchLatestAddedAuthors() async {
+    setState(() => _pageState = EnumPageState.loading);
+
     try {
       final QuerySnapMap snapshot = await FirebaseFirestore.instance
           .collection("authors")
@@ -295,6 +298,8 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
 
   /// Fetches latest added references.
   void fetchLatestAddedReferences() async {
+    setState(() => _pageState = EnumPageState.loading);
+
     try {
       final QuerySnapMap snapshot = await FirebaseFirestore.instance
           .collection("references")
@@ -308,9 +313,7 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
 
       for (final DocumentSnapshotMap doc in snapshot.docs) {
         final Json? data = doc.data();
-        if (data == null) {
-          continue;
-        }
+        if (data == null) continue;
 
         data["id"] = doc.id;
         final Reference reference = Reference.fromMap(data);
@@ -341,7 +344,9 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
     }
 
     setState(() {
-      _pageState = EnumPageState.loading;
+      _pageState = _pageState != EnumPageState.loading
+          ? EnumPageState.loadingRandomQuotes
+          : EnumPageState.loading;
       NavigationStateHelper.randomQuotes.clear();
       NavigationStateHelper.lastRandomQuoteLanguage = currentLanguage;
     });
@@ -389,16 +394,10 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
         // quotes.add(quote.copyWith(author: author, reference: reference));
         NavigationStateHelper.randomQuotes.add(quote);
       }
-
-      setState(() {
-        _pageState = EnumPageState.idle;
-      });
     } catch (error) {
       loggy.error(error);
-      if (!mounted) return;
-      setState(() {
-        _pageState = EnumPageState.idle;
-      });
+    } finally {
+      setState(() => _pageState = EnumPageState.idle);
     }
   }
 

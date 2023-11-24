@@ -49,7 +49,7 @@ class RandomQuoteText extends StatelessWidget {
                   textStyle: TextStyle(
                     fontSize: 14.0,
                     fontWeight: FontWeight.w400,
-                    color: foregroundColor?.withOpacity(0.4),
+                    color: foregroundColor?.withOpacity(0.6),
                   ),
                 ),
               ),
@@ -66,7 +66,7 @@ class RandomQuoteText extends StatelessWidget {
                   textStyle: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w400,
-                    color: foregroundColor?.withOpacity(0.6),
+                    color: foregroundColor?.withOpacity(0.8),
                   ),
                 ),
               ),
