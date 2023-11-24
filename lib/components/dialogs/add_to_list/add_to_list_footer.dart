@@ -11,6 +11,7 @@ class AddToListFooter extends StatelessWidget {
   const AddToListFooter({
     super.key,
     this.asBottomSheet = false,
+    this.selectedColor,
     this.elevation = 0.0,
     this.pageState = EnumPageState.idle,
     this.onValidate,
@@ -21,6 +22,9 @@ class AddToListFooter extends StatelessWidget {
   /// If true, this widget will take a suitable layout for bottom sheet.
   /// Otherwise, it will have a dialog layout.
   final bool asBottomSheet;
+
+  /// Selected list color.
+  final Color? selectedColor;
 
   /// Elevation of the widget.
   final double elevation;
@@ -39,49 +43,65 @@ class AddToListFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color backgroundColor = Theme.of(context).scaffoldBackgroundColor;
+    final Color? foregroundColor =
+        Theme.of(context).textTheme.bodyMedium?.color;
+
     return Material(
       elevation: elevation,
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 24.0,
-          vertical: 16.0,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: ColoredTextButton(
-                  textAlign: TextAlign.center,
-                  style: TextButton.styleFrom(
-                    backgroundColor: selectedLists.isEmpty
-                        ? Theme.of(context).scaffoldBackgroundColor
-                        : Theme.of(context).primaryColor.withOpacity(0.1),
+      color: backgroundColor,
+      child: Column(
+        children: [
+          const Divider(
+            height: 0.0,
+            thickness: 2.0,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+              vertical: 16.0,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: ColoredTextButton(
+                      textAlign: TextAlign.center,
+                      style: TextButton.styleFrom(
+                        backgroundColor: selectedLists.isEmpty
+                            ? backgroundColor
+                            : selectedColor?.withOpacity(0.4),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 4.0,
+                        vertical: 4.0,
+                      ),
+                      tooltip:
+                          selectedLists.isEmpty ? "list.add.hint".tr() : "",
+                      onPressed: selectedLists.isEmpty
+                          ? null
+                          : () => onValidate?.call(selectedLists),
+                      textValue:
+                          "${"list.add.to".plural(selectedLists.length)} "
+                          "(${selectedLists.length})",
+                    ),
                   ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 4.0,
-                    vertical: 8.0,
-                  ),
-                  tooltip: selectedLists.isEmpty ? "list.add.hint".tr() : "",
-                  onPressed: selectedLists.isEmpty
-                      ? null
-                      : () => onValidate?.call(selectedLists),
-                  textValue: "${"list.add.to".plural(selectedLists.length)} "
-                      "(${selectedLists.length})",
                 ),
-              ),
+                CircleButton(
+                  backgroundColor: backgroundColor,
+                  icon: Icon(TablerIcons.playlist_add,
+                      color: foregroundColor?.withOpacity(0.6)),
+                  onTap: pageState == EnumPageState.loading
+                      ? null
+                      : showCreationInputs,
+                ),
+              ],
             ),
-            CircleButton(
-              icon: const Icon(TablerIcons.playlist_add),
-              onTap: pageState == EnumPageState.loading
-                  ? null
-                  : showCreationInputs,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

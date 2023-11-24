@@ -8,11 +8,20 @@ class AddToListItem extends StatelessWidget {
     super.key,
     required this.quoteList,
     this.selected = false,
+    this.selectedColor,
     this.onTap,
   });
 
+  /// True if the list is selected.
   final bool selected;
+
+  /// Selected list color.
+  final Color? selectedColor;
+
+  /// Quote list data.
   final QuoteList quoteList;
+
+  /// Callback fired when a quote list is tapped.
   final void Function(QuoteList quoteList)? onTap;
 
   @override
@@ -23,6 +32,7 @@ class AddToListItem extends StatelessWidget {
         onPressed: onTap != null ? () => onTap?.call(quoteList) : null,
         style: TextButton.styleFrom(
           alignment: Alignment.topLeft,
+          foregroundColor: selectedColor,
         ),
         child: Row(
           children: [

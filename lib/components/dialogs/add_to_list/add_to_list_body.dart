@@ -12,6 +12,7 @@ class AddToListBody extends StatelessWidget {
   const AddToListBody({
     super.key,
     required this.pageScrollController,
+    this.selectedColor,
     this.pageState = EnumPageState.idle,
     this.onScroll,
     this.quoteLists = const [],
@@ -20,6 +21,9 @@ class AddToListBody extends StatelessWidget {
     this.onTapListItem,
     this.selectedQuoteLists = const [],
   });
+
+  /// Selected list color.
+  final Color? selectedColor;
 
   /// Dialog's body max height.
   final double maxHeight;
@@ -74,6 +78,7 @@ class AddToListBody extends StatelessWidget {
                       quoteList: quoteList,
                       onTap: onTapListItem,
                       selected: selectedQuoteLists.contains(quoteList),
+                      selectedColor: selectedColor,
                     );
                   },
                   childCount: quoteLists.length,

@@ -19,6 +19,7 @@ class AddToListMobile extends StatelessWidget {
     this.onTapListItem,
     this.asBottomSheet = false,
     this.pageState = EnumPageState.idle,
+    this.selectedColor,
     this.quotes = const [],
     this.onScroll,
     this.onValidate,
@@ -28,6 +29,9 @@ class AddToListMobile extends StatelessWidget {
   /// If true, this widget will take a suitable layout for bottom sheet.
   /// Otherwise, it will have a dialog layout.
   final bool asBottomSheet;
+
+  /// Selected list color.
+  final Color? selectedColor;
 
   /// Page's state (e.g. loading, idle, ...).
   final EnumPageState pageState;
@@ -71,6 +75,7 @@ class AddToListMobile extends StatelessWidget {
           onScroll: onScroll,
           scrollController: pageScrollController,
           child: CustomScrollView(
+            shrinkWrap: true,
             controller: pageScrollController,
             slivers: [
               SliverToBoxAdapter(
@@ -94,6 +99,7 @@ class AddToListMobile extends StatelessWidget {
                         quoteList: quoteList,
                         onTap: onTapListItem,
                         selected: selectedQuoteLists.contains(quoteList),
+                        selectedColor: selectedColor,
                       );
                     },
                     childCount: quoteLists.length,
@@ -113,6 +119,7 @@ class AddToListMobile extends StatelessWidget {
           child: AddToListFooter(
             asBottomSheet: asBottomSheet,
             elevation: 6.0,
+            selectedColor: selectedColor,
             selectedLists: selectedQuoteLists,
             showCreationInputs: showCreationInputs,
             onValidate: selectedQuoteLists.isEmpty ? null : onValidate,

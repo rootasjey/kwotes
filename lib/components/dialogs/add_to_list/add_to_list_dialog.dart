@@ -1,3 +1,5 @@
+import "dart:math";
+
 import "package:beamer/beamer.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
@@ -23,9 +25,11 @@ class AddToListDialog extends StatefulWidget {
     super.key,
     required this.userId,
     this.asBottomSheet = false,
-    this.autoFocus = false,
+    this.autofocus = false,
     this.startInCreate = false,
+    this.selectedColor,
     this.quotes = const [],
+    this.scrollController,
   });
 
   /// If true, this widget will take a suitable layout for bottom sheet.
@@ -33,13 +37,19 @@ class AddToListDialog extends StatefulWidget {
   final bool asBottomSheet;
 
   /// Will request focus on mount if true.
-  final bool autoFocus;
+  final bool autofocus;
 
   /// If true, the widget will show inputs to create a new list.
   final bool startInCreate;
 
+  /// Selected list color.
+  final Color? selectedColor;
+
   /// List of quotes to add to a list.
   final List<Quote> quotes;
+
+  /// Scroll controller for this widget.
+  final ScrollController? scrollController;
 
   /// User's id.
   final String userId;
@@ -69,13 +79,16 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
   final int _limit = 50;
 
   /// Scroll controller for this widget.
-  final ScrollController _pageScrollController = ScrollController();
+  ScrollController? _pageScrollController;
 
   /// Controller for new book name.
   final TextEditingController _nameController = TextEditingController();
 
   /// Controller for new book description.
   final TextEditingController _descriptionController = TextEditingController();
+
+  /// Random hint number.
+  int _randomHintNumber = 0;
 
   /// User's quote lists.
   final List<QuoteList> _quoteLists = [];
@@ -86,22 +99,29 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
   @override
   void initState() {
     super.initState();
+    _pageScrollController = widget.scrollController ?? ScrollController();
+    _randomHintNumber = Random().nextInt(9);
     _createMode = widget.startInCreate;
     fetch();
   }
 
   @override
   void dispose() {
-    _pageScrollController.dispose();
     _nameController.dispose();
     _descriptionController.dispose();
     _lastDocument = null;
+
+    if (widget.scrollController == null) {
+      _pageScrollController?.dispose();
+    }
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     if (_createMode) {
+      final bool isDark = Theme.of(context).brightness == Brightness.dark;
       return CreateListDialog(
         asBottomSheet: widget.asBottomSheet,
         nameController: _nameController,
@@ -109,6 +129,12 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
         quotes: widget.quotes,
         onCancel: Beamer.of(context).popRoute,
         onValidate: onCreateList,
+        onTapBackButton: hideCreationInputs,
+        pageScrollController: _pageScrollController ?? ScrollController(),
+        randomHintNumber: _randomHintNumber,
+        accentColor: widget.selectedColor,
+        buttonBackgroundColor:
+            isDark ? Colors.blue.shade900 : Colors.blue.shade100,
       );
     }
 
@@ -119,8 +145,9 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
         quoteLists: _quoteLists,
         selectedQuoteLists: _selectedLists,
         onValidate: onAddToLists,
+        selectedColor: widget.selectedColor,
         pageState: _pageState,
-        pageScrollController: _pageScrollController,
+        pageScrollController: _pageScrollController ?? ScrollController(),
         quotes: widget.quotes,
         onTapListItem: onTapListItem,
         showCreationInputs: showCreationInputs,
@@ -129,7 +156,7 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
 
     return ThemedDialog(
       width: 400.0,
-      autofocus: widget.autoFocus,
+      autofocus: widget.autofocus,
       useRawDialog: true,
       title: AddToListHeader(
         quoteLength: widget.quotes.length,
@@ -137,14 +164,16 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
       body: AddToListBody(
         onScroll: onScroll,
         pageState: _pageState,
+        selectedColor: widget.selectedColor,
         maxWidth: 360.0,
-        pageScrollController: _pageScrollController,
+        pageScrollController: _pageScrollController ?? ScrollController(),
         quoteLists: _quoteLists,
         selectedQuoteLists: _selectedLists,
         onTapListItem: onTapListItem,
       ),
       footer: AddToListFooter(
         asBottomSheet: widget.asBottomSheet,
+        selectedColor: widget.selectedColor,
         selectedLists: _selectedLists,
         showCreationInputs: showCreationInputs,
         onValidate: onAddToLists,
@@ -190,13 +219,6 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
     try {
       final query = getQuery(widget.userId);
       final QuerySnapMap snapshot = await query.get();
-      // final QuerySnapMap snapshot = await FirebaseFirestore.instance
-      //     .collection("users")
-      //     .doc(widget.userId)
-      //     .collection("lists")
-      //     .limit(_limit)
-      //     .get();
-
       if (snapshot.docs.isEmpty) {
         return;
       }
@@ -232,7 +254,10 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
       return;
     }
 
-    if (_pageScrollController.position.maxScrollExtent - offset <= 200) {
+    final double maxScrollExtent =
+        _pageScrollController?.position.maxScrollExtent ?? 0.0;
+
+    if (maxScrollExtent - offset <= 200) {
       fetch();
     }
   }
@@ -270,10 +295,7 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
     );
 
     if (newList == null) {
-      if (!mounted) {
-        return;
-      }
-
+      if (!mounted) return;
       Utils.graphic.showSnackbar(
         context,
         message: "list.error.create.named".tr(args: [
@@ -284,24 +306,30 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
     }
 
     onAddToLists([newList]);
+
+    if (!mounted) return;
+    Utils.graphic.showSnackbar(
+      context,
+      message: "list.create.success".tr(args: [
+        _nameController.text,
+      ]),
+    );
   }
 
   void showCreationInputs() {
-    setState(() {
-      _createMode = true;
-    });
+    setState(() => _createMode = true);
   }
 
   void onTapListItem(QuoteList quoteList) {
     if (_selectedLists.contains(quoteList)) {
-      setState(() {
-        _selectedLists.remove(quoteList);
-      });
+      setState(() => _selectedLists.remove(quoteList));
       return;
     }
 
-    setState(() {
-      _selectedLists.add(quoteList);
-    });
+    setState(() => _selectedLists.add(quoteList));
+  }
+
+  void hideCreationInputs() {
+    setState(() => _createMode = false);
   }
 }

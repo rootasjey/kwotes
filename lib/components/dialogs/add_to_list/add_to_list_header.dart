@@ -1,5 +1,6 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/globals/utils.dart";
 
 class AddToListHeader extends StatelessWidget {
@@ -9,6 +10,7 @@ class AddToListHeader extends StatelessWidget {
     this.margin = EdgeInsets.zero,
     this.create = false,
     this.quoteLength = 0,
+    this.onBack,
   });
 
   /// If true, the widget will show texts related to list creation.
@@ -16,6 +18,9 @@ class AddToListHeader extends StatelessWidget {
 
   /// Margin of the header.
   final EdgeInsets margin;
+
+  /// Trigger when the user tap on back button.
+  final void Function()? onBack;
 
   /// Number of quotes being added to the list.
   final int quoteLength;
@@ -29,6 +34,11 @@ class AddToListHeader extends StatelessWidget {
       padding: margin,
       child: Column(
         children: [
+          if (onBack != null)
+            IconButton(
+              onPressed: onBack,
+              icon: const Icon(TablerIcons.arrow_back),
+            ),
           Text(
             "lists.name".tr().toUpperCase(),
             style: Utils.calligraphy.body(
