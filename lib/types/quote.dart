@@ -135,6 +135,7 @@ class Quote {
       "author": author.toMap(minimal: true),
       "language": language.isEmpty ? "en" : language,
       "name": name,
+      "created_at": DateTime.now(),
       "reference": reference.toMap(minimal: true),
       "topics": topics.fold(<String, bool>{}, (
         Map<String, bool> previousValue,
