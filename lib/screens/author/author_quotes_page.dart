@@ -264,9 +264,11 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
 
     showImageViewer(
       context,
-      imageProvider,
-      swipeDismissible: true,
       doubleTapZoomable: true,
+      imageProvider,
+      immersive: false,
+      swipeDismissible: true,
+      useSafeArea: false,
     );
   }
 

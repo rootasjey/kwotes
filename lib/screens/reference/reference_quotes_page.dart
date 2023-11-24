@@ -280,9 +280,11 @@ class _ReferenceQuotesPageState extends State<ReferenceQuotesPage>
 
     showImageViewer(
       context,
-      imageProvider,
-      swipeDismissible: true,
       doubleTapZoomable: true,
+      imageProvider,
+      immersive: false,
+      swipeDismissible: true,
+      useSafeArea: false,
     );
   }
 }

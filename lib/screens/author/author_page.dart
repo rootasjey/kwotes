@@ -302,9 +302,11 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
 
     showImageViewer(
       context,
-      imageProvider,
-      swipeDismissible: true,
       doubleTapZoomable: true,
+      imageProvider,
+      immersive: false,
+      swipeDismissible: true,
+      useSafeArea: false,
     );
   }
 
