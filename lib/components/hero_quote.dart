@@ -1,5 +1,7 @@
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:kwotes/components/better_avatar.dart";
+import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/author.dart";
@@ -12,7 +14,8 @@ class HeroQuote extends StatelessWidget {
     required this.quote,
     this.isDark = false,
     this.isBig = false,
-    this.textColor,
+    this.loading = false,
+    this.foregroundColor,
     this.onTapAuthor,
     this.onTapQuote,
     this.margin = EdgeInsets.zero,
@@ -25,11 +28,14 @@ class HeroQuote extends StatelessWidget {
   /// Whether to display a big quote.
   final bool isBig;
 
+  /// Whether to display a loading indicator.
+  final bool loading;
+
   /// Widget background color.
   final Color? backgroundColor;
 
   /// Foreground text color.
-  final Color? textColor;
+  final Color? foregroundColor;
 
   /// Margin of the widget.
   final EdgeInsets margin;
@@ -45,6 +51,13 @@ class HeroQuote extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (loading) {
+      return LoadingView(
+        useSliver: true,
+        message: "loading".tr(),
+      );
+    }
+
     final Author author = quote.author;
     final Topic topic = Constants.colors.topics.firstWhere(
       (Topic x) => x.name == quote.topics.first,
@@ -98,7 +111,7 @@ class HeroQuote extends StatelessWidget {
                   textStyle: TextStyle(
                     fontSize: isBig ? 28.0 : 18.0,
                     fontWeight: isBig ? FontWeight.w200 : FontWeight.w400,
-                    color: textColor,
+                    color: foregroundColor,
                   ),
                 ),
               ),
