@@ -16,10 +16,14 @@ class ColoredTextButton extends StatefulWidget {
     this.tooltip = "",
     this.textStyle,
     this.textAlign,
+    this.accentColor,
   });
 
   /// Only show icon for this button if true.
   final bool iconOnly;
+
+  /// Accent color.
+  final Color? accentColor;
 
   /// Spacing around this widget.
   final EdgeInsets margin;
@@ -65,9 +69,10 @@ class _ColoredTextButtonState extends State<ColoredTextButton> {
   @override
   void initState() {
     super.initState();
-    _hoverForegroundColor = Constants.colors.getRandomFromPalette(
-      withGoodContrast: true,
-    );
+    _hoverForegroundColor = widget.accentColor ??
+        Constants.colors.getRandomFromPalette(
+          withGoodContrast: true,
+        );
   }
 
   @override
@@ -81,11 +86,7 @@ class _ColoredTextButtonState extends State<ColoredTextButton> {
         padding: widget.margin,
         child: TextButton(
           onPressed: widget.onPressed,
-          onHover: (bool isHover) {
-            setState(() {
-              _isHover = isHover;
-            });
-          },
+          onHover: (bool isHover) => setState(() => _isHover = isHover),
           style: TextButton.styleFrom(
             foregroundColor: _isHover
                 ? _hoverForegroundColor
