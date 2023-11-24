@@ -114,6 +114,16 @@
   "developers": "Développeurs",
   "discover": "Explorer",
   "done": "Terminer",
+  "download": {
+    "error": {
+      "cancelled": "Le telechargement a été annulé.",
+      "failed": "Le fichier n'a pas pu être telechargeé.",
+      "server": "Le serveur n'a pas pu être contacté."
+    },
+    "failed": "Le fichier n'a pas pu être téléchargé.",
+    "name": "Télécharger",
+    "success": "Le fichier a été téléchargeé."
+  },
   "drafts": {
     "description": "Mes ébauches",
     "name": "Brouillons"
@@ -192,6 +202,7 @@
   "home": "Accueil",
   "iap": "Achats intégrés",
   "iap_content": "Cette app peut contenir des achats intégrés dans le but de vous fournir des fonctionnalités supplémentaires.",
+  "image": "Image",
   "in_validation": {
     "description": "Les citations en validation",
     "name": "En validation"
@@ -298,6 +309,7 @@
           "8": "Une petite chose pour capter mon attention."
         }
       },
+      "success": "La liste a été crée",
       "validate": "Valider la création"
     },
     "delete": {
@@ -308,7 +320,10 @@
     "edit": {
       "name": "Éditer la liste"
     },
-    "empty": "Cette liste est vide.",
+    "empty": {
+      "name": "Cette liste est vide",
+      "description": "Vous pouvez ajouter des citations à cette liste."
+    },
     "error": {
       "add": {
         "quote": {
@@ -341,7 +356,6 @@
   },
   "loading": "Chargement...",
   "loading_error": "Il y a eu une erreur durant le chargement",
-  "logout": "Déconnecter",
   "name": "Nom",
   "next": "Suivant",
   "new_quote": "Nouvelle citation",
@@ -705,6 +719,14 @@
     "copy_from": {
       "name": "Copier à partir"
     },
+    "copy_image": {
+      "name": "Copier l'image",
+      "success": "L'image de la citation a été copiée !"
+    },
+    "copy_link": {
+      "name": "Copier le lien",
+      "success": "Le lien de la citation a été copié !"
+    },
     "delete": {
       "confirm": "Confirmer la suppression ?",
       "draft": "Supprimer le brouillon",
@@ -778,6 +800,12 @@
       "name": "Sauvegarder la citation",
       "success": "La citation a été sauvegardée !"
     },
+    "share": {
+      "image": "Partager l'image",
+      "link": "Partager le lien",
+      "name": "Partager la citation",
+      "text": "Partager le texte"
+    },
     "shuffle": "Mélanger les citations",
     "start_typing": "Écrivez votre citation",
     "submit": {
@@ -844,7 +872,8 @@
     "empty": {
       "author": "Aucun auteur trouvé pour votre recherche.",
       "quote": "Aucune citation trouvée pour votre recherche.",
-      "reference": "Aucune référence trouvée pour votre recherche."
+      "reference": "Aucune référence trouvée pour votre recherche.",
+      "results": "Aucun résultat"
     },
     "ing": "En recherche",
     "name": "Recherche",
@@ -878,21 +907,39 @@
   "settings": {
     "behaviour": {
       "name": "Comportement",
-      "fullscreen": "Citation en plein écran",
-      "fullscreen_description": "Ouvrir la page de citation en plein écran"
+      "fullscreen_quote_page": {
+        "true": "Citation plein écran: ON",
+        "false": "Citation plein écran: OFF"
+      },
+      "minimal_quote_actions": {
+        "true": "Actions minimales (citation): ON",
+        "false": "Actions minimales (citation): OFF"
+      }
     },
     "description": "Personnalisez votre expérience",
-    "name": "Paramètres"
+    "fullscreen_quote_page": {
+      "name": "Citation en plein écran",
+      "description": "Ouvrir la page de citation en plein écran"
+    },
+    "minimal_quote_actions": {
+      "name": "Actions minimales de la page de citation",
+      "description": "Masquer les actions non-essentielles de la page de citation"
+    },
+    "name": "Paramètres",
+    "ui": "Interface utilisateur"
   },
+  "share": "Partager",
   "share_on_twitter": "Partager sur Twitter",
   "skip": "Passer",
   "signin": "Se connecter",
   "signin_again": "Veuillez vous reconnecter",
   "signin_existing_account": "Connectez-vous avec votre compte existant",
+  "signout": "Se déconnecter",
   "signup": "S'inscrire",
   "suggestions": "Suggestions",
   "summary": "Résumé",
   "system": "Système",
+  "text": "Texte",
   "theme": "Thème",
   "title": "Titre",
   "topic": {

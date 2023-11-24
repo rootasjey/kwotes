@@ -111,6 +111,16 @@
   "developers": "Developers",
   "discover": "Discover",
   "done": "Done",
+  "download": {
+    "error": {
+      "cancelled": "The download has been cancelled.",
+      "file": "The file could not be downloaded.",
+      "server": "The server could not be reached."
+    },
+    "failed": "The file could not be downloaded.",
+    "name": "Download",
+    "success": "The file has been successfully downloaded."
+  },
   "drafts": {
     "description": "Unfinished work",
     "name": "Drafts"
@@ -190,6 +200,7 @@
   "home": "Home",
   "iap": "In-app purchases",
   "iap_content": "The apps contain in-app purchases which offer additional features.",
+  "image": "Image",
   "in_validation": {
     "description": "Your quotes in validation",
     "name": "In validation"
@@ -296,6 +307,7 @@
           "8": "A little something to think about."
         }
       },
+      "success": "Your list has been created",
       "validate": "Validate the creation"
     },
     "delete": {
@@ -306,7 +318,10 @@
     "edit": {
       "name": "Edit list"
     },
-    "empty": "This list is empty.",
+    "empty": {
+      "name": "This list is empty",
+      "description": "You can add some quotes to this list."
+    },
     "error": {
       "add": {
         "quote": {
@@ -339,7 +354,6 @@
   },
   "loading": "Loading...",
   "loading_error": "There was an error while loading",
-  "logout": "Logout",
   "name": "Name",
   "next": "Next",
   "new_quote": "New quote",
@@ -691,6 +705,14 @@
     "copy_from": {
       "name": "Copy from"
     },
+    "copy_image": {
+      "name": "Copy image",
+      "success": "Quote's image successfully copied!"
+    },
+    "copy_link": {
+      "name": "Copy link",
+      "success": "Quote's link successfully copied!"
+    },
     "delete": {
       "confirm": "Confirm deletion?",
       "draft": "Delete draft",
@@ -764,6 +786,13 @@
       "name": "Save quote",
       "success": "Quote successfully saved!"
     },
+    "share": {
+      "image": "Share image",
+      "link": "Share link",
+      "name": "Share quote",
+      "text": "Share text",
+      "url": "Share URL"
+    },
     "shuffle": "Shuffle quotes",
     "start_typing": "Type your quote",
     "submit": {
@@ -830,7 +859,8 @@
     "empty": {
       "author": "No author found for your search.",
       "quote": "No quote found for your search.",
-      "reference": "No reference found for your search."
+      "reference": "No reference found for your search.",
+      "results": "No results"
     },
     "ing": "Searching",
     "name": "Search",
@@ -863,24 +893,40 @@
   "see_related_quotes": "See related quotes",
   "settings": {
     "behaviour": {
-      "name": "Behaviour"
+      "name": "Behaviour",
+      "fullscreen_quote_page": {
+        "true": "Fullscreen quote page: ON",
+        "false": "Fullscreen quote page: OFF"
+      },
+      "minimal_quote_actions": {
+        "true": "Minimal quote actions: ON",
+        "false": "Minimal quote actions: OFF"
+      }
     },
     "fullscreen_quote_page": {
       "name": "Fullscreen quote page",
       "description": "Open quote page in fullscreen mode"
     },
+    "minimal_quote_actions": {
+      "name": "Minimal quote actions",
+      "description": "Hide actions non-essential in quote page"
+    },
     "description": "Customize your experience",
-    "name": "Settings"
+    "name": "Settings",
+    "ui": "User interface"
   },
+  "share": "Share",
   "share_on_twitter": "Share on Twitter",
   "signin": "Sign in",
   "signin_again": "Please sign in again",
   "signin_existing_account": "Already have an account?",
+  "signout": "Sign out",
   "signup": "Sign up",
   "skip": "Skip",
   "suggestions": "Suggestions",
   "summary": "Summary",
   "system": "System",
+  "text": "Text",
   "theme": "Theme",
   "title": "Title",
   "topic": {
