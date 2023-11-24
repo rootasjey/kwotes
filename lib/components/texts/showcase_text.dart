@@ -48,18 +48,40 @@ class ShowcaseText extends StatefulWidget {
 }
 
 class _ShowcaseTextState extends State<ShowcaseText> {
+  /// Color on hover.
+  Color? _accentColor;
+
+  /// Current text foreground color.
   Color? _foregroundColor = Colors.black;
+
+  /// Initial text foreground color.
   Color? _initialForegroundColor = Colors.black;
 
   @override
   void initState() {
     super.initState();
-    _initialForegroundColor = widget.initialForegroundColor;
-    _foregroundColor = _initialForegroundColor;
+    initProps();
+  }
+
+  /// Initializes properties.
+  void initProps() {
+    _accentColor = Constants.colors.getRandomFromPalette(
+      withGoodContrast: !widget.isDark,
+    );
+
+    setState(() {
+      _initialForegroundColor = widget.initialForegroundColor;
+      _foregroundColor = _initialForegroundColor;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_initialForegroundColor != widget.initialForegroundColor) {
+      _initialForegroundColor = widget.initialForegroundColor;
+      initProps();
+    }
+
     return Padding(
       padding: widget.margin,
       child: InkWell(
@@ -68,16 +90,9 @@ class _ShowcaseTextState extends State<ShowcaseText> {
         hoverColor: Colors.transparent,
         borderRadius: BorderRadius.circular(4.0),
         onHover: (bool isHover) {
-          if (isHover) {
-            setState(() {
-              _foregroundColor = Constants.colors.getRandomFromPalette(
-                withGoodContrast: !widget.isDark,
-              );
-            });
-            return;
-          }
-
-          setState(() => _foregroundColor = _initialForegroundColor);
+          setState(() {
+            _foregroundColor = isHover ? _accentColor : _initialForegroundColor;
+          });
         },
         child: Padding(
           padding: widget.padding,
