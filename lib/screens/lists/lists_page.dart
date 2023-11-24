@@ -276,15 +276,11 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
     );
 
     if (index > -1) {
-      setState(() {
-        _lists[index] = createdList;
-      });
+      setState(() => _lists[index] = createdList);
       return;
     }
 
-    setState(() {
-      _lists.add(createdList);
-    });
+    setState(() => _lists.add(createdList));
   }
 
   /// Handle modified document.
@@ -472,23 +468,16 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
           .collection("lists")
           .add(_newQuoteList.toMapUpdate());
 
-      setState(() {
-        _pageState = EnumPageState.idle;
-      });
-
       onCancelCreate();
     } catch (error) {
       loggy.error(error);
       if (!mounted) return;
-
-      setState(() {
-        _pageState = EnumPageState.idle;
-      });
-
       Utils.graphic.showSnackbar(
         context,
         message: "list.create.failed".tr(),
       );
+    } finally {
+      setState(() => _pageState = EnumPageState.idle);
     }
   }
 
@@ -502,9 +491,7 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
     }
 
     final int index = _lists.indexOf(quoteList);
-    setState(() {
-      _lists.remove(quoteList);
-    });
+    setState(() => _lists.remove(quoteList));
 
     try {
       await FirebaseFirestore.instance
@@ -530,9 +517,7 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
 
   /// Cancel edit list mode.
   void onCancelEditListMode() {
-    setState(() {
-      _editingListId = "";
-    });
+    setState(() => _editingListId = "");
   }
 
   /// Save list changes.
@@ -549,15 +534,12 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
     }
 
     final QuoteList listToUpdate = _lists[index];
-
     final String prevName = listToUpdate.name;
-    // final String prevDescription = listToUpdate.description;
 
     setState(() {
       _editingListId = "";
       _lists[index] = listToUpdate.copyWith(
         name: name,
-        // description: description,
       );
     });
 
@@ -593,9 +575,7 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
   }
 
   void onTryEditList(QuoteList quoteList) {
-    setState(() {
-      _editingListId = quoteList.id;
-    });
+    setState(() => _editingListId = quoteList.id);
   }
 
   void onOpenDeleteConfirm(QuoteList quoteList) {
