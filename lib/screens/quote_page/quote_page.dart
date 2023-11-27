@@ -31,7 +31,6 @@ import "package:kwotes/types/intents/copy_intent.dart";
 import "package:kwotes/types/intents/like_intent.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/reference.dart";
-import "package:kwotes/types/topic.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 import "package:kwotes/types/user/user_rights.dart";
 import "package:loggy/loggy.dart";
@@ -64,12 +63,14 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   /// Copy icon data.
   IconData copyIcon = TablerIcons.copy;
 
+  /// Keyboard shortcuts.
   final Map<LogicalKeySet, Intent> _shortcuts = {
     LogicalKeySet(LogicalKeyboardKey.keyC): const CopyIntent(),
     LogicalKeySet(LogicalKeyboardKey.keyA): const AddToListIntent(),
     LogicalKeySet(LogicalKeyboardKey.keyL): const LikeIntent(),
   };
 
+  /// Screenshot controller (to share quote image).
   final ScreenshotController _screenshotController = ScreenshotController();
 
   /// Signal for navigation bar.
@@ -435,19 +436,10 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
       return Colors.indigo.shade200;
     }
 
-    final String firstTopic = _quote.topics.first;
-    final topic = Constants.colors.topics.firstWhere(
-      (element) => element.name == firstTopic,
-      orElse: () {
-        return Topic.empty();
-      },
+    return Constants.colors.getColorFromTopicName(
+      context,
+      topicName: _quote.topics.first,
     );
-
-    if (topic.name.isEmpty) {
-      return Theme.of(context).textTheme.bodyMedium?.color ?? Colors.black;
-    }
-
-    return topic.color;
   }
 
   /// Initialize props.
@@ -574,7 +566,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
 
     setState(() {
       copyIcon = UniconsLine.check;
-      copyTooltip = "quote.copy.success".tr();
+      copyTooltip = "quote.copy.success.name".tr();
     });
 
     _timerCopyIcon?.cancel();
@@ -692,7 +684,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
       onCopyQuote(quote);
       Utils.graphic.showSnackbar(
         context,
-        message: "quote.copy.success".tr(),
+        message: "quote.copy.success.name".tr(),
       );
       return;
     }

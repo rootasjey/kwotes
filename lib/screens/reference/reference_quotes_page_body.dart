@@ -1,19 +1,26 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:kwotes/components/context_menu_components.dart";
 import "package:kwotes/components/empty_view.dart";
 import "package:kwotes/screens/search/search_quote_text.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/quote.dart";
+import "package:super_context_menu/super_context_menu.dart";
 
 class ReferenceQuotesPageBody extends StatelessWidget {
   const ReferenceQuotesPageBody({
     super.key,
     this.isMobileSize = false,
     this.accentColor,
+    this.pageState = EnumPageState.idle,
     this.quotes = const [],
+    this.onCopyQuoteUrl,
+    this.onDoubleTapQuote,
+    this.onShareImage,
+    this.onShareLink,
+    this.onShareText,
     this.onTapBackButton,
     this.onTapQuote,
-    this.pageState = EnumPageState.idle,
   });
 
   /// Whether to use mobile layout.
@@ -27,6 +34,20 @@ class ReferenceQuotesPageBody extends StatelessWidget {
 
   /// List of quotes.
   final List<Quote> quotes;
+
+  final void Function(Quote quote)? onCopyQuoteUrl;
+
+  /// Callback fired when quote is double tapped.
+  final void Function(Quote quote)? onDoubleTapQuote;
+
+  /// Callback fired when image is shared.
+  final void Function(Quote quote)? onShareImage;
+
+  /// Callback fired when image is shared.
+  final void Function(Quote quote)? onShareLink;
+
+  /// Callback fired when image is shared.
+  final void Function(Quote quote)? onShareText;
 
   /// Callback fired when back button is tapped.
   final void Function()? onTapBackButton;
@@ -64,7 +85,19 @@ class ReferenceQuotesPageBody extends StatelessWidget {
           final Quote quote = quotes[index];
           return SearchQuoteText(
             quote: quote,
+            onDoubleTapQuote: onDoubleTapQuote,
             onTapQuote: onTapQuote,
+            quoteMenuProvider: (MenuRequest menuRequest) {
+              return ContextMenuComponents.quoteMenuProvider(
+                context,
+                quote: quote,
+                onCopyQuote: onDoubleTapQuote,
+                onCopyQuoteUrl: onCopyQuoteUrl,
+                onShareImage: onShareImage,
+                onShareLink: onShareLink,
+                onShareText: onShareText,
+              );
+            },
             tiny: isMobileSize,
             margin: const EdgeInsets.only(bottom: 16.0),
           );

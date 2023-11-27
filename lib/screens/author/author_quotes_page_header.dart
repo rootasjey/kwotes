@@ -9,6 +9,7 @@ class AuthorQuotesPageHeader extends StatelessWidget {
     super.key,
     required this.author,
     this.isMobileSize = false,
+    this.onDoubleTapName,
     this.onTapAvatar,
     this.onTapName,
   });
@@ -24,6 +25,9 @@ class AuthorQuotesPageHeader extends StatelessWidget {
 
   /// Callback fired when name is tapped.
   final void Function()? onTapName;
+
+  /// Callback fired when name is double tapped.
+  final void Function()? onDoubleTapName;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +49,7 @@ class AuthorQuotesPageHeader extends StatelessWidget {
         Expanded(
           child: InkWell(
             onTap: onTapName,
+            onDoubleTap: onDoubleTapName,
             child: Text(
               author.name,
               style: Utils.calligraphy.title(

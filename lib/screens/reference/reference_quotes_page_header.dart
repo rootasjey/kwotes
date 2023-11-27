@@ -8,8 +8,9 @@ import "package:kwotes/types/reference.dart";
 class ReferenceQuotesPageHeader extends StatelessWidget {
   const ReferenceQuotesPageHeader({
     super.key,
-    this.isMobileSize = false,
     required this.reference,
+    this.isMobileSize = false,
+    this.onDoubleTapName,
     this.onTapName,
     this.onTapPoster,
   });
@@ -19,6 +20,9 @@ class ReferenceQuotesPageHeader extends StatelessWidget {
 
   /// Reference data for this component.
   final Reference reference;
+
+  /// Callback fired when name is double tapped.
+  final void Function()? onDoubleTapName;
 
   /// Callback fired when avatar is tapped.
   final void Function(Reference reference)? onTapPoster;
@@ -44,6 +48,7 @@ class ReferenceQuotesPageHeader extends StatelessWidget {
         Expanded(
           child: InkWell(
             onTap: onTapName,
+            onDoubleTap: onDoubleTapName,
             child: Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: Text(

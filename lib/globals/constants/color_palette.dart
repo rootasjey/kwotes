@@ -96,6 +96,26 @@ class ColorPalette {
 
   List<Topic> topics = [];
 
+  Color getColorFromTopicName(
+    BuildContext context, {
+    required String topicName,
+  }) {
+    if (topicName.isEmpty) {
+      return Colors.indigo.shade200;
+    }
+
+    final Topic topic = topics.firstWhere(
+      (Topic x) => x.name == topicName,
+      orElse: () => Topic.empty(),
+    );
+
+    if (topic.name.isEmpty) {
+      return Theme.of(context).textTheme.bodyMedium?.color ?? Colors.black;
+    }
+
+    return topic.color;
+  }
+
   Topic getRandomTopic() {
     return topics.elementAt(Random().nextInt(topics.length));
   }

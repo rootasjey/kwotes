@@ -20,8 +20,10 @@ class ReferencePageBody extends StatelessWidget {
     this.randomColor,
     this.pageState = EnumPageState.idle,
     this.maxHeight = double.infinity,
+    this.onDoubleTapName,
+    this.onDoubleTapSummary,
     this.onTapSeeQuotes,
-    this.onTapReferenceName,
+    this.onTapName,
     this.onToggleMetadata,
     this.referenceNameTextStyle = const TextStyle(),
   });
@@ -44,11 +46,17 @@ class ReferencePageBody extends StatelessWidget {
   /// Page's state (e.g. loading, idle, ...).
   final EnumPageState pageState;
 
+  /// Callback fired when the reference name is double tapped.
+  final void Function()? onDoubleTapName;
+
+  /// Callback fired when the reference summary is double tapped.
+  final void Function()? onDoubleTapSummary;
+
   /// Callback fired when the "see related quotes" button is tapped.
   final void Function()? onTapSeeQuotes;
 
   /// Callback fired when the reference name is tapped.
-  final void Function()? onTapReferenceName;
+  final void Function()? onTapName;
 
   /// Callback fired to toggle reference metadata widget size.
   final void Function()? onToggleMetadata;
@@ -80,7 +88,8 @@ class ReferencePageBody extends StatelessWidget {
       sliver: SliverList(
         delegate: SliverChildListDelegate([
           GestureDetector(
-            onTap: onTapReferenceName,
+            onTap: onTapName,
+            onDoubleTap: onDoubleTapName,
             child: Padding(
               padding: isMobileSize
                   ? EdgeInsets.only(
@@ -116,27 +125,30 @@ class ReferencePageBody extends StatelessWidget {
             ),
             show: isMobileSize,
           ),
-          Padding(
-            padding: EdgeInsets.only(
-              left: leftPadding,
-              right: rightPadding,
-            ),
-            child: AnimatedTextKit(
-              isRepeatingAnimation: false,
-              displayFullTextOnTap: true,
-              animatedTexts: [
-                TypewriterAnimatedText(
-                  reference.summary,
-                  speed: const Duration(milliseconds: 10),
-                  curve: Curves.decelerate,
-                  textStyle: Utils.calligraphy.body(
-                    textStyle: TextStyle(
-                      fontSize: isMobileSize ? 16.0 : 24.0,
-                      color: foregroundColor.withOpacity(0.6),
+          GestureDetector(
+            onDoubleTap: onDoubleTapSummary,
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: leftPadding,
+                right: rightPadding,
+              ),
+              child: AnimatedTextKit(
+                isRepeatingAnimation: false,
+                displayFullTextOnTap: true,
+                animatedTexts: [
+                  TypewriterAnimatedText(
+                    reference.summary,
+                    speed: const Duration(milliseconds: 10),
+                    curve: Curves.decelerate,
+                    textStyle: Utils.calligraphy.body(
+                      textStyle: TextStyle(
+                        fontSize: isMobileSize ? 16.0 : 24.0,
+                        color: foregroundColor.withOpacity(0.6),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           ReferenceMetadaRow(

@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
+import "package:kwotes/components/context_menu_components.dart";
 import "package:kwotes/screens/search/search_quote_text.dart";
 import "package:kwotes/types/quote.dart";
+import "package:super_context_menu/super_context_menu.dart";
 
 class SearchQuoteResultsPage extends StatelessWidget {
   const SearchQuoteResultsPage({
@@ -36,6 +38,12 @@ class SearchQuoteResultsPage extends StatelessWidget {
             onTapQuote: onTapQuote,
             tiny: isMobileSize,
             margin: const EdgeInsets.only(bottom: 16.0),
+            quoteMenuProvider: (MenuRequest menuRequest) {
+              return ContextMenuComponents.quoteMenuProvider(
+                context,
+                quote: quote,
+              );
+            },
           );
         },
         itemCount: quoteResults.length,

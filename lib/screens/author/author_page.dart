@@ -5,6 +5,7 @@ import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_image_viewer/easy_image_viewer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:just_the_tooltip/just_the_tooltip.dart";
@@ -140,7 +141,9 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
               isMobileSize: isMobileSize,
               pageState: _pageState,
               maxHeight: windowSize.height / 2,
-              onTapAuthorName: onTapAuthorName,
+              onDoubleTapName: onDoubleTapAuthorName,
+              onDoubleTapSummary: onDoubleTapAuthorSummary,
+              onTapName: onTapAuthorName,
               onTapSeeQuotes: onTapSeeQuotes,
               onToggleMetadata: onToggleAuthorMetadata,
               randomColor: randomColor,
@@ -278,6 +281,26 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
     _tooltipController.hideTooltip();
     await _docRef?.delete();
     navigateBack();
+  }
+
+  /// Callback fired when author name is double tapped.
+  /// Copy name to clipboard.
+  void onDoubleTapAuthorName() {
+    Clipboard.setData(ClipboardData(text: _author.name));
+    Utils.graphic.showSnackbar(
+      context,
+      message: "author.copy.success.name".tr(),
+    );
+  }
+
+  /// Callback fired when author summary is double tapped.
+  /// Copy name to clipboard.
+  void onDoubleTapAuthorSummary() {
+    Clipboard.setData(ClipboardData(text: _author.summary));
+    Utils.graphic.showSnackbar(
+      context,
+      message: "author.copy.success.summary".tr(),
+    );
   }
 
   /// Callback fired to edit author.

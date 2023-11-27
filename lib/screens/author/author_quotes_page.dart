@@ -3,7 +3,9 @@ import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_image_viewer/easy_image_viewer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
+import "package:kwotes/actions/quote_actions.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/globals/constants.dart";
@@ -23,6 +25,9 @@ import "package:kwotes/types/firestore/query_map.dart";
 import "package:kwotes/types/firestore/query_snap_map.dart";
 import "package:kwotes/types/quote.dart";
 import "package:loggy/loggy.dart";
+import "package:screenshot/screenshot.dart";
+import "package:text_wrap_auto_size/solution.dart";
+import "package:text_wrap_auto_size/text_wrap_auto_size.dart";
 
 class AuthorQuotesPage extends StatefulWidget {
   const AuthorQuotesPage({
@@ -93,6 +98,7 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
               AuthorQuotesPageHeader(
                 author: _author,
                 isMobileSize: isMobileSize,
+                onDoubleTapName: onDoubleTapAuthorName,
                 onTapName: onTapAuthorName,
                 onTapAvatar: onTapAuthorAvatar,
               ),
@@ -116,6 +122,17 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
                 isMobileSize: isMobileSize,
                 pageState: _pageState,
                 quotes: _quotes,
+                onCopyQuoteUrl: onCopyQuoteUrl,
+                onDoubleTapQuote: onDoubleTapQuote,
+                onShareImage: onShareImage,
+                onShareLink: (Quote quote) => QuoteActions.shareQuoteLink(
+                  context,
+                  quote,
+                ),
+                onShareText: (Quote quote) => QuoteActions.shareQuoteText(
+                  context,
+                  quote,
+                ),
                 onTapQuote: onTapQuote,
                 onTapBackButton: Beamer.of(context).beamBack,
               ),
@@ -220,6 +237,35 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
     _selectedLanguage = Utils.linguistic.getLanguageSelection();
   }
 
+  /// Callback to copy quote url.
+  void onCopyQuoteUrl(Quote quote) {
+    QuoteActions.copyQuoteUrl(quote);
+    Utils.graphic.showSnackbar(
+      context,
+      message: "quote.copy.success.link".tr(),
+    );
+  }
+
+  /// Callback fired when author name is double tapped.
+  /// Copy name to clipboard.
+  void onDoubleTapAuthorName() {
+    Clipboard.setData(ClipboardData(text: _author.name));
+    Utils.graphic.showSnackbar(
+      context,
+      message: "author.copy.success.name".tr(),
+    );
+  }
+
+  /// Callback fired when a quote is double tapped.
+  /// Copy quote to clipboard.
+  void onDoubleTapQuote(Quote quote) {
+    QuoteActions.copyQuote(quote);
+    Utils.graphic.showSnackbar(
+      context,
+      message: "quote.copy.success.name".tr(),
+    );
+  }
+
   /// Callback fired when the user scrolls.
   void onScroll(double offset) {
     if (!_hasMoreResults) {
@@ -247,6 +293,39 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
     });
 
     fetchQuotes();
+  }
+
+  /// Callback to share quote image.
+  void onShareImage(Quote quote) {
+    /// Screenshot controller (to share quote image).
+    final ScreenshotController screenshotController = ScreenshotController();
+
+    final Size windowSize = MediaQuery.of(context).size;
+    double widthPadding = 192.0;
+    final double heightPadding = QuoteActions.getShareHeightPadding(quote);
+
+    Solution textWrapSolution = TextWrapAutoSize.solution(
+      Size(windowSize.width - widthPadding, windowSize.height - heightPadding),
+      Text(quote.name, style: Utils.calligraphy.body()),
+    );
+
+    QuoteActions.shareQuoteImage(
+      context,
+      borderColor: Constants.colors.getColorFromTopicName(
+        context,
+        topicName: quote.topics.first,
+      ),
+      quote: quote,
+      onCaptureImage: ({bool pop = false}) => QuoteActions.captureImage(
+        context,
+        screenshotController: screenshotController,
+        filename: QuoteActions.generateFileName(quote),
+        pop: pop,
+        loggy: loggy,
+      ),
+      screenshotController: screenshotController,
+      textWrapSolution: textWrapSolution,
+    );
   }
 
   /// Callback fired when the author avatar is tapped.

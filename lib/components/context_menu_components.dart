@@ -178,13 +178,14 @@ class ContextMenuComponents {
           quote: quote,
           onChangeLanguage: onChangeLanguage,
         ),
-      share(
-        context,
-        quote: quote,
-        onShareImage: onShareImage,
-        onShareLink: onShareLink,
-        onShareText: onShareText,
-      ),
+      if (onShareImage != null || onShareLink != null || onShareText != null)
+        share(
+          context,
+          quote: quote,
+          onShareImage: onShareImage,
+          onShareLink: onShareLink,
+          onShareText: onShareText,
+        ),
     ]);
   }
 
@@ -200,21 +201,24 @@ class ContextMenuComponents {
       title: "share".tr(),
       image: MenuImage.icon(TablerIcons.share),
       children: [
-        MenuAction(
-          title: "quote.share.link".tr(),
-          image: MenuImage.icon(TablerIcons.share_3),
-          callback: () => onShareLink?.call(quote),
-        ),
-        MenuAction(
-          title: "quote.share.text".tr(),
-          image: MenuImage.icon(TablerIcons.message_share),
-          callback: () => onShareText?.call(quote),
-        ),
-        MenuAction(
-          title: "quote.share.image".tr(),
-          image: MenuImage.icon(TablerIcons.photo_share),
-          callback: () => onShareImage?.call(quote),
-        ),
+        if (onShareLink != null)
+          MenuAction(
+            title: "quote.share.link".tr(),
+            image: MenuImage.icon(TablerIcons.share_3),
+            callback: () => onShareLink.call(quote),
+          ),
+        if (onShareText != null)
+          MenuAction(
+            title: "quote.share.text".tr(),
+            image: MenuImage.icon(TablerIcons.message_share),
+            callback: () => onShareText.call(quote),
+          ),
+        if (onShareImage != null)
+          MenuAction(
+            title: "quote.share.image".tr(),
+            image: MenuImage.icon(TablerIcons.photo_share),
+            callback: () => onShareImage.call(quote),
+          ),
       ],
     );
   }

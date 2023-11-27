@@ -20,8 +20,10 @@ class AuthorPageBody extends StatelessWidget {
     this.randomColor,
     this.maxHeight = double.infinity,
     this.pageState = EnumPageState.idle,
+    this.onDoubleTapName,
+    this.onDoubleTapSummary,
     this.onTapSeeQuotes,
-    this.onTapAuthorName,
+    this.onTapName,
     this.onToggleMetadata,
     this.authorNameTextStyle = const TextStyle(),
   });
@@ -47,8 +49,14 @@ class AuthorPageBody extends StatelessWidget {
   /// Page's state (e.g. loading, idle, ...).
   final EnumPageState pageState;
 
+  /// Callback fired when the author name is double tapped.
+  final void Function()? onDoubleTapName;
+
+  /// Callback fired when the author's summary is double tapped.
+  final void Function()? onDoubleTapSummary;
+
   /// Callback fired when the author name is tapped.
-  final void Function()? onTapAuthorName;
+  final void Function()? onTapName;
 
   /// Callback fired when the "see related quotes" button is tapped.
   final void Function()? onTapSeeQuotes;
@@ -79,7 +87,8 @@ class AuthorPageBody extends StatelessWidget {
       sliver: SliverList(
         delegate: SliverChildListDelegate([
           GestureDetector(
-            onTap: onTapAuthorName,
+            onTap: onTapName,
+            onDoubleTap: onDoubleTapName,
             child: Padding(
               padding: isMobileSize
                   ? EdgeInsets.only(
@@ -115,28 +124,31 @@ class AuthorPageBody extends StatelessWidget {
             ),
             show: isMobileSize,
           ),
-          Padding(
-            padding: EdgeInsets.only(
-              left: leftPadding,
-              right: rightPadding,
-            ),
-            child: DefaultTextStyle(
-              style: Utils.calligraphy.body(
-                textStyle: TextStyle(
-                  fontSize: isMobileSize ? 16.0 : 24.0,
-                  color: foregroundColor.withOpacity(0.6),
-                ),
+          GestureDetector(
+            onDoubleTap: onDoubleTapSummary,
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: leftPadding,
+                right: rightPadding,
               ),
-              child: AnimatedTextKit(
-                isRepeatingAnimation: false,
-                displayFullTextOnTap: true,
-                animatedTexts: [
-                  TypewriterAnimatedText(
-                    author.summary,
-                    speed: const Duration(milliseconds: 10),
-                    curve: Curves.decelerate,
+              child: DefaultTextStyle(
+                style: Utils.calligraphy.body(
+                  textStyle: TextStyle(
+                    fontSize: isMobileSize ? 16.0 : 24.0,
+                    color: foregroundColor.withOpacity(0.6),
                   ),
-                ],
+                ),
+                child: AnimatedTextKit(
+                  isRepeatingAnimation: false,
+                  displayFullTextOnTap: true,
+                  animatedTexts: [
+                    TypewriterAnimatedText(
+                      author.summary,
+                      speed: const Duration(milliseconds: 10),
+                      curve: Curves.decelerate,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

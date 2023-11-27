@@ -3,6 +3,7 @@ import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_image_viewer/easy_image_viewer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:just_the_tooltip/just_the_tooltip.dart";
@@ -137,7 +138,9 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
               maxHeight: windowSize.height / 2,
               onTapSeeQuotes: onTapSeeQuotes,
               pageState: _pageState,
-              onTapReferenceName: onTapReferenceName,
+              onDoubleTapName: onDoubleTapReferenceName,
+              onDoubleTapSummary: onDoubleTapReferenceSummary,
+              onTapName: onTapReferenceName,
               onToggleMetadata: onToggleReferenceMetadata,
               randomColor: randomColor,
               referenceNameTextStyle: textWrapSolution.style,
@@ -274,6 +277,26 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
     _tooltipController.hideTooltip();
     await _docRef?.delete();
     navigateBack();
+  }
+
+  /// Callback fired when reference name is double tapped.
+  /// Copy name to clipboard.
+  void onDoubleTapReferenceName() {
+    Clipboard.setData(ClipboardData(text: _reference.name));
+    Utils.graphic.showSnackbar(
+      context,
+      message: "reference.copy.success.name".tr(),
+    );
+  }
+
+  /// Callback fired when reference summary is double tapped.
+  /// Copy name to clipboard.
+  void onDoubleTapReferenceSummary() {
+    Clipboard.setData(ClipboardData(text: _reference.summary));
+    Utils.graphic.showSnackbar(
+      context,
+      message: "reference.copy.success.summary".tr(),
+    );
   }
 
   void onEditReference() {

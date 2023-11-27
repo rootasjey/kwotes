@@ -3,6 +3,8 @@ import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
+import "package:kwotes/actions/quote_actions.dart";
+import "package:kwotes/components/context_menu_components.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/components/empty_view.dart";
 import "package:kwotes/components/loading_view.dart";
@@ -20,6 +22,7 @@ import "package:kwotes/types/firestore/query_map.dart";
 import "package:kwotes/types/firestore/query_snap_map.dart";
 import "package:kwotes/types/quote.dart";
 import "package:loggy/loggy.dart";
+import "package:super_context_menu/super_context_menu.dart";
 
 class TopicPage extends StatefulWidget {
   const TopicPage({
@@ -109,9 +112,15 @@ class _TopicPageState extends State<TopicPage> with UiLoggy {
                       return SearchQuoteText(
                         quote: quote,
                         onTapQuote: onTapQuote,
+                        onDoubleTapQuote: onDoubleTapQuote,
                         tiny: isMobileSize,
                         margin: const EdgeInsets.symmetric(
                           vertical: 12.0,
+                        ),
+                        quoteMenuProvider: (MenuRequest menuRequest) =>
+                            ContextMenuComponents.quoteMenuProvider(
+                          context,
+                          quote: quote,
                         ),
                       );
                     },
@@ -201,6 +210,16 @@ class _TopicPageState extends State<TopicPage> with UiLoggy {
         _pageState = EnumPageState.idle;
       });
     }
+  }
+
+  /// On double tap quote.
+  void onDoubleTapQuote(Quote quote) {
+    QuoteActions.copyQuote(quote);
+
+    Utils.graphic.showSnackbar(
+      context,
+      message: "quote.copy.success.name".tr(),
+    );
   }
 
   void onTapQuote(Quote quote) {
