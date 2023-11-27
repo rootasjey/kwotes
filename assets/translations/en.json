@@ -41,6 +41,10 @@
     "copy": {
       "link": "Copy link",
       "name": "Copy name",
+      "success": {
+        "name": "Author's name successfully copied.",
+        "url": "Author's URL successfully copied."
+      },
       "url": "Copy URL"
     },
     "delete": {
@@ -701,7 +705,12 @@
     "copy": {
       "link": "Copy link",
       "name": "Copy quote",
-      "success": "Quote successfully copied!",
+      "success": {
+        "image": "Quote's image successfully copied.",
+        "link": "Quote's link successfully copied.",
+        "name": "Quote successfully copied.",
+        "url": "Quote URL successfully copied."
+      },
       "url": "Copy quote URL"
     },
     "copy_from": {
@@ -829,6 +838,12 @@
   "reference": {
     "copy": {
       "name": "Copy reference's name",
+      "success": {
+        "link": "Reference's link successfully copied.",
+        "name": "Reference's name successfully copied.",
+        "summary": "Reference's summary successfully copied.",
+        "url": "Reference's URL successfully copied."
+      },
       "url": "Copy reference's URL"
     },
     "delete": {

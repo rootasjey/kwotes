@@ -41,6 +41,10 @@
     "copy": {
       "link": "Copier le lien",
       "name": "Copier le nom",
+      "success": {
+        "link": "Le lien de l'auteur a été copié.",
+        "name": "Le nom de l'auteur a été copié."
+      },
       "url": "Copier le l'URL"
     },
     "delete": {
@@ -715,7 +719,12 @@
     "copy": {
       "link": "Copier le lien",
       "name": "Copier la citation",
-      "success": "La citation a été copiée !",
+      "success": {
+        "image": "L'image de la citation a été copiée.",
+        "link": "Le lien de la citation a été copié.",
+        "name": "La citation a été copiée.",
+        "url": "Le lien de la citation a été copié."
+      },
       "url": "Copier le lien"
     },
     "copy_from": {
@@ -842,6 +851,12 @@
   "reference": {
     "copy": {
       "name": "Copier le nom de la référence",
+      "success": {
+        "link": "Le lien de la référence a bien été copié.",
+        "name": "Le nom de la référence a bien été copié.",
+        "summary": "Le synopsis de la référence a bien été copié.",
+        "url": "L'URL de la référence a bien été copiée."
+      },
       "url": "Copier le lien de la référence"
     },
     "delete": {
