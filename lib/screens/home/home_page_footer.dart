@@ -1,26 +1,32 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/buttons/brightness_button.dart";
 import "package:kwotes/components/buttons/colored_text_button.dart";
-import "package:kwotes/types/user/user_firestore.dart";
+import "package:kwotes/components/buttons/language_selector.dart";
+import "package:kwotes/components/buttons/like_button_vanilla.dart";
+import "package:kwotes/components/icons/app_icon.dart";
+import "package:kwotes/globals/constants.dart";
+import "package:kwotes/globals/utils.dart";
+import "package:kwotes/types/enums/enum_language_selection.dart";
 
 class HomePageFooter extends StatelessWidget {
   const HomePageFooter({
     super.key,
-    required this.userFirestoreSignal,
     this.isMobileSize = false,
     this.iconColor,
     this.margin = EdgeInsets.zero,
-    this.onAddQuote,
-    this.onFetchRandomQuotes,
+    this.onChangeLanguage,
     this.onTapGitHub,
-    this.onTapOpenRandomQuote,
-    this.onTapSettings,
+    this.onTapLikeButton,
+    this.foregroundColor,
   });
 
   /// Adapt user interface to small screens.
   final bool isMobileSize;
+
+  /// Text foreground color.
+  final Color? foregroundColor;
 
   /// Icon color.
   final Color? iconColor;
@@ -28,121 +34,124 @@ class HomePageFooter extends StatelessWidget {
   /// Margin of the widget.
   final EdgeInsets margin;
 
-  /// Callback fired to add a new quote.
-  final void Function()? onAddQuote;
-
-  /// Callback fired to fetch new random quotes.
-  final void Function()? onFetchRandomQuotes;
+  /// Callback fired when language is changed.
+  final void Function(EnumLanguageSelection locale)? onChangeLanguage;
 
   /// Callback fired to open GitHub url project.
   final void Function()? onTapGitHub;
 
-  /// Callback fired to open a random quote.
-  final void Function()? onTapOpenRandomQuote;
-
-  /// Callback fired to open settings.
-  final void Function()? onTapSettings;
-
-  /// Signal containing data about the current authenticated user.
-  final Signal<UserFirestore> userFirestoreSignal;
+  /// Callback fired when like button is tapped.
+  final void Function()? onTapLikeButton;
 
   @override
   Widget build(BuildContext context) {
-    final Widget openRandomButton = ColoredTextButton(
-      icon: const Icon(TablerIcons.hand_finger),
-      iconOnly: isMobileSize,
-      onPressed: onTapOpenRandomQuote,
-      textValue: "quote.open_random".tr(),
-      tooltip: isMobileSize ? "quote.open_random".tr() : "",
-    );
-
-    final Widget shuffleButton = ColoredTextButton(
-      icon: const Icon(TablerIcons.arrows_shuffle),
-      iconOnly: isMobileSize,
-      margin: isMobileSize ? EdgeInsets.zero : const EdgeInsets.only(top: 6.0),
-      onPressed: onFetchRandomQuotes,
-      textValue: "quote.shuffle".tr(),
-      tooltip: isMobileSize ? "quote.shuffle".tr() : "",
-    );
-
-    final Widget addQuoteButton = ColoredTextButton(
-      icon: const Icon(TablerIcons.plus),
-      iconOnly: isMobileSize,
-      margin: isMobileSize ? EdgeInsets.zero : const EdgeInsets.only(top: 6.0),
-      onPressed: onAddQuote,
-      textValue: "quote.add.a".tr(),
-      tooltip: isMobileSize ? "quote.add.a".tr() : "",
-    );
+    const EdgeInsets textPadding = EdgeInsets.only(left: 16.0);
 
     return SliverPadding(
       padding: margin,
       sliver: SliverList.list(
         children: [
-          if (!isMobileSize) ...[
-            Align(
-              alignment: Alignment.topLeft,
-              child: openRandomButton,
-            ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: shuffleButton,
-            ),
-            SignalBuilder(
-              signal: userFirestoreSignal,
-              builder: (
-                BuildContext context,
-                UserFirestore userFirestore,
-                Widget? child,
-              ) {
-                if (!userFirestore.rights.canProposeQuote) {
-                  return Container();
-                }
-
-                return Align(
-                  alignment: Alignment.topLeft,
-                  child: addQuoteButton,
-                );
-              },
-            ),
-          ],
+          Wrap(
+            spacing: 8.0,
+            runSpacing: 8.0,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              LikeButtonVanilla(
+                tooltip: "footer.give_some_love".tr(),
+                onPressed: onTapLikeButton,
+                size: const Size(62.0, 62.0),
+              ),
+              const BrightnessButton(),
+            ],
+          ),
           Padding(
-            padding: const EdgeInsets.only(top: 16.0),
-            child: Wrap(
-              spacing: 4.0,
-              runSpacing: 16.0,
-              alignment: WrapAlignment.center,
-              children: [
-                if (isMobileSize) ...[
-                  openRandomButton,
-                  shuffleButton,
-                  SignalBuilder(
-                    signal: userFirestoreSignal,
-                    builder: (
-                      BuildContext context,
-                      UserFirestore userFirestore,
-                      Widget? child,
-                    ) {
-                      if (!userFirestore.rights.canProposeQuote) {
-                        return const SizedBox.shrink();
-                      }
-
-                      return addQuoteButton;
-                    },
-                  ),
-                ],
-                ColoredTextButton(
-                  icon: const Icon(TablerIcons.settings),
-                  iconOnly: true,
-                  onPressed: onTapSettings,
-                  textValue: "settings.name".tr(),
-                  tooltip: "settings.name".tr(),
+            padding: textPadding,
+            child: Text(
+              "footer.thanks".tr(args: [Constants.appName]),
+              style: Utils.calligraphy.body(
+                textStyle: const TextStyle(
+                  fontSize: 32.0,
+                  fontWeight: FontWeight.w500,
                 ),
-                ColoredTextButton(
-                  icon: const Icon(TablerIcons.brand_github),
-                  iconOnly: true,
-                  onPressed: onTapGitHub,
-                  textValue: "GitHub",
-                  tooltip: "GitHub",
+              ),
+            ),
+          ),
+          Padding(
+            padding: textPadding.add(const EdgeInsets.only(bottom: 24.0)),
+            child: Text(
+              "footer.tagline".tr(),
+              style: Utils.calligraphy.body(
+                textStyle: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.w400,
+                  color: foregroundColor?.withOpacity(0.6),
+                ),
+              ),
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ColoredTextButton(
+                textValue: "footer.github".tr(),
+                onPressed: onTapGitHub,
+                iconOnRight: true,
+                textFlex: 0,
+                icon: const Padding(
+                  padding: EdgeInsets.only(left: 8.0),
+                  child: Icon(TablerIcons.arrow_right, size: 18.0),
+                ),
+                margin: EdgeInsets.only(left: textPadding.left / 2),
+              ),
+            ],
+          ),
+          Padding(
+            // padding: EdgeInsets.zero,
+            padding: textPadding.add(const EdgeInsets.only(bottom: 24.0)),
+            child: Text(
+              "footer.made_in".tr(),
+              style: Utils.calligraphy.body(
+                textStyle: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w400,
+                  color: foregroundColor?.withOpacity(0.4),
+                ),
+              ),
+            ),
+          ),
+          const Divider(thickness: 1.0),
+          LanguageSelector(
+            margin: EdgeInsets.only(left: textPadding.left),
+            onChangeLanguage: onChangeLanguage,
+          ),
+          const Divider(thickness: 1.0),
+          Padding(
+            padding: const EdgeInsets.only(top: 54.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const AppIcon(),
+                Text(
+                  Constants.appName,
+                  style: Utils.calligraphy.body(
+                    textStyle: TextStyle(
+                      color: foregroundColor?.withOpacity(0.6),
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  "footer.rights".tr(args: ["© 2019 - ${DateTime.now().year}"]),
+                  style: Utils.calligraphy.body(
+                    textStyle: TextStyle(
+                      color: foregroundColor?.withOpacity(0.6),
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
                 ),
               ],
             ),

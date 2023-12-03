@@ -4,8 +4,8 @@ import "package:flutter/widgets.dart";
 import "package:kwotes/screens/author/author_page.dart";
 import "package:kwotes/screens/author/author_quotes_page.dart";
 import "package:kwotes/screens/author/edit_author_page.dart";
-import "package:kwotes/screens/home/mobile_home_page.dart";
-import "package:kwotes/screens/home/responsive_app_container.dart";
+import "package:kwotes/screens/home/home_page.dart";
+import "package:kwotes/screens/home/app_location_container.dart";
 import "package:kwotes/screens/quote_page/quote_page.dart";
 import "package:kwotes/screens/reference/edit_reference_page.dart";
 import "package:kwotes/screens/topic_page/topic_page.dart";
@@ -29,7 +29,7 @@ class HomeLocation extends BeamLocation<BeamState> {
   List<BeamPage> buildPages(BuildContext context, BeamState state) {
     return [
       BeamPage(
-        child: const ResponsiveAppContainer(),
+        child: const AppLocationContainer(),
         key: const ValueKey(route),
         title: "page_title.home".tr(),
         type: BeamPageType.fadeTransition,
@@ -98,7 +98,7 @@ class HomeContentLocation extends BeamLocation<BeamState> {
   List<BeamPage> buildPages(BuildContext context, BeamState state) {
     return [
       BeamPage(
-        child: const MobileHomePage(),
+        child: const HomePage(),
         key: const ValueKey(route),
         title: "page_title.home".tr(),
         type: BeamPageType.fadeTransition,

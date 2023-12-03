@@ -15,15 +15,24 @@ class SearchQuoteText extends StatefulWidget {
     required this.quote,
     required this.quoteMenuProvider,
     this.tiny = false,
+    this.highlightColor,
+    this.splashColor,
     this.textColor,
     this.margin = EdgeInsets.zero,
     this.padding = const EdgeInsets.all(4.0),
     this.onDoubleTapQuote,
     this.onTapQuote,
+    this.textStyle,
   });
 
   /// True if this is a mobile size.
   final bool tiny;
+
+  /// Focus color.
+  final Color? highlightColor;
+
+  /// Splash color.
+  final Color? splashColor;
 
   /// Text color.
   final Color? textColor;
@@ -45,6 +54,9 @@ class SearchQuoteText extends StatefulWidget {
 
   /// Context menu provider for the quote.
   final FutureOr<Menu?> Function(MenuRequest menuRequest) quoteMenuProvider;
+
+  /// Text style.
+  final TextStyle? textStyle;
 
   @override
   State<SearchQuoteText> createState() => _SearchQuoteTextState();
@@ -77,7 +89,9 @@ class _SearchQuoteTextState extends State<SearchQuoteText> {
       child: ContextMenuWidget(
         menuProvider: widget.quoteMenuProvider,
         child: InkWell(
+          splashColor: widget.splashColor,
           hoverColor: Colors.transparent,
+          highlightColor: widget.highlightColor,
           borderRadius: BorderRadius.circular(4.0),
           onTap: onTapQuote != null ? () => onTapQuote.call(quote) : null,
           onDoubleTap: widget.onDoubleTapQuote != null
@@ -85,15 +99,11 @@ class _SearchQuoteTextState extends State<SearchQuoteText> {
               : null,
           onHover: (bool isHover) {
             if (isHover) {
-              setState(() {
-                _textShadowColor = _topicColor.color;
-              });
+              setState(() => _textShadowColor = _topicColor.color);
               return;
             }
 
-            setState(() {
-              _textShadowColor = Colors.transparent;
-            });
+            setState(() => _textShadowColor = Colors.transparent);
           },
           child: Align(
             alignment: Alignment.topLeft,
@@ -117,7 +127,7 @@ class _SearchQuoteTextState extends State<SearchQuoteText> {
                         color: _textShadowColor,
                       ),
                     ],
-                  ),
+                  ).merge(widget.textStyle),
                 ),
               ),
             ),

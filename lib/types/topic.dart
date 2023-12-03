@@ -1,6 +1,8 @@
 import "dart:convert";
 import "dart:ui";
 
+import "package:kwotes/globals/constants.dart";
+
 /// A category for a quote (e.g. "art", "biology", ...).
 class Topic {
   Topic({
@@ -34,7 +36,7 @@ class Topic {
   factory Topic.empty() {
     return Topic(
       name: "",
-      color: const Color(0x00000000),
+      color: Constants.colors.primary,
     );
   }
 

@@ -1,5 +1,3 @@
-import "dart:math";
-
 import "package:beamer/beamer.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
@@ -138,8 +136,9 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
                 ),
               ),
               HeroQuote(
-                isBig: true,
-                loading: _pageState == EnumPageState.loadingRandomQuotes,
+                isMobileSize: true,
+                loading: _pageState == EnumPageState.loadingRandomQuotes ||
+                    _pageState == EnumPageState.loading,
                 backgroundColor: topBackgroundColor,
                 foregroundColor: foregroundColor,
                 quote: firstQuote,
@@ -221,6 +220,10 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
                 topics: Constants.colors.topics,
                 onTapTopic: onTapTopic,
                 cardBackgroundColor: backgroundColor,
+                margin: const EdgeInsets.only(
+                  top: 24.0,
+                  bottom: 42.0,
+                ),
               ),
               ReferencePosters(
                 backgroundColor: backgroundColor,
@@ -399,9 +402,9 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
 
         data["id"] = quoteDoc.id;
         final Quote quote = Quote.fromMap(data);
-        // final Author? author = await fetchAuthor(quote.author.id);
-        // final Reference? reference = await fetchReference(quote.reference.id);
-        // quotes.add(quote.copyWith(author: author, reference: reference));
+        if (quote.author.id == Constants.skippingAuthor) {
+          continue;
+        }
         NavigationStateHelper.randomQuotes.add(quote);
       }
     } catch (error) {
@@ -453,18 +456,6 @@ class _MobileHomePageState extends State<MobileHomePage> with UiLoggy {
     Beamer.of(context).beamToNamed(
       HomeContentLocation.quoteRoute.replaceFirst(":quoteId", quote.id),
     );
-  }
-
-  void onTapOpenRandomQuote() {
-    final List<Quote> quotes = NavigationStateHelper.randomQuotes;
-
-    onTapQuote(
-      quotes.elementAt(Random().nextInt(quotes.length)),
-    );
-  }
-
-  void onTapSettings() {
-    Beamer.of(context).beamToNamed("settings");
   }
 
   void onTapGitHub() {

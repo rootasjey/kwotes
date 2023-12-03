@@ -2,16 +2,11 @@ import "dart:math";
 
 import "package:beamer/beamer.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
-import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:flutter_solidart/flutter_solidart.dart";
 import "package:infinite_carousel/infinite_carousel.dart";
 import "package:kwotes/actions/quote_actions.dart";
-import "package:kwotes/components/application_bar.dart";
-import "package:kwotes/components/basic_shortcuts.dart";
-import "package:kwotes/components/context_menu_components.dart";
-import "package:kwotes/components/hero_quote.dart";
-import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/author_location.dart";
@@ -19,15 +14,13 @@ import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/locations/reference_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
-import "package:kwotes/screens/home/authors_carousel.dart";
-import "package:kwotes/screens/home/home_page_footer.dart";
-import "package:kwotes/screens/home/quote_posters.dart";
-import "package:kwotes/screens/home/reference_grid.dart";
-import "package:kwotes/screens/home/topic_carousel.dart";
+import "package:kwotes/screens/home/desktop_layout.dart";
+import "package:kwotes/screens/home/mobile_layout.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
+import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/firestore/query_doc_snap_map.dart";
 import "package:kwotes/types/firestore/query_snap_map.dart";
@@ -36,19 +29,18 @@ import "package:kwotes/types/random_quote_document.dart";
 import "package:kwotes/types/reference.dart";
 import "package:kwotes/types/topic.dart";
 import "package:loggy/loggy.dart";
-import "package:super_context_menu/super_context_menu.dart";
 import "package:url_launcher/url_launcher.dart";
 
-class DesktopHomePage extends StatefulWidget {
-  const DesktopHomePage({
+class HomePage extends StatefulWidget {
+  const HomePage({
     super.key,
   });
 
   @override
-  State<DesktopHomePage> createState() => _DesktopHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _DesktopHomePageState extends State<DesktopHomePage> with UiLoggy {
+class _HomePageState extends State<HomePage> with UiLoggy {
   /// Show author left arrow if true.
   bool _enableAuthorLeftArrow = false;
 
@@ -105,6 +97,10 @@ class _DesktopHomePageState extends State<DesktopHomePage> with UiLoggy {
   final InfiniteScrollController _topicScrollController =
       InfiniteScrollController();
 
+  /// Reference scroll controller.
+  final InfiniteScrollController _referenceScrollController =
+      InfiniteScrollController();
+
   /// Sub-list of random quotes.
   final List<Quote> _subRandomQuotes = [];
 
@@ -138,184 +134,76 @@ class _DesktopHomePageState extends State<DesktopHomePage> with UiLoggy {
     _authorScrollController.dispose();
     _quoteScrollController.dispose();
     _topicScrollController.dispose();
+    _referenceScrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_pageState == EnumPageState.loading) {
-      return LoadingView.scaffold(
-        message: "loading".tr(),
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+
+    final List<Quote> quotes = NavigationStateHelper.randomQuotes;
+
+    if (isMobileSize) {
+      return MobileLayout(
+        carouselScrollController: _referenceScrollController,
+        onCopyQuote: onCopyQuote,
+        onCopyQuoteUrl: onCopyQuoteUrl,
+        onReferenceIndexChanged: onReferenceIndexChanged,
+        onTapAuthor: onTapAuthor,
+        onTapQuote: onTapQuote,
+        onTapReference: onTapReference,
+        onTapTopic: onTapTopic,
+        pageState: _pageState,
+        quotes: quotes,
+        refetchRandomQuotes: refetchRandomQuotes,
       );
     }
 
-    final Color? iconColor =
-        Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6);
-
-    // final Signal<UserFirestore> userFirestoreSignal =
-    //     context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
-
-    final Color? foregroundColor =
-        Theme.of(context).textTheme.bodyMedium?.color;
-
-    final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final Color topBackgroundColor = Theme.of(context).scaffoldBackgroundColor;
-
-    final Quote firstQuote = NavigationStateHelper.randomQuotes.isNotEmpty
-        ? NavigationStateHelper.randomQuotes.first
-        : Quote.empty();
-
-    return BasicShortcuts(
-      child: Scaffold(
-        backgroundColor: isDark ? Colors.black26 : Colors.white,
-        body: CustomScrollView(
-          slivers: [
-            const ApplicationBar(
-              pinned: false,
-            ),
-            HeroQuote.desktop(
-              loading: _pageState == EnumPageState.loadingRandomQuotes ||
-                  _pageState == EnumPageState.loading,
-              backgroundColor: topBackgroundColor,
-              foregroundColor: foregroundColor,
-              quote: firstQuote,
-              isDark: isDark,
-              onTapAuthor: onTapAuthor,
-              onTapQuote: onTapQuote,
-              authorMenuProvider: (MenuRequest menuRequest) =>
-                  ContextMenuComponents.authorMenuProvider(
-                context,
-                author: firstQuote.author,
-              ),
-              quoteMenuProvider: (MenuRequest menuRequest) =>
-                  ContextMenuComponents.quoteMenuProvider(
-                context,
-                quote: firstQuote,
-                onCopyQuote: onCopyQuote,
-                onCopyQuoteUrl: onCopyQuoteUrl,
-              ),
-              margin: const EdgeInsets.only(
-                top: 32.0,
-                left: 42.0,
-                right: 42.0,
-                bottom: 16.0,
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: InkWell(
-                onTap: fetchRandomQuotes,
-                child: Container(
-                  margin: const EdgeInsets.only(
-                    top: 16.0,
-                    left: 48.0,
-                    right: 26.0,
-                    bottom: 12.0,
-                  ),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      "Welcome to kwotes. \nHere is a set of random quotes. "
-                      "\nYou can fetch new quotes by clicking this text.",
-                      style: Utils.calligraphy.body(
-                        textStyle: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            QuotePosters(
-              isDark: isDark,
-              itemExtent: _quoteCardExtent,
-              enableLeftArrow: _enableQuoteLeftArrow,
-              enableRightArrow: _enableQuoteRightArrow,
-              foregroundColor: foregroundColor,
-              margin: const EdgeInsets.only(
-                top: 6.0,
-                left: 36.0,
-                bottom: 24.0,
-              ),
-              quotes: _subRandomQuotes,
-              onIndexChanged: onQuoteIndexChanged,
-              onTapArrowLeft: onTapQuoteLeftArrow,
-              onTapArrowRight: onTapQuoteRightArrow,
-              scrollController: _quoteScrollController,
-              textColor: iconColor,
-            ),
-            TopicCarousel(
-              enableLeftArrow: _enableTopicLeftArrow,
-              enableRightArrow: _enableTopicRightArrow,
-              foregroundColor: foregroundColor,
-              isDark: isDark,
-              itemExtent: _topicCardExtent,
-              hoveredTopicName: _hoveredTopicName,
-              onTapTopic: onTapTopic,
-              onHoverTopic: onHoverTopic,
-              margin: const EdgeInsets.only(
-                left: 36.0,
-                top: 24.0,
-                bottom: 24.0,
-              ),
-              onIndexChanged: onTopicIndexChanged,
-              onTapArrowRight: onTapTopicRightArrow,
-              onTapArrowLeft: onTapTopicLeftArrow,
-              scrollController: _topicScrollController,
-              topics: Constants.colors.topics,
-            ),
-            AuthorCarousel(
-              authors: NavigationStateHelper.latestAddedAuthors,
-              isDark: isDark,
-              foregroundColor: foregroundColor,
-              hoveredAuthorName: _hoveredAuthorName,
-              itemExtent: _authorCardExtent,
-              enableLeftArrow: _enableAuthorLeftArrow,
-              enableRightArrow: _enableAuthorRightArrow,
-              onTapAuthor: onTapAuthor,
-              onHoverAuthor: onHoverAuthor,
-              onIndexChanged: onAuthorIndexChanged,
-              onTapArrowRight: onTapAuthorRightArrow,
-              onTapArrowLeft: onTapAuthorLeftArrow,
-              margin: const EdgeInsets.only(
-                left: 42.0,
-                top: 24.0,
-                bottom: 24.0,
-              ),
-              scrollController: _authorScrollController,
-            ),
-            ReferenceGrid(
-              backgroundColor: _posterBackgroundColor,
-              foregroundColor: foregroundColor,
-              isDark: isDark,
-              margin: const EdgeInsets.only(
-                top: 32.0,
-                left: 42.0,
-                right: 42.0,
-                bottom: 120.0,
-              ),
-              onTapReference: onTapReference,
-              onHoverReference: onHoverReference,
-              referenceHoveredId: _hoveredReferenceId,
-              references: NavigationStateHelper.latestAddedReferences,
-            ),
-            HomePageFooter(
-              onTapGitHub: onTapGitHub,
-              iconColor: iconColor,
-              foregroundColor: foregroundColor,
-              margin: const EdgeInsets.only(
-                top: 32.0,
-                left: 42.0,
-                right: 42.0,
-                bottom: 24.0,
-              ),
-              onChangeLanguage: onChangeLanguage,
-            ),
-          ],
-        ),
-      ),
+    return DesktopLayout(
+      authors: NavigationStateHelper.latestAddedAuthors,
+      authorCardExtent: _authorCardExtent,
+      authorScrollController: _authorScrollController,
+      enableAuthorLeftArrow: _enableAuthorLeftArrow,
+      enableAuthorRightArrow: _enableAuthorRightArrow,
+      enableQuoteLeftArrow: _enableQuoteLeftArrow,
+      enableQuoteRightArrow: _enableQuoteRightArrow,
+      enableTopicLeftArrow: _enableTopicLeftArrow,
+      enableTopicRightArrow: _enableTopicRightArrow,
+      hoveredAuthorName: _hoveredAuthorName,
+      hoveredReferenceId: _hoveredReferenceId,
+      hoveredTopicName: _hoveredTopicName,
+      onAuthorIndexChanged: onAuthorIndexChanged,
+      onChangeLanguage: onChangeLanguage,
+      onCopyQuote: onCopyQuote,
+      onCopyQuoteUrl: onCopyQuoteUrl,
+      onHoverAuthor: onHoverAuthor,
+      onHoverReference: onHoverReference,
+      onHoverTopic: onHoverTopic,
+      onQuoteIndexChanged: onQuoteIndexChanged,
+      onTapAuthor: onTapAuthor,
+      onTapAuthorLeftArrow: onTapAuthorLeftArrow,
+      onTapAuthorRightArrow: onTapAuthorRightArrow,
+      onTapGitHub: onTapGitHub,
+      onTapQuote: onTapQuote,
+      onTapQuoteLeftArrow: onTapQuoteLeftArrow,
+      onTapQuoteRightArrow: onTapQuoteRightArrow,
+      onTapTopicLeftArrow: onTapTopicLeftArrow,
+      onTapTopicRightArrow: onTapTopicRightArrow,
+      onTapReference: onTapReference,
+      onTapTopic: onTapTopic,
+      onTopicIndexChanged: onTopicIndexChanged,
+      pageState: _pageState,
+      quoteScrollController: _quoteScrollController,
+      posterBackgroundColor: _posterBackgroundColor,
+      quotes: quotes,
+      quoteCardExtent: _quoteCardExtent,
+      references: NavigationStateHelper.latestAddedReferences,
+      topicCardExtent: _topicCardExtent,
+      refetchRandomQuotes: refetchRandomQuotes,
+      subQuotes: _subRandomQuotes,
+      topics: Constants.colors.topics,
+      topicScrollController: _topicScrollController,
     );
   }
 
@@ -416,12 +304,20 @@ class _DesktopHomePageState extends State<DesktopHomePage> with UiLoggy {
     }
   }
 
-  void fetchRandomQuotes() async {
-    final String currentLanguage = await getLanguage();
+  /// Refetches random quotes.
+  Future<void> refetchRandomQuotes() {
+    return fetchRandomQuotes(forceRefresh: true);
+  }
+
+  /// Fetches random quotes.
+  Future<void> fetchRandomQuotes({bool forceRefresh = false}) async {
+    final String currentLanguage = await Utils.linguistic.getLanguage();
     final bool hasLanguageChanged =
         NavigationStateHelper.lastRandomQuoteLanguage != currentLanguage;
 
-    if (NavigationStateHelper.randomQuotes.isNotEmpty && !hasLanguageChanged) {
+    if (NavigationStateHelper.randomQuotes.isNotEmpty &&
+        !hasLanguageChanged &&
+        !forceRefresh) {
       return;
     }
 
@@ -429,13 +325,14 @@ class _DesktopHomePageState extends State<DesktopHomePage> with UiLoggy {
       _pageState = _pageState != EnumPageState.loading
           ? EnumPageState.loadingRandomQuotes
           : EnumPageState.loading;
+
       _subRandomQuotes.clear();
       NavigationStateHelper.randomQuotes.clear();
       NavigationStateHelper.lastRandomQuoteLanguage = currentLanguage;
     });
 
     try {
-      final String language = await getLanguage();
+      final String language = await Utils.linguistic.getLanguage();
       final QuerySnapMap randomSnapshot = await FirebaseFirestore.instance
           .collection("randoms")
           .where("language", isEqualTo: language)
@@ -475,20 +372,15 @@ class _DesktopHomePageState extends State<DesktopHomePage> with UiLoggy {
         if (quote.author.id == Constants.skippingAuthor) {
           continue;
         }
-
         NavigationStateHelper.randomQuotes.add(quote);
       }
 
-      setState(() {
-        _pageState = EnumPageState.idle;
-        _subRandomQuotes.addAll(NavigationStateHelper.randomQuotes.sublist(1));
-      });
+      _subRandomQuotes.addAll(NavigationStateHelper.randomQuotes.sublist(1));
+      populateAppFrameColor(NavigationStateHelper.randomQuotes.first);
     } catch (error) {
       loggy.error(error);
-      if (!mounted) return;
-      setState(() {
-        _pageState = EnumPageState.idle;
-      });
+    } finally {
+      setState(() => _pageState = EnumPageState.idle);
     }
   }
 
@@ -719,5 +611,26 @@ class _DesktopHomePageState extends State<DesktopHomePage> with UiLoggy {
 
   void onChangeLanguage(EnumLanguageSelection locale) {
     fetchRandomQuotes();
+  }
+
+  void onReferenceIndexChanged(int index) {
+    setState(() {});
+  }
+
+  void populateAppFrameColor(Quote quote) {
+    if (quote.topics.isEmpty) {
+      return;
+    }
+
+    final Topic topic = Constants.colors.topics.firstWhere(
+      (Topic x) => x.name == quote.topics.first,
+      orElse: () => Topic.empty(),
+    );
+
+    final Signal<Color> appColorFrameSignal = context.get<Signal<Color>>(
+      EnumSignalId.appFrameColor,
+    );
+
+    appColorFrameSignal.update((value) => topic.color);
   }
 }

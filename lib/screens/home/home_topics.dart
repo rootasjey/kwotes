@@ -11,6 +11,7 @@ class HomeTopics extends StatelessWidget {
     this.isDark = false,
     this.backgroundColor,
     this.cardBackgroundColor,
+    this.margin = EdgeInsets.zero,
     this.onTapTopic,
   });
 
@@ -22,6 +23,9 @@ class HomeTopics extends StatelessWidget {
 
   /// Card's background color.
   final Color? cardBackgroundColor;
+
+  /// Margin of the widget.
+  final EdgeInsets margin;
 
   /// Callback fired when topic is tapped.
   final void Function(Topic topic)? onTapTopic;
@@ -36,10 +40,7 @@ class HomeTopics extends StatelessWidget {
 
     return SliverToBoxAdapter(
       child: Container(
-        padding: const EdgeInsets.only(
-          top: 24.0,
-          bottom: 42.0,
-        ),
+        padding: margin,
         color: backgroundColor,
         child: Column(
           children: [
@@ -54,7 +55,7 @@ class HomeTopics extends StatelessWidget {
               ),
             ),
             Text(
-              "topic.home_description".tr(),
+              "topics.home_description".tr(),
               style: Utils.calligraphy.body(
                 textStyle: TextStyle(
                   fontSize: 14.0,

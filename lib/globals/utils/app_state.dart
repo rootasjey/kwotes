@@ -1,4 +1,5 @@
 import "dart:async";
+import "dart:ui";
 
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:cloud_functions/cloud_functions.dart";
@@ -41,6 +42,11 @@ class AppState with UiLoggy {
   /// Whether the app should show the navigation bar
   /// (e.g. when displaying quote page).
   final Signal<bool> showNavigationBar = createSignal(true);
+
+  /// App frame color signal.
+  final Signal<Color> appFrameColor = createSignal(
+    const Color.fromRGBO(241, 237, 255, 1.0),
+  );
 
   /// Firebase auth stream subscription.
   StreamSubscription<firebase_auth.User?>? userAuthSubscription;

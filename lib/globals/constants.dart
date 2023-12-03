@@ -38,4 +38,7 @@ class Constants {
 
   /// Unique keys to store and retrieve data from local storage.
   static const storageKeys = StorageKeys();
+
+  /// Author to skip in random quotes.
+  static const String skippingAuthor = "ldlNL1YgBd4OkfNjGLhd";
 }
