@@ -379,7 +379,7 @@ class ApplicationBar extends StatelessWidget {
       ),
       MenuSeparator(),
       MenuAction(
-        title: "logout.name".tr(),
+        title: "signout.name".tr(),
         image: MenuImage.icon(UniconsLine.signout),
         callback: () {
           Utils.state.signOut();

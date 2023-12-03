@@ -42,7 +42,7 @@ class ShowcaseQuotes extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
           child: Text(
-            "topics".tr(),
+            "topics.name".tr(),
             textAlign: TextAlign.center,
             style: Utils.calligraphy.body(
               textStyle: TextStyle(

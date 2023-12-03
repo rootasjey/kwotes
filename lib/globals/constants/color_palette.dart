@@ -170,7 +170,6 @@ class ColorPalette {
 
   /// Secondary application's color.
   Color secondary = Colors.blue;
-  // Color secondary = Colors.pink;
 
   /// Color for profile.
   final Color profile = Colors.indigo;
@@ -190,7 +189,7 @@ class ColorPalette {
   /// Color for settings.
   final Color settings = Colors.amber;
 
-  final Color bio = Colors.deepPurple.shade300;
+  final Color search = Colors.deepPurple.shade300;
 
   final Color validation = Colors.green;
 }
