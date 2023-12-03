@@ -12,6 +12,7 @@ class BetterAvatar extends StatefulWidget {
     this.margin = EdgeInsets.zero,
     this.radius = 36.0,
     this.avatarMargin = const EdgeInsets.all(4.0),
+    this.onHover,
   }) : super(key: key);
 
   /// True if the avatar is selected.
@@ -28,6 +29,9 @@ class BetterAvatar extends StatefulWidget {
 
   /// Image provider (e.g. network, asset, ...).
   final ImageProvider<Object> imageProvider;
+
+  /// Callback fired when avatar is hovered.
+  final void Function(bool isHovered)? onHover;
 
   /// Callback fired when avatar is tapped.
   final void Function()? onTap;
@@ -115,6 +119,7 @@ class _BetterAvatarState extends State<BetterAvatar>
                         });
                       },
                       onHover: (final bool isHover) {
+                        widget.onHover?.call(isHover);
                         if (isHover) {
                           _elevation = (widget.elevation + 1.0) * 2;
                           _scaleAnimationController.forward();
