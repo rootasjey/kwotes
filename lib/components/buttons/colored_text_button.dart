@@ -9,8 +9,10 @@ class ColoredTextButton extends StatefulWidget {
     required this.textValue,
     this.icon,
     this.iconOnly = false,
+    this.iconOnRight = false,
     this.margin = EdgeInsets.zero,
     this.padding = EdgeInsets.zero,
+    this.textFlex = 1,
     this.style,
     this.onPressed,
     this.tooltip = "",
@@ -21,6 +23,12 @@ class ColoredTextButton extends StatefulWidget {
 
   /// Only show icon for this button if true.
   final bool iconOnly;
+
+  /// Show icon at the end if true.
+  final bool iconOnRight;
+
+  /// Style for this button.
+  final ButtonStyle? style;
 
   /// Accent color.
   final Color? accentColor;
@@ -34,14 +42,16 @@ class ColoredTextButton extends StatefulWidget {
   /// Callback fired when user taps this button.
   final void Function()? onPressed;
 
+  /// Creates a widget that expands a child of a [Row], [Column], or [Flex]
+  /// so that the child fills the available space along the flex
+  /// widget's main axis.
+  final int textFlex;
+
   /// Text value for this button.
   final String textValue;
 
   /// Tooltip for this button.
   final String tooltip;
-
-  /// Style for this button.
-  final ButtonStyle? style;
 
   /// Text alignment for this button.
   final TextAlign? textAlign;
@@ -97,7 +107,7 @@ class _ColoredTextButtonState extends State<ColoredTextButton> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (widget.icon != null)
+                if (widget.icon != null && !widget.iconOnRight)
                   Padding(
                     padding: widget.iconOnly
                         ? EdgeInsets.zero
@@ -106,6 +116,7 @@ class _ColoredTextButtonState extends State<ColoredTextButton> {
                   ),
                 if (!widget.iconOnly)
                   Expanded(
+                    flex: widget.textFlex,
                     child: Text(
                       widget.textValue,
                       textAlign: widget.textAlign,
@@ -116,6 +127,13 @@ class _ColoredTextButtonState extends State<ColoredTextButton> {
                         ).merge(widget.textStyle),
                       ),
                     ),
+                  ),
+                if (widget.icon != null && widget.iconOnRight)
+                  Padding(
+                    padding: widget.iconOnly
+                        ? EdgeInsets.zero
+                        : const EdgeInsets.only(right: 8.0),
+                    child: widget.icon,
                   ),
               ],
             ),
