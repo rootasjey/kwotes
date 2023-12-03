@@ -8,6 +8,7 @@ class TopicCard extends StatefulWidget {
   const TopicCard({
     super.key,
     required this.topic,
+    this.showName = true,
     this.startElevation = 0.0,
     this.backgroundColor,
     this.foregroundColor,
@@ -17,7 +18,12 @@ class TopicCard extends StatefulWidget {
     this.size = const Size(100.0, 100.0),
     this.shape,
     this.heroTag,
+    this.onHover,
   });
+
+  /// Show topic name below icon if true.
+  /// Default: true.
+  final bool showName;
 
   /// Background color.
   final Color? backgroundColor;
@@ -49,6 +55,9 @@ class TopicCard extends StatefulWidget {
   /// Callback fired when a topic color is tapped.
   final void Function(Topic topicColor)? onTap;
 
+  /// Callback fired when a topic color is hovered.
+  final void Function(Topic topicColor, bool isHover)? onHover;
+
   @override
   State<TopicCard> createState() => _TopicCardState();
 }
@@ -60,8 +69,10 @@ class _TopicCardState extends State<TopicCard> {
   /// Icon color on hover.
   Color? _iconHoverColor = Colors.transparent;
 
-  /// card's elevation.
+  /// Card's elevation on start.
   double _cardElevation = 0.0;
+
+  /// Card's elevation on hover.
   final double _endElevation = 0.0;
 
   /// Shake animation value target (to animate on hover).
@@ -85,6 +96,7 @@ class _TopicCardState extends State<TopicCard> {
       elevation: _cardElevation,
       color: widget.backgroundColor,
       shadowColor: _iconHoverColor?.withOpacity(0.2),
+      // shadowColor: _iconHoverColor?.withOpacity(0.2),
       shape: widget.shape,
       child: InkWell(
         customBorder: widget.shape,
@@ -92,6 +104,8 @@ class _TopicCardState extends State<TopicCard> {
         onTap:
             widget.onTap != null ? () => widget.onTap?.call(topicColor) : null,
         onHover: (bool isHover) {
+          widget.onHover?.call(topicColor, isHover);
+
           if (isHover) {
             setState(() {
               _cardElevation = widget.startElevation / 2.0;
@@ -127,24 +141,25 @@ class _TopicCardState extends State<TopicCard> {
                 color: _iconColor,
                 size: widget.iconSize,
               ).animate(target: _shakeAnimationTarget).shake(),
-              Padding(
-                padding: const EdgeInsets.only(top: 4.0),
-                child: Hero(
-                  tag: widget.heroTag ?? topicColor.name,
-                  child: Text(
-                    topicColor.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: Utils.calligraphy.body(
-                      textStyle: TextStyle(
-                        fontSize: 12.0,
-                        color: foregroundColor?.withOpacity(0.4),
-                        fontWeight: FontWeight.w500,
+              if (widget.showName)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4.0),
+                  child: Hero(
+                    tag: widget.heroTag ?? topicColor.name,
+                    child: Text(
+                      topicColor.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Utils.calligraphy.body(
+                        textStyle: TextStyle(
+                          fontSize: 12.0,
+                          color: foregroundColor?.withOpacity(0.4),
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
             ],
           ),
         ),
