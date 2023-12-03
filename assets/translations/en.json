@@ -60,6 +60,7 @@
     "latest_added": "Latest added authors",
     "loading": "Loading author",
     "name": "Author",
+    "names": "Authors",
     "no": "No author",
     "reset": "Reset author",
     "save": {
@@ -161,6 +162,14 @@
     "name": "Favourites"
   },
   "fictional": "Fictional",
+  "footer": {
+    "github": "You can find this project on GitHub",
+    "give_some_love": "Give some love",
+    "made_in": "This project is made in France",
+    "rights": "{}. All rights reserved.",
+    "tagline": "Repetition of one expression as part of another one.",
+    "thanks": "Thank you for using {}"
+  },
   "genre": {
       "name": "Genre",
       "primary": {
@@ -780,6 +789,7 @@
     "name": "Quote",
     "new": "New quote",
     "not_found": "The quote was not found in the list.",
+    "open_card": "Tap on a card to open a quote.",
     "open_random": "Click/Tap on a letter to open a quote.",
     "owned": {
       "description": "Published quotes from myself",
@@ -859,6 +869,7 @@
     "latest_added": "Latest added references",
     "loading": "Loading reference",
     "name": "Reference",
+    "names": "References",
     "reset": "Reset reference",
     "update": {
       "error": "An error occurred while updating reference",
@@ -947,9 +958,36 @@
   "theme": "Theme",
   "title": "Title",
   "topic": {
-    "home_description": "Tap on a topic to open related quotes"
+    "art": "Art",
+    "biology": "Biology",
+    "feelings": "Feelings",
+    "fun": "Fun",
+    "gratitude": "Gratitude",
+    "introspection": "Introspection",
+    "knowledge": "Knowledge",
+    "language": "Language",
+    "mature": "Mature",
+    "metaphor": "Metaphor",
+    "motivation": "Motivation",
+    "offensive": "Offensive",
+    "philosophy": "Philosophy",
+    "poetry": "Poetry",
+    "proverb": "Proverb",
+    "psychology": "Psychology",
+    "punchline": "Punchline",
+    "retrospection": "Retrospection",
+    "sciences": "Sciences",
+    "social": "Social",
+    "spiritual": "Spiritual",
+    "travel": "Travel",
+    "work": "Work"
   },
-  "topics": "Topics",
+  "topics": {
+    "home_description": "Tap on a topic to open related quotes.",
+    "name": "Topics",
+    "open_card": "Tap on a topic to open related quotes.",
+    "single": "Topic"
+  },
   "tos": {
     "name": "Terms of service",
     "title": "Terms of service",
@@ -985,6 +1023,13 @@
     }
   },
   "version": "Version",
+  "welcome": {
+    "home": {
+      "0": "Welcome to kwotes.",
+      "1": "We fetched random quotes for you.",
+      "2": "You can fetch new ones by tapping this text."
+    }
+  },
   "welcome_back": "Welcome back",
   "welcome_ex": "Welcome!",
   "zoom": "Zoom"

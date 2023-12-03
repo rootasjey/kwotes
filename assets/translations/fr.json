@@ -60,6 +60,7 @@
     "latest_added": "Derniers auteurs ajoutés",
     "loading": "Chargement de l'auteur",
     "name": "Auteur",
+    "names": "Authors",
     "no": "Pas d'auteur",
     "reset": "Reinitialiser l'auteur",
     "save": {
@@ -163,6 +164,14 @@
     "name": "Favoris"
   },
   "fictional": "Fictionnel",
+  "footer": {
+    "github": "Vous pouvez retrouver ce project sur GitHub",
+    "give_some_love": "Donnez un peu d'amour",
+    "made_in": "Ce projet a été créé en France",
+    "rights": "{}. Tout droits réservés.",
+    "tagline": "La répétition d'une partie d'une expression dans le cadre d'une autre.",
+    "thanks": "Merci d'utiliser {}"
+  },
   "genre": {
     "name": "Genre",
     "primary": {
@@ -794,6 +803,7 @@
     "name": "Citation",
     "new": "Nouvelle citation",
     "not_found": "The quote was not found in the list.",
+    "open_card": "Appuyez sur une carte pour ouvrir la citation.",
     "open_random": "Appuyez sur une lettre pour ouvrir une citation.",
     "owned": {
       "description": "Les citations que j'ai publiées",
@@ -872,6 +882,7 @@
     "latest_added":"Dernières références ajoutées",
     "loading":"Chargement de la référence",
     "name": "Référence",
+    "names": "Références",
     "reset": "Reinitialiser la référence",
     "update": {
       "failed": "Une erreur est survenue lors de la mise à jour de la référence.",
@@ -960,9 +971,36 @@
   "theme": "Thème",
   "title": "Titre",
   "topic": {
-    "home_description": "Cliquez sur un thème pour voir les citations liées"
+    "art": "Art",
+    "biology": "Biologie",
+    "feelings": "Sentiments",
+    "fun": "Fun",
+    "gratitude": "Gratitude",
+    "introspection": "Introspection",
+    "knowledge": "Connaissance",
+    "language": "Language",
+    "mature": "Mature",
+    "metaphor": "Metaphore",
+    "motivation": "Motivation",
+    "offensive": "Offensif",
+    "philosophy": "Philosophie",
+    "poetry": "Poésie",
+    "proverb": "Proverbe",
+    "psychology": "Psychologie",
+    "punchline": "Punchline",
+    "retrospection": "Rétrospection",
+    "sciences": "Sciences",
+    "social": "Sociale",
+    "spiritual": "Spirituel",
+    "travel": "Voyage",
+    "work": "Travail"
   },
-  "topics": "Thèmes",
+  "topics": {
+    "home_description": "Cliquez sur un thème pour voir les citations liées.",
+    "name": "Thèmes",
+    "open_card": "Appuyez sur un thème pour voir les citations liées.",
+    "single": "Thème"
+  },
   "tos": {
     "name": "Conditions générales d'utilisation",
     "title": "Contrat Général d'Utilisation",
@@ -998,6 +1036,13 @@
     }
   },
   "version": "Version",
+  "welcome": {
+    "home": {
+      "0": "Bienvenu•e sur kwotes.",
+      "1": "Nous avons récupéré un groupe aléatoire de citations pour vous.",
+      "2": "Vous pouvez en récupérer de nouvelles en appuyant sur ce texte."
+    }
+  },
   "welcome_back": "Welcome back",
   "welcome_ex": "Bienvenu(e) !",
   "zoom": "Agrandir l'image"
