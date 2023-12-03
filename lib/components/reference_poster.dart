@@ -10,6 +10,11 @@ class ReferencePoster extends StatefulWidget {
     this.margin = EdgeInsets.zero,
     this.accentColor = Colors.transparent,
     this.onTap,
+    this.onHover,
+    this.maxLines,
+    this.shape,
+    this.overflow,
+    this.titleTextStyle,
   });
 
   /// Selected if true.
@@ -25,8 +30,23 @@ class ReferencePoster extends StatefulWidget {
   /// Callback fired when reference is tapped.
   final void Function(Reference reference)? onTap;
 
+  /// Callback fired when reference is hovered.
+  final void Function(Reference reference, bool isHover)? onHover;
+
+  /// Title text max lines.
+  final int? maxLines;
+
   /// Reference to display.
   final Reference reference;
+
+  /// Shape of the poster.
+  final ShapeBorder? shape;
+
+  /// Title text overflow.
+  final TextOverflow? overflow;
+
+  /// Title text style.
+  final TextStyle? titleTextStyle;
 
   @override
   State<ReferencePoster> createState() => _ReferencePosterState();
@@ -34,6 +54,14 @@ class ReferencePoster extends StatefulWidget {
 
 class _ReferencePosterState extends State<ReferencePoster> {
   double _titleOpacity = 0.0;
+
+  final TextStyle _defaultTextStyle = Utils.calligraphy.body(
+    textStyle: const TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.w400,
+      fontSize: 32.0,
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +83,10 @@ class _ReferencePosterState extends State<ReferencePoster> {
       child: InkWell(
         splashColor: widget.accentColor?.withOpacity(0.6),
         onTap: () => widget.onTap?.call(widget.reference),
-        onHover: (value) => setState(() => _titleOpacity = value ? 1.0 : 0.0),
+        onHover: (bool isHover) {
+          widget.onHover?.call(widget.reference, isHover);
+          setState(() => _titleOpacity = isHover ? 1.0 : 0.0);
+        },
       ),
     );
 
@@ -64,13 +95,14 @@ class _ReferencePosterState extends State<ReferencePoster> {
       curve: Curves.decelerate,
       padding: widget.margin,
       child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(2.0),
-          side: BorderSide(
-            color: widget.accentColor ?? Colors.transparent,
-            width: 2.0,
-          ),
-        ),
+        shape: widget.shape ??
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(2.0),
+              side: BorderSide(
+                color: widget.accentColor ?? Colors.transparent,
+                width: 2.0,
+              ),
+            ),
         clipBehavior: Clip.antiAlias,
         child: Stack(
           children: [
@@ -87,13 +119,9 @@ class _ReferencePosterState extends State<ReferencePoster> {
                   ),
                   child: Text(
                     reference.name,
-                    style: Utils.calligraphy.body(
-                      textStyle: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 32.0,
-                      ),
-                    ),
+                    overflow: widget.overflow,
+                    maxLines: widget.maxLines,
+                    style: widget.titleTextStyle ?? _defaultTextStyle,
                   ),
                 ),
               ),
