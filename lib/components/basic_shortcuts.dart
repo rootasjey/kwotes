@@ -49,26 +49,10 @@ class BasicShortcuts extends StatelessWidget {
       focusNode?.requestFocus();
     });
 
-    Map<LogicalKeySet, Intent> shortcuts = {
+    final Map<LogicalKeySet, Intent> shortcuts = {
       LogicalKeySet(
         LogicalKeyboardKey.escape,
       ): const EscapeIntent(),
-      LogicalKeySet(
-        LogicalKeyboardKey.control,
-        LogicalKeyboardKey.keyN,
-      ): const AddQuoteIntent(),
-      LogicalKeySet(
-        LogicalKeyboardKey.control,
-        LogicalKeyboardKey.keyD,
-      ): const DashboardIntent(),
-      LogicalKeySet(
-        LogicalKeyboardKey.control,
-        LogicalKeyboardKey.keyH,
-      ): const HomeIntent(),
-      LogicalKeySet(
-        LogicalKeyboardKey.control,
-        LogicalKeyboardKey.keyS,
-      ): const SearchIntent(),
     };
 
     shortcuts.addAll(additionalShortcuts);
