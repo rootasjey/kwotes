@@ -16,8 +16,8 @@ class AddToListBody extends StatelessWidget {
     this.pageState = EnumPageState.idle,
     this.onScroll,
     this.quoteLists = const [],
-    this.maxHeight = 300,
-    this.maxWidth = 300,
+    this.maxHeight = 300.0,
+    this.maxWidth = 300.0,
     this.onTapListItem,
     this.selectedQuoteLists = const [],
   });
@@ -53,6 +53,7 @@ class AddToListBody extends StatelessWidget {
   Widget build(BuildContext context) {
     if (pageState == EnumPageState.loading) {
       return LoadingView(
+        useSliver: false,
         message: "loading".tr(),
       );
     }

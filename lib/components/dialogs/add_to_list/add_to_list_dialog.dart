@@ -156,6 +156,7 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
 
     return ThemedDialog(
       width: 400.0,
+      height: 474.0,
       autofocus: widget.autofocus,
       useRawDialog: true,
       title: AddToListHeader(
@@ -282,6 +283,8 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
         });
       }
     }
+
+    Navigator.of(context).pop();
   }
 
   /// Create a new list and add a quote to it.
