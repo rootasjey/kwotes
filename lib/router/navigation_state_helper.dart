@@ -1,5 +1,6 @@
 import "package:flutter/widgets.dart";
 import "package:kwotes/types/author.dart";
+import "package:kwotes/types/enums/enum_frame_border_style.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/quote_list.dart";
 import "package:kwotes/types/reference.dart";
@@ -19,6 +20,9 @@ class NavigationStateHelper {
   /// We need this property on top of the local storage
   /// in order to syncronously know where to navigate (with the router).
   static bool fullscreenQuotePage = true;
+
+  /// App frame border style.
+  static EnumFrameBorderStyle frameBorderStyle = EnumFrameBorderStyle.discrete;
 
   /// Hide duplicated actions (e.g. [close], [copy]) on quote page,
   /// if this is true.
