@@ -198,16 +198,21 @@ class EmptyView extends StatelessWidget {
                 ),
               ),
             ),
-            ColoredTextButton(
-              onPressed: onTapBackButton,
-              textValue: buttonTextValue,
-              textAlign: TextAlign.center,
-              margin: const EdgeInsets.only(top: 24.0),
-              style: TextButton.styleFrom(
-                backgroundColor: accentColor?.withOpacity(0.2),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 16.0,
-                  horizontal: 24.0,
+            ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: 160.0,
+              ),
+              child: ColoredTextButton(
+                onPressed: onTapBackButton,
+                textValue: buttonTextValue,
+                textAlign: TextAlign.center,
+                margin: const EdgeInsets.only(top: 24.0),
+                style: TextButton.styleFrom(
+                  backgroundColor: accentColor?.withOpacity(0.2),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 16.0,
+                    horizontal: 24.0,
+                  ),
                 ),
               ),
             ),
