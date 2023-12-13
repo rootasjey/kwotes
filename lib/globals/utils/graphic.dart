@@ -396,21 +396,28 @@ class Graphic {
   }
 
   /// Show a snackbar with custom text.
-  void showSnackbarWithCustomText(
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
+      showSnackbarWithCustomText(
     BuildContext context, {
     required Widget text,
+    bool showCloseIcon = true,
+    ShapeBorder? shape,
+    SnackBarBehavior? behavior,
+    Duration duration = const Duration(seconds: 4),
   }) {
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
     final Color backgroundColor = Theme.of(context).dialogBackgroundColor;
 
-    ScaffoldMessenger.of(context).showSnackBar(
+    return ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: text,
-        showCloseIcon: true,
         backgroundColor: backgroundColor,
+        behavior: behavior,
         closeIconColor: foregroundColor?.withOpacity(0.6),
-        behavior: SnackBarBehavior.fixed,
+        content: text,
+        duration: duration,
+        shape: shape,
+        showCloseIcon: showCloseIcon,
       ),
     );
   }
