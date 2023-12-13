@@ -43,6 +43,7 @@
       "name": "Copier le nom",
       "success": {
         "link": "Le lien de l'auteur a été copié.",
+        "summary": "La biographie de l'auteur a été copiée.",
         "name": "Le nom de l'auteur a été copié."
       },
       "url": "Copier le l'URL"
@@ -816,6 +817,12 @@
       "success": "Citation retirée avec succès !"
     },
     "save": {
+      "draft": {
+        "failed": "Une erreur est survenue lors de la sauvegarde du brouillon. Veuillez réessayer plus tard.",
+        "name": "Sauvegarder le brouillon",
+        "success": "Le brouillon a été sauvegardé !",
+        "validation": "Vous pouvez soumettre pour validation lorsque vous le souhaitez."
+      },
       "failed": "Une erreur est survenue lors de la sauvegarde de la citation. Veuillez réessayer plus tard.",
       "ing": "Sauvegarde de la citation",
       "name": "Sauvegarder la citation",
@@ -893,6 +900,7 @@
   "release_date": "Date de sortie",
   "report_bug": "Signaler a bug",
   "resources": "Ressources",
+  "rollback": "Annuler",
   "search": {
     "authors": "Recherche d'auteurs",
     "clear": "Effacer",
@@ -935,6 +943,11 @@
   "settings": {
     "behaviour": {
       "name": "Comportement",
+      "frame_border_style": {
+        "colored": "Bordures de fenêtre colorées",
+        "highContrast": "Contraste élevé des bordures de fenêtre",
+        "discrete": "Bordures de fenêtre discrètes"
+      },
       "fullscreen_quote_page": {
         "true": "Citation plein écran: ON",
         "false": "Citation plein écran: OFF"

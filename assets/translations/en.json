@@ -43,6 +43,7 @@
       "name": "Copy name",
       "success": {
         "name": "Author's name successfully copied.",
+        "summary":"Author's biography has been successfully copied.",
         "url": "Author's URL successfully copied."
       },
       "url": "Copy URL"
@@ -802,6 +803,12 @@
       "success": "Quote successfully removed!"
     },
     "save": {
+      "draft": {
+        "failed": "Failed to save draft. Please try again.",
+        "name": "Save draft",
+        "success": "Draft successfully saved!",
+        "validation": "You can submit for validation when you're ready."
+      },
       "failed": "Failed to save quote. Please try again.",
       "ing": "Saving the quote",
       "name": "Save quote",
@@ -880,6 +887,7 @@
   "release_date": "Release date",
   "report_bug": "Report a bug",
   "resources": "Resources",
+  "rollback": "Rollback",
   "search": {
     "authors": "Search authors",
     "clear": "Clear",
@@ -922,6 +930,11 @@
   "settings": {
     "behaviour": {
       "name": "Behaviour",
+      "frame_border_style" : {
+        "colored": "Colored frame border",
+        "highContrast": "High contrast frame border",
+        "discrete": "Discrete frame border"
+      },
       "fullscreen_quote_page": {
         "true": "Fullscreen quote page: ON",
         "false": "Fullscreen quote page: OFF"
