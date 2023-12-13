@@ -76,20 +76,24 @@ class CircleButton extends StatelessWidget {
     required final Function()? onTap,
     required final Widget child,
     Color borderColor = const Color(0xFF000000),
+    final EdgeInsets margin = EdgeInsets.zero,
   }) {
-    return Container(
-      height: 28.0,
-      width: 28.0,
-      decoration: BoxDecoration(
-        border: Border.all(width: 2.0, color: borderColor),
-        borderRadius: BorderRadius.circular(24.0),
-      ),
-      clipBehavior: Clip.hardEdge,
-      child: InkWell(
-        canRequestFocus: false,
-        borderRadius: BorderRadius.circular(24.0),
-        onTap: onTap,
-        child: child,
+    return Padding(
+      padding: margin,
+      child: Container(
+        height: 28.0,
+        width: 28.0,
+        decoration: BoxDecoration(
+          border: Border.all(width: 2.0, color: borderColor),
+          borderRadius: BorderRadius.circular(24.0),
+        ),
+        clipBehavior: Clip.hardEdge,
+        child: InkWell(
+          canRequestFocus: false,
+          borderRadius: BorderRadius.circular(24.0),
+          onTap: onTap,
+          child: child,
+        ),
       ),
     );
   }
@@ -101,20 +105,24 @@ class CircleButton extends StatelessWidget {
     Color backgroundColor = Colors.black12,
     String tooltip = "",
     bool showBorder = false,
+    EdgeInsets margin = EdgeInsets.zero,
   }) {
-    return Material(
-      shape: CircleBorder(
-        side: showBorder
-            ? const BorderSide(color: Colors.white38, width: 2.0)
-            : BorderSide.none,
-      ),
-      clipBehavior: Clip.antiAlias,
-      color: Colors.transparent,
-      elevation: elevation,
-      child: CircleAvatar(
-        backgroundColor: backgroundColor,
-        radius: radius,
-        child: icon,
+    return Padding(
+      padding: margin,
+      child: Material(
+        shape: CircleBorder(
+          side: showBorder
+              ? const BorderSide(color: Colors.white38, width: 2.0)
+              : BorderSide.none,
+        ),
+        clipBehavior: Clip.antiAlias,
+        color: Colors.transparent,
+        elevation: elevation,
+        child: CircleAvatar(
+          backgroundColor: backgroundColor,
+          radius: radius,
+          child: icon,
+        ),
       ),
     );
   }
