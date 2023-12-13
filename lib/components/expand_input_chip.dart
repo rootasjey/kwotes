@@ -11,23 +11,24 @@ class ExpandInputChip extends StatefulWidget {
   /// A chip which expand its content on tap to show a text input.
   const ExpandInputChip({
     super.key,
-    this.backgroundColor,
-    this.onPressed,
-    this.tooltip,
-    this.avatar,
-    this.elevation,
-    this.onTextChanged,
-    this.textEditingController,
-    this.hintText,
-    this.open,
-    this.hideCloseIcon = false,
     this.autofocus = false,
-    this.margin = EdgeInsets.zero,
-    this.width,
+    this.hideCloseIcon = false,
+    this.backgroundColor,
+    this.open,
     this.borderSide,
+    this.elevation,
+    this.width,
+    this.margin = EdgeInsets.zero,
+    this.chipPadding,
+    this.onPressed,
+    this.onTextChanged,
     this.onFocusChanged,
     this.onSubmitted,
+    this.hintText,
     this.initialValue,
+    this.tooltip,
+    this.textEditingController,
+    this.avatar,
   });
 
   /// Request focus on chip's input if true.
@@ -55,6 +56,9 @@ class ExpandInputChip extends StatefulWidget {
 
   /// Outside space to be applied on the chip relative to its parent.
   final EdgeInsets margin;
+
+  /// Padding to be applied inside the chip.
+  final EdgeInsets? chipPadding;
 
   /// Callback fired when the chip is tapped.
   final void Function()? onPressed;
@@ -155,6 +159,8 @@ class _ExpandInputChipState extends State<ExpandInputChip> {
               onPressed: onActionChipPressed,
               avatar: widget.avatar,
               label: textField(),
+              clipBehavior: Clip.antiAlias,
+              padding: widget.chipPadding,
               labelPadding: EdgeInsets.zero,
               side: widget.borderSide,
               backgroundColor: getBackgroundColor(),
