@@ -82,6 +82,7 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
   @override
   Widget build(BuildContext context) {
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       body: ImprovedScrolling(
@@ -107,6 +108,7 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
               ),
               DraftsPageBody(
                 animateList: _animateList,
+                isDark: isDark,
                 isMobileSize: isMobileSize,
                 pageState: _pageState,
                 draftQuotes: _quotes,

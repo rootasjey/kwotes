@@ -120,6 +120,8 @@ class _ListPageState extends State<ListPage> with UiLoggy {
     final void Function()? onSave =
         _nameController.text.isEmpty ? null : trySaveList;
 
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Shortcuts(
       shortcuts: _shortcuts,
       child: Actions(
@@ -161,10 +163,12 @@ class _ListPageState extends State<ListPage> with UiLoggy {
                   ),
                   ListPageBody(
                     animateList: _animateList,
+                    isDark: isDark,
                     isMobileSize: isMobileSize,
                     pageState: _pageState,
                     quotes: _quotes,
                     onCopy: onCopy,
+                    onDoubleTap: onDoubleTap,
                     onTap: onTap,
                     onRemove: onRemoveFromList,
                     userId: currentUser.value.id,
@@ -322,6 +326,16 @@ class _ListPageState extends State<ListPage> with UiLoggy {
   /// Copy a quote's name.
   void onCopy(Quote quote) {
     QuoteActions.copyQuote(quote);
+  }
+
+  /// Copy a quote's name when the user double taps a quote.
+  void onDoubleTap(Quote quote) {
+    QuoteActions.copyQuote(quote);
+
+    Utils.graphic.showSnackbar(
+      context,
+      message: "quote.copy.success.name".tr(),
+    );
   }
 
   /// Callback to enter create mode.

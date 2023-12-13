@@ -118,6 +118,7 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
     final bool onCreateActive = _pageState != EnumPageState.creatingList &&
         _newQuoteList.name.isNotEmpty;
 
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
     final bool allowEscapeIntent =
         _showCreate || _editingListId.isNotEmpty || _deletingListId.isNotEmpty;
@@ -133,11 +134,12 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
         },
         child: Scaffold(
           floatingActionButton: ListsPageFab(
-            fabActive: fabActive,
+            isActive: fabActive,
             isMobileSize: isMobileSize,
             showCreate: _showCreate,
-            accentColor: _accentColor,
-            onToggleCreate: onToggleCreate,
+            backgroundColor: Colors.white,
+            splashColor: _accentColor,
+            onPressed: onToggleCreate,
           ),
           body: ImprovedScrolling(
             scrollController: _pageScrollController,
@@ -167,6 +169,7 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
                   ),
                   ListsPageBody(
                     animateList: _animateList,
+                    isDark: isDark,
                     isMobileSize: isMobileSize,
                     editingListId: _editingListId,
                     deletingListId: _deletingListId,

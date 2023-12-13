@@ -96,6 +96,7 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
     final Signal<UserFirestore> signalUserFirestore =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       body: ImprovedScrolling(
@@ -147,6 +148,7 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
 
                   return InValidationPageBody(
                     animateList: _animateList,
+                    isDark: isDark,
                     isMobileSize: isMobileSize,
                     pageState: _pageState,
                     quotes: _quotes,
@@ -201,9 +203,8 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
       });
     } catch (error) {
       loggy.error(error);
-      setState(() {
-        _pageState = EnumPageState.error;
-      });
+      if (!mounted) return;
+      setState(() => _pageState = EnumPageState.error);
     }
   }
 

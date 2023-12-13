@@ -14,6 +14,7 @@ class DraftsPageBody extends StatelessWidget {
     super.key,
     required this.draftQuotes,
     this.animateList = true,
+    this.isDark = false,
     this.isMobileSize = false,
     this.pageState = EnumPageState.idle,
     this.onTap,
@@ -24,6 +25,9 @@ class DraftsPageBody extends StatelessWidget {
 
   /// Animate list's items if true.
   final bool animateList;
+
+  /// True if the page is mobile size.
+  final bool isDark;
 
   /// Adapt user interface to tiny screens if true.
   final bool isMobileSize;
@@ -61,9 +65,9 @@ class DraftsPageBody extends StatelessWidget {
           : const EdgeInsets.only(top: 6.0, left: 48.0, right: 72.0),
       sliver: SliverList.separated(
         separatorBuilder: (BuildContext context, int index) {
-          return const Divider(
-            height: 54.0,
-          );
+          return isDark
+              ? const Divider(height: 54.0, color: Colors.white12)
+              : const Divider(height: 54.0, color: Colors.black12);
         },
         itemBuilder: (BuildContext context, int index) {
           final DraftQuote draftQuote = draftQuotes[index];

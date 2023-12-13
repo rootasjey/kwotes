@@ -19,8 +19,10 @@ class ListPageBody extends StatelessWidget {
     required this.quotes,
     required this.userId,
     this.animateList = false,
+    this.isDark = false,
     this.pageState = EnumPageState.idle,
     this.onRemove,
+    this.onDoubleTap,
     this.onTap,
     this.onCopy,
     this.isMobileSize = false,
@@ -28,6 +30,9 @@ class ListPageBody extends StatelessWidget {
 
   /// Animate list's items if true.
   final bool animateList;
+
+  /// Adapt UI for dark mode.
+  final bool isDark;
 
   /// Adapt UI for mobile size.
   final bool isMobileSize;
@@ -40,6 +45,9 @@ class ListPageBody extends StatelessWidget {
 
   /// Callback fired to copy a quote.
   final void Function(Quote quote)? onCopy;
+
+  /// Callback fired to double tap a quote.
+  final void Function(Quote quote)? onDoubleTap;
 
   /// Callback fired to remove a quote from the list.
   final void Function(Quote quote)? onRemove;
@@ -61,7 +69,9 @@ class ListPageBody extends StatelessWidget {
 
     if (quotes.isEmpty) {
       return EmptyView(
-        margin: const EdgeInsets.symmetric(horizontal: 24.0),
+        margin: isMobileSize
+            ? const EdgeInsets.symmetric(horizontal: 24.0)
+            : const EdgeInsets.symmetric(horizontal: 48.0),
         title: "list.empty.name".tr(),
         description: "list.empty.description".tr(),
       );
@@ -73,7 +83,9 @@ class ListPageBody extends StatelessWidget {
           : const EdgeInsets.only(top: 6.0, left: 48.0, right: 72.0),
       sliver: SliverList.separated(
         separatorBuilder: (BuildContext context, int index) {
-          return const Divider(height: 54.0);
+          return isDark
+              ? const Divider(height: 54.0, color: Colors.white12)
+              : const Divider(height: 54.0, color: Colors.black12);
         },
         itemBuilder: (BuildContext context, int index) {
           final Quote quote = quotes[index];
@@ -81,7 +93,7 @@ class ListPageBody extends StatelessWidget {
           return ContextMenuWidget(
             child: QuoteText(
               quote: quote,
-              margin: const EdgeInsets.only(bottom: 0.0),
+              onDoubleTap: onDoubleTap,
               onTap: onTap,
               tiny: isMobileSize,
             )

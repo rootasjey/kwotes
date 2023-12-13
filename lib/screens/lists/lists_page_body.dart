@@ -13,6 +13,8 @@ class ListsPageBody extends StatelessWidget {
     super.key,
     required this.lists,
     this.animateList = false,
+    this.isDark = false,
+    this.isMobileSize = false,
     this.pageState = EnumPageState.idle,
     this.onTap,
     this.onDeleteList,
@@ -23,11 +25,13 @@ class ListsPageBody extends StatelessWidget {
     this.onCancelDeleteList,
     this.onConfirmDeleteList,
     this.deletingListId = "",
-    this.isMobileSize = false,
   });
 
   /// Animate list's items if true.
   final bool animateList;
+
+  /// Uses dark theme if true.
+  final bool isDark;
 
   /// Adapt UI for mobile size.
   final bool isMobileSize;
@@ -81,8 +85,10 @@ class ListsPageBody extends StatelessWidget {
           : const EdgeInsets.only(left: 48.0, right: 72.0),
       sliver: SliverList.separated(
         separatorBuilder: (BuildContext context, int index) {
-          return const Divider(
+          return Divider(
             height: 54.0,
+            thickness: isDark ? 2.0 : 1.0,
+            color: isDark ? Colors.white12 : Colors.black12,
           );
         },
         itemBuilder: (BuildContext context, int index) {
