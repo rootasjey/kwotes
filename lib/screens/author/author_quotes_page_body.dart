@@ -10,6 +10,7 @@ import "package:super_context_menu/super_context_menu.dart";
 class AuthorQuotesPageBody extends StatelessWidget {
   const AuthorQuotesPageBody({
     super.key,
+    this.isDark = false,
     this.isMobileSize = false,
     this.accentColor,
     this.onDoubleTapQuote,
@@ -22,6 +23,9 @@ class AuthorQuotesPageBody extends StatelessWidget {
     this.onShareLink,
     this.onShareText,
   });
+
+  /// Adapt UI for dark mode.
+  final bool isDark;
 
   /// Whether to use mobile layout.
   final bool isMobileSize;
@@ -74,15 +78,17 @@ class AuthorQuotesPageBody extends StatelessWidget {
     }
 
     return SliverPadding(
-      padding: const EdgeInsets.only(
-        top: 24.0,
-        left: 18.0,
-        right: 18.0,
+      padding: EdgeInsets.only(
+        top: 48.0,
+        left: isMobileSize ? 24.0 : 48.0,
+        right: 24.0,
         bottom: 54.0,
       ),
       sliver: SliverList.separated(
         separatorBuilder: (BuildContext context, int index) {
-          return const Divider(height: 64.0);
+          return isDark
+              ? const Divider(height: 54.0, color: Colors.white12)
+              : const Divider(height: 54.0, color: Colors.black12);
         },
         itemBuilder: (BuildContext context, int index) {
           final Quote quote = quotes[index];

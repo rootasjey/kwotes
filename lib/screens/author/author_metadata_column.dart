@@ -6,8 +6,8 @@ import "package:kwotes/globals/utils.dart";
 import "package:kwotes/components/buttons/colored_text_button.dart";
 import "package:kwotes/types/author.dart";
 
-class AuthorMetadaColumn extends StatelessWidget {
-  const AuthorMetadaColumn({
+class AuthorMetadataColumn extends StatelessWidget {
+  const AuthorMetadataColumn({
     super.key,
     required this.author,
     required this.foregroundColor,
@@ -164,6 +164,11 @@ class AuthorMetadaColumn extends StatelessWidget {
             ColoredTextButton(
               icon: const Icon(TablerIcons.eye, size: 16.0),
               onPressed: onToggleOpen,
+              style: TextButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+              ),
               textValue: "see_metadata".tr(),
               textStyle: Utils.calligraphy.body(
                 textStyle: const TextStyle(
@@ -175,6 +180,11 @@ class AuthorMetadaColumn extends StatelessWidget {
             ColoredTextButton(
               icon: const Icon(TablerIcons.x, size: 16.0),
               onPressed: onToggleOpen,
+              style: TextButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+              ),
               textValue: "close".tr(),
               textStyle: Utils.calligraphy.body(
                 textStyle: const TextStyle(
@@ -190,6 +200,9 @@ class AuthorMetadaColumn extends StatelessWidget {
               child: Card(
                 elevation: 8.0,
                 margin: EdgeInsets.zero,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
                 color: isDark ? null : Colors.grey.shade100,
                 child: InkWell(
                   onTap: onToggleOpen,
@@ -207,7 +220,7 @@ class AuthorMetadaColumn extends StatelessWidget {
                         );
                       },
                       separatorBuilder: (BuildContext context, int index) {
-                        return const Divider();
+                        return Divider(color: foregroundColor.withOpacity(0.2));
                       },
                       itemCount: children.length,
                     ),

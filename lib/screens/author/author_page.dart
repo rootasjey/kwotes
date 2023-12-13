@@ -13,6 +13,7 @@ import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/locations/search_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
@@ -101,7 +102,6 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
         userFirestoreSignal.value.rights.canManageAuthors;
 
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-
     final Color randomColor = Constants.colors.getRandomFromPalette(
       withGoodContrast: !isDark,
     );
@@ -143,8 +143,8 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
               maxHeight: windowSize.height / 2,
               onDoubleTapName: onDoubleTapAuthorName,
               onDoubleTapSummary: onDoubleTapAuthorSummary,
-              onTapName: onTapAuthorName,
-              onTapSeeQuotes: onTapSeeQuotes,
+              onTapAvatar: onTapAuthorName,
+              onTapSeeQuotes: onTapRelatedQuotes,
               onToggleMetadata: onToggleAuthorMetadata,
               randomColor: randomColor,
             ),
@@ -159,7 +159,6 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
 
     await Future.wait([
       fetchAuthor(widget.authorId),
-      // fetchAuthorQuotes(widget.authorId),
     ]);
 
     setState(() => _pageState = EnumPageState.idle);
@@ -334,7 +333,7 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
   }
 
   /// Callback fired to see author's quotes.
-  void onTapSeeQuotes() {
+  void onTapRelatedQuotes() {
     final BeamerDelegate beamer = Beamer.of(context);
 
     final bool hasSearch = beamer
@@ -348,6 +347,20 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
           "query": "quotes:author:${_author.id}",
           "subjectName": _author.name,
         },
+      );
+      return;
+    }
+
+    final bool hasDashboard = beamer
+        .beamingHistory.last.state.routeInformation.uri.pathSegments
+        .contains("d");
+
+    if (hasDashboard) {
+      beamer.beamToNamed(
+        DashboardContentLocation.authorQuotesRoute.replaceFirst(
+          ":authorId",
+          _author.id,
+        ),
       );
       return;
     }

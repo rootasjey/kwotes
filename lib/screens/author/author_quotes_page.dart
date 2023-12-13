@@ -85,6 +85,7 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
     }
 
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       body: ImprovedScrolling(
@@ -103,8 +104,8 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
                 onTapAvatar: onTapAuthorAvatar,
               ),
               HeaderFilterListView(
-                margin: const EdgeInsets.only(
-                  left: 24.0,
+                margin: EdgeInsets.only(
+                  left: isMobileSize ? 24.0 : 48.0,
                   top: 12.0,
                   right: 12.0,
                 ),
@@ -119,6 +120,7 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
                 accentColor: Constants.colors.getRandomFromPalette(
                   withGoodContrast: true,
                 ),
+                isDark: isDark,
                 isMobileSize: isMobileSize,
                 pageState: _pageState,
                 quotes: _quotes,

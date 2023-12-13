@@ -23,7 +23,7 @@ class AuthorPageBody extends StatelessWidget {
     this.onDoubleTapName,
     this.onDoubleTapSummary,
     this.onTapSeeQuotes,
-    this.onTapName,
+    this.onTapAvatar,
     this.onToggleMetadata,
     this.authorNameTextStyle = const TextStyle(),
   });
@@ -56,7 +56,7 @@ class AuthorPageBody extends StatelessWidget {
   final void Function()? onDoubleTapSummary;
 
   /// Callback fired when the author name is tapped.
-  final void Function()? onTapName;
+  final void Function()? onTapAvatar;
 
   /// Callback fired when the "see related quotes" button is tapped.
   final void Function()? onTapSeeQuotes;
@@ -87,31 +87,26 @@ class AuthorPageBody extends StatelessWidget {
       sliver: SliverList(
         delegate: SliverChildListDelegate([
           GestureDetector(
-            onTap: onTapName,
             onDoubleTap: onDoubleTapName,
             child: Padding(
-              padding: isMobileSize
-                  ? EdgeInsets.only(
-                      left: leftPadding,
-                      right: rightPadding,
-                      bottom: 24.0,
-                    )
-                  : EdgeInsets.zero,
+              padding: EdgeInsets.only(
+                left: leftPadding,
+                right: rightPadding,
+                bottom: 24.0,
+              ),
               child: Hero(
                 tag: author.id,
                 child: Material(
                   color: Colors.transparent,
                   child: Text(
                     author.name,
-                    style: Utils.calligraphy.title(
-                      textStyle: authorNameTextStyle,
-                    ),
+                    style: authorNameTextStyle,
                   ),
                 ),
               ),
             ),
           ),
-          AuthorMetadaColumn(
+          AuthorMetadataColumn(
             author: author,
             isDark: isDark,
             foregroundColor: foregroundColor,
@@ -124,43 +119,51 @@ class AuthorPageBody extends StatelessWidget {
             ),
             show: isMobileSize,
           ),
-          GestureDetector(
-            onDoubleTap: onDoubleTapSummary,
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: leftPadding,
-                right: rightPadding,
-              ),
-              child: DefaultTextStyle(
-                style: Utils.calligraphy.body(
-                  textStyle: TextStyle(
-                    fontSize: isMobileSize ? 16.0 : 24.0,
-                    color: foregroundColor.withOpacity(0.6),
-                  ),
-                ),
-                child: AnimatedTextKit(
-                  isRepeatingAnimation: false,
-                  displayFullTextOnTap: true,
-                  animatedTexts: [
-                    TypewriterAnimatedText(
-                      author.summary,
-                      speed: const Duration(milliseconds: 10),
-                      curve: Curves.decelerate,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          AuthorMetadaRow(
+          AuthorMetadataRow(
             author: author,
             foregroundColor: foregroundColor,
+            onToggleOpen: onToggleMetadata,
+            opened: areMetadataOpen,
+            onTapAvatar: onTapAvatar,
             margin: EdgeInsets.only(
-              top: 24.0,
-              left: leftPadding,
+              bottom: 24.0,
+              left: leftPadding - 6.0,
               right: rightPadding,
             ),
             show: !isMobileSize,
+          ),
+          GestureDetector(
+            onDoubleTap: onDoubleTapSummary,
+            child: FractionallySizedBox(
+              alignment: Alignment.topLeft,
+              widthFactor: isMobileSize ? 1.0 : 0.7,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: leftPadding,
+                  right: rightPadding,
+                ),
+                child: DefaultTextStyle(
+                  style: Utils.calligraphy.body(
+                    textStyle: TextStyle(
+                      fontSize: isMobileSize ? 16.0 : 28.0,
+                      color: foregroundColor.withOpacity(0.6),
+                      fontWeight: isMobileSize ? null : FontWeight.w300,
+                    ),
+                  ),
+                  child: AnimatedTextKit(
+                    isRepeatingAnimation: false,
+                    displayFullTextOnTap: true,
+                    animatedTexts: [
+                      TypewriterAnimatedText(
+                        author.summary,
+                        speed: const Duration(milliseconds: 10),
+                        curve: Curves.decelerate,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ),
           Align(
             alignment: Alignment.topLeft,
@@ -182,8 +185,8 @@ class AuthorPageBody extends StatelessWidget {
                     Text(
                       "see_related_quotes".tr(),
                       style: Utils.calligraphy.body(
-                        textStyle: TextStyle(
-                          fontSize: isMobileSize ? 16.0 : 24.0,
+                        textStyle: const TextStyle(
+                          fontSize: 16.0,
                         ),
                       ),
                     ),
@@ -195,7 +198,14 @@ class AuthorPageBody extends StatelessWidget {
                 ),
               ),
             ),
-          ).animate().slideY(begin: 0.8, end: 0.0, duration: 250.ms).fadeIn(),
+          )
+              .animate()
+              .slideY(
+                begin: 0.8,
+                end: 0.0,
+                duration: 250.ms,
+              )
+              .fadeIn(),
         ]),
       ),
     );
