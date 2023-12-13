@@ -4,7 +4,6 @@ import "dart:ui";
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/buttons/circle_button.dart";
 import "package:kwotes/components/dot_indicator.dart";
@@ -14,11 +13,9 @@ import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
-import "package:kwotes/router/locations/search_location.dart";
 import "package:kwotes/router/locations/signin_location.dart";
 import "package:kwotes/types/enums/enum_app_bar_mode.dart";
 import "package:kwotes/types/enums/enum_search_category.dart";
-import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/user/user_auth.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 import "package:super_context_menu/super_context_menu.dart";
@@ -94,12 +91,6 @@ class ApplicationBar extends StatelessWidget {
   Widget build(
     BuildContext context,
   ) {
-    final Signal<UserAuth?> userAuthSignal =
-        context.get<Signal<UserAuth?>>(EnumSignalId.userAuth);
-
-    final Signal<UserFirestore> userFirestoreSignal =
-        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
-
     final String location = Beamer.of(context)
         .beamingHistory
         .last
@@ -169,12 +160,6 @@ class ApplicationBar extends StatelessWidget {
                 children: [
                   ...rightChildren,
                   if (!isMobileSize) ...iconChildren(context),
-                  if (!isMobileSize)
-                    DualSignalBuilder(
-                      firstSignal: userAuthSignal,
-                      secondSignal: userFirestoreSignal,
-                      builder: authButtonBuilder,
-                    ),
                 ],
               ),
             ],
@@ -186,19 +171,14 @@ class ApplicationBar extends StatelessWidget {
   }
 
   List<Widget> iconChildren(BuildContext context) {
+    if (mode == EnumAppBarMode.settings) {
+      return [];
+    }
+
     final Color? defaultColor = Theme.of(context).textTheme.bodyMedium?.color;
 
     if (mode != EnumAppBarMode.search) {
-      return [
-        IconButton(
-          onPressed: () {
-            context.beamToNamed(SearchLocation.route);
-          },
-          tooltip: "search.name".tr(),
-          color: defaultColor,
-          icon: const Icon(UniconsLine.search),
-        ),
-      ];
+      return [];
     }
 
     final bool quoteSelected =
@@ -294,7 +274,7 @@ class ApplicationBar extends StatelessWidget {
     UserFirestore userFirestore,
     Widget? child,
   ) {
-    if (mode == EnumAppBarMode.signin) {
+    if (mode == EnumAppBarMode.signin || mode == EnumAppBarMode.home) {
       return Container();
     }
 
