@@ -2,6 +2,7 @@ import "dart:math";
 
 import "package:beamer/beamer.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
@@ -9,15 +10,13 @@ import "package:infinite_carousel/infinite_carousel.dart";
 import "package:kwotes/actions/quote_actions.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
-import "package:kwotes/router/locations/author_location.dart";
-import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
-import "package:kwotes/router/locations/reference_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/home/desktop_layout.dart";
 import "package:kwotes/screens/home/mobile_layout.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/author.dart";
+import "package:kwotes/types/enums/enum_frame_border_style.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
@@ -59,6 +58,7 @@ class _HomePageState extends State<HomePage> with UiLoggy {
   /// Show topic right arrow if true.
   bool _enableTopicRightArrow = true;
 
+  /// Background color of the reference posters section.
   Color? _posterBackgroundColor;
 
   /// Item size in the caroussel.
@@ -141,7 +141,6 @@ class _HomePageState extends State<HomePage> with UiLoggy {
   @override
   Widget build(BuildContext context) {
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
-
     final List<Quote> quotes = NavigationStateHelper.randomQuotes;
 
     if (isMobileSize) {
@@ -177,6 +176,7 @@ class _HomePageState extends State<HomePage> with UiLoggy {
       onChangeLanguage: onChangeLanguage,
       onCopyQuote: onCopyQuote,
       onCopyQuoteUrl: onCopyQuoteUrl,
+      onDoubleTapAuthor: onCopyAuthorName,
       onHoverAuthor: onHoverAuthor,
       onHoverReference: onHoverReference,
       onHoverTopic: onHoverTopic,
@@ -207,6 +207,7 @@ class _HomePageState extends State<HomePage> with UiLoggy {
     );
   }
 
+  /// Gets current language.
   Future<String> getLanguage() async {
     final EnumLanguageSelection savedLanguage = await Utils.vault.getLanguage();
     if (Utils.linguistic.available().contains(savedLanguage)) {
@@ -216,6 +217,7 @@ class _HomePageState extends State<HomePage> with UiLoggy {
     return "en";
   }
 
+  /// Fetches a specific author from their id.
   Future<Author?> fetchAuthor(String authorId) async {
     if (authorId.isEmpty) {
       return null;
@@ -311,15 +313,19 @@ class _HomePageState extends State<HomePage> with UiLoggy {
 
   /// Fetches random quotes.
   Future<void> fetchRandomQuotes({bool forceRefresh = false}) async {
-    final String currentLanguage = await Utils.linguistic.getLanguage();
-    final bool hasLanguageChanged =
-        NavigationStateHelper.lastRandomQuoteLanguage != currentLanguage;
-
-    if (NavigationStateHelper.randomQuotes.isNotEmpty &&
-        !hasLanguageChanged &&
-        !forceRefresh) {
+    if (await shouldSkipFetch(forceRefresh: forceRefresh)) {
+      _subRandomQuotes.isEmpty
+          ? setState(
+              () => _subRandomQuotes.addAll(
+                NavigationStateHelper.randomQuotes.sublist(1),
+              ),
+            )
+          : null;
+      updateAppFrameColor(NavigationStateHelper.randomQuotes.first);
       return;
     }
+
+    final String currentLanguage = await getLanguage();
 
     setState(() {
       _pageState = _pageState != EnumPageState.loading
@@ -376,7 +382,7 @@ class _HomePageState extends State<HomePage> with UiLoggy {
       }
 
       _subRandomQuotes.addAll(NavigationStateHelper.randomQuotes.sublist(1));
-      populateAppFrameColor(NavigationStateHelper.randomQuotes.first);
+      updateAppFrameColor(NavigationStateHelper.randomQuotes.first);
     } catch (error) {
       loggy.error(error);
     } finally {
@@ -384,6 +390,7 @@ class _HomePageState extends State<HomePage> with UiLoggy {
     }
   }
 
+  /// Fetches a specific reference from its id.
   Future<Reference?> fetchReference(String referenceId) async {
     if (referenceId.isEmpty) {
       return null;
@@ -408,45 +415,68 @@ class _HomePageState extends State<HomePage> with UiLoggy {
     }
   }
 
-  void onAddQuote() {
-    NavigationStateHelper.quote = Quote.empty();
-    Beamer.of(context).beamToNamed(DashboardContentLocation.addQuoteRoute);
-  }
-
-  void onCopyQuote(Quote quote) {
-    QuoteActions.copyQuote(quote);
-  }
-
-  void onCopyQuoteUrl(Quote quote) {
-    Clipboard.setData(ClipboardData(text: "${Constants.quoteUrl}/${quote.id}"));
-  }
-
-  void onTapQuote(Quote quote) {
-    NavigationStateHelper.quote = quote;
-    context.beamToNamed(
-      HomeContentLocation.quoteRoute.replaceFirst(":quoteId", quote.id),
-      data: {
-        "quoteId": quote.id,
-      },
-      routeState: {
-        "quoteId": quote.id,
-      },
+  void onCopyAuthorName(Author author) {
+    Clipboard.setData(ClipboardData(text: author.name));
+    Utils.graphic.showSnackbar(
+      context,
+      message: "author.copy.success.name".tr(),
     );
   }
 
+  /// Copy a specific quote's name to the clipboard.
+  void onCopyQuote(Quote quote) {
+    QuoteActions.copyQuote(quote);
+
+    Utils.graphic.showSnackbar(
+      context,
+      message: "quote.copy.success.name".tr(),
+    );
+  }
+
+  /// Copy a specific quote's url to the clipboard.
+  void onCopyQuoteUrl(Quote quote) {
+    Clipboard.setData(ClipboardData(text: "${Constants.quoteUrl}/${quote.id}"));
+
+    Utils.graphic.showSnackbar(
+      context,
+      message: "quote.copy.success.link".tr(),
+    );
+  }
+
+  /// Navigate to the quote page.
+  void onTapQuote(Quote quote) {
+    NavigationStateHelper.quote = quote;
+    Beamer.of(context).beamToNamed(
+      HomeContentLocation.quoteRoute.replaceFirst(":quoteId", quote.id),
+    );
+  }
+
+  /// Open projcet's GitHub page.
   void onTapGitHub() {
     launchUrl(Uri.parse(Constants.githubUrl));
   }
 
+  /// Navigate to the author page.
   void onTapAuthor(Author author) {
     Beamer.of(context).beamToNamed(
-      AuthorLocation.route.replaceFirst(
+      HomeContentLocation.authorRoute.replaceFirst(
         ":authorId",
         author.id,
       ),
     );
   }
 
+  /// Navigate to the reference page.
+  void onTapReference(Reference reference) {
+    Beamer.of(context).beamToNamed(
+      HomeContentLocation.referenceRoute.replaceFirst(
+        ":referenceId",
+        reference.id,
+      ),
+    );
+  }
+
+  /// Navigate to the topic page.
   void onTapTopic(Topic topic) {
     Beamer.of(context).beamToNamed(
       HomeContentLocation.topicRoute.replaceFirst(
@@ -456,15 +486,7 @@ class _HomePageState extends State<HomePage> with UiLoggy {
     );
   }
 
-  void onTapReference(Reference reference) {
-    Beamer.of(context).beamToNamed(
-      ReferenceLocation.route.replaceFirst(
-        ":referenceId",
-        reference.id,
-      ),
-    );
-  }
-
+  /// Display hovered topic name.
   void onHoverTopic(Topic topic, bool isHover) {
     setState(() {
       _hoveredTopicName = isHover ? topic.name : "";
@@ -527,6 +549,7 @@ class _HomePageState extends State<HomePage> with UiLoggy {
     );
   }
 
+  /// Callback fired to show/hide topic arrow buttons.
   void onTopicIndexChanged(int index) {
     if (index == 0 && _enableTopicLeftArrow) {
       setState(() => _enableTopicLeftArrow = false);
@@ -543,6 +566,7 @@ class _HomePageState extends State<HomePage> with UiLoggy {
     }
   }
 
+  /// Callback fired to show/hide quote arrow buttons.
   void onQuoteIndexChanged(int index) {
     if (index == 0 && _enableQuoteLeftArrow) {
       setState(() => _enableQuoteLeftArrow = false);
@@ -557,12 +581,14 @@ class _HomePageState extends State<HomePage> with UiLoggy {
     }
   }
 
+  /// Display hovered author name.
   void onHoverAuthor(Author author, bool isHovered) {
     setState(() {
       _hoveredAuthorName = isHovered ? author.name : "";
     });
   }
 
+  /// Callback fired to show/hide author arrow buttons.
   void onAuthorIndexChanged(int index) {
     if (index == 0 && _enableAuthorLeftArrow) {
       setState(() => _enableAuthorLeftArrow = false);
@@ -579,6 +605,7 @@ class _HomePageState extends State<HomePage> with UiLoggy {
     }
   }
 
+  /// Callback fired when author arrow right button is pressed.
   void onTapAuthorRightArrow() {
     final double newOffset = min(
       _authorScrollController.offset + _authorCardExtent,
@@ -592,6 +619,7 @@ class _HomePageState extends State<HomePage> with UiLoggy {
     );
   }
 
+  /// Callback fired when author arrow left button is pressed.
   void onTapAuthorLeftArrow() {
     final double newOffset = max(
       _authorScrollController.offset - _authorCardExtent,
@@ -605,19 +633,39 @@ class _HomePageState extends State<HomePage> with UiLoggy {
     );
   }
 
+  /// Display hovered author name.
   void onHoverReference(Reference reference, bool isHovered) {
     setState(() => _hoveredReferenceId = isHovered ? reference.id : "");
   }
 
+  /// Update application's language.
   void onChangeLanguage(EnumLanguageSelection locale) {
     fetchRandomQuotes();
   }
 
+  /// Callback fired to show/hide reference arrow buttons.
   void onReferenceIndexChanged(int index) {
     setState(() {});
   }
 
-  void populateAppFrameColor(Quote quote) {
+  /// Checks if should skip fetching random quotes.
+  Future<bool> shouldSkipFetch({bool forceRefresh = false}) async {
+    final String currentLanguage = await getLanguage();
+    final bool hasLanguageChanged =
+        NavigationStateHelper.lastRandomQuoteLanguage != currentLanguage;
+
+    return NavigationStateHelper.randomQuotes.isNotEmpty &&
+        !hasLanguageChanged &&
+        !forceRefresh;
+  }
+
+  /// Update application's frame color.
+  void updateAppFrameColor(Quote quote) {
+    if (NavigationStateHelper.frameBorderStyle !=
+        EnumFrameBorderStyle.colored) {
+      return;
+    }
+
     if (quote.topics.isEmpty) {
       return;
     }
@@ -628,9 +676,10 @@ class _HomePageState extends State<HomePage> with UiLoggy {
     );
 
     final Signal<Color> appColorFrameSignal = context.get<Signal<Color>>(
-      EnumSignalId.appFrameColor,
+      EnumSignalId.frameBorderColor,
     );
 
     appColorFrameSignal.update((value) => topic.color);
+    Constants.colors.lastBorderColor = topic.color;
   }
 }

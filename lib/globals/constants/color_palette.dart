@@ -1,6 +1,7 @@
 import "dart:math";
 
 import "package:flutter/material.dart";
+import "package:kwotes/types/enums/enum_frame_border_style.dart";
 import "package:kwotes/types/topic.dart";
 
 class ColorPalette {
@@ -118,6 +119,25 @@ class ColorPalette {
 
   Topic getRandomTopic() {
     return topics.elementAt(Random().nextInt(topics.length));
+  }
+
+  Color lastBorderColor = Colors.blue;
+
+  /// Return border color from style.
+  Color getBorderColorFromStyle(
+      BuildContext context, EnumFrameBorderStyle style) {
+    switch (style) {
+      case EnumFrameBorderStyle.colored:
+        return lastBorderColor;
+      case EnumFrameBorderStyle.discrete:
+        return const Color.fromRGBO(241, 237, 255, 1.0);
+      case EnumFrameBorderStyle.highContrast:
+        return Theme.of(context).brightness == Brightness.dark
+            ? Colors.white
+            : Colors.black;
+      default:
+        return const Color.fromRGBO(241, 237, 255, 1.0);
+    }
   }
 
   /// Fill foreground palette from topics.

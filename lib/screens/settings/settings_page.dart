@@ -17,6 +17,8 @@ import "package:kwotes/screens/settings/app_behaviour_settings.dart";
 import "package:kwotes/screens/settings/app_language_selection.dart";
 import "package:kwotes/screens/settings/theme_switcher.dart";
 import "package:kwotes/types/enums/enum_accunt_displayed.dart";
+import "package:kwotes/types/enums/enum_app_bar_mode.dart";
+import "package:kwotes/types/enums/enum_frame_border_style.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/user/user_firestore.dart";
@@ -71,6 +73,7 @@ class _SettingsPageState extends State<SettingsPage> {
         slivers: [
           ApplicationBar(
             isMobileSize: isMobileSize,
+            mode: EnumAppBarMode.settings,
             title: Padding(
               padding: const EdgeInsets.only(left: 12.0),
               child: Hero(
@@ -137,9 +140,11 @@ class _SettingsPageState extends State<SettingsPage> {
             accentColor: _accentColors.elementAt(3),
             animateElements: _animateElements,
             foregroundColor: foregroundColor,
+            appBorderStyle: NavigationStateHelper.frameBorderStyle,
             isMobileSize: isMobileSize,
             isFullscreenQuotePage: NavigationStateHelper.fullscreenQuotePage,
             isMinimalQuoteActions: NavigationStateHelper.minimalQuoteActions,
+            onToggleFrameBorderColor: onToggleFrameBorderColor,
             onToggleFullscreen: onToggleFullscreen,
             onToggleMinimalQuoteActions: onToggleMinimalQuoteActions,
           ),
@@ -296,6 +301,29 @@ class _SettingsPageState extends State<SettingsPage> {
     updateUiBrightness();
   }
 
+  void onToggleFrameBorderColor() {
+    final int nextIndex = (NavigationStateHelper.frameBorderStyle.index + 1) %
+        EnumFrameBorderStyle.values.length;
+
+    final EnumFrameBorderStyle nextStyle =
+        EnumFrameBorderStyle.values[nextIndex];
+
+    Utils.vault.setFrameBorderStyle(nextStyle);
+    setState(() {
+      NavigationStateHelper.frameBorderStyle = nextStyle;
+    });
+
+    final Color borderColor = Constants.colors.getBorderColorFromStyle(
+      context,
+      nextStyle,
+    );
+    final Signal<Color> frameColorSignal = context.get<Signal<Color>>(
+      EnumSignalId.frameBorderColor,
+    );
+
+    frameColorSignal.update((Color previousColor) => borderColor);
+  }
+
   /// Turn on/off fullscreen mode on quote page.
   void onToggleFullscreen() {
     final bool newValue = !NavigationStateHelper.fullscreenQuotePage;
@@ -311,8 +339,7 @@ class _SettingsPageState extends State<SettingsPage> {
     Utils.vault.setMinimalQuoteActions(newValue);
 
     setState(() {
-      NavigationStateHelper.minimalQuoteActions =
-          !NavigationStateHelper.minimalQuoteActions;
+      NavigationStateHelper.minimalQuoteActions = newValue;
     });
   }
 

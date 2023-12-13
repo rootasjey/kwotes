@@ -44,6 +44,9 @@ void main() async {
   NavigationStateHelper.minimalQuoteActions =
       await Utils.vault.getMinimalQuoteActions();
 
+  NavigationStateHelper.frameBorderStyle =
+      await Utils.vault.getFrameBorderColored();
+
   if (!kIsWeb) {
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
       await windowManager.ensureInitialized();

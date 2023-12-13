@@ -4,6 +4,7 @@ import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/screens/settings/theme_chip.dart";
+import "package:kwotes/types/enums/enum_frame_border_style.dart";
 
 class AppBehaviourSettings extends StatelessWidget {
   /// Customize application behaviour.
@@ -11,16 +12,21 @@ class AppBehaviourSettings extends StatelessWidget {
     super.key,
     this.isMobileSize = false,
     this.animateElements = false,
+    this.appBorderStyle = EnumFrameBorderStyle.discrete,
     this.isFullscreenQuotePage = false,
     this.isMinimalQuoteActions = false,
     this.accentColor = Colors.blue,
     this.foregroundColor,
+    this.onToggleFrameBorderColor,
     this.onToggleFullscreen,
     this.onToggleMinimalQuoteActions,
   });
 
   /// Animate elements on settings page if true.
   final bool animateElements;
+
+  /// Color frame border if true.
+  final EnumFrameBorderStyle appBorderStyle;
 
   /// Whether quote page is fullscreen.
   final bool isFullscreenQuotePage;
@@ -43,8 +49,13 @@ class AppBehaviourSettings extends StatelessWidget {
   /// Callback fired to toggle minimal quote action setting.
   final void Function()? onToggleMinimalQuoteActions;
 
+  /// Callback fired to toggle frame border color setting.
+  final void Function()? onToggleFrameBorderColor;
+
   @override
   Widget build(BuildContext context) {
+    // final Color? defaultForegroundColor =
+    //     Theme.of(context).textTheme.bodyMedium?.color;
     final Color foregroundAccentColor =
         accentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
 
@@ -87,10 +98,9 @@ class AppBehaviourSettings extends StatelessWidget {
                       .tr(),
               selected: isFullscreenQuotePage,
               accentColor: accentColor,
-              foregroundColor: foregroundAccentColor,
-              // foregroundColor: isFullscreenQuotePage
-              //     ? foregroundAccentColor
-              //     : foregroundColor?.withOpacity(0.6),
+              foregroundColor: isFullscreenQuotePage
+                  ? foregroundAccentColor
+                  : foregroundColor?.withOpacity(0.6),
               onTap: onToggleFullscreen,
             ),
             ThemeChip(
@@ -100,11 +110,19 @@ class AppBehaviourSettings extends StatelessWidget {
                       .tr(),
               selected: isMinimalQuoteActions,
               accentColor: accentColor,
-              foregroundColor: foregroundAccentColor,
-              // foregroundColor: isMinimalQuoteActions
-              //     ? foregroundAccentColor
-              //     : foregroundColor?.withOpacity(0.6),
+              foregroundColor: isMinimalQuoteActions
+                  ? foregroundAccentColor
+                  : foregroundColor?.withOpacity(0.6),
               onTap: onToggleMinimalQuoteActions,
+            ),
+            ThemeChip(
+              textLabel:
+                  "settings.behaviour.frame_border_style.${appBorderStyle.name}"
+                      .tr(),
+              selected: true,
+              accentColor: accentColor,
+              foregroundColor: foregroundAccentColor,
+              onTap: onToggleFrameBorderColor,
             ),
           ]
               .animate(interval: animateElements ? 150.ms : 0.ms)

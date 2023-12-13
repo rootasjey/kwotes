@@ -2,6 +2,7 @@ import "package:flutter/foundation.dart";
 import "package:glutton/glutton.dart";
 import "package:kwotes/types/credentials.dart";
 import "package:kwotes/globals/constants/storage_keys.dart";
+import "package:kwotes/types/enums/enum_frame_border_style.dart";
 import "package:kwotes/types/enums/enum_data_ownership.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_search_category.dart";
@@ -222,5 +223,20 @@ class Vault {
       StorageKeys.minimalQuoteActions,
       false,
     );
+  }
+
+  /// Saves frame border color state.
+  void setFrameBorderStyle(EnumFrameBorderStyle newValue) {
+    Glutton.eat(StorageKeys.frameBorderStyle, newValue.index);
+  }
+
+  /// Retrieves frame border color state.
+  Future<EnumFrameBorderStyle> getFrameBorderColored() async {
+    final int index = await Glutton.vomit(
+      StorageKeys.frameBorderStyle,
+      EnumFrameBorderStyle.discrete.index,
+    );
+
+    return EnumFrameBorderStyle.values[index];
   }
 }

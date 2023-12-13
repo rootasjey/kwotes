@@ -72,7 +72,7 @@ class _AppState extends State<App> {
         EnumSignalId.userAuth: () => Utils.state.userAuth,
         EnumSignalId.userFirestore: () => Utils.state.userFirestore,
         EnumSignalId.navigationBar: () => Utils.state.showNavigationBar,
-        EnumSignalId.appFrameColor: () => Utils.state.appFrameColor,
+        EnumSignalId.frameBorderColor: () => Utils.state.frameBorderColor,
       },
       child: AdaptiveTheme(
         light: lightTheme,

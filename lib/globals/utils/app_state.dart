@@ -44,7 +44,7 @@ class AppState with UiLoggy {
   final Signal<bool> showNavigationBar = createSignal(true);
 
   /// App frame color signal.
-  final Signal<Color> appFrameColor = createSignal(
+  final Signal<Color> frameBorderColor = createSignal(
     const Color.fromRGBO(241, 237, 255, 1.0),
   );
 
