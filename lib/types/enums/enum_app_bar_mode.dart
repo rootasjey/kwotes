@@ -6,6 +6,9 @@ enum EnumAppBarMode {
   /// Some actions are available on this state i.e. search types.
   search,
 
+  /// App bar is shown on its settings state.
+  settings,
+
   /// Hide signin button in this mode.
   signin,
 }
