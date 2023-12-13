@@ -23,6 +23,7 @@ class HeroQuote extends StatelessWidget {
     this.isMobileSize = false,
     this.loading = false,
     this.foregroundColor,
+    this.onDoubleTapAuthor,
     this.onTapAuthor,
     this.onTapQuote,
     this.margin = EdgeInsets.zero,
@@ -47,6 +48,9 @@ class HeroQuote extends StatelessWidget {
   /// Margin of the widget.
   final EdgeInsets margin;
 
+  /// Callback fired when author's name is double tapped.
+  final void Function(Author author)? onDoubleTapAuthor;
+
   /// Callback fired when author's name is tapped.
   final void Function(Author author)? onTapAuthor;
 
@@ -64,7 +68,7 @@ class HeroQuote extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (loading) {
+    if (loading || quote.id.isEmpty) {
       return LoadingView(
         useSliver: true,
         message: "loading".tr(),
@@ -77,9 +81,7 @@ class HeroQuote extends StatelessWidget {
       orElse: () => Topic.empty(),
     );
 
-    final Color accentColor = Constants.colors.getRandomFromPalette(
-      withGoodContrast: !isDark,
-    );
+    final Color accentColor = topic.color;
 
     return SliverToBoxAdapter(
       child: Container(
@@ -101,7 +103,12 @@ class HeroQuote extends StatelessWidget {
                         radius: 24.0,
                       ),
                     InkWell(
-                      onTap: () => onTapAuthor?.call(author),
+                      onDoubleTap: onDoubleTapAuthor == null
+                          ? null
+                          : () => onDoubleTapAuthor?.call(author),
+                      onTap: onTapAuthor == null
+                          ? null
+                          : () => onTapAuthor?.call(author),
                       splashColor: accentColor.withOpacity(0.2),
                       hoverColor: accentColor.withOpacity(0.1),
                       highlightColor: accentColor.withOpacity(0.2),
@@ -129,6 +136,9 @@ class HeroQuote extends StatelessWidget {
                 style: TextButton.styleFrom(
                   foregroundColor: topic.color,
                   surfaceTintColor: topic.color,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4.0),
+                  ),
                 ),
                 textValue: quote.name,
                 textStyle: Utils.calligraphy.body(
@@ -164,8 +174,14 @@ class HeroQuote extends StatelessWidget {
     /// Margin of the widget.
     final EdgeInsets margin = EdgeInsets.zero,
 
+    /// Callback fired when author's name is double tapped.
+    final void Function(Author author)? onDoubleTapAuthor,
+
     /// Callback fired when author's name is tapped.
     final void Function(Author author)? onTapAuthor,
+
+    /// Callback fired when author's avatar is double tapped.
+    final void Function(Quote quote)? onDoubleTapQuote,
 
     /// Callback fired when author's avatar is tapped.
     final void Function(Quote quote)? onTapQuote,
@@ -206,6 +222,7 @@ class HeroQuote extends StatelessWidget {
               SearchQuoteText(
                 quote: quote,
                 quoteMenuProvider: quoteMenuProvider,
+                onDoubleTapQuote: onDoubleTapQuote,
                 onTapQuote: onTapQuote,
                 highlightColor: Colors.transparent,
                 splashColor: Colors.transparent,
@@ -229,7 +246,12 @@ class HeroQuote extends StatelessWidget {
                             radius: 24.0,
                           ),
                         InkWell(
-                          onTap: () => onTapAuthor?.call(author),
+                          onDoubleTap: onDoubleTapAuthor == null
+                              ? null
+                              : () => onDoubleTapAuthor.call(author),
+                          onTap: onTapAuthor == null
+                              ? null
+                              : () => onTapAuthor.call(author),
                           splashColor: topic.color.withOpacity(0.2),
                           hoverColor: topic.color.withOpacity(0.1),
                           highlightColor: topic.color.withOpacity(0.2),
