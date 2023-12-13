@@ -86,7 +86,7 @@ class PageAppBar extends StatelessWidget {
           sigmaY: 5,
         ),
         child: Padding(
-          padding: const EdgeInsets.only(left: 0.0, top: 42.0),
+          padding: const EdgeInsets.only(left: 24.0, top: 42.0),
           child: layoutChild,
         ),
       ),

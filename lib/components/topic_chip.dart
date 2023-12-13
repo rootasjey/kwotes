@@ -82,6 +82,7 @@ class _TopicChipState extends State<TopicChip> {
             ],
           ),
         ),
+        checkmarkColor: getTextColor(),
         selected: selected,
         elevation: selected ? 8.0 : _elevation,
         selectedColor: topic.color,
