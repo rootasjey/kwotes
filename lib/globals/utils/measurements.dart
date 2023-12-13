@@ -11,7 +11,6 @@ class Measurements {
   bool isMobileSize(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     final double pageWidth = size.width;
-    final double pageHeight = size.height;
-    return pageWidth <= mobileWidthTreshold || pageHeight < mobileWidthTreshold;
+    return pageWidth <= mobileWidthTreshold;
   }
 }
