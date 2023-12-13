@@ -12,6 +12,7 @@ class QuoteText extends StatefulWidget {
     required this.quote,
     this.tiny = false,
     this.margin = EdgeInsets.zero,
+    this.onDoubleTap,
     this.onTap,
   });
 
@@ -26,6 +27,9 @@ class QuoteText extends StatefulWidget {
 
   /// Callback fired when quote is tapped.
   final void Function(Quote quote)? onTap;
+
+  /// Callback fired when quote is double tapped.
+  final void Function(Quote quote)? onDoubleTap;
 
   @override
   State<QuoteText> createState() => _QuoteTextState();
@@ -68,6 +72,9 @@ class _QuoteTextState extends State<QuoteText> {
       padding: widget.margin,
       child: InkWell(
         hoverColor: Colors.transparent,
+        onDoubleTap: widget.onDoubleTap != null
+            ? () => widget.onDoubleTap?.call(quote)
+            : null,
         onTap: widget.onTap != null ? () => widget.onTap?.call(quote) : null,
         onHover: (bool isHover) {
           if (isHover) {
