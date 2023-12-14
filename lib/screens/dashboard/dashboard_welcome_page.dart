@@ -27,7 +27,7 @@ class DashboardWelcomePage extends StatelessWidget {
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
 
-    final Color randomColor = Constants.colors.primary;
+    final Color randomColor = Constants.colors.getRandomFromPalette();
 
     final UserFirestore userFirestore =
         context.observe<UserFirestore>(EnumSignalId.userFirestore);
@@ -41,16 +41,19 @@ class DashboardWelcomePage extends StatelessWidget {
         floatingActionButton: DashboardFab(
           isMobileSize: isMobileSize,
           onGoToAddQuotePage: onGoToAddQuotePage,
-          randomColor: randomColor,
+          backgroundColor: Colors.white,
+          splashColor: randomColor,
         ),
         body: CustomScrollView(
           slivers: [
             SliverList(
               delegate: SliverChildListDelegate.fixed([
-                const Align(
+                Align(
                   alignment: Alignment.topLeft,
                   child: AppIcon(
-                    margin: EdgeInsets.only(top: 24.0, left: 12.0),
+                    margin: isMobileSize
+                        ? const EdgeInsets.only(top: 24.0, left: 12.0)
+                        : const EdgeInsets.only(top: 24.0, left: 36.0),
                   ),
                 ),
                 Padding(

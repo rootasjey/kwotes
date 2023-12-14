@@ -88,6 +88,10 @@ class _DashboardCardState extends State<DashboardCard> {
   Widget compactLayout() {
     return Card(
       elevation: _elevation,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4.0),
+      ),
+      color: widget.backgroundColor,
       child: InkWell(
         onTap: widget.onTap,
         splashColor: widget.hoverColor,
@@ -117,6 +121,7 @@ class _DashboardCardState extends State<DashboardCard> {
       child: Card(
         elevation: _elevation,
         color: widget.backgroundColor,
+        clipBehavior: Clip.hardEdge,
         child: InkWell(
           onTap: widget.onTap,
           splashColor: widget.hoverColor,

@@ -7,9 +7,10 @@ class DashboardFab extends StatelessWidget {
   /// Floating Action Button of the Dashboard page.
   const DashboardFab({
     super.key,
-    required this.randomColor,
+    required this.backgroundColor,
     this.isMobileSize = false,
     this.onGoToAddQuotePage,
+    this.splashColor = Colors.white,
   });
 
   /// If true, this Floating Action Button will only display an icon.
@@ -17,7 +18,10 @@ class DashboardFab extends StatelessWidget {
   final bool isMobileSize;
 
   /// A random color to pain the background button.
-  final Color randomColor;
+  final Color backgroundColor;
+
+  /// A random color to pain the background button.
+  final Color? splashColor;
 
   /// Callback fired when this button is tapped.
   final void Function(BuildContext context)? onGoToAddQuotePage;
@@ -28,10 +32,11 @@ class DashboardFab extends StatelessWidget {
       return FloatingActionButton(
         onPressed: () => onGoToAddQuotePage?.call(context),
         tooltip: "quote.add.a".tr(),
-        splashColor: Colors.white,
-        backgroundColor: randomColor,
-        foregroundColor:
-            randomColor.computeLuminance() > 0.4 ? Colors.black : Colors.white,
+        splashColor: splashColor,
+        backgroundColor: backgroundColor,
+        foregroundColor: backgroundColor.computeLuminance() > 0.4
+            ? Colors.black
+            : Colors.white,
         child: const Icon(TablerIcons.quote),
       );
     }
@@ -41,17 +46,18 @@ class DashboardFab extends StatelessWidget {
       hoverElevation: 4.0,
       focusElevation: 0.0,
       highlightElevation: 0.0,
-      splashColor: Colors.white,
+      splashColor: splashColor,
       onPressed: () => onGoToAddQuotePage?.call(context),
-      backgroundColor: randomColor,
+      backgroundColor: backgroundColor,
       icon: const Icon(TablerIcons.quote),
-      foregroundColor:
-          randomColor.computeLuminance() > 0.4 ? Colors.black : Colors.white,
+      foregroundColor: backgroundColor.computeLuminance() > 0.4
+          ? Colors.black
+          : Colors.white,
       label: Text(
         "quote.add.a".tr(),
         style: Utils.calligraphy.body(
           textStyle: const TextStyle(
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),
