@@ -2,6 +2,7 @@ import "dart:math";
 
 import "package:flutter/material.dart";
 import "package:kwotes/types/enums/enum_frame_border_style.dart";
+import "package:kwotes/types/enums/enum_search_category.dart";
 import "package:kwotes/types/topic.dart";
 
 class ColorPalette {
@@ -42,6 +43,20 @@ class ColorPalette {
     Colors.lightGreen.shade50,
     Colors.pink.shade50,
   ];
+
+  /// Returns the color of the search category.
+  Color getSearchColor(EnumSearchCategory categorySelected) {
+    switch (categorySelected) {
+      case EnumSearchCategory.quote:
+        return Colors.pink;
+      case EnumSearchCategory.author:
+        return Colors.amber;
+      case EnumSearchCategory.reference:
+        return Colors.blue;
+      default:
+        return Colors.transparent;
+    }
+  }
 
   Color getRandomPastel() {
     return pastelPalette.elementAt(Random().nextInt(pastelPalette.length));

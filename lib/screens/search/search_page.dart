@@ -15,6 +15,7 @@ import "package:kwotes/screens/search/search_category_selector.dart";
 import "package:kwotes/screens/search/search_input.dart";
 import "package:kwotes/screens/search/search_page_body.dart";
 import "package:kwotes/screens/search/search_result_meta.dart";
+import "package:kwotes/screens/search/show_more_button.dart";
 import "package:kwotes/screens/search/showcase.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/author.dart";
@@ -214,6 +215,12 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                       searchCategory: _searchCategory,
                       show: _searchInputController.text.isEmpty,
                       topicColors: Constants.colors.topics,
+                    ),
+                    ShowMoreButton(
+                      searchCategory: _searchCategory,
+                      show: _searchInputController.text.isEmpty &&
+                          _searchCategory != EnumSearchCategory.quote,
+                      onPressed: () => tryFetchShowcaseData(fetchMore: true),
                     ),
                   ],
                 ),

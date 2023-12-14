@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/better_action_chip.dart";
 import "package:kwotes/components/expand_input_chip.dart";
+import "package:kwotes/globals/constants.dart";
 import "package:kwotes/types/reference.dart";
 
 class AddReferenceMetadataWrap extends StatelessWidget {
@@ -52,10 +53,13 @@ class AddReferenceMetadataWrap extends StatelessWidget {
           tooltip: "quote.add.reference.avatar".tr(),
           avatar: CircleAvatar(
             radius: 14.0,
-            backgroundImage:
-                const AssetImage("assets/images/reference-picture-0.png"),
-            foregroundImage: reference.urls.image.isNotEmpty
-                ? NetworkImage(reference.urls.image)
+            backgroundImage: null,
+            backgroundColor: Constants.colors.secondary,
+            foregroundImage: reference.urls.image.isEmpty
+                ? null
+                : NetworkImage(reference.urls.image),
+            child: reference.urls.image.isEmpty
+                ? const Icon(TablerIcons.plus)
                 : null,
           ),
           chipPadding: const EdgeInsets.all(6.0),

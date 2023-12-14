@@ -388,7 +388,7 @@ class _EditAuthorPageState extends State<EditAuthorPage> with UiLoggy {
       _author = _author.copyWith(
           birth: authorBirth.copyWith(
         date: pickedDate,
-        dateEmpty: false,
+        isDateEmpty: false,
       ));
     });
 
@@ -416,7 +416,7 @@ class _EditAuthorPageState extends State<EditAuthorPage> with UiLoggy {
       _author = _author.copyWith(
         death: authorDeath.copyWith(
           date: pickedDate,
-          dateEmpty: false,
+          isDateEmpty: false,
         ),
       );
     });

@@ -113,8 +113,8 @@ class AddQuoteReferencePage extends StatelessWidget {
     final Color? iconColor =
         Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5);
 
-    final String releaseText = reference.release.dateEmpty
-        ? "quote.add.reference.dates.$randomReferenceInt.original".tr()
+    final String releaseText = reference.release.isEmpty
+        ? "quote.add.reference.dates.choose".tr()
         : Jiffy.parseFromDateTime(reference.release.original).yMMMMd;
 
     return Scaffold(

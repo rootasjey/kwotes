@@ -68,6 +68,7 @@
       "done": "All edits are done",
       "name_required": "An author's name is required"
     },
+    "show_more": "Show more authors",
     "update": {
       "error": "An error occurred while updating author",
       "name": "Update author",
@@ -495,6 +496,7 @@
             "birth": "September 21, 1947", "death": ""
           },
           "birth": "When this author was born?",
+          "choose": "Choose a date",
           "death": "When this author died?",
           "negative": {
             "birth": {
@@ -636,6 +638,7 @@
           "9": {
             "original": "2 February 1922"
           },
+          "choose": "Choose a date",
           "release": "When this reference was released?",
           "negative": {
             "release": {
@@ -878,6 +881,7 @@
     "name": "Reference",
     "names": "References",
     "reset": "Reset reference",
+    "show_more": "Show more references",
     "update": {
       "error": "An error occurred while updating reference",
       "name": "Update reference",

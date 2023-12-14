@@ -135,7 +135,7 @@ class AuthorMetadataRow extends StatelessWidget {
                         ),
                       ),
                     ),
-                  if (!author.birth.dateEmpty)
+                  if (!author.birth.isDateEmpty)
                     Card(
                       elevation: 0.0,
                       child: Padding(
@@ -159,7 +159,7 @@ class AuthorMetadataRow extends StatelessWidget {
                         ),
                       ),
                     ),
-                  if (!author.death.dateEmpty)
+                  if (!author.death.isDateEmpty)
                     Card(
                       elevation: 0.0,
                       child: Padding(

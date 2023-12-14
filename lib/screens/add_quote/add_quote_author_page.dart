@@ -211,7 +211,6 @@ class AddQuoteAuthorPage extends StatelessWidget {
                   onToggleNagativeDeathDate: onToggleNagativeDeathDate,
                   onToggleIsFictional: onToggleIsFictional,
                   onToggleOpen: onToggleMetadata,
-                  randomAuthorInt: randomAuthorInt,
                   show: isMobileSize,
                 ),
                 AddAuthorMetadaWrap(
@@ -222,7 +221,6 @@ class AddQuoteAuthorPage extends StatelessWidget {
                   onToggleNagativeBirthDate: onToggleNagativeBirthDate,
                   onToggleNagativeDeathDate: onToggleNagativeDeathDate,
                   onToggleIsFictional: onToggleIsFictional,
-                  randomAuthorInt: randomAuthorInt,
                   show: !isMobileSize,
                 ),
                 Padding(

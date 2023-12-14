@@ -164,7 +164,7 @@ class ReferenceMetadaRow extends StatelessWidget {
                         ),
                       ),
                     ),
-                  if (!reference.release.dateEmpty)
+                  if (!reference.release.isEmpty)
                     JustTheTooltip(
                       content: Padding(
                         padding: const EdgeInsets.all(8.0),

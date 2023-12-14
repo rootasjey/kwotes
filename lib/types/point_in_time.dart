@@ -8,17 +8,18 @@ class PointInTime {
     required this.country,
     required this.city,
     required this.date,
-    required this.dateEmpty,
+    required this.isDateEmpty,
   });
 
   /// The date is neggative.
   final bool beforeCommonEra;
 
-  /// True if the Firestore [date] value is null or doesn't exist.
+  /// True if the release date has not been set.
+  /// In that case, the Firestore [date] value is null or doesn't exist.
   /// In this app, the [date] property will never be null (null safety).
   ///
   /// This property doesn't exist in Firestore.
-  final bool dateEmpty;
+  final bool isDateEmpty;
 
   /// Country where the event happened.
   final String country;
@@ -34,14 +35,14 @@ class PointInTime {
     String? country,
     String? city,
     DateTime? date,
-    bool? dateEmpty,
+    bool? isDateEmpty,
   }) {
     return PointInTime(
       beforeCommonEra: beforeCommonEra ?? this.beforeCommonEra,
       country: country ?? this.country,
       city: city ?? this.city,
       date: date ?? this.date,
-      dateEmpty: dateEmpty ?? this.dateEmpty,
+      isDateEmpty: isDateEmpty ?? this.isDateEmpty,
     );
   }
 
@@ -60,7 +61,7 @@ class PointInTime {
       country: "",
       city: "",
       date: DateTime.now(),
-      dateEmpty: true,
+      isDateEmpty: true,
     );
   }
 
@@ -74,7 +75,7 @@ class PointInTime {
       country: map["country"] ?? "",
       city: map["city"] ?? "",
       date: Utils.tictac.fromFirestore(map["date"]),
-      dateEmpty: map["date"] == null ? true : false,
+      isDateEmpty: map["date"] == null ? true : false,
     );
   }
 
@@ -86,7 +87,7 @@ class PointInTime {
   @override
   String toString() {
     return "PointInTime(beforeCommonEra: $beforeCommonEra, country: $country, "
-        "city: $city, date: $date, dateEmpty: $dateEmpty)";
+        "city: $city, date: $date, isDateEmpty: $isDateEmpty)";
   }
 
   @override
@@ -97,7 +98,7 @@ class PointInTime {
         other.country == country &&
         other.city == city &&
         other.date == date &&
-        other.dateEmpty == dateEmpty;
+        other.isDateEmpty == isDateEmpty;
   }
 
   @override
@@ -106,6 +107,6 @@ class PointInTime {
         country.hashCode ^
         city.hashCode ^
         date.hashCode ^
-        dateEmpty.hashCode;
+        isDateEmpty.hashCode;
   }
 }

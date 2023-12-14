@@ -15,7 +15,6 @@ class AddAuthorMetadaColumn extends StatelessWidget {
   const AddAuthorMetadaColumn({
     super.key,
     required this.author,
-    this.randomAuthorInt = 0,
     this.isOpen = true,
     this.show = true,
     this.margin = EdgeInsets.zero,
@@ -36,9 +35,6 @@ class AddAuthorMetadaColumn extends StatelessWidget {
 
   /// Show this widget if true.
   final bool show;
-
-  /// Random int for displaying hint texts.
-  final int randomAuthorInt;
 
   /// Space around this widget.
   final EdgeInsets margin;
@@ -75,12 +71,12 @@ class AddAuthorMetadaColumn extends StatelessWidget {
     final Color? iconColor =
         Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5);
 
-    final String birthText = author.birth.dateEmpty
-        ? "quote.add.author.dates.$randomAuthorInt.birth".tr()
+    final String birthText = author.birth.isDateEmpty
+        ? "quote.add.author.dates.choose".tr()
         : Jiffy.parseFromDateTime(author.birth.date).yMMMMd;
 
-    final String deathText = author.death.dateEmpty
-        ? "quote.add.author.dates.$randomAuthorInt.death".tr()
+    final String deathText = author.death.isDateEmpty
+        ? "quote.add.author.dates.choose".tr()
         : Jiffy.parseFromDateTime(author.death.date).yMMMMd;
 
     List<Widget> children = [

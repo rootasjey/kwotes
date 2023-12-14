@@ -86,7 +86,7 @@ class AuthorMetadataColumn extends StatelessWidget {
       );
     }
 
-    if (!author.birth.dateEmpty) {
+    if (!author.birth.isDateEmpty) {
       children.add(
         Row(
           mainAxisSize: MainAxisSize.min,
@@ -109,7 +109,7 @@ class AuthorMetadataColumn extends StatelessWidget {
       );
     }
 
-    if (!author.death.dateEmpty) {
+    if (!author.death.isDateEmpty) {
       children.add(
         Row(
           mainAxisSize: MainAxisSize.min,

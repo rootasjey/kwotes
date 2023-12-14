@@ -6,30 +6,31 @@ class Release {
   Release({
     required this.original,
     required this.beforeCommonEra,
-    required this.dateEmpty,
+    required this.isEmpty,
   });
-
-  /// Original release.
-  DateTime original;
 
   /// True if the date is negative.
   bool beforeCommonEra;
 
-  /// True if the Firestore [date] value is null or doesn't exist.
+  /// True if the release date has not been set.
+  /// In that case, the Firestore [date] value is null or doesn't exist.
   /// In this app, the [date] property will never be null (null safety).
   ///
   /// This property doesn't exist in Firestore.
-  bool dateEmpty;
+  bool isEmpty;
+
+  /// Original release.
+  DateTime original;
 
   Release copyWith({
     DateTime? original,
     bool? beforeCommonEra,
-    bool? dateEmpty,
+    bool? isEmpty,
   }) {
     return Release(
       original: original ?? this.original,
       beforeCommonEra: beforeCommonEra ?? this.beforeCommonEra,
-      dateEmpty: dateEmpty ?? this.dateEmpty,
+      isEmpty: isEmpty ?? this.isEmpty,
     );
   }
 
@@ -44,7 +45,7 @@ class Release {
     return Release(
       original: DateTime.now(),
       beforeCommonEra: false,
-      dateEmpty: true,
+      isEmpty: true,
     );
   }
 
@@ -54,7 +55,7 @@ class Release {
     return Release(
       original: Utils.tictac.fromFirestore(map["original"]),
       beforeCommonEra: map["before_common_era"] ?? false,
-      dateEmpty: map["original"] == null ? true : false,
+      isEmpty: map["original"] == null ? true : false,
     );
   }
 
@@ -65,7 +66,8 @@ class Release {
 
   @override
   String toString() =>
-      "Release(original: $original, beforeCommonEra: $beforeCommonEra, dateEmpty: $dateEmpty)";
+      "Release(original: $original, beforeCommonEra: $beforeCommonEra,"
+      " isEmpty: $isEmpty)";
 
   @override
   bool operator ==(covariant Release other) {
@@ -73,10 +75,10 @@ class Release {
 
     return other.original == original &&
         other.beforeCommonEra == beforeCommonEra &&
-        other.dateEmpty == dateEmpty;
+        other.isEmpty == isEmpty;
   }
 
   @override
   int get hashCode =>
-      original.hashCode ^ beforeCommonEra.hashCode ^ dateEmpty.hashCode;
+      original.hashCode ^ beforeCommonEra.hashCode ^ isEmpty.hashCode;
 }

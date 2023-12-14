@@ -414,7 +414,7 @@ class _EditReferencePageState extends State<EditReferencePage> with UiLoggy {
         release: _reference.release.copyWith(
           original: pickedDate,
           beforeCommonEra: _reference.release.beforeCommonEra,
-          dateEmpty: false,
+          isEmpty: false,
         ),
       );
     });

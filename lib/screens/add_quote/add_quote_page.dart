@@ -1232,7 +1232,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
         author: NavigationStateHelper.quote.author.copyWith(
           birth: authorBirth.copyWith(
             date: pickedDate,
-            dateEmpty: false,
+            isDateEmpty: false,
           ),
         ),
       );
@@ -1263,7 +1263,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
         author: NavigationStateHelper.quote.author.copyWith(
           death: authorDeath.copyWith(
             date: pickedDate,
-            dateEmpty: false,
+            isDateEmpty: false,
           ),
         ),
       );
@@ -1313,7 +1313,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
           release: Release(
             original: pickedDate,
             beforeCommonEra: reference.release.beforeCommonEra,
-            dateEmpty: false,
+            isEmpty: false,
           ),
         ),
       );

@@ -113,7 +113,7 @@ class ReferenceMetadaColumn extends StatelessWidget {
       );
     }
 
-    if (!reference.release.dateEmpty) {
+    if (!reference.release.isEmpty) {
       children.add(
         Row(
           mainAxisSize: MainAxisSize.min,

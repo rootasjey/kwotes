@@ -13,7 +13,6 @@ class AddAuthorMetadaWrap extends StatelessWidget {
   const AddAuthorMetadaWrap({
     super.key,
     required this.author,
-    this.randomAuthorInt = 0,
     this.onTapBirthDate,
     this.onTapDeathDate,
     this.onToggleNagativeBirthDate,
@@ -28,9 +27,6 @@ class AddAuthorMetadaWrap extends StatelessWidget {
 
   /// Show this widget if true.
   final bool show;
-
-  /// Random int for displaying hint texts.
-  final int randomAuthorInt;
 
   /// Callback fired when birth date chip is tapped.
   final void Function()? onTapBirthDate;
@@ -59,12 +55,12 @@ class AddAuthorMetadaWrap extends StatelessWidget {
     final Color? iconColor =
         Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5);
 
-    final String birthText = author.birth.dateEmpty
-        ? "quote.add.author.dates.$randomAuthorInt.birth".tr()
+    final String birthText = author.birth.isDateEmpty
+        ? "quote.add.author.dates.choose".tr()
         : Jiffy.parseFromDateTime(author.birth.date).yMMMMd;
 
-    final String deathText = author.death.dateEmpty
-        ? "quote.add.author.dates.$randomAuthorInt.death".tr()
+    final String deathText = author.death.isDateEmpty
+        ? "quote.add.author.dates.choose".tr()
         : Jiffy.parseFromDateTime(author.death.date).yMMMMd;
 
     return Wrap(

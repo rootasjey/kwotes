@@ -1,6 +1,7 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/globals/constants.dart";
 import "package:kwotes/screens/search/category_item_button.dart";
 import "package:kwotes/types/enums/enum_indicator_type.dart";
 import "package:kwotes/types/enums/enum_search_category.dart";
@@ -37,7 +38,10 @@ class SearchCategorySelector extends StatelessWidget {
       color: isDark ? Colors.black87 : Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24.0),
-        side: BorderSide(color: getSelectedColor(categorySelected), width: 1.0),
+        side: BorderSide(
+          color: Constants.colors.getSearchColor(categorySelected),
+          width: 1.0,
+        ),
       ),
       child: Container(
         padding: const EdgeInsets.only(
@@ -82,18 +86,5 @@ class SearchCategorySelector extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Color getSelectedColor(EnumSearchCategory categorySelected) {
-    switch (categorySelected) {
-      case EnumSearchCategory.quote:
-        return Colors.pink;
-      case EnumSearchCategory.author:
-        return Colors.amber;
-      case EnumSearchCategory.reference:
-        return Colors.blue;
-      default:
-        return Colors.transparent;
-    }
   }
 }
