@@ -54,7 +54,7 @@ class _GenreChipsState extends State<GenreChips> {
 
   /// List of genres to be displayed.
   /// This list is possibly filtered based on the input text.
-  List<EnumMainGenre> _genres = EnumMainGenre.values;
+  List<EnumMainGenre> _genres = EnumMainGenre.values.sublist(0);
 
   /// Input text value.
   String _primaryGenreString = "";
@@ -110,6 +110,7 @@ class _GenreChipsState extends State<GenreChips> {
             hideCloseIcon: true,
             borderSide: chipBorderSide,
             backgroundColor: chipBackgroundColor,
+            chipPadding: EdgeInsets.zero,
             textEditingController: _primaryGenreTextController,
             tooltip: "quote.add.reference.genre.primary".tr(),
             avatar: CircleAvatar(
@@ -120,6 +121,7 @@ class _GenreChipsState extends State<GenreChips> {
                 Utils.graphic.getIconDataFromGenre(
                   ReferenceType.getGenreFromString(_primaryGenreString),
                 ),
+                size: 18.0,
               ),
             ),
             hintText: widget.primaryHintText,
@@ -132,6 +134,7 @@ class _GenreChipsState extends State<GenreChips> {
             width: width,
             hideCloseIcon: true,
             borderSide: chipBorderSide,
+            chipPadding: EdgeInsets.zero,
             backgroundColor: chipBackgroundColor,
             textEditingController: _secondaryGenreTextController,
             tooltip: "quote.add.reference.genre.secondary".tr(),
