@@ -79,6 +79,7 @@ class HeaderFilterWrap extends StatelessWidget {
     if (showOwnershipSelector) {
       ownershipChips.addAll([
         FilterChip(
+          checkmarkColor: iconColor,
           label: Text("quote.owned.name".tr()),
           tooltip: "quote.owned.description".tr(),
           backgroundColor: chipBackgroundColor,
@@ -92,6 +93,7 @@ class HeaderFilterWrap extends StatelessWidget {
           selected: selectedOwnership == EnumDataOwnership.owned,
         ),
         FilterChip(
+          checkmarkColor: iconColor,
           label: Text("quote.all.name".tr()),
           tooltip: "quote.all.description".tr(),
           backgroundColor: chipBackgroundColor,
@@ -135,8 +137,9 @@ class HeaderFilterWrap extends StatelessWidget {
               (LanguageFilterData data) => Padding(
                 padding: const EdgeInsets.only(right: 8.0),
                 child: FilterChip(
+                  checkmarkColor: iconColor,
                   label: data.labelString.isEmpty
-                      ? Icon(data.iconData, color: iconColor)
+                      ? Icon(data.iconData)
                       : Text(data.labelString),
                   tooltip: data.tooltipString,
                   backgroundColor: chipBackgroundColor,
