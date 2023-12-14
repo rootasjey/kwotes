@@ -1,7 +1,6 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:infinite_carousel/infinite_carousel.dart";
-import "package:kwotes/components/basic_shortcuts.dart";
 import "package:kwotes/components/context_menu_components.dart";
 import "package:kwotes/components/hero_quote.dart";
 import "package:kwotes/components/icons/app_icon.dart";
@@ -10,6 +9,7 @@ import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/screens/home/authors_carousel.dart";
 import "package:kwotes/screens/home/home_page_footer.dart";
+import "package:kwotes/screens/home/home_welcome_greetings.dart";
 import "package:kwotes/screens/home/quote_posters.dart";
 import "package:kwotes/screens/home/reference_grid.dart";
 import "package:kwotes/screens/home/topic_carousel.dart";
@@ -42,21 +42,22 @@ class DesktopLayout extends StatelessWidget {
     this.onAuthorIndexChanged,
     this.onTopicIndexChanged,
     this.refetchRandomQuotes,
-    this.onTapAuthor,
-    this.onTapQuote,
-    this.onTapReference,
     this.onCopyQuote,
     this.onCopyQuoteUrl,
-    this.onTapTopic,
-    this.onTapGitHub,
+    this.onChangeLanguage,
+    this.onDoubleTapAuthor,
     this.onHoverAuthor,
     this.onHoverReference,
     this.onHoverTopic,
-    this.onChangeLanguage,
+    this.onTapAuthor,
     this.onTapAuthorLeftArrow,
     this.onTapAuthorRightArrow,
+    this.onTapGitHub,
+    this.onTapQuote,
     this.onTapQuoteLeftArrow,
     this.onTapQuoteRightArrow,
+    this.onTapReference,
+    this.onTapTopic,
     this.onTapTopicLeftArrow,
     this.onTapTopicRightArrow,
     this.authors = const [],
@@ -116,6 +117,9 @@ class DesktopLayout extends StatelessWidget {
 
   /// Callback fired when author is tapped.
   final void Function(Author author)? onTapAuthor;
+
+  /// Callback fired when author is double tapped.
+  final void Function(Author author)? onDoubleTapAuthor;
 
   /// Callback fired when quote is tapped.
   final void Function(Quote quote)? onTapQuote;
@@ -217,22 +221,22 @@ class DesktopLayout extends StatelessWidget {
 
     final Quote firstQuote = quotes.isNotEmpty ? quotes.first : Quote.empty();
 
-    return BasicShortcuts(
-      child: Scaffold(
-        backgroundColor: isDark ? Colors.black26 : Colors.white,
-        body: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
+    return Scaffold(
+      backgroundColor: isDark ? Colors.black26 : Colors.white,
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 54.0,
+                left: 42.0,
+              ),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const AppIcon(
                     size: 20.0,
-                    margin: EdgeInsets.only(
-                      top: 54.0,
-                      left: 42.0,
-                      right: 6.0,
-                    ),
+                    margin: EdgeInsets.only(right: 6.0),
                   ),
                   Text(
                     Constants.appName,
@@ -247,174 +251,137 @@ class DesktopLayout extends StatelessWidget {
                 ],
               ),
             ),
-            HeroQuote.desktop(
-              loading: pageState == EnumPageState.loadingRandomQuotes ||
-                  pageState == EnumPageState.loading,
-              backgroundColor: topBackgroundColor,
-              foregroundColor: foregroundColor,
+          ),
+          HeroQuote.desktop(
+            loading: pageState == EnumPageState.loadingRandomQuotes ||
+                pageState == EnumPageState.loading,
+            backgroundColor: topBackgroundColor,
+            foregroundColor: foregroundColor,
+            quote: firstQuote,
+            isDark: isDark,
+            onTapAuthor: onTapAuthor,
+            onDoubleTapQuote: onCopyQuote,
+            onTapQuote: onTapQuote,
+            authorMenuProvider: (MenuRequest menuRequest) =>
+                ContextMenuComponents.authorMenuProvider(
+              context,
+              author: firstQuote.author,
+            ),
+            quoteMenuProvider: (MenuRequest menuRequest) =>
+                ContextMenuComponents.quoteMenuProvider(
+              context,
               quote: firstQuote,
-              isDark: isDark,
-              onTapAuthor: onTapAuthor,
-              onTapQuote: onTapQuote,
-              authorMenuProvider: (MenuRequest menuRequest) =>
-                  ContextMenuComponents.authorMenuProvider(
-                context,
-                author: firstQuote.author,
-              ),
-              quoteMenuProvider: (MenuRequest menuRequest) =>
-                  ContextMenuComponents.quoteMenuProvider(
-                context,
-                quote: firstQuote,
-                onCopyQuote: onCopyQuote,
-                onCopyQuoteUrl: onCopyQuoteUrl,
-              ),
-              margin: const EdgeInsets.only(
-                top: 32.0,
-                left: 42.0,
-                right: 42.0,
-                bottom: 16.0,
-              ),
+              onCopyQuote: onCopyQuote,
+              onCopyQuoteUrl: onCopyQuoteUrl,
             ),
-            SliverToBoxAdapter(
-              child: InkWell(
-                onTap: refetchRandomQuotes,
-                child: Container(
-                  margin: const EdgeInsets.only(
-                    top: 16.0,
-                    left: 48.0,
-                    right: 26.0,
-                    bottom: 12.0,
-                  ),
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Container(
-                          width: 4.0,
-                          height: 64.0,
-                          foregroundDecoration: BoxDecoration(
-                            color: foregroundColor?.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Text.rich(
-                          TextSpan(
-                            text: "${"welcome.home.0".tr()}\n",
-                            children: [
-                              TextSpan(
-                                text: "${"welcome.home.1".tr()}\n",
-                              ),
-                              TextSpan(
-                                text: "welcome.home.2".tr(),
-                              ),
-                            ],
-                          ),
-                          style: Utils.calligraphy.body(
-                            textStyle: TextStyle(
-                              // color: Colors.grey,
-                              color: foregroundColor?.withOpacity(0.4),
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+            margin: const EdgeInsets.only(
+              top: 32.0,
+              left: 42.0,
+              right: 42.0,
+              bottom: 16.0,
             ),
-            QuotePosters(
-              isDark: isDark,
-              itemExtent: quoteCardExtent,
-              enableLeftArrow: enableQuoteLeftArrow,
-              enableRightArrow: enableQuoteRightArrow,
-              foregroundColor: foregroundColor,
-              margin: const EdgeInsets.only(
-                top: 6.0,
-                left: 36.0,
-                bottom: 24.0,
-              ),
-              quotes: subQuotes,
-              onIndexChanged: onQuoteIndexChanged,
-              onTapQuote: onTapQuote,
-              onTapArrowLeft: onTapQuoteLeftArrow,
-              onTapArrowRight: onTapQuoteRightArrow,
-              scrollController: quoteScrollController,
-              textColor: iconColor,
+          ),
+          HomeWelcomeGreetings(
+            foregroundColor: foregroundColor,
+            refetchRandomQuotes: refetchRandomQuotes,
+            padding: const EdgeInsets.only(
+              top: 16.0,
+              left: 48.0,
+              right: 26.0,
+              bottom: 12.0,
             ),
-            TopicCarousel(
-              enableLeftArrow: enableTopicLeftArrow,
-              enableRightArrow: enableTopicRightArrow,
-              foregroundColor: foregroundColor,
-              isDark: isDark,
-              itemExtent: topicCardExtent,
-              hoveredTopicName: hoveredTopicName,
-              onTapTopic: onTapTopic,
-              onHoverTopic: onHoverTopic,
-              margin: const EdgeInsets.only(
-                left: 36.0,
-                top: 24.0,
-                bottom: 24.0,
-              ),
-              onIndexChanged: onTopicIndexChanged,
-              onTapArrowRight: onTapTopicRightArrow,
-              onTapArrowLeft: onTapTopicLeftArrow,
-              scrollController: topicScrollController,
-              topics: topics,
+          ),
+          QuotePosters(
+            isDark: isDark,
+            itemExtent: quoteCardExtent,
+            enableLeftArrow: enableQuoteLeftArrow,
+            enableRightArrow: enableQuoteRightArrow,
+            foregroundColor: foregroundColor,
+            margin: const EdgeInsets.only(
+              top: 6.0,
+              left: 36.0,
+              bottom: 24.0,
             ),
-            AuthorCarousel(
-              authors: authors,
-              isDark: isDark,
-              foregroundColor: foregroundColor,
-              hoveredAuthorName: hoveredAuthorName,
-              itemExtent: authorCardExtent,
-              enableLeftArrow: enableAuthorLeftArrow,
-              enableRightArrow: enableAuthorRightArrow,
-              onTapAuthor: onTapAuthor,
-              onHoverAuthor: onHoverAuthor,
-              onIndexChanged: onAuthorIndexChanged,
-              onTapArrowRight: onTapAuthorRightArrow,
-              onTapArrowLeft: onTapAuthorLeftArrow,
-              margin: const EdgeInsets.only(
-                left: 42.0,
-                top: 24.0,
-                bottom: 24.0,
-              ),
-              scrollController: authorScrollController,
+            quotes: subQuotes,
+            onTapAuthor: onTapAuthor,
+            onDoubleTapAuthor: onDoubleTapAuthor,
+            onCopyQuoteUrl: onCopyQuoteUrl,
+            onDoubleTapQuote: onCopyQuote,
+            onIndexChanged: onQuoteIndexChanged,
+            onTapQuote: onTapQuote,
+            onTapArrowLeft: onTapQuoteLeftArrow,
+            onTapArrowRight: onTapQuoteRightArrow,
+            scrollController: quoteScrollController,
+            textColor: iconColor,
+          ),
+          TopicCarousel(
+            enableLeftArrow: enableTopicLeftArrow,
+            enableRightArrow: enableTopicRightArrow,
+            foregroundColor: foregroundColor,
+            isDark: isDark,
+            itemExtent: topicCardExtent,
+            hoveredTopicName: hoveredTopicName,
+            onTapTopic: onTapTopic,
+            onHoverTopic: onHoverTopic,
+            margin: const EdgeInsets.only(
+              left: 36.0,
+              top: 24.0,
+              bottom: 24.0,
             ),
-            ReferenceGrid(
-              backgroundColor: posterBackgroundColor,
-              foregroundColor: foregroundColor,
-              isDark: isDark,
-              margin: const EdgeInsets.only(
-                top: 32.0,
-                left: 42.0,
-                right: 42.0,
-                bottom: 120.0,
-              ),
-              onTapReference: onTapReference,
-              onHoverReference: onHoverReference,
-              referenceHoveredId: hoveredReferenceId,
-              references: references,
+            onIndexChanged: onTopicIndexChanged,
+            onTapArrowRight: onTapTopicRightArrow,
+            onTapArrowLeft: onTapTopicLeftArrow,
+            scrollController: topicScrollController,
+            topics: topics,
+          ),
+          AuthorCarousel(
+            authors: authors,
+            isDark: isDark,
+            foregroundColor: foregroundColor,
+            hoveredAuthorName: hoveredAuthorName,
+            itemExtent: authorCardExtent,
+            enableLeftArrow: enableAuthorLeftArrow,
+            enableRightArrow: enableAuthorRightArrow,
+            onTapAuthor: onTapAuthor,
+            onHoverAuthor: onHoverAuthor,
+            onIndexChanged: onAuthorIndexChanged,
+            onTapArrowRight: onTapAuthorRightArrow,
+            onTapArrowLeft: onTapAuthorLeftArrow,
+            margin: const EdgeInsets.only(
+              left: 42.0,
+              top: 24.0,
+              bottom: 24.0,
             ),
-            HomePageFooter(
-              onTapGitHub: onTapGitHub,
-              iconColor: iconColor,
-              foregroundColor: foregroundColor,
-              margin: const EdgeInsets.only(
-                top: 32.0,
-                left: 42.0,
-                right: 42.0,
-                bottom: 24.0,
-              ),
-              onChangeLanguage: onChangeLanguage,
+            scrollController: authorScrollController,
+          ),
+          ReferenceGrid(
+            backgroundColor: posterBackgroundColor,
+            foregroundColor: foregroundColor,
+            isDark: isDark,
+            margin: const EdgeInsets.only(
+              top: 32.0,
+              left: 42.0,
+              right: 42.0,
+              bottom: 120.0,
             ),
-          ],
-        ),
+            onTapReference: onTapReference,
+            onHoverReference: onHoverReference,
+            referenceHoveredId: hoveredReferenceId,
+            references: references,
+          ),
+          HomePageFooter(
+            onTapGitHub: onTapGitHub,
+            iconColor: iconColor,
+            foregroundColor: foregroundColor,
+            margin: const EdgeInsets.only(
+              top: 32.0,
+              left: 42.0,
+              right: 42.0,
+              bottom: 24.0,
+            ),
+            onChangeLanguage: onChangeLanguage,
+          ),
+        ],
       ),
     );
   }

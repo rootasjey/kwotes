@@ -1,28 +1,21 @@
 import "package:beamer/beamer.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
-import "package:kwotes/router/locations/home_location.dart";
-import "package:kwotes/router/locations/search_location.dart";
-import "package:kwotes/screens/dashboard/dahboard_side_menu.dart";
 import "package:kwotes/types/intents/add_quote_intent.dart";
-import "package:kwotes/types/intents/dashboard_intent.dart";
 import "package:kwotes/types/intents/escape_intent.dart";
-import "package:kwotes/types/intents/home_intent.dart";
 import "package:kwotes/types/intents/index_intent.dart";
-import "package:kwotes/types/intents/search_intent.dart";
 
-class DashboardPage extends StatefulWidget {
-  /// Dashboard page.
-  /// Personal user space.
-  const DashboardPage({super.key});
+class DashboardNavigationPage extends StatefulWidget {
+  /// Deep navigation container for dashboard page.
+  const DashboardNavigationPage({super.key});
 
   @override
-  State<DashboardPage> createState() => _DashboardPageState();
+  State<DashboardNavigationPage> createState() =>
+      _DashboardNavigationPageState();
 }
 
-class _DashboardPageState extends State<DashboardPage> {
+class _DashboardNavigationPageState extends State<DashboardNavigationPage> {
   /// Beamer key to navigate sub-locations.
   final GlobalKey<BeamerState> _beamerKey = GlobalKey<BeamerState>();
 
@@ -61,18 +54,6 @@ class _DashboardPageState extends State<DashboardPage> {
       LogicalKeyboardKey.digit6,
     ): const SixthIndexIntent(),
     LogicalKeySet(
-      LogicalKeyboardKey.control,
-      LogicalKeyboardKey.keyD,
-    ): const DashboardIntent(),
-    LogicalKeySet(
-      LogicalKeyboardKey.control,
-      LogicalKeyboardKey.keyH,
-    ): const HomeIntent(),
-    LogicalKeySet(
-      LogicalKeyboardKey.control,
-      LogicalKeyboardKey.keyS,
-    ): const SearchIntent(),
-    LogicalKeySet(
       LogicalKeyboardKey.escape,
     ): const EscapeIntent(),
     LogicalKeySet(
@@ -83,8 +64,6 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isMobileSize = Utils.measurements.isMobileSize(context);
-
     return Shortcuts(
       shortcuts: _shortcuts,
       child: Actions(
@@ -107,15 +86,6 @@ class _DashboardPageState extends State<DashboardPage> {
           SixthIndexIntent: CallbackAction<SixthIndexIntent>(
             onInvoke: onSixthIndexShortcut,
           ),
-          DashboardIntent: CallbackAction<DashboardIntent>(
-            onInvoke: onDashboardShortcut,
-          ),
-          SearchIntent: CallbackAction<SearchIntent>(
-            onInvoke: onSearchShortcut,
-          ),
-          HomeIntent: CallbackAction<HomeIntent>(
-            onInvoke: onHomeShortcut,
-          ),
           AddQuoteIntent: CallbackAction<AddQuoteIntent>(
             onInvoke: onAddQuoteShortcut,
           ),
@@ -125,22 +95,9 @@ class _DashboardPageState extends State<DashboardPage> {
         },
         child: HeroControllerScope(
           controller: HeroController(),
-          child: Stack(
-            children: [
-              Beamer(
-                key: _beamerKey,
-                routerDelegate: _routerDelegate,
-              ),
-              if (!isMobileSize)
-                Positioned(
-                  right: 0.0,
-                  top: 0.0,
-                  bottom: 0.0,
-                  child: DashboardSideMenu(
-                    beamerKey: _beamerKey,
-                  ),
-                ),
-            ],
+          child: Beamer(
+            key: _beamerKey,
+            routerDelegate: _routerDelegate,
           ),
         ),
       ),
@@ -196,33 +153,6 @@ class _DashboardPageState extends State<DashboardPage> {
   Object? onSixthIndexShortcut(SixthIndexIntent intent) {
     _beamerKey.currentState?.routerDelegate.beamToNamed(
       DashboardContentLocation.settingsRoute,
-    );
-
-    return null;
-  }
-
-  /// Callback fired to navigate to dashboard page.
-  Object? onDashboardShortcut(DashboardIntent intent) {
-    _beamerKey.currentState?.routerDelegate.beamToNamed(
-      DashboardLocation.route,
-    );
-
-    return null;
-  }
-
-  /// Callback fired to navigate to home page.
-  Object? onHomeShortcut(HomeIntent intent) {
-    _beamerKey.currentState?.routerDelegate.root.beamToNamed(
-      HomeLocation.route,
-    );
-
-    return null;
-  }
-
-  /// Callback fired to navigate to search page.
-  Object? onSearchShortcut(SearchIntent intent) {
-    _beamerKey.currentState?.routerDelegate.root.beamToNamed(
-      SearchLocation.route,
     );
 
     return null;

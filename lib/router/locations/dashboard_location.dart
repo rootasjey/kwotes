@@ -3,11 +3,13 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:kwotes/router/locations/signin_location.dart";
+import "package:kwotes/screens/author/author_page.dart";
+import "package:kwotes/screens/author/author_quotes_page.dart";
 import "package:kwotes/screens/author/edit_author_page.dart";
 import "package:kwotes/screens/color_palette/color_detail_page.dart";
 import "package:kwotes/screens/color_palette/color_palette_page.dart";
 import "package:kwotes/screens/add_quote/add_quote_page.dart";
-import "package:kwotes/screens/dashboard/dashboard_page.dart";
+import "package:kwotes/screens/dashboard/dashboard_navigation_page.dart";
 import "package:kwotes/screens/dashboard/dashboard_welcome_page.dart";
 import "package:kwotes/screens/drafts/drafts_page.dart";
 import "package:kwotes/screens/favourites/favourites_page.dart";
@@ -17,6 +19,8 @@ import "package:kwotes/screens/lists/lists_page.dart";
 import "package:kwotes/screens/published/published_page.dart";
 import "package:kwotes/screens/quote_page/quote_page.dart";
 import "package:kwotes/screens/reference/edit_reference_page.dart";
+import "package:kwotes/screens/reference/reference_page.dart";
+import "package:kwotes/screens/reference/reference_quotes_page.dart";
 import "package:kwotes/screens/settings/about/terms_of_service_page.dart";
 import "package:kwotes/screens/settings/about/the_purpose_page.dart";
 import "package:kwotes/screens/settings/delete_account/delete_account_page.dart";
@@ -54,7 +58,7 @@ class DashboardLocation extends BeamLocation<BeamState> {
   List<BeamPage> buildPages(BuildContext context, BeamState state) {
     return [
       BeamPage(
-        child: const DashboardPage(),
+        child: const DashboardNavigationPage(),
         key: const ValueKey(route),
         title: "page_title.dashboard".tr(),
         type: BeamPageType.fadeTransition,
@@ -69,6 +73,18 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
 
   /// Add quote route location.
   static const String addQuoteRoute = "$route/add-quote";
+
+  /// Author route location.
+  static const String authorRoute = "$route/author/:authorId";
+
+  /// Author's single quote route location.
+  /// e.g. `/h/author/authorId/quotes/quoteId`
+  /// Useful to keep previous author page(s) below this one.
+  static const String authorQuoteRoute = "$authorRoute/quotes/:quoteId";
+
+  /// Author's quotes route location.
+  static const String authorQuotesRoute = "$authorRoute/quotes";
+
   static const String colorPaletteRoute = "$settingsRoute/color-palette";
   static const String colorDetailRoute = "$colorPaletteRoute/:topicName";
   static const String deleteAccountRoute = "$settingsRoute/delete-account";
@@ -83,6 +99,18 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
   static const String listQuoteRoute = "$listRoute/quotes/:quoteId";
   static const String publishedRoute = "$route/published";
   static const String publishedQuoteRoute = "$publishedRoute/:quoteId";
+
+  /// Reference route location.
+  static const String referenceRoute = "$route/reference/:referenceId";
+
+  /// Reference's quotes route location.
+  static const String referenceQuotesRoute = "$referenceRoute/quotes";
+
+  /// Reference's single quote route location.
+  /// e.g. `/h/reference/authorId/quotes/quoteId`
+  /// Useful to keep previous reference page(s) below this one.
+  static const String referenceQuoteRoute = "$referenceRoute/quotes/:quoteId";
+
   static const String settingsRoute = "$route/settings";
   static const String settingsTosRoute = "$settingsRoute/terms-of-service";
   static const String settingsThePurposeRoute = "$settingsRoute/the-purpose";
@@ -93,6 +121,9 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
   @override
   List<String> get pathPatterns => [
         addQuoteRoute,
+        authorRoute,
+        authorQuoteRoute,
+        authorQuotesRoute,
         colorPaletteRoute,
         colorDetailRoute,
         deleteAccountRoute,
@@ -106,6 +137,9 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
         listsRoute,
         publishedRoute,
         inValidationRoute,
+        referenceRoute,
+        referenceQuoteRoute,
+        referenceQuotesRoute,
         settingsRoute,
         settingsTosRoute,
         settingsThePurposeRoute,
@@ -274,6 +308,55 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
             referenceId: state.pathParameters["referenceId"] ?? "",
           ),
           key: const ValueKey(editReferenceRoute),
+          title: "page_title.any".tr(),
+          type: BeamPageType.fadeTransition,
+          fullScreenDialog: false,
+          opaque: false,
+        ),
+      if (!state.pathPatternSegments.contains("edit") &&
+          state.pathPatternSegments.contains(authorRoute.split("/").last))
+        BeamPage(
+          child: AuthorPage(
+            authorId: state.pathParameters["authorId"] ?? "",
+          ),
+          key: const ValueKey(authorRoute),
+          title: "page_title.any".tr(),
+          type: BeamPageType.fadeTransition,
+          fullScreenDialog: false,
+          opaque: false,
+        ),
+      if (!state.pathPatternSegments.contains("edit") &&
+          state.pathPatternSegments.contains(referenceRoute.split("/").last))
+        BeamPage(
+          child: ReferencePage(
+            referenceId: state.pathParameters["referenceId"] ?? "",
+          ),
+          key: const ValueKey(referenceRoute),
+          title: "page_title.any".tr(),
+          type: BeamPageType.fadeTransition,
+          fullScreenDialog: false,
+          opaque: false,
+        ),
+      if (state.pathPatternSegments.contains(authorRoute.split("/").last) &&
+          state.pathPatternSegments.contains(authorQuotesRoute.split("/").last))
+        BeamPage(
+          child: AuthorQuotesPage(
+            authorId: state.pathParameters["authorId"] ?? "",
+          ),
+          key: const ValueKey(authorQuotesRoute),
+          title: "page_title.any".tr(),
+          type: BeamPageType.fadeTransition,
+          fullScreenDialog: false,
+          opaque: false,
+        ),
+      if (state.pathPatternSegments.contains(referenceRoute.split("/").last) &&
+          state.pathPatternSegments
+              .contains(referenceQuotesRoute.split("/").last))
+        BeamPage(
+          child: ReferenceQuotesPage(
+            referenceId: state.pathParameters["referenceId"] ?? "",
+          ),
+          key: const ValueKey(referenceQuotesRoute),
           title: "page_title.any".tr(),
           type: BeamPageType.fadeTransition,
           fullScreenDialog: false,

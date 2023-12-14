@@ -6,7 +6,7 @@ import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/types/intents/escape_intent.dart";
 
 class HomeNavigationPage extends StatefulWidget {
-  /// Deep navigation container for mobile home page.
+  /// Deep navigation container for home page.
   const HomeNavigationPage({super.key});
 
   @override

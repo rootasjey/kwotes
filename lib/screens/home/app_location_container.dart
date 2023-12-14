@@ -10,10 +10,14 @@ import "package:kwotes/components/buttons/menu_navigation_item.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/globals/utils/passage.dart";
-import "package:kwotes/screens/dashboard/dashboard_page.dart";
+import "package:kwotes/router/navigation_state_helper.dart";
+import "package:kwotes/screens/dashboard/dashboard_navigation_page.dart";
 import "package:kwotes/screens/home/home_navigation_page.dart";
 import "package:kwotes/screens/search/search_navigation_page.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
+import "package:kwotes/types/intents/dashboard_intent.dart";
+import "package:kwotes/types/intents/home_intent.dart";
+import "package:kwotes/types/intents/search_intent.dart";
 import "package:salomon_bottom_bar/salomon_bottom_bar.dart";
 import "package:unicons/unicons.dart";
 
@@ -38,8 +42,27 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
   final List<StatefulWidget> _widgetChildren = [
     const HomeNavigationPage(),
     const SearchNavigationPage(),
-    const DashboardPage(),
+    const DashboardNavigationPage(),
   ];
+
+  /// Keyboard shortcuts definition.
+  final Map<LogicalKeySet, Intent> _shortcuts = {
+    LogicalKeySet(
+      LogicalKeyboardKey.control,
+      LogicalKeyboardKey.shift,
+      LogicalKeyboardKey.digit3,
+    ): const DashboardIntent(),
+    LogicalKeySet(
+      LogicalKeyboardKey.control,
+      LogicalKeyboardKey.shift,
+      LogicalKeyboardKey.digit1,
+    ): const HomeIntent(),
+    LogicalKeySet(
+      LogicalKeyboardKey.control,
+      LogicalKeyboardKey.shift,
+      LogicalKeyboardKey.digit2,
+    ): const SearchIntent(),
+  };
 
   @override
   void initState() {
@@ -51,7 +74,6 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
   Widget build(BuildContext context) {
     adaptUiOverlayStyle();
     final bool isMobile = Utils.measurements.isMobileSize(context);
-
     final bool isDarkTheme = Theme.of(context).brightness == Brightness.dark;
 
     final Signal<bool> signalNavigationBar =
@@ -98,87 +120,103 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
     }
 
     final Signal<Color> appFrameColor = context.get<Signal<Color>>(
-      EnumSignalId.appFrameColor,
+      EnumSignalId.frameBorderColor,
     );
 
-    return SignalBuilder(
-      signal: appFrameColor,
-      builder: (BuildContext context, Color backgroundColor, Widget? body) {
-        return Scaffold(
-          backgroundColor: backgroundColor,
-          body: body,
-        );
-      },
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              color: Colors.transparent,
-              padding: const EdgeInsets.all(8.0),
-              child: Material(
-                borderRadius: const BorderRadius.all(Radius.circular(12.0)),
-                clipBehavior: Clip.antiAlias,
-                child: _widgetChildren[_currentIndex],
-              ),
-            ),
+    return Shortcuts(
+      shortcuts: _shortcuts,
+      child: Actions(
+        actions: {
+          DashboardIntent: CallbackAction<DashboardIntent>(
+            onInvoke: onDashboardShortcut,
           ),
-          SignalBuilder(
-            signal: signalNavigationBar,
-            builder: (BuildContext context, bool show, Widget? child) {
-              if (show) {
-                return child ?? const SizedBox.shrink();
-              }
-
-              return const SizedBox.shrink();
-            },
-            child: Container(
-              color: Colors.transparent,
-              padding: const EdgeInsets.all(8.0).subtract(
-                const EdgeInsets.only(left: 8.0),
-              ),
-              child: Material(
-                color: isDarkTheme ? Colors.black87 : Colors.white,
-                elevation: isDarkTheme ? 4.0 : 0.0,
-                borderRadius: const BorderRadius.all(Radius.circular(12.0)),
-                child: SizedBox(
-                  width: 90.0,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      MenuNavigationItem(
-                        index: 0,
-                        label: "home".tr(),
-                        icon: const Icon(TablerIcons.home),
-                        onTap: onTapBottomBarItem,
-                        selectedColor: Constants.colors.home,
-                        selected: _currentIndex == 0,
-                        tooltip: "home".tr(),
-                      ),
-                      MenuNavigationItem(
-                        icon: const Icon(TablerIcons.search),
-                        index: 1,
-                        label: "search.name".tr(),
-                        onTap: onTapBottomBarItem,
-                        selected: _currentIndex == 1,
-                        selectedColor: Constants.colors.search,
-                        tooltip: "search.name".tr(),
-                      ),
-                      MenuNavigationItem(
-                        icon: const Icon(TablerIcons.user_circle),
-                        index: 2,
-                        label: "dashboard".tr(),
-                        onTap: onTapBottomBarItem,
-                        selected: _currentIndex == 2,
-                        selectedColor: Constants.colors.delete,
-                        tooltip: "dashboard".tr(),
-                      ),
-                    ],
+          SearchIntent: CallbackAction<SearchIntent>(
+            onInvoke: onSearchShortcut,
+          ),
+          HomeIntent: CallbackAction<HomeIntent>(
+            onInvoke: onHomeShortcut,
+          ),
+        },
+        child: SignalBuilder(
+          signal: appFrameColor,
+          builder: (BuildContext context, Color backgroundColor, Widget? body) {
+            return Scaffold(
+              backgroundColor: backgroundColor,
+              body: body,
+            );
+          },
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  color: Colors.transparent,
+                  padding: const EdgeInsets.all(8.0),
+                  child: Material(
+                    borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+                    clipBehavior: Clip.antiAlias,
+                    child: _widgetChildren[_currentIndex],
                   ),
                 ),
               ),
-            ),
+              SignalBuilder(
+                signal: signalNavigationBar,
+                builder: (BuildContext context, bool show, Widget? child) {
+                  if (show) {
+                    return child ?? const SizedBox.shrink();
+                  }
+
+                  return const SizedBox.shrink();
+                },
+                child: Container(
+                  color: Colors.transparent,
+                  padding: const EdgeInsets.all(8.0).subtract(
+                    const EdgeInsets.only(left: 8.0),
+                  ),
+                  child: Material(
+                    color: isDarkTheme ? Colors.black87 : Colors.white,
+                    elevation: isDarkTheme ? 4.0 : 0.0,
+                    borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+                    child: SizedBox(
+                      width: 90.0,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          MenuNavigationItem(
+                            index: 0,
+                            label: "home".tr(),
+                            icon: const Icon(TablerIcons.home),
+                            onTap: onTapBottomBarItem,
+                            selectedColor: Constants.colors.home,
+                            selected: _currentIndex == 0,
+                            tooltip: "home".tr(),
+                          ),
+                          MenuNavigationItem(
+                            icon: const Icon(TablerIcons.search),
+                            index: 1,
+                            label: "search.name".tr(),
+                            onTap: onTapBottomBarItem,
+                            selected: _currentIndex == 1,
+                            selectedColor: Constants.colors.search,
+                            tooltip: "search.name".tr(),
+                          ),
+                          MenuNavigationItem(
+                            icon: const Icon(TablerIcons.user_circle),
+                            index: 2,
+                            label: "dashboard".tr(),
+                            onTap: onTapBottomBarItem,
+                            selected: _currentIndex == 2,
+                            selectedColor: Constants.colors.delete,
+                            tooltip: "dashboard".tr(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -197,6 +235,7 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
   /// Adapt UI overlay style on Android and iOS.
   void adaptUiOverlayStyle() {
     if (!Platform.isAndroid && !Platform.isIOS) {
+      updateFrameBorderColor();
       return;
     }
 
@@ -232,5 +271,37 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
               );
 
     SystemChrome.setSystemUIOverlayStyle(overlayStyle);
+  }
+
+  /// Callback fired to navigate to dashboard page.
+  Object? onDashboardShortcut(DashboardIntent intent) {
+    onTapBottomBarItem(2);
+    return null;
+  }
+
+  /// Callback fired to navigate to home page.
+  Object? onHomeShortcut(HomeIntent intent) {
+    onTapBottomBarItem(0);
+    return null;
+  }
+
+  /// Callback fired to navigate to search page.
+  Object? onSearchShortcut(SearchIntent intent) {
+    onTapBottomBarItem(1);
+    return null;
+  }
+
+  /// Update frame border color according to last saved style.
+  void updateFrameBorderColor() {
+    final Color borderColor = Constants.colors.getBorderColorFromStyle(
+      context,
+      NavigationStateHelper.frameBorderStyle,
+    );
+
+    final Signal<Color> frameColorSignal = context.get<Signal<Color>>(
+      EnumSignalId.frameBorderColor,
+    );
+
+    frameColorSignal.update((Color previousColor) => borderColor);
   }
 }
