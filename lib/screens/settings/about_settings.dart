@@ -62,12 +62,12 @@ class _AboutSettingsState extends State<AboutSettings> {
             text: "${"about.name".tr()}: ",
             children: const [
               WidgetSpan(
-                alignment: PlaceholderAlignment.top,
+                alignment: PlaceholderAlignment.middle,
                 child: SizedBox(
-                  width: 56.0,
-                  height: 56.0,
+                  width: 84.0,
+                  height: 84.0,
                   child: LikeButtonVanilla(
-                    size: Size(56.0, 56.0),
+                    size: Size(84.0, 84.0),
                   ),
                 ),
               ),
@@ -107,21 +107,13 @@ class _AboutSettingsState extends State<AboutSettings> {
                   const Text("GitHub"),
                   Icon(
                     TablerIcons.arrow_up_right,
+                    size: 16.0,
                     color: widget.foregroundColor?.withOpacity(0.6),
                   ),
                 ],
               ),
             ),
             ActionChip(
-              onPressed: () {},
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.0),
-                side: BorderSide(
-                  color: widget.foregroundColor?.withOpacity(0.6) ??
-                      Colors.transparent,
-                ),
-              ),
-              disabledColor: Theme.of(context).scaffoldBackgroundColor,
               label: Text("${"version".tr()}: ${Constants.appVersion}"),
             ),
           ]

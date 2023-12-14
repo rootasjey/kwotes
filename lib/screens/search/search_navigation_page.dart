@@ -6,6 +6,7 @@ import "package:kwotes/router/locations/search_location.dart";
 import "package:kwotes/types/intents/escape_intent.dart";
 
 class SearchNavigationPage extends StatefulWidget {
+  /// Deep navigation container for search page.
   const SearchNavigationPage({super.key});
 
   @override

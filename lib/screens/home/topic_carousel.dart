@@ -80,7 +80,10 @@ class TopicCarousel extends StatelessWidget {
     return SliverToBoxAdapter(
       child: Column(
         children: [
-          const Divider(thickness: 2.0),
+          Divider(
+            thickness: isDark ? 1.0 : 2.0,
+            color: isDark ? foregroundColor?.withOpacity(0.4) : null,
+          ),
           Container(
             padding: margin,
             child: Column(
@@ -194,7 +197,10 @@ class TopicCarousel extends StatelessWidget {
               ],
             ),
           ),
-          const Divider(thickness: 2.0),
+          Divider(
+            thickness: isDark ? 1.0 : 2.0,
+            color: isDark ? foregroundColor?.withOpacity(0.4) : null,
+          ),
         ],
       ),
     );

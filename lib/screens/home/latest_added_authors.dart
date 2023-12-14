@@ -88,9 +88,9 @@ class LatestAddedAuthors extends StatelessWidget {
     }
 
     children.add(
-      const Padding(
-        padding: EdgeInsets.only(top: 24.0),
-        child: Divider(),
+      Padding(
+        padding: const EdgeInsets.only(top: 24.0),
+        child: Divider(color: foregroundColor?.withOpacity(0.2)),
       ),
     );
 

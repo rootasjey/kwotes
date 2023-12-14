@@ -10,6 +10,7 @@ class ThemeSwitcher extends StatelessWidget {
   const ThemeSwitcher({
     super.key,
     this.animateElements = false,
+    this.isDark = false,
     this.isMobileSize = false,
     this.accentColor = Colors.amber,
     this.foregroundColor,
@@ -21,6 +22,9 @@ class ThemeSwitcher extends StatelessWidget {
 
   /// Animate elements on settings page if true.
   final bool animateElements;
+
+  /// Dark theme if true.
+  final bool isDark;
 
   /// Adapt the user interface to narrow screen's size if true.
   final bool isMobileSize;
@@ -120,9 +124,7 @@ class ThemeSwitcher extends StatelessWidget {
               .fadeIn(duration: animateElements ? 250.ms : 0.ms)
               .slideY(begin: 0.8, end: 0.0),
         ),
-        const Divider(
-          height: 48.0,
-        )
+        Divider(height: 48.0, color: isDark ? Colors.white12 : null)
             .animate(delay: animateElements ? 250.ms : 0.ms)
             .fadeIn(duration: animateElements ? 250.ms : 0.ms)
             .slideY(begin: 0.8, end: 0.0),
