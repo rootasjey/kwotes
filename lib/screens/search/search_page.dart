@@ -3,13 +3,9 @@ import "dart:async";
 import "package:algolia/algolia.dart";
 import "package:beamer/beamer.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
-import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
-import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
-import "package:kwotes/components/application_bar.dart";
-import "package:kwotes/components/basic_shortcuts.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
@@ -22,7 +18,6 @@ import "package:kwotes/screens/search/search_result_meta.dart";
 import "package:kwotes/screens/search/showcase.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/author.dart";
-import "package:kwotes/types/enums/enum_app_bar_mode.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_search_category.dart";
 import "package:kwotes/types/firestore/query_doc_snap_map.dart";
@@ -157,133 +152,95 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return BasicShortcuts(
-      autofocus: false,
-      onCancel: context.beamBack,
-      child: SafeArea(
-        child: Scaffold(
-          body: Stack(
-            children: [
-              ImprovedScrolling(
-                onScroll: onScroll,
-                scrollController: _scrollController,
-                child: ScrollConfiguration(
-                  behavior: const CustomScrollBehavior(),
-                  child: CustomScrollView(
-                    controller: _scrollController,
-                    slivers: [
-                      if (!isMobileSize)
-                        ApplicationBar(
-                          elevation: 0.0,
-                          isMobileSize: isMobileSize,
-                          mode: EnumAppBarMode.search,
-                          searchCategorySelected: _searchCategory,
-                          onSelectSearchEntity: onSelectSearchEntity,
-                          onTapTitle: onScrollToTop,
-                          onTapIcon: onScrollToTop,
-                          toolbarHeight: 42.0,
-                          title: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              if (showResultCount) ...[
-                                Text(
-                                  "• ${"search.result_count".plural(_resultCount)} •",
-                                  style: Utils.calligraphy.body(
-                                    textStyle: TextStyle(
-                                      color: foregroundColor?.withOpacity(0.6),
-                                    ),
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: onClearInput,
-                                  tooltip: "search.clear".tr(),
-                                  color: foregroundColor?.withOpacity(0.6),
-                                  icon:
-                                      const Icon(TablerIcons.square_rounded_x),
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-                      SearchInput(
-                        inputController: _searchInputController,
-                        onChangedTextField: onSearchInputChanged,
-                        focusNode: _searchFocusNode,
+    return SafeArea(
+      child: Scaffold(
+        body: Stack(
+          children: [
+            ImprovedScrolling(
+              onScroll: onScroll,
+              scrollController: _scrollController,
+              child: ScrollConfiguration(
+                behavior: const CustomScrollBehavior(),
+                child: CustomScrollView(
+                  controller: _scrollController,
+                  slivers: [
+                    SearchInput(
+                      inputController: _searchInputController,
+                      onChangedTextField: onSearchInputChanged,
+                      focusNode: _searchFocusNode,
+                      padding: padding,
+                      searchCategory: _searchCategory,
+                      isMobileSize: isMobileSize,
+                      bottom: SearchResultMeta(
+                        isMobileSize: isMobileSize,
+                        foregroundColor: foregroundColor,
+                        onClearInput: onClearInput,
                         padding: padding,
-                        searchCategory: _searchCategory,
-                        isMobileSize: isMobileSize,
-                        bottom: SearchResultMeta(
-                          isMobileSize: isMobileSize,
-                          foregroundColor: foregroundColor,
-                          onClearInput: onClearInput,
-                          padding: padding,
-                          pageState: _pageState,
-                          resultCount: _resultCount,
-                          show: showResultCount,
-                        ),
-                      ),
-                      SearchPageBody(
-                        authorResults: _authorResults,
-                        isMobileSize: isMobileSize,
-                        isQueryEmpty: _searchInputController.text.isEmpty,
-                        margin: padding,
-                        onRefreshSearch: search,
-                        onReinitializeSearch: onClearInput,
-                        onTapQuote: onTapQuote,
-                        onTapAuthor: onTapAuthor,
-                        onTapReference: onTapReference,
                         pageState: _pageState,
-                        quoteResults: _quoteResults,
-                        referenceResults: _referenceResults,
-                        searchCategory: _searchCategory,
+                        resultCount: _resultCount,
+                        show: showResultCount,
                       ),
-                      Showcase(
-                        authors: _authorList,
-                        isDark: isDark,
-                        isMobileSize: isMobileSize,
-                        margin: EdgeInsets.only(
-                          top: isMobileSize ? 0.0 : 24.0,
-                          bottom: 54.0,
-                          left: isMobileSize ? 24.0 : 24.0,
-                          right: isMobileSize ? 24.0 : 24.0,
-                        ),
-                        pageState: _pageState,
-                        onTapTopicColor: onTapTopicColor,
-                        onTapAuthor: onTapAuthor,
-                        onTapReference: onTapReference,
-                        references: _referenceList,
-                        searchCategory: _searchCategory,
-                        show: _searchInputController.text.isEmpty,
-                        topicColors: Constants.colors.topics,
+                    ),
+                    SearchPageBody(
+                      authorResults: _authorResults,
+                      isMobileSize: isMobileSize,
+                      isQueryEmpty: _searchInputController.text.isEmpty,
+                      margin: padding,
+                      onRefreshSearch: search,
+                      onReinitializeSearch: onClearInput,
+                      onTapQuote: onTapQuote,
+                      onTapAuthor: onTapAuthor,
+                      onTapReference: onTapReference,
+                      pageState: _pageState,
+                      quoteResults: _quoteResults,
+                      referenceResults: _referenceResults,
+                      searchCategory: _searchCategory,
+                    ),
+                    Showcase(
+                      authors: _authorList,
+                      isDark: isDark,
+                      isMobileSize: isMobileSize,
+                      margin: EdgeInsets.only(
+                        top: isMobileSize ? 0.0 : 24.0,
+                        bottom: 54.0,
+                        left: isMobileSize ? 24.0 : 24.0,
+                        right: isMobileSize ? 24.0 : 24.0,
                       ),
-                    ],
-                  ),
+                      pageState: _pageState,
+                      onTapTopicColor: onTapTopicColor,
+                      onTapAuthor: onTapAuthor,
+                      onTapReference: onTapReference,
+                      references: _referenceList,
+                      searchCategory: _searchCategory,
+                      show: _searchInputController.text.isEmpty,
+                      topicColors: Constants.colors.topics,
+                    ),
+                  ],
                 ),
               ),
-              if (_showEntitySelector)
-                Positioned(
-                  bottom: 12.0,
-                  left: 0.0,
-                  right: 0.0,
-                  child: Center(
-                    child: SearchCategorySelector(
-                      categorySelected: _searchCategory,
-                      isDark: isDark,
-                      onSelectCategory: onSelectSearchEntity,
-                    ),
-                  )
-                      .animate()
-                      .slideY(
-                        begin: 0.4,
-                        end: 0.0,
-                        duration: 150.ms,
-                        curve: Curves.decelerate,
-                      )
-                      .fadeIn(),
-                ),
-            ],
-          ),
+            ),
+            if (_showEntitySelector)
+              Positioned(
+                bottom: 12.0,
+                left: 0.0,
+                right: 0.0,
+                child: Center(
+                  child: SearchCategorySelector(
+                    categorySelected: _searchCategory,
+                    isDark: isDark,
+                    onSelectCategory: onSelectSearchEntity,
+                  ),
+                )
+                    .animate()
+                    .slideY(
+                      begin: 0.4,
+                      end: 0.0,
+                      duration: 150.ms,
+                      curve: Curves.decelerate,
+                    )
+                    .fadeIn(),
+              ),
+          ],
         ),
       ),
     );
