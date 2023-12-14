@@ -16,9 +16,11 @@ import "package:kwotes/screens/favourites/favourites_page_body.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
+import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/firestore/query_doc_snap_map.dart";
 import "package:kwotes/types/firestore/query_map.dart";
 import "package:kwotes/types/firestore/query_snap_map.dart";
+import "package:kwotes/types/firestore/query_snapshot_stream_subscription.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
@@ -55,6 +57,9 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
   /// Page's scroll controller.
   final ScrollController _pageScrollController = ScrollController();
 
+  /// Stream subscription for favourite quotes.
+  QuerySnapshotStreamSubscription? _quoteSub;
+
   @override
   void initState() {
     super.initState();
@@ -65,6 +70,8 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
   @override
   void dispose() {
     _pageScrollController.dispose();
+    _quoteSub?.cancel();
+    _quoteSub = null;
     super.dispose();
   }
 
@@ -126,6 +133,7 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
     try {
       final QueryMap query = getQuery(currentUser.value.id);
       final QuerySnapMap snapshot = await query.get();
+      listenToDocumentChanges(query);
 
       if (snapshot.docs.isEmpty) {
         setState(() {
@@ -154,6 +162,43 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
         _pageState = EnumPageState.idle;
       });
     }
+  }
+
+  /// Handle added document.
+  void handleAddedDocument(DocumentSnapshotMap doc) {
+    final Json? data = doc.data();
+    if (data == null) return;
+
+    data["id"] = doc.id;
+    final Quote quote = Quote.fromMap(data);
+    setState(() => _quotes.add(quote));
+  }
+
+  /// Handle removed document.
+  void handleRemovedDocument(DocumentSnapshotMap doc) {
+    setState(() => _quotes.removeWhere((Quote x) => x.id == doc.id));
+  }
+
+  /// Listen to document changes.
+  void listenToDocumentChanges(QueryMap query) {
+    _quoteSub?.cancel();
+    _quoteSub = query.snapshots().skip(1).listen((QuerySnapMap snapshot) {
+      for (final docChange in snapshot.docChanges) {
+        switch (docChange.type) {
+          case DocumentChangeType.added:
+            handleAddedDocument(docChange.doc);
+            break;
+          case DocumentChangeType.removed:
+            handleRemovedDocument(docChange.doc);
+            break;
+          default:
+            break;
+        }
+      }
+    }, onDone: () {
+      _quoteSub?.cancel();
+      _quoteSub = null;
+    });
   }
 
   /// Return firebase query.

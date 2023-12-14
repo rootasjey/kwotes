@@ -330,7 +330,8 @@
     },
     "delete": {
       "failed": "Une erreur s'est produite lors de la suppression de la liste",
-      "name": "Supprimer la liste"
+      "name": "Supprimer la liste",
+      "success": "La liste a été supprimée"
     },
     "description": "Rangez des citations ensemble",
     "edit": {

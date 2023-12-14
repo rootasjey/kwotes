@@ -18,9 +18,12 @@ import "package:kwotes/types/draft_quote.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
+import "package:kwotes/types/firestore/document_change_map.dart";
+import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/firestore/query_doc_snap_map.dart";
 import "package:kwotes/types/firestore/query_map.dart";
 import "package:kwotes/types/firestore/query_snap_map.dart";
+import "package:kwotes/types/firestore/query_snapshot_stream_subscription.dart";
 import "package:kwotes/types/user/user_auth.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
@@ -58,10 +61,13 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
   final int _limit = 20;
 
   /// List of drafts quotes.
-  final List<DraftQuote> _quotes = [];
+  final List<DraftQuote> _drafts = [];
 
   /// Last document.
   QueryDocSnapMap? _lastDocument;
+
+  /// Stream subscription for draft quotes.
+  QuerySnapshotStreamSubscription? _draftSub;
 
   /// Page's scroll controller.
   final ScrollController _pageScrollController = ScrollController();
@@ -76,6 +82,8 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
   @override
   void dispose() {
     _pageScrollController.dispose();
+    _draftSub?.cancel();
+    _draftSub = null;
     super.dispose();
   }
 
@@ -111,7 +119,7 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
                 isDark: isDark,
                 isMobileSize: isMobileSize,
                 pageState: _pageState,
-                draftQuotes: _quotes,
+                draftQuotes: _drafts,
                 onTap: onTapDraftQuote,
                 onDelete: onDeleteDraftQuote,
                 onEdit: onEditDraftQuote,
@@ -138,6 +146,7 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
     try {
       final QueryMap query = getQuery(userId);
       final QuerySnapMap snapshot = await query.get();
+      listenToDocumentChanges(query);
 
       if (snapshot.docs.isEmpty) {
         setState(() {
@@ -152,7 +161,7 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
         final Json data = doc.data();
         data["id"] = doc.id;
         final DraftQuote quote = DraftQuote.fromMap(data);
-        _quotes.add(quote);
+        _drafts.add(quote);
       }
 
       setState(() {
@@ -192,6 +201,60 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
     return baseQuery.startAfterDocument(lastDocument);
   }
 
+  /// Callback fired when a document is added to the Firestore collection.
+  void handleAddedDocument(DocumentSnapshotMap doc) {
+    final Json? data = doc.data();
+    if (data == null) {
+      return;
+    }
+
+    final DraftQuote foundDraft = _drafts.firstWhere(
+      (DraftQuote x) => x.id == doc.id,
+      orElse: () => DraftQuote.empty(),
+    );
+
+    if (foundDraft.id.isNotEmpty) {
+      return;
+    }
+
+    data["id"] = doc.id;
+    final DraftQuote draft = DraftQuote.fromMap(data);
+    setState(() => _drafts.add(draft));
+  }
+
+  /// Handle modified document.
+  void handleModifiedDocument(DocumentSnapshotMap doc) {
+    final Json? data = doc.data();
+    if (data == null) {
+      return;
+    }
+
+    final int index = _drafts.indexWhere(
+      (DraftQuote x) => x.id == doc.id,
+    );
+
+    if (index == -1) {
+      return;
+    }
+
+    data["id"] = doc.id;
+    final DraftQuote draft = DraftQuote.fromMap(data);
+    setState(() => _drafts[index] = draft);
+  }
+
+  /// Handle removed document.
+  void handleRemovedDocument(DocumentSnapshotMap doc) {
+    final int index = _drafts.indexWhere(
+      (DraftQuote x) => x.id == doc.id,
+    );
+
+    if (index == -1) {
+      return;
+    }
+
+    setState(() => _drafts.removeAt(index));
+  }
+
   /// Initialize page properties.
   void initProps() async {
     _showPageOptions = await Utils.vault.geShowtHeaderOptions();
@@ -204,6 +267,31 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
       setState(() {
         _animateList = false;
       });
+    });
+  }
+
+  /// Listen to document changes.
+  void listenToDocumentChanges(QueryMap query) {
+    _draftSub?.cancel();
+    _draftSub = query.snapshots().skip(1).listen((QuerySnapMap snapshot) {
+      for (final DocumentChangeMap docChange in snapshot.docChanges) {
+        switch (docChange.type) {
+          case DocumentChangeType.added:
+            handleAddedDocument(docChange.doc);
+            break;
+          case DocumentChangeType.modified:
+            handleModifiedDocument(docChange.doc);
+            break;
+          case DocumentChangeType.removed:
+            handleRemovedDocument(docChange.doc);
+            break;
+          default:
+            break;
+        }
+      }
+    }, onDone: () {
+      _draftSub?.cancel();
+      _draftSub = null;
     });
   }
 
@@ -230,9 +318,9 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
 
   /// Callback fired when a draft quote is going to be deleted.
   void onDeleteDraftQuote(DraftQuote quote) async {
-    final int index = _quotes.indexOf(quote);
+    final int index = _drafts.indexOf(quote);
     setState(() {
-      _quotes.removeAt(index);
+      _drafts.removeAt(index);
     });
 
     final Signal<UserFirestore> userFirestore =
@@ -251,7 +339,7 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
       if (!mounted) return;
 
       setState(() {
-        _quotes.insert(index, quote);
+        _drafts.insert(index, quote);
       });
 
       Utils.graphic.showSnackbar(
@@ -281,7 +369,7 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
 
     setState(() {
       _selectedLanguage = language;
-      _quotes.clear();
+      _drafts.clear();
       _lastDocument = null;
     });
 

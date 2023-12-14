@@ -20,6 +20,7 @@ import "package:kwotes/screens/lists/lists_page_header.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
+import "package:kwotes/types/firestore/document_change_map.dart";
 import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/firestore/query_doc_snap_map.dart";
 import "package:kwotes/types/firestore/query_map.dart";
@@ -71,8 +72,8 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
   /// Page scroll controller.
   final ScrollController _pageScrollController = ScrollController();
 
-  /// Stream subscription for query snapshot.
-  QuerySnapshotStreamSubscription? _streamSnapshot;
+  /// Stream subscription for lists.
+  QuerySnapshotStreamSubscription? _listSub;
 
   /// Hint text for list name.
   String _hintListName = "";
@@ -107,7 +108,8 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
   @override
   void dispose() {
     _pageScrollController.dispose();
-    _streamSnapshot?.cancel();
+    _listSub?.cancel();
+    _listSub = null;
     super.dispose();
   }
 
@@ -209,6 +211,7 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
     try {
       final QueryMap query = getQuery(userId);
       final QuerySnapMap snapshot = await query.get();
+      listenToDocumentChanges(query);
 
       if (snapshot.docs.isEmpty) {
         setState(() {
@@ -231,8 +234,6 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
         _lastDocument = snapshot.docs.last;
         _hasNextPage = _limit == snapshot.docs.length;
       });
-
-      listenToDocumentChanges(userId);
     } catch (error) {
       loggy.error(error);
       if (!mounted) return;
@@ -295,17 +296,14 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
     }
 
     // final QuoteList existingList = _lists[index];
-    final Json? map = doc.data();
-    if (map == null) {
+    final Json? data = doc.data();
+    if (data == null) {
       return;
     }
 
-    map["id"] = doc.id;
-    final QuoteList newList = QuoteList.fromMap(map);
-
-    setState(() {
-      _lists[index] = newList;
-    });
+    data["id"] = doc.id;
+    final QuoteList newList = QuoteList.fromMap(data);
+    setState(() => _lists[index] = newList);
   }
 
   /// Handle removed document.
@@ -324,29 +322,15 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
   void initProps() async {
     Future.delayed(const Duration(seconds: 1), () {
       if (!mounted) return;
-      setState(() {
-        _animateList = false;
-      });
+      setState(() => _animateList = false);
     });
   }
 
-  /// Listen to changes of lists.
-  void listenToDocumentChanges(String userId) {
-    final lastDocument = _lastDocument;
-    if (lastDocument == null) {
-      return;
-    }
-
-    _streamSnapshot = FirebaseFirestore.instance
-        .collection("users")
-        .doc(userId)
-        .collection("lists")
-        .orderBy("updated_at", descending: _descending)
-        .endAtDocument(lastDocument)
-        .snapshots()
-        .skip(1)
-        .listen((QuerySnapMap snapshot) {
-      for (final docChange in snapshot.docChanges) {
+  /// Listen to document changes.
+  void listenToDocumentChanges(QueryMap query) {
+    _listSub?.cancel();
+    _listSub = query.snapshots().skip(1).listen((QuerySnapMap snapshot) {
+      for (final DocumentChangeMap docChange in snapshot.docChanges) {
         switch (docChange.type) {
           case DocumentChangeType.added:
             handleAddedDocument(docChange.doc);
@@ -362,8 +346,8 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
         }
       }
     }, onDone: () {
-      _streamSnapshot?.cancel();
-      _streamSnapshot = null;
+      _listSub?.cancel();
+      _listSub = null;
     });
   }
 

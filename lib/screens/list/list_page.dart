@@ -18,9 +18,14 @@ import "package:kwotes/screens/list/list_page_header.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
+import "package:kwotes/types/firestore/doc_snapshot_stream_subscription.dart";
+import "package:kwotes/types/firestore/document_change_map.dart";
+import "package:kwotes/types/firestore/document_map.dart";
+import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/firestore/query_doc_snap_map.dart";
 import "package:kwotes/types/firestore/query_map.dart";
 import "package:kwotes/types/firestore/query_snap_map.dart";
+import "package:kwotes/types/firestore/query_snapshot_stream_subscription.dart";
 import "package:kwotes/types/intents/escape_intent.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/quote_list.dart";
@@ -44,9 +49,6 @@ class _ListPageState extends State<ListPage> with UiLoggy {
   /// Animate list's items if true.
   bool _animateList = true;
 
-  /// Page's state.
-  EnumPageState _pageState = EnumPageState.loading;
-
   /// Show text inputs (to edit list's name & description) if this true.
   bool _createMode = false;
 
@@ -59,24 +61,31 @@ class _ListPageState extends State<ListPage> with UiLoggy {
   /// Page accent color.
   Color _accentColor = Colors.amber;
 
-  /// True if the order is the most recent first.
-  // final bool _descending = true;
+  /// Stream subscription for list (metadata).
+  DocSnapshotStreamSubscription? _listSub;
 
-  /// Last document.
-  QueryDocSnapMap? _lastDocument;
-
-  /// List of quotes in a user list.
-  final List<Quote> _quotes = [];
-
-  /// Quote list metadata.
-  QuoteList _quoteList = QuoteList.empty();
+  /// Page's state.
+  EnumPageState _pageState = EnumPageState.loading;
 
   /// Result count limit.
   final int _limit = 20;
 
+  /// List of quotes in a user list.
+  final List<Quote> _quotes = [];
+
+  /// Page shortcuts.
   final Map<SingleActivator, EscapeIntent> _shortcuts = {
     const SingleActivator(LogicalKeyboardKey.escape): const EscapeIntent(),
   };
+
+  /// Last document.
+  QueryDocSnapMap? _lastDocument;
+
+  /// Stream subscription for quotes (in the list).
+  QuerySnapshotStreamSubscription? _quoteSub;
+
+  /// Quote list metadata.
+  QuoteList _quoteList = QuoteList.empty();
 
   /// Page scroll controller.
   final ScrollController _scrollController = ScrollController();
@@ -108,6 +117,10 @@ class _ListPageState extends State<ListPage> with UiLoggy {
     _scrollController.dispose();
     _nameController.dispose();
     _descriptionController.dispose();
+    _quoteSub?.cancel();
+    _quoteSub = null;
+    _listSub?.cancel();
+    _listSub = null;
     super.dispose();
   }
 
@@ -118,7 +131,7 @@ class _ListPageState extends State<ListPage> with UiLoggy {
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
 
     final void Function()? onSave =
-        _nameController.text.isEmpty ? null : trySaveList;
+        _nameController.text.isEmpty ? null : saveList;
 
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -194,14 +207,13 @@ class _ListPageState extends State<ListPage> with UiLoggy {
   /// Fetch list metadata (name, description, public).
   Future fetchListMetadata() async {
     if (NavigationStateHelper.quoteList.id == widget.listId) {
-      setState(() {
-        _quoteList = NavigationStateHelper.quoteList;
-      });
+      setState(() => _quoteList = NavigationStateHelper.quoteList);
       return;
     }
 
     final Signal<UserFirestore> currentUser =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+
     if (currentUser.value.id.isEmpty) {
       return;
     }
@@ -209,17 +221,17 @@ class _ListPageState extends State<ListPage> with UiLoggy {
     final String userId = currentUser.value.id;
 
     try {
-      final docListSnap = await FirebaseFirestore.instance
+      final DocumentMap query = FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
           .collection("lists")
-          .doc(widget.listId)
-          .get();
+          .doc(widget.listId);
+
+      final DocumentSnapshotMap docListSnap = await query.get();
+      listenToListChanges(query);
 
       if (!docListSnap.exists) {
-        if (!mounted) {
-          return;
-        }
+        if (!mounted) return;
         context.beamBack();
         return;
       }
@@ -250,6 +262,7 @@ class _ListPageState extends State<ListPage> with UiLoggy {
     try {
       final QueryMap query = getQuery(userId);
       final QuerySnapMap snapshot = await query.get();
+      listenToQuoteChanges(query);
 
       if (snapshot.docs.isEmpty) {
         setState(() {
@@ -304,6 +317,38 @@ class _ListPageState extends State<ListPage> with UiLoggy {
         .startAfterDocument(lastDocument);
   }
 
+  /// Handle added quote.
+  void handleAddedQuote(DocumentSnapshotMap doc) {
+    final int index = _quotes.indexWhere((x) => x.id == doc.id);
+    if (index != -1) return;
+
+    final Json? data = doc.data();
+    if (data == null) return;
+
+    data["id"] = doc.id;
+    setState(() => _quotes.add(Quote.fromMap(data)));
+  }
+
+  /// Handle modified quote.
+  void handleModifiedQuote(DocumentSnapshotMap doc) {
+    final int index = _quotes.indexWhere((x) => x.id == doc.id);
+    if (index == -1) return;
+
+    final Json? data = doc.data();
+    if (data == null) return;
+
+    data["id"] = doc.id;
+    setState(() => _quotes[index] = Quote.fromMap(data));
+  }
+
+  /// Handle removed quote.
+  void handleRemovedQuote(DocumentSnapshotMap doc) {
+    final int index = _quotes.indexWhere((x) => x.id == doc.id);
+    if (index == -1) return;
+
+    setState(() => _quotes.removeAt(index));
+  }
+
   void initProps() async {
     Future.delayed(const Duration(seconds: 1), () {
       if (!mounted) return;
@@ -311,6 +356,55 @@ class _ListPageState extends State<ListPage> with UiLoggy {
       setState(() {
         _animateList = false;
       });
+    });
+  }
+
+  /// Listen to list document changes.
+  void listenToListChanges(DocumentMap query) {
+    _listSub?.cancel();
+    _listSub = query.snapshots().listen((snapshot) {
+      if (!snapshot.exists) {
+        context.beamBack();
+        Utils.graphic.showSnackbar(
+          context,
+          message: "list.delete.success".tr(),
+        );
+        return;
+      }
+
+      final Json? data = snapshot.data();
+      if (data == null) return;
+
+      data["id"] = snapshot.id;
+      setState(() => _quoteList = QuoteList.fromMap(data));
+    }, onDone: () {
+      _listSub?.cancel();
+      _listSub = null;
+    });
+  }
+
+  /// Listen to quote document changes.
+  void listenToQuoteChanges(QueryMap query) {
+    _quoteSub?.cancel();
+    _quoteSub = query.snapshots().skip(1).listen((QuerySnapMap snapshot) {
+      for (final DocumentChangeMap docChange in snapshot.docChanges) {
+        switch (docChange.type) {
+          case DocumentChangeType.added:
+            handleAddedQuote(docChange.doc);
+            break;
+          case DocumentChangeType.modified:
+            handleModifiedQuote(docChange.doc);
+            break;
+          case DocumentChangeType.removed:
+            handleRemovedQuote(docChange.doc);
+            break;
+          default:
+            break;
+        }
+      }
+    }, onDone: () {
+      _quoteSub?.cancel();
+      _quoteSub = null;
     });
   }
 
@@ -438,7 +532,7 @@ class _ListPageState extends State<ListPage> with UiLoggy {
   }
 
   /// Save list's changes (name and description).
-  void trySaveList() async {
+  void saveList() async {
     if (_nameController.text.isEmpty) {
       return;
     }

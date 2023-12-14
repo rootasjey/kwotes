@@ -21,9 +21,12 @@ import "package:kwotes/types/enums/enum_draft_quote_operation.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
+import "package:kwotes/types/firestore/document_change_map.dart";
+import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/firestore/query_doc_snap_map.dart";
 import "package:kwotes/types/firestore/query_map.dart";
 import "package:kwotes/types/firestore/query_snap_map.dart";
+import "package:kwotes/types/firestore/query_snapshot_stream_subscription.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/user/user_auth.dart";
 import "package:kwotes/types/user/user_firestore.dart";
@@ -38,14 +41,11 @@ class PublishedPage extends StatefulWidget {
 }
 
 class _PublishedPageState extends State<PublishedPage> with UiLoggy {
-  /// Page's state.
-  EnumPageState _pageState = EnumPageState.idle;
+  /// True if the order is the most recent first.
+  final bool _descending = true;
 
   /// True if more results can be loaded.
   bool _hasNextPage = true;
-
-  /// True if the order is the most recent first.
-  final bool _descending = true;
 
   /// Show page options (e.g. language) if true.
   bool _showPageOptions = false;
@@ -56,22 +56,29 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
   /// Selected tab index (owned | all).
   EnumDataOwnership _selectedOwnership = EnumDataOwnership.owned;
 
-  /// Last document.
-  QueryDocSnapMap? _lastDocument;
+  /// Current selected language to fetch published quotes.
+  EnumLanguageSelection _selectedLanguage = EnumLanguageSelection.all;
 
-  /// List of pubslihed quotes.
-  final List<Quote> _quotes = [];
+  /// Page's state.
+  EnumPageState _pageState = EnumPageState.idle;
 
   /// Result count limit.
   final int _limit = 20;
 
+  /// List of pubslihed quotes.
+  final List<Quote> _quotes = [];
+
+  /// Last document.
+  QueryDocSnapMap? _lastDocument;
+
+  /// Stream subscription for published quotes.
+  QuerySnapshotStreamSubscription? _quoteSub;
+
   /// Page's scroll controller.
   final ScrollController _pageScrollController = ScrollController();
 
+  /// Firestore collection name.
   final String _collectionName = "quotes";
-
-  /// Current selected language to fetch published quotes.
-  EnumLanguageSelection _selectedLanguage = EnumLanguageSelection.all;
 
   @override
   void initState() {
@@ -82,6 +89,8 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
   @override
   void dispose() {
     _pageScrollController.dispose();
+    _quoteSub?.cancel();
+    _quoteSub = null;
     super.dispose();
   }
 
@@ -189,6 +198,7 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
     try {
       final QueryMap query = getQuery(userId);
       final QuerySnapMap snapshot = await query.get();
+      listenToDocumentChanges(query);
 
       if (snapshot.docs.isEmpty) {
         setState(() {
@@ -219,6 +229,51 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
     }
   }
 
+  /// Callback fired when a document is added to the Firestore collection.
+  void handleAddedDocument(DocumentSnapshotMap doc) {
+    final Json? data = doc.data();
+    if (data == null) {
+      return;
+    }
+
+    data["id"] = doc.id;
+    final Quote draft = Quote.fromMap(data);
+    setState(() => _quotes.add(draft));
+  }
+
+  /// Handle modified document.
+  void handleModifiedDocument(DocumentSnapshotMap doc) {
+    final Json? data = doc.data();
+    if (data == null) {
+      return;
+    }
+
+    final int index = _quotes.indexWhere(
+      (Quote x) => x.id == doc.id,
+    );
+
+    if (index == -1) {
+      return;
+    }
+
+    data["id"] = doc.id;
+    final Quote draft = Quote.fromMap(data);
+    setState(() => _quotes[index] = draft);
+  }
+
+  /// Handle removed document.
+  void handleRemovedDocument(DocumentSnapshotMap doc) {
+    final int index = _quotes.indexWhere(
+      (Quote x) => x.id == doc.id,
+    );
+
+    if (index == -1) {
+      return;
+    }
+
+    setState(() => _quotes.removeAt(index));
+  }
+
   /// Load saved settings and initialize properties.
   Future<void> initProps() async {
     _showPageOptions = await Utils.vault.geShowtHeaderOptions();
@@ -227,6 +282,31 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
 
     chipSelectedColor =
         Constants.colors.getRandomFromPalette().withOpacity(0.6);
+  }
+
+  /// Listen to document changes.
+  void listenToDocumentChanges(QueryMap query) {
+    _quoteSub?.cancel();
+    _quoteSub = query.snapshots().skip(1).listen((QuerySnapMap snapshot) {
+      for (final DocumentChangeMap docChange in snapshot.docChanges) {
+        switch (docChange.type) {
+          case DocumentChangeType.added:
+            handleAddedDocument(docChange.doc);
+            break;
+          case DocumentChangeType.modified:
+            handleModifiedDocument(docChange.doc);
+            break;
+          case DocumentChangeType.removed:
+            handleRemovedDocument(docChange.doc);
+            break;
+          default:
+            break;
+        }
+      }
+    }, onDone: () {
+      _quoteSub?.cancel();
+      _quoteSub = null;
+    });
   }
 
   /// Callback to update a quote's language.

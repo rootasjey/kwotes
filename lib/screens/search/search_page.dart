@@ -21,9 +21,12 @@ import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_search_category.dart";
+import "package:kwotes/types/firestore/document_change_map.dart";
+import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/firestore/query_doc_snap_map.dart";
 import "package:kwotes/types/firestore/query_map.dart";
 import "package:kwotes/types/firestore/query_snap_map.dart";
+import "package:kwotes/types/firestore/query_snapshot_stream_subscription.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/reference.dart";
 import "package:kwotes/types/topic.dart";
@@ -94,19 +97,20 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   /// List of authors results for a specific search (algolia).
   final List<Author> _authorResults = [];
 
-  /// List of authors in alphabetical order (from Firestore).
+  /// List of authors in alphabetical order (for showcase).
   final List<Author> _authorList = [];
 
   /// List of references results for a specific search (algolia).
   final List<Reference> _referenceResults = [];
 
-  /// List of references in alphabetical order (from Firestore).
+  /// List of references in alphabetical order (for showcase).
   final List<Reference> _referenceList = [];
-
-  // QueryDocSnapMap? _lastAuthorDocument;
 
   /// Last reference document for pagination.
   QueryDocSnapMap? _lastReferenceDocument;
+
+  /// Stream subscription for query snapshot.
+  QuerySnapshotStreamSubscription? _streamSnapshot;
 
   /// Scroll controller.
   final ScrollController _scrollController = ScrollController();
@@ -132,6 +136,8 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     _searchTimer?.cancel();
     _searchFocusNode.dispose();
     _scrollController.dispose();
+    _streamSnapshot?.cancel();
+    _streamSnapshot = null;
     super.dispose();
   }
 
@@ -208,7 +214,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                         right: isMobileSize ? 24.0 : 24.0,
                       ),
                       pageState: _pageState,
-                      onTapTopicColor: onTapTopicColor,
+                      onTapTopicColor: onTapTopic,
                       onTapAuthor: onTapAuthor,
                       onTapReference: onTapReference,
                       references: _referenceList,
@@ -220,7 +226,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                       searchCategory: _searchCategory,
                       show: _searchInputController.text.isEmpty &&
                           _searchCategory != EnumSearchCategory.quote,
-                      onPressed: () => tryFetchShowcaseData(fetchMore: true),
+                      onPressed: () => fetchShowcaseData(fetchMore: true),
                     ),
                   ],
                 ),
@@ -253,266 +259,78 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     );
   }
 
-  /// Selective search (according to entity category).
-  void search() async {
-    _prevSearchTextValue = _searchInputController.text;
-
-    final String text = removeSpecialKeywords(_searchInputController.text);
-
-    switch (_searchCategory) {
-      case EnumSearchCategory.quote:
-        preSearchQuotes(text);
-        break;
-      case EnumSearchCategory.author:
-        preSearchAuthors(text);
-        break;
-      case EnumSearchCategory.reference:
-        preSearchReferences(text);
-        break;
-      default:
+  /// Automatically hide/show entity selector when scrolling.
+  void autoHideEntitySelector(double offset) {
+    if (_scrollController.position.atEdge && offset == 0.0) {
+      _showEntitySelector ? null : setState(() => _showEntitySelector = true);
+      return;
     }
+
+    if (_scrollController.position.atEdge && offset > 0.0) {
+      _showEntitySelector ? setState(() => _showEntitySelector = false) : null;
+      return;
+    }
+
+    if (_prevOffset < offset) {
+      _prevOffset = offset;
+      _showEntitySelector ? setState(() => _showEntitySelector = false) : null;
+      return;
+    }
+
+    _prevOffset = offset;
+    _showEntitySelector ? null : setState(() => _showEntitySelector = true);
   }
 
-  /// Selective search (according to entity category).
-  void searchMore() async {
-    _prevSearchTextValue = _searchInputController.text;
-
-    final String text = removeSpecialKeywords(_searchInputController.text);
-
-    switch (_searchCategory) {
-      case EnumSearchCategory.quote:
-        preSearchMoreQuotes(text);
-        break;
-      case EnumSearchCategory.author:
-        preSearchMoreAuthors(text);
-        break;
-      case EnumSearchCategory.reference:
-        preSearchMoreReferences(text);
-        break;
-      default:
-    }
-  }
-
-  /// Build the query to search authors.
-  Future<void> preSearchAuthors(String text) async {
+  /// Check text input to automatically adjust search settings.
+  void checkForKeywords() {
+    final String text = _searchInputController.text;
     if (text.isEmpty) {
-      setState(() {
-        _searchPage = 0;
-        _authorResults.clear();
-      });
       return;
     }
 
-    setState(() {
-      _searchPage = 0;
-      _pageState = EnumPageState.searching;
-      _authorResults.clear();
-    });
-
-    trySearchAuthors(text);
-  }
-
-  /// Build the query to search more authors.
-  Future<void> preSearchMoreAuthors(String text) async {
-    if (text.isEmpty || !_hasMoreResults) {
-      return;
+    if (text.startsWith("quote:") || text.startsWith("q:")) {
+      onSelectSearchEntity(EnumSearchCategory.quote);
     }
-
-    _pageState = EnumPageState.searchingMore;
-    trySearchAuthors(text);
+    if (text.startsWith("author:") || text.startsWith("a:")) {
+      onSelectSearchEntity(EnumSearchCategory.author);
+    }
+    if (text.startsWith("reference:") || text.startsWith("r:")) {
+      onSelectSearchEntity(EnumSearchCategory.reference);
+    }
   }
 
-  /// Find authors according to the passed text.
-  void trySearchAuthors(String text) async {
-    try {
-      final AlgoliaQuery query = Utils.search.algolia
-          .index("authors")
-          .query(text)
-          .setHitsPerPage(_searchLimit)
-          .setPage(_searchPage);
+  /// Check route parameters to automatically search for data
+  /// with the right settings.
+  void checkRouteParams() async {
+    final String query = widget.query;
 
-      final AlgoliaQuerySnapshot snapshot = await query.getObjects();
+    if (query.isNotEmpty) {
+      _searchInputController.text = widget.subjectName;
 
-      if (snapshot.empty) {
-        setState(() {
-          _hasMoreResults = false;
-          _pageState = EnumPageState.idle;
-        });
+      final String searchType = query.split(":").first;
+      manualSelectSearchEntity(searchType);
+
+      if (query.indexOf(":") != query.lastIndexOf(":")) {
+        findDirectResults(query);
         return;
       }
 
-      for (final AlgoliaObjectSnapshot hit in snapshot.hits) {
-        final Json data = hit.data;
-        data["id"] = hit.objectID;
-
-        final Author author = Author.fromMap(data);
-        _authorResults.add(author);
-      }
-
-      setState(() {
-        _searchPage = _searchPage + 1;
-        _resultCount = snapshot.nbHits;
-        _pageState = EnumPageState.idle;
-        _hasMoreResults = snapshot.page < snapshot.nbPages - 1;
-      });
-    } catch (error) {
-      loggy.error(error.toString());
-      setState(() => _pageState = EnumPageState.idle);
+      search();
     }
-  }
 
-  /// Build the query to search quotes.
-  Future<void> preSearchQuotes(String text) async {
-    if (text.isEmpty) {
-      setState(() {
-        _searchPage = 0;
-        _quoteResults.clear();
-      });
+    if (NavigationStateHelper.searchValue.isNotEmpty) {
+      _searchInputController.text = NavigationStateHelper.searchValue;
+      await initProps();
+      search();
       return;
     }
 
-    setState(() {
-      _searchPage = 0;
-      _pageState = EnumPageState.searching;
-      _quoteResults.clear();
-    });
-
-    trySearchQuotes(text);
-  }
-
-  /// Build the query to search more quotes.
-  Future<void> preSearchMoreQuotes(String text) async {
-    if (text.isEmpty || !_hasMoreResults) {
-      return;
-    }
-
-    _pageState = EnumPageState.searchingMore;
-    trySearchQuotes(text);
-  }
-
-  /// Find quotes according to the passed text.
-  void trySearchQuotes(String text) async {
-    try {
-      final AlgoliaQuery query = Utils.search.algolia
-          .index("quotes")
-          .query(text)
-          .setHitsPerPage(_searchLimit)
-          .setPage(_searchPage);
-
-      final AlgoliaQuerySnapshot snapshot = await query.getObjects();
-
-      if (snapshot.empty) {
-        setState(() {
-          _hasMoreResults = false;
-          _pageState = EnumPageState.idle;
-        });
-        return;
-      }
-
-      for (final AlgoliaObjectSnapshot hit in snapshot.hits) {
-        final Json data = hit.data;
-        data["id"] = hit.objectID;
-
-        final Quote quote = Quote.fromMap(data);
-        _quoteResults.add(quote);
-      }
-
-      setState(() {
-        _searchPage = _searchPage + 1;
-        _resultCount = snapshot.nbHits;
-        _pageState = EnumPageState.idle;
-        _hasMoreResults = snapshot.page < snapshot.nbPages - 1;
-      });
-    } catch (error) {
-      loggy.error(error.toString());
-      setState(() => _pageState = EnumPageState.idle);
-    }
-  }
-
-  /// Build the query to search references.
-  Future<void> preSearchReferences(String text) async {
-    if (text.isEmpty) {
-      setState(() => _referenceResults.clear());
-      return;
-    }
-
-    setState(() {
-      _pageState = EnumPageState.searching;
-      _referenceResults.clear();
-    });
-
-    trySearchReferences(text);
-  }
-
-  /// Build the query to search more references.
-  Future<void> preSearchMoreReferences(String text) async {
-    if (text.isEmpty || !_hasMoreResults) {
-      return;
-    }
-
-    _pageState = EnumPageState.searchingMore;
-    trySearchReferences(text);
-  }
-
-  /// Find references according to the passed text.
-  void trySearchReferences(String text) async {
-    try {
-      final AlgoliaQuery query = Utils.search.algolia
-          .index("references")
-          .query(text)
-          .setHitsPerPage(_searchLimit)
-          .setPage(0);
-
-      final AlgoliaQuerySnapshot snapshot = await query.getObjects();
-
-      if (snapshot.empty) {
-        setState(() => _pageState = EnumPageState.idle);
-        return;
-      }
-
-      for (final AlgoliaObjectSnapshot hit in snapshot.hits) {
-        final Json data = hit.data;
-        data["id"] = hit.objectID;
-
-        final Reference reference = Reference.fromMap(data);
-        _referenceResults.add(reference);
-      }
-
-      setState(() {
-        _searchPage++;
-        _pageState = EnumPageState.idle;
-        _resultCount = snapshot.nbHits;
-        _hasMoreResults = snapshot.page < snapshot.nbPages - 1;
-      });
-    } catch (error) {
-      loggy.error(error.toString());
-      setState(() => _pageState = EnumPageState.idle);
-    }
-  }
-
-  void tryFetchShowcaseData({
-    bool reinit = false,
-    bool fetchMore = false,
-  }) async {
-    if (_searchCategory == EnumSearchCategory.author) {
-      tryFetchAuthors(
-        reinit: reinit,
-        fetchMore: fetchMore,
-      );
-      return;
-    }
-
-    if (_searchCategory == EnumSearchCategory.reference) {
-      tryFetchReferences(
-        reinit: reinit,
-        fetchMore: fetchMore,
-      );
-      return;
-    }
+    await initProps();
+    fetchShowcaseData(reinit: true);
   }
 
   /// Try to fetch authors alphabetically in Firestore.
-  void tryFetchAuthors({
+  void fetchAuthors({
     bool reinit = false,
     bool fetchMore = false,
   }) async {
@@ -543,6 +361,8 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       }
 
       final QuerySnapMap snapshot = await query.get();
+      listenToDocumentChanges(query);
+
       if (snapshot.size == 0) {
         _pageState = EnumPageState.idle;
         _hasMoreResults = false;
@@ -569,7 +389,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   }
 
   /// Try to fetch references alphabetically in Firestore.
-  void tryFetchReferences({
+  void fetchReferences({
     bool reinit = false,
     bool fetchMore = false,
   }) async {
@@ -600,6 +420,8 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       }
 
       final QuerySnapMap snapshot = await query.get();
+      listenToDocumentChanges(query);
+
       if (snapshot.size == 0) {
         _hasMoreResults = false;
         _pageState = EnumPageState.idle;
@@ -625,157 +447,25 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
   }
 
-  /// Callback fired when search input has changed.
-  void onSearchInputChanged(
-    String value, {
-    Duration delay = const Duration(milliseconds: 500),
-  }) {
-    if (value.trim() == _prevSearchTextValue) {
+  /// Try to fetch showcase data.
+  void fetchShowcaseData({
+    bool reinit = false,
+    bool fetchMore = false,
+  }) async {
+    if (_searchCategory == EnumSearchCategory.author) {
+      fetchAuthors(
+        reinit: reinit,
+        fetchMore: fetchMore,
+      );
       return;
     }
 
-    NavigationStateHelper.searchValue = value;
-
-    if (value.isEmpty) {
-      setState(() {
-        _quoteResults.clear();
-        _authorResults.clear();
-        _referenceResults.clear();
-        _prevSearchTextValue = value;
-      });
-
-      tryFetchShowcaseData();
+    if (_searchCategory == EnumSearchCategory.reference) {
+      fetchReferences(
+        reinit: reinit,
+        fetchMore: fetchMore,
+      );
       return;
-    }
-
-    _searchTimer?.cancel();
-    _searchTimer = Timer(
-      delay,
-      search,
-    );
-  }
-
-  void onSelectSearchEntity(EnumSearchCategory searchEntity) {
-    Utils.vault.saveLastSearchCategory(searchEntity);
-
-    setState(() {
-      _searchCategory = searchEntity;
-      _resultCount = 0;
-    });
-
-    // _searchFocusNode.requestFocus();
-    search();
-    tryFetchShowcaseData(reinit: true);
-  }
-
-  /// Callback fired when quote is tapped.
-  void onTapQuote(Quote quote) {
-    NavigationStateHelper.quote = quote;
-    Beamer.of(context).beamToNamed(
-      SearchContentLocation.quoteRoute.replaceFirst(":quoteId", quote.id),
-    );
-  }
-
-  /// Callback fired when author is tapped.
-  void onTapAuthor(Author author) {
-    NavigationStateHelper.author = author;
-
-    final String route = SearchContentLocation.authorRoute.replaceFirst(
-      ":authorId",
-      author.id,
-    );
-
-    Beamer.of(context).beamToNamed(route);
-  }
-
-  /// Callback fired when reference is tapped.
-  void onTapReference(Reference reference) {
-    NavigationStateHelper.reference = reference;
-
-    final String route = SearchContentLocation.referenceRoute.replaceFirst(
-      ":referenceId",
-      reference.id,
-    );
-
-    Beamer.of(context).beamToNamed(route);
-  }
-
-  /// Check text input to automatically adjust search settings.
-  void checkForKeywords() {
-    final String text = _searchInputController.text;
-    if (text.isEmpty) {
-      return;
-    }
-
-    if (text.startsWith("quote:") || text.startsWith("q:")) {
-      onSelectSearchEntity(EnumSearchCategory.quote);
-    }
-    if (text.startsWith("author:") || text.startsWith("a:")) {
-      onSelectSearchEntity(EnumSearchCategory.author);
-    }
-    if (text.startsWith("reference:") || text.startsWith("r:")) {
-      onSelectSearchEntity(EnumSearchCategory.reference);
-    }
-  }
-
-  String removeSpecialKeywords(String initialText) {
-    return initialText
-        .replaceFirst("quote:", "")
-        .replaceFirst("author:", "")
-        .replaceFirst("reference:", "")
-        .replaceFirst("q:", "")
-        .replaceFirst("a:", "")
-        .replaceFirst("r:", "")
-        .trim();
-  }
-
-  Future<void> initializeData() async {
-    _searchCategory = await Utils.vault.getLastSearchCategory();
-    setState(() {});
-  }
-
-  /// Check route parameters to automatically search for data
-  /// with the right settings.
-  void checkRouteParams() async {
-    final String query = widget.query;
-
-    if (query.isNotEmpty) {
-      _searchInputController.text = widget.subjectName;
-
-      final String searchType = query.split(":").first;
-      manualSelectSearchEntity(searchType);
-
-      if (query.indexOf(":") != query.lastIndexOf(":")) {
-        findDirectResults(query);
-        return;
-      }
-
-      search();
-    }
-
-    if (NavigationStateHelper.searchValue.isNotEmpty) {
-      _searchInputController.text = NavigationStateHelper.searchValue;
-      await initializeData();
-      search();
-      return;
-    }
-
-    await initializeData();
-    tryFetchShowcaseData(reinit: true);
-  }
-
-  void manualSelectSearchEntity(String value) {
-    switch (value) {
-      case "quote":
-        onSelectSearchEntity(EnumSearchCategory.quote);
-        break;
-      case "author":
-        onSelectSearchEntity(EnumSearchCategory.author);
-        break;
-      case "reference":
-        onSelectSearchEntity(EnumSearchCategory.reference);
-        break;
-      default:
     }
   }
 
@@ -813,27 +503,175 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
   }
 
-  void autoHideEntitySelector(double offset) {
-    if (_scrollController.position.atEdge && offset == 0.0) {
-      _showEntitySelector ? null : setState(() => _showEntitySelector = true);
-      return;
-    }
+  /// Handle added author.
+  void handleAddedAuthor(DocumentSnapshotMap doc) {
+    final Json? data = doc.data();
+    if (data == null) return;
 
-    if (_scrollController.position.atEdge && offset > 0.0) {
-      _showEntitySelector ? setState(() => _showEntitySelector = false) : null;
-      return;
-    }
-
-    if (_prevOffset < offset) {
-      _prevOffset = offset;
-      _showEntitySelector ? setState(() => _showEntitySelector = false) : null;
-      return;
-    }
-
-    _prevOffset = offset;
-    _showEntitySelector ? null : setState(() => _showEntitySelector = true);
+    data["id"] = doc.id;
+    setState(() => _authorList.add(Author.fromMap(data)));
   }
 
+  /// Handle added document.
+  void handleAddedDocument(DocumentSnapshotMap doc) {
+    if (_searchCategory == EnumSearchCategory.author) {
+      handleAddedAuthor(doc);
+      return;
+    }
+
+    if (_searchCategory == EnumSearchCategory.reference) {
+      handleAddedReference(doc);
+      return;
+    }
+  }
+
+  /// Handle added reference.
+  void handleAddedReference(DocumentSnapshotMap doc) {
+    final Json? data = doc.data();
+    if (data == null) return;
+
+    data["id"] = doc.id;
+    setState(() => _referenceList.add(Reference.fromMap(data)));
+  }
+
+  /// Handle modified author.
+  void handleModifiedAuthor(DocumentSnapshotMap doc) {
+    final int index = _authorList.indexWhere((Author x) => x.id == doc.id);
+    if (index == -1) return;
+
+    final Json? data = doc.data();
+    if (data == null) return;
+
+    data["id"] = doc.id;
+    setState(() => _authorList[index] = Author.fromMap(data));
+  }
+
+  /// Handle modified document.
+  void handleModifiedDocument(DocumentSnapshotMap doc) {
+    if (_searchCategory == EnumSearchCategory.author) {
+      handleModifiedAuthor(doc);
+      return;
+    }
+
+    if (_searchCategory == EnumSearchCategory.reference) {
+      handleModifiedReference(doc);
+      return;
+    }
+  }
+
+  /// Handle modified reference.
+  void handleModifiedReference(DocumentSnapshotMap doc) {
+    final int index =
+        _referenceList.indexWhere((Reference x) => x.id == doc.id);
+    if (index == -1) return;
+
+    final Json? data = doc.data();
+    if (data == null) return;
+
+    data["id"] = doc.id;
+    setState(() => _referenceList[index] = Reference.fromMap(data));
+  }
+
+  /// Handle removed author.
+  void handleRemovedAuthor(DocumentSnapshotMap doc) {
+    final int index = _authorList.indexWhere((Author x) => x.id == doc.id);
+    if (index == -1) return;
+    setState(() => _authorList.removeAt(index));
+  }
+
+  /// Handle removed document.
+  void handleRemovedDocument(DocumentSnapshotMap doc) {
+    if (_searchCategory == EnumSearchCategory.author) {
+      handleRemovedAuthor(doc);
+      return;
+    }
+
+    if (_searchCategory == EnumSearchCategory.reference) {
+      handleRemovedReference(doc);
+      return;
+    }
+  }
+
+  /// Handle removed reference.
+  void handleRemovedReference(DocumentSnapshotMap doc) {
+    final int index = _referenceList.indexWhere(
+      (Reference x) => x.id == doc.id,
+    );
+
+    if (index == -1) return;
+    setState(() => _referenceList.removeAt(index));
+  }
+
+  /// Initialize properties (search category).
+  Future<void> initProps() async {
+    _searchCategory = await Utils.vault.getLastSearchCategory();
+    setState(() {});
+  }
+
+  /// Listen to document changes.
+  void listenToDocumentChanges(QueryMap query) {
+    _streamSnapshot?.cancel();
+    _streamSnapshot = query.snapshots().skip(1).listen((QuerySnapMap snapshot) {
+      for (final DocumentChangeMap docChange in snapshot.docChanges) {
+        switch (docChange.type) {
+          case DocumentChangeType.added:
+            handleAddedDocument(docChange.doc);
+            break;
+          case DocumentChangeType.modified:
+            handleModifiedDocument(docChange.doc);
+            break;
+          case DocumentChangeType.removed:
+            handleRemovedDocument(docChange.doc);
+            break;
+          default:
+            break;
+        }
+      }
+    }, onDone: () {
+      _streamSnapshot?.cancel();
+      _streamSnapshot = null;
+    });
+  }
+
+  /// Manually select search entity.
+  void manualSelectSearchEntity(String value) {
+    switch (value) {
+      case "quote":
+        onSelectSearchEntity(EnumSearchCategory.quote);
+        break;
+      case "author":
+        onSelectSearchEntity(EnumSearchCategory.author);
+        break;
+      case "reference":
+        onSelectSearchEntity(EnumSearchCategory.reference);
+        break;
+      default:
+    }
+  }
+
+  /// Callback fired to clear the search input.
+  void onClearInput() {
+    _searchInputController.text = "";
+    Beamer.of(context).updateRouteInformation(
+      RouteInformation(uri: Uri(path: SearchLocation.route)),
+    );
+
+    setState(() {
+      _resultCount = 0;
+      _prevSearchTextValue = "";
+      NavigationStateHelper.searchValue = "";
+      _hasMoreResults = true;
+      _pageState = EnumPageState.idle;
+      _quoteResults.clear();
+      _authorResults.clear();
+      _referenceResults.clear();
+      _searchFocusNode.requestFocus();
+    });
+
+    fetchShowcaseData();
+  }
+
+  /// Callback event when scrolling.
   void onScroll(double offset) {
     autoHideEntitySelector(offset);
 
@@ -853,7 +691,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
 
     if (_searchInputController.text.isEmpty) {
-      tryFetchShowcaseData(
+      fetchShowcaseData(
         fetchMore: true,
       );
       return;
@@ -864,6 +702,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
   }
 
+  /// Scroll the view to the top.
   void onScrollToTop() {
     _scrollController.animateTo(
       0.0,
@@ -873,7 +712,85 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     _searchFocusNode.requestFocus();
   }
 
-  void onTapTopicColor(Topic topicColor) {
+  /// Callback fired when search input has changed.
+  void onSearchInputChanged(
+    String value, {
+    Duration delay = const Duration(milliseconds: 500),
+  }) {
+    if (value.trim() == _prevSearchTextValue) {
+      return;
+    }
+
+    NavigationStateHelper.searchValue = value;
+
+    if (value.isEmpty) {
+      setState(() {
+        _quoteResults.clear();
+        _authorResults.clear();
+        _referenceResults.clear();
+        _prevSearchTextValue = value;
+      });
+
+      fetchShowcaseData();
+      return;
+    }
+
+    _searchTimer?.cancel();
+    _searchTimer = Timer(
+      delay,
+      search,
+    );
+  }
+
+  /// Callback fired when a different search category is selected (e.g. author).
+  /// Clear previous results.
+  void onSelectSearchEntity(EnumSearchCategory searchEntity) {
+    Utils.vault.saveLastSearchCategory(searchEntity);
+
+    setState(() {
+      _searchCategory = searchEntity;
+      _resultCount = 0;
+    });
+
+    // _searchFocusNode.requestFocus();
+    search();
+    fetchShowcaseData(reinit: true);
+  }
+
+  /// Callback fired when quote is tapped.
+  void onTapQuote(Quote quote) {
+    NavigationStateHelper.quote = quote;
+    Beamer.of(context).beamToNamed(
+      SearchContentLocation.quoteRoute.replaceFirst(":quoteId", quote.id),
+    );
+  }
+
+  /// Callback fired when author is tapped.
+  void onTapAuthor(Author author) {
+    NavigationStateHelper.author = author;
+
+    final String route = SearchContentLocation.authorRoute.replaceFirst(
+      ":authorId",
+      author.id,
+    );
+
+    Beamer.of(context).beamToNamed(route);
+  }
+
+  /// Callback fired when reference is tapped.
+  void onTapReference(Reference reference) {
+    NavigationStateHelper.reference = reference;
+
+    final String route = SearchContentLocation.referenceRoute.replaceFirst(
+      ":referenceId",
+      reference.id,
+    );
+
+    Beamer.of(context).beamToNamed(route);
+  }
+
+  /// Callback fired when a topic is tapped.
+  void onTapTopic(Topic topicColor) {
     _searchInputController.text = topicColor.name;
 
     onSearchInputChanged(
@@ -882,24 +799,252 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     );
   }
 
-  void onClearInput() {
-    _searchInputController.text = "";
-    Beamer.of(context).updateRouteInformation(
-      RouteInformation(uri: Uri(path: SearchLocation.route)),
-    );
+  /// Build the query to search authors.
+  Future<void> preSearchAuthors(String text) async {
+    if (text.isEmpty) {
+      setState(() {
+        _searchPage = 0;
+        _authorResults.clear();
+      });
+      return;
+    }
 
     setState(() {
-      _resultCount = 0;
-      _prevSearchTextValue = "";
-      NavigationStateHelper.searchValue = "";
-      _hasMoreResults = true;
-      _pageState = EnumPageState.idle;
-      _quoteResults.clear();
+      _searchPage = 0;
+      _pageState = EnumPageState.searching;
       _authorResults.clear();
-      _referenceResults.clear();
-      _searchFocusNode.requestFocus();
     });
 
-    tryFetchShowcaseData();
+    searchAuthors(text);
+  }
+
+  /// Build the query to search more authors.
+  Future<void> preSearchMoreAuthors(String text) async {
+    if (text.isEmpty || !_hasMoreResults) {
+      return;
+    }
+
+    _pageState = EnumPageState.searchingMore;
+    searchAuthors(text);
+  }
+
+  /// Build the query to search quotes.
+  Future<void> preSearchQuotes(String text) async {
+    if (text.isEmpty) {
+      setState(() {
+        _searchPage = 0;
+        _quoteResults.clear();
+      });
+      return;
+    }
+
+    setState(() {
+      _searchPage = 0;
+      _pageState = EnumPageState.searching;
+      _quoteResults.clear();
+    });
+
+    searchQuotes(text);
+  }
+
+  /// Build the query to search more quotes.
+  Future<void> preSearchMoreQuotes(String text) async {
+    if (text.isEmpty || !_hasMoreResults) {
+      return;
+    }
+
+    _pageState = EnumPageState.searchingMore;
+    searchQuotes(text);
+  }
+
+  /// Build the query to search references.
+  Future<void> preSearchReferences(String text) async {
+    if (text.isEmpty) {
+      setState(() => _referenceResults.clear());
+      return;
+    }
+
+    setState(() {
+      _pageState = EnumPageState.searching;
+      _referenceResults.clear();
+    });
+
+    searchReferences(text);
+  }
+
+  /// Build the query to search more references.
+  Future<void> preSearchMoreReferences(String text) async {
+    if (text.isEmpty || !_hasMoreResults) {
+      return;
+    }
+
+    _pageState = EnumPageState.searchingMore;
+    searchReferences(text);
+  }
+
+  /// Remove special keywords from text search (to search the real value).
+  String removeSpecialKeywords(String initialText) {
+    return initialText
+        .replaceFirst("quote:", "")
+        .replaceFirst("author:", "")
+        .replaceFirst("reference:", "")
+        .replaceFirst("q:", "")
+        .replaceFirst("a:", "")
+        .replaceFirst("r:", "")
+        .trim();
+  }
+
+  /// Selective search (according to entity category).
+  void search() async {
+    _prevSearchTextValue = _searchInputController.text;
+
+    final String text = removeSpecialKeywords(_searchInputController.text);
+
+    switch (_searchCategory) {
+      case EnumSearchCategory.quote:
+        preSearchQuotes(text);
+        break;
+      case EnumSearchCategory.author:
+        preSearchAuthors(text);
+        break;
+      case EnumSearchCategory.reference:
+        preSearchReferences(text);
+        break;
+      default:
+    }
+  }
+
+  /// Find authors according to the passed text.
+  void searchAuthors(String text) async {
+    try {
+      final AlgoliaQuery query = Utils.search.algolia
+          .index("authors")
+          .query(text)
+          .setHitsPerPage(_searchLimit)
+          .setPage(_searchPage);
+
+      final AlgoliaQuerySnapshot snapshot = await query.getObjects();
+
+      if (snapshot.empty) {
+        setState(() {
+          _hasMoreResults = false;
+          _pageState = EnumPageState.idle;
+        });
+        return;
+      }
+
+      for (final AlgoliaObjectSnapshot hit in snapshot.hits) {
+        final Json data = hit.data;
+        data["id"] = hit.objectID;
+
+        final Author author = Author.fromMap(data);
+        _authorResults.add(author);
+      }
+
+      setState(() {
+        _searchPage = _searchPage + 1;
+        _resultCount = snapshot.nbHits;
+        _pageState = EnumPageState.idle;
+        _hasMoreResults = snapshot.page < snapshot.nbPages - 1;
+      });
+    } catch (error) {
+      loggy.error(error.toString());
+      setState(() => _pageState = EnumPageState.idle);
+    }
+  }
+
+  /// Selective search (according to entity category).
+  void searchMore() async {
+    _prevSearchTextValue = _searchInputController.text;
+
+    final String text = removeSpecialKeywords(_searchInputController.text);
+
+    switch (_searchCategory) {
+      case EnumSearchCategory.quote:
+        preSearchMoreQuotes(text);
+        break;
+      case EnumSearchCategory.author:
+        preSearchMoreAuthors(text);
+        break;
+      case EnumSearchCategory.reference:
+        preSearchMoreReferences(text);
+        break;
+      default:
+    }
+  }
+
+  /// Find quotes according to the passed text.
+  void searchQuotes(String text) async {
+    try {
+      final AlgoliaQuery query = Utils.search.algolia
+          .index("quotes")
+          .query(text)
+          .setHitsPerPage(_searchLimit)
+          .setPage(_searchPage);
+
+      final AlgoliaQuerySnapshot snapshot = await query.getObjects();
+
+      if (snapshot.empty) {
+        setState(() {
+          _hasMoreResults = false;
+          _pageState = EnumPageState.idle;
+        });
+        return;
+      }
+
+      for (final AlgoliaObjectSnapshot hit in snapshot.hits) {
+        final Json data = hit.data;
+        data["id"] = hit.objectID;
+
+        final Quote quote = Quote.fromMap(data);
+        _quoteResults.add(quote);
+      }
+
+      setState(() {
+        _searchPage = _searchPage + 1;
+        _resultCount = snapshot.nbHits;
+        _pageState = EnumPageState.idle;
+        _hasMoreResults = snapshot.page < snapshot.nbPages - 1;
+      });
+    } catch (error) {
+      loggy.error(error.toString());
+      setState(() => _pageState = EnumPageState.idle);
+    }
+  }
+
+  /// Find references according to the passed text.
+  void searchReferences(String text) async {
+    try {
+      final AlgoliaQuery query = Utils.search.algolia
+          .index("references")
+          .query(text)
+          .setHitsPerPage(_searchLimit)
+          .setPage(0);
+
+      final AlgoliaQuerySnapshot snapshot = await query.getObjects();
+
+      if (snapshot.empty) {
+        setState(() => _pageState = EnumPageState.idle);
+        return;
+      }
+
+      for (final AlgoliaObjectSnapshot hit in snapshot.hits) {
+        final Json data = hit.data;
+        data["id"] = hit.objectID;
+
+        final Reference reference = Reference.fromMap(data);
+        _referenceResults.add(reference);
+      }
+
+      setState(() {
+        _searchPage++;
+        _pageState = EnumPageState.idle;
+        _resultCount = snapshot.nbHits;
+        _hasMoreResults = snapshot.page < snapshot.nbPages - 1;
+      });
+    } catch (error) {
+      loggy.error(error.toString());
+      setState(() => _pageState = EnumPageState.idle);
+    }
   }
 }

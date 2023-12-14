@@ -20,11 +20,13 @@ import "package:kwotes/types/enums/enum_draft_quote_operation.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
+import "package:kwotes/types/firestore/document_change_map.dart";
 import "package:kwotes/types/firestore/document_map.dart";
 import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/firestore/query_doc_snap_map.dart";
 import "package:kwotes/types/firestore/query_map.dart";
 import "package:kwotes/types/firestore/query_snap_map.dart";
+import "package:kwotes/types/firestore/query_snapshot_stream_subscription.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/user/user_auth.dart";
 import "package:kwotes/types/user/user_firestore.dart";
@@ -67,13 +69,16 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
   final int _limit = 20;
 
   /// List of draft quotes in validation.
-  final List<DraftQuote> _quotes = [];
+  final List<DraftQuote> _drafts = [];
 
   /// Last document.
   QueryDocSnapMap? _lastDocument;
 
   /// Page's scroll controller.
   final ScrollController _pageScrollController = ScrollController();
+
+  /// Stream subscription for draft quotes.
+  QuerySnapshotStreamSubscription? _draftSub;
 
   /// Page collection name.
   final String _collectionName = "drafts";
@@ -88,6 +93,8 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
   @override
   void dispose() {
     _pageScrollController.dispose();
+    _draftSub?.cancel();
+    _draftSub = null;
     super.dispose();
   }
 
@@ -151,7 +158,7 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
                     isDark: isDark,
                     isMobileSize: isMobileSize,
                     pageState: _pageState,
-                    quotes: _quotes,
+                    quotes: _drafts,
                     onTap: onTapDraftQuote,
                     onDelete: onDeleteDraftQuote,
                     onValidate: canManage ? onValidateDraftQuote : null,
@@ -168,9 +175,7 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
   /// Fetch draft quotes.
   void fetch() async {
     final UserAuth? currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null) {
-      return;
-    }
+    if (currentUser == null) return;
 
     final String userId = currentUser.uid;
     _pageState = EnumPageState.loadingMore;
@@ -178,6 +183,7 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
     try {
       final QueryMap query = getQuery(userId);
       final QuerySnapMap snapshot = await query.get();
+      listenToDocumentChanges(query);
 
       if (snapshot.docs.isEmpty) {
         setState(() {
@@ -192,8 +198,8 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
         final Json data = doc.data();
         data["id"] = doc.id;
         data["in_validation"] = true;
-        final DraftQuote quote = DraftQuote.fromMap(data);
-        _quotes.add(quote);
+        final DraftQuote draft = DraftQuote.fromMap(data);
+        _drafts.add(draft);
       }
 
       setState(() {
@@ -233,6 +239,38 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
     return baseQuery.startAfterDocument(lastDocument);
   }
 
+  /// Handle added document.
+  void handleAddedDocument(DocumentSnapshotMap doc) {
+    final Json? data = doc.data();
+    if (data == null) return;
+
+    data["id"] = doc.id;
+    data["in_validation"] = true;
+    final DraftQuote draft = DraftQuote.fromMap(data);
+    setState(() => _drafts.add(draft));
+  }
+
+  /// Handle modified document.
+  void handleModifiedDocument(DocumentSnapshotMap doc) {
+    final int index = _drafts.indexWhere((DraftQuote x) => x.id == doc.id);
+    if (index == -1) return;
+
+    final Json? data = doc.data();
+    if (data == null) return;
+
+    data["id"] = doc.id;
+    data["in_validation"] = true;
+
+    final DraftQuote draft = DraftQuote.fromMap(data);
+    setState(() => _drafts[index] = draft);
+  }
+
+  void handleRemovedDocument(DocumentSnapshotMap doc) {
+    final int index = _drafts.indexWhere((DraftQuote x) => x.id == doc.id);
+    if (index == -1) return;
+    setState(() => _drafts.removeAt(index));
+  }
+
   /// Initialize page properties.
   void initProps() async {
     _showPageOptions = await Utils.vault.geShowtHeaderOptions();
@@ -241,9 +279,32 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
 
     Future.delayed(const Duration(seconds: 1), () {
       if (!mounted) return;
-      setState(() {
-        _animateList = false;
-      });
+      setState(() => _animateList = false);
+    });
+  }
+
+  /// Listen to document changes.
+  void listenToDocumentChanges(QueryMap query) {
+    _draftSub?.cancel();
+    _draftSub = query.snapshots().skip(1).listen((QuerySnapMap snapshot) {
+      for (final DocumentChangeMap docChange in snapshot.docChanges) {
+        switch (docChange.type) {
+          case DocumentChangeType.added:
+            handleAddedDocument(docChange.doc);
+            break;
+          case DocumentChangeType.modified:
+            handleModifiedDocument(docChange.doc);
+            break;
+          case DocumentChangeType.removed:
+            handleRemovedDocument(docChange.doc);
+            break;
+          default:
+            break;
+        }
+      }
+    }, onDone: () {
+      _draftSub?.cancel();
+      _draftSub = null;
     });
   }
 
@@ -271,11 +332,8 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
 
   /// Callback fired when a draft quote in validation is deleted.
   void onDeleteDraftQuote(DraftQuote quote) async {
-    final int index = _quotes.indexOf(quote);
-
-    setState(() {
-      _quotes.remove(quote);
-    });
+    final int index = _drafts.indexOf(quote);
+    setState(() => _drafts.remove(quote));
 
     try {
       await FirebaseFirestore.instance
@@ -286,9 +344,7 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
       loggy.error(error);
       if (!mounted) return;
 
-      setState(() {
-        _quotes.insert(index, quote);
-      });
+      setState(() => _drafts.insert(index, quote));
 
       Utils.graphic.showSnackbar(
         context,
@@ -305,7 +361,7 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
 
     setState(() {
       _selectedLanguage = language;
-      _quotes.clear();
+      _drafts.clear();
       _lastDocument = null;
     });
 
@@ -321,7 +377,7 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
 
     setState(() {
       _selectedOwnership = ownership;
-      _quotes.clear();
+      _drafts.clear();
       _lastDocument = null;
     });
 
@@ -338,7 +394,7 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
 
   /// Callback fired when a draft quote is validated.
   void onValidateDraftQuote(DraftQuote draft) async {
-    final int index = _quotes.indexOf(draft);
+    final int index = _drafts.indexOf(draft);
     if (index == -1) {
       Utils.graphic.showSnackbar(
         context,
@@ -367,9 +423,7 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
       return;
     }
 
-    setState(() {
-      _quotes.removeAt(index);
-    });
+    setState(() => _drafts.removeAt(index));
 
     try {
       final DocumentMap addedQuoteDoc =
@@ -402,9 +456,7 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
         message: "quote.validate.failed".tr(),
       );
 
-      setState(() {
-        _quotes.insert(index, draft);
-      });
+      setState(() => _drafts.insert(index, draft));
     }
   }
 }

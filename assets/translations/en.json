@@ -328,7 +328,8 @@
     },
     "delete": {
       "failed": "An error occurred while deleting your list",
-      "name": "Delete list"
+      "name": "Delete list",
+      "success": "The list has been deleted"
     },
     "description": "Put some quotes together",
     "edit": {
