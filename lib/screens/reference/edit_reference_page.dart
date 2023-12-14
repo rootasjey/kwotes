@@ -147,9 +147,7 @@ class _EditReferencePageState extends State<EditReferencePage> with UiLoggy {
         onPressed: onDone,
         backgroundColor: fabBackgroundColor,
         foregroundColor: fabForegroundColor,
-        tooltip: isAuthorValid
-            ? "quote.submit.ok".tr()
-            : "quote.submit.required".tr(),
+        tooltip: isAuthorValid ? null : "quote.submit.required".tr(),
         elevation: 6.0,
         disabledElevation: 0.0,
         hoverElevation: 4.0,

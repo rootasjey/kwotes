@@ -11,6 +11,7 @@ import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/locations/search_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
@@ -98,11 +99,10 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
     final bool canManageReference =
         userFirestoreSignal.value.rights.canManageReferences;
 
-    final Color randomColor = Constants.colors.getRandomFromPalette(
-      withGoodContrast: true,
-    );
-
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
+    final Color randomColor = Constants.colors.getRandomFromPalette(
+      withGoodContrast: !isDark,
+    );
 
     return BasicShortcuts(
       onCancel: context.beamBack,
@@ -121,8 +121,8 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
           slivers: [
             ApplicationBar(
               pinned: false,
-              title: const SizedBox.shrink(),
               isMobileSize: isMobileSize,
+              title: const SizedBox.shrink(),
               rightChildren: canManageReference
                   ? ReferenceAppBarChildren.getChildren(
                       context,
@@ -136,11 +136,11 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
               isDark: isDark,
               isMobileSize: isMobileSize,
               maxHeight: windowSize.height / 2,
-              onTapSeeQuotes: onTapSeeQuotes,
+              onTapSeeQuotes: onTapRelatedQuotes,
               pageState: _pageState,
               onDoubleTapName: onDoubleTapReferenceName,
               onDoubleTapSummary: onDoubleTapReferenceSummary,
-              onTapName: onTapReferenceName,
+              onTapPoster: onTapPoster,
               onToggleMetadata: onToggleReferenceMetadata,
               randomColor: randomColor,
               referenceNameTextStyle: textWrapSolution.style,
@@ -157,7 +157,6 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
 
     await Future.wait([
       fetchReference(widget.referenceId),
-      // fetchReferenceQuotes(widget.referenceId),
     ]);
 
     setState(() => _pageState = EnumPageState.idle);
@@ -305,8 +304,8 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
     Beamer.of(context).beamToNamed(getEditRoute(suffix));
   }
 
-  void onTapReferenceName() {
-    if (_reference.urls.image.isEmpty) {
+  void onTapPoster(Reference reference) {
+    if (reference.urls.image.isEmpty) {
       Utils.graphic.showSnackbar(
         context,
         message: "reference.error.no_image".tr(),
@@ -315,7 +314,7 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
     }
 
     final ImageProvider imageProvider =
-        Image.network(_reference.urls.image).image;
+        Image.network(reference.urls.image).image;
 
     showImageViewer(
       context,
@@ -327,7 +326,7 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
     );
   }
 
-  void onTapSeeQuotes() {
+  void onTapRelatedQuotes() {
     final BeamerDelegate beamer = Beamer.of(context);
 
     final bool hasSearch = beamer
@@ -341,6 +340,20 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
           "query": "quotes:reference:${_reference.id}",
           "subjectName": _reference.name,
         },
+      );
+      return;
+    }
+
+    final bool hasDashboard = beamer
+        .beamingHistory.last.state.routeInformation.uri.pathSegments
+        .contains("d");
+
+    if (hasDashboard) {
+      beamer.beamToNamed(
+        DashboardContentLocation.referenceQuotesRoute.replaceFirst(
+          ":referenceId",
+          _reference.id,
+        ),
       );
       return;
     }

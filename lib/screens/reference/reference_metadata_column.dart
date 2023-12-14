@@ -105,8 +105,6 @@ class ReferenceMetadaColumn extends StatelessWidget {
             Expanded(
               child: Text(
                 reference.type.secondary,
-                // "genre.secondary.${reference.type.secondary.toLowerCase()}"
-                //     .tr(),
                 style: textStyle,
               ),
             ),
@@ -190,7 +188,10 @@ class ReferenceMetadaColumn extends StatelessWidget {
                         );
                       },
                       separatorBuilder: (BuildContext context, int index) {
-                        return const Divider();
+                        return Divider(
+                          // color: isDark ? Colors.white12 : Colors.grey.shade300,
+                          color: foregroundColor.withOpacity(0.2),
+                        );
                       },
                       itemCount: children.length,
                     ),

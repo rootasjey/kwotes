@@ -23,7 +23,7 @@ class ReferencePageBody extends StatelessWidget {
     this.onDoubleTapName,
     this.onDoubleTapSummary,
     this.onTapSeeQuotes,
-    this.onTapName,
+    this.onTapPoster,
     this.onToggleMetadata,
     this.referenceNameTextStyle = const TextStyle(),
   });
@@ -55,8 +55,8 @@ class ReferencePageBody extends StatelessWidget {
   /// Callback fired when the "see related quotes" button is tapped.
   final void Function()? onTapSeeQuotes;
 
-  /// Callback fired when the reference name is tapped.
-  final void Function()? onTapName;
+  /// Callback fired when the reference's poster is tapped.
+  final void Function(Reference reference)? onTapPoster;
 
   /// Callback fired to toggle reference metadata widget size.
   final void Function()? onToggleMetadata;
@@ -69,15 +69,14 @@ class ReferencePageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color foregroundColor =
-        Theme.of(context).textTheme.bodyMedium?.color ?? Colors.black;
-
     if (pageState == EnumPageState.loading) {
       return LoadingView(
         message: "${"reference.loading".tr()}...",
       );
     }
 
+    final Color foregroundColor =
+        Theme.of(context).textTheme.bodyMedium?.color ?? Colors.black;
     final double leftPadding = isMobileSize ? 24.0 : 48.0;
     const double rightPadding = 24.0;
 
@@ -88,25 +87,19 @@ class ReferencePageBody extends StatelessWidget {
       sliver: SliverList(
         delegate: SliverChildListDelegate([
           GestureDetector(
-            onTap: onTapName,
             onDoubleTap: onDoubleTapName,
             child: Padding(
-              padding: isMobileSize
-                  ? EdgeInsets.only(
-                      left: leftPadding,
-                      right: rightPadding,
-                      bottom: 24.0,
-                    )
-                  : EdgeInsets.zero,
+              padding: EdgeInsets.only(
+                left: leftPadding,
+                right: rightPadding,
+              ),
               child: Hero(
                 tag: reference.id,
                 child: Material(
                   color: Colors.transparent,
                   child: Text(
                     reference.name,
-                    style: Utils.calligraphy.title(
-                      textStyle: referenceNameTextStyle,
-                    ),
+                    style: referenceNameTextStyle,
                   ),
                 ),
               ),
@@ -125,41 +118,51 @@ class ReferencePageBody extends StatelessWidget {
             ),
             show: isMobileSize,
           ),
-          GestureDetector(
-            onDoubleTap: onDoubleTapSummary,
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: leftPadding,
-                right: rightPadding,
-              ),
-              child: AnimatedTextKit(
-                isRepeatingAnimation: false,
-                displayFullTextOnTap: true,
-                animatedTexts: [
-                  TypewriterAnimatedText(
-                    reference.summary,
-                    speed: const Duration(milliseconds: 10),
-                    curve: Curves.decelerate,
-                    textStyle: Utils.calligraphy.body(
-                      textStyle: TextStyle(
-                        fontSize: isMobileSize ? 16.0 : 24.0,
-                        color: foregroundColor.withOpacity(0.6),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
           ReferenceMetadaRow(
             reference: reference,
+            opened: areMetadataOpen,
+            onTapPoster: onTapPoster,
+            onToggleOpen: onToggleMetadata,
             foregroundColor: foregroundColor,
             margin: EdgeInsets.only(
+              bottom: 24.0,
               left: leftPadding,
               right: rightPadding,
-              top: 24.0,
             ),
             show: !isMobileSize,
+          ),
+          GestureDetector(
+            onDoubleTap: onDoubleTapSummary,
+            child: FractionallySizedBox(
+              alignment: Alignment.topLeft,
+              widthFactor: isMobileSize ? 1.0 : 0.7,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: leftPadding,
+                  right: rightPadding,
+                ),
+                child: DefaultTextStyle(
+                  style: Utils.calligraphy.body(
+                    textStyle: TextStyle(
+                      fontSize: isMobileSize ? 16.0 : 28.0,
+                      color: foregroundColor.withOpacity(0.6),
+                      fontWeight: isMobileSize ? null : FontWeight.w300,
+                    ),
+                  ),
+                  child: AnimatedTextKit(
+                    isRepeatingAnimation: false,
+                    displayFullTextOnTap: true,
+                    animatedTexts: [
+                      TypewriterAnimatedText(
+                        reference.summary,
+                        speed: const Duration(milliseconds: 10),
+                        curve: Curves.decelerate,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ),
           Align(
             alignment: Alignment.topLeft,
@@ -181,8 +184,8 @@ class ReferencePageBody extends StatelessWidget {
                     Text(
                       "see_related_quotes".tr(),
                       style: Utils.calligraphy.body(
-                        textStyle: TextStyle(
-                          fontSize: isMobileSize ? 16.0 : 24.0,
+                        textStyle: const TextStyle(
+                          fontSize: 16.0,
                         ),
                       ),
                     ),
