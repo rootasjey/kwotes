@@ -81,7 +81,7 @@ class AddQuoteContent extends StatelessWidget {
                 hintText: "quote.start_typing".tr(),
                 hintStyle: Utils.calligraphy.body(
                   textStyle: TextStyle(
-                    fontSize: isMobileSize ? 36.0 : 52.0,
+                    fontSize: isMobileSize ? 36.0 : 92.0,
                   ),
                 ),
               ),

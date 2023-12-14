@@ -58,6 +58,7 @@ class AddReferenceMetadataWrap extends StatelessWidget {
                 ? NetworkImage(reference.urls.image)
                 : null,
           ),
+          chipPadding: const EdgeInsets.all(6.0),
           hintText: "quote.add.links.example.web".tr(),
           onTextChanged: onPictureUrlChanged,
         ),

@@ -83,6 +83,7 @@ class AddAuthorMetadaWrap extends StatelessWidget {
           ),
           hintText: "quote.add.links.example.web".tr(),
           onTextChanged: onProfilePictureChanged,
+          chipPadding: const EdgeInsets.all(6.0),
         ),
         BetterActionChip(
           onPressed: onTapBirthDate,

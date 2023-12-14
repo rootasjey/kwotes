@@ -11,6 +11,7 @@ import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/screens/quote_page/share_quote_template.dart";
+import "package:kwotes/types/enums/enum_draft_quote_operation.dart";
 import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/quote.dart";
 import "package:loggy/loggy.dart";
@@ -210,6 +211,36 @@ class QuoteActions {
     }
 
     return heightPadding;
+  }
+
+  /// Propose quote as draft in the global "drafts" collection.
+  /// The result of this operation is silent as it doesn't use context.
+  static void proposeQuote({
+    required Quote quote,
+    required String userId,
+  }) async {
+    if (userId.isEmpty ||
+        quote.name.isEmpty ||
+        quote.name.length < 3 ||
+        quote.topics.isEmpty) {
+      return;
+    }
+
+    final Map<String, dynamic> map = quote.toMap(
+      userId: userId,
+      operation: EnumQuoteOperation.create,
+    );
+
+    final DocumentSnapshot draft = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .collection("drafts")
+        .doc(quote.id)
+        .get();
+
+    if (!draft.exists) return; // in case of duplicate action
+    await FirebaseFirestore.instance.collection("drafts").add(map);
+    await draft.reference.delete();
   }
 
   /// Callback fired to share quote as image.

@@ -13,6 +13,7 @@ import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:just_the_tooltip/just_the_tooltip.dart";
 import "package:kwotes/screens/add_quote/add_quote_fab.dart";
+import "package:kwotes/screens/add_quote/snackbar_draft.dart";
 import "package:kwotes/types/enums/enum_draft_quote_operation.dart";
 import "package:kwotes/types/user/user_rights.dart";
 import "package:loggy/loggy.dart";
@@ -233,13 +234,14 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     final Solution solution = TextWrapAutoSize.solution(
       Size(windowSize.width / 2, windowSize.height / 2),
       Text(
-        textValue,
+        textValue.trim(),
         style: Utils.calligraphy.body(
           textStyle: const TextStyle(
             fontSize: 52.0,
           ),
         ),
       ),
+      minFontSize: 12.0,
     );
 
     final Quote quote = NavigationStateHelper.quote;
@@ -304,7 +306,8 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                 isQuoteValid: isQuoteValid,
                 isMobileSize: isMobileSize,
                 quote: quote,
-                onSubmitQuote: onSubmitQuote,
+                onPressed: onSaveDraft,
+                onLongPress: onSubmitQuote,
                 canManageQuotes: userFirestore.rights.canManageQuotes,
               );
             },
@@ -400,7 +403,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                 ],
               ),
               Positioned(
-                bottom: isMobileSize ? 0.0 : 12.0,
+                bottom: isMobileSize ? 0.0 : 0.0,
                 left: 0.0,
                 right: 0.0,
                 child: MouseRegion(
@@ -412,8 +415,8 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                       color: Theme.of(context).scaffoldBackgroundColor,
                       borderRadius: BorderRadius.circular(4.0),
                     ),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 4.0,
+                    padding: EdgeInsets.symmetric(
+                      vertical: isMobileSize ? 4.0 : 12.0,
                       horizontal: 8.0,
                     ),
                     child: Center(
@@ -421,7 +424,6 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           CircleButton(
-                            tooltip: "quote.add.page.previous".tr(),
                             onTap: onPreviousPage,
                             icon: const Icon(UniconsLine.arrow_left),
                             radius: 14.0,
@@ -440,7 +442,6 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                           ),
                           CircleButton(
                             onTap: onNextPage,
-                            tooltip: "quote.add.page.next".tr(),
                             icon: const Icon(UniconsLine.arrow_right),
                             radius: 14.0,
                             margin: const EdgeInsets.only(left: 8.0),
@@ -1107,6 +1108,25 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     updateQuoteDoc();
   }
 
+  /// Callback fired to (phantom) save draft.
+  /// This method does nothing really useful except notifying the user.
+  /// Shows a "propose" button to consecutively send the draft
+  /// to the global collection.
+  void onSaveDraft() {
+    Utils.graphic.showSnackbarWithCustomText(
+      context,
+      behavior: SnackBarBehavior.floating,
+      duration: const Duration(seconds: 4),
+      text: SnackbarDraft(quote: NavigationStateHelper.quote),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(2.0),
+        side: BorderSide(color: Colors.green.shade100, width: 4.0),
+      ),
+    );
+
+    Utils.passage.back(context);
+  }
+
   /// Callback fired when secondary genre has changed.
   void onSecondaryGenreChanged(String subGenre) {
     final Reference reference = NavigationStateHelper.quote.reference;
@@ -1311,6 +1331,12 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     );
   }
 
+  /// Callback fired to toggle author metadata widget size.
+  void onToggleAuthorMetadata() {
+    Utils.vault.setAddAuthorMetadataOpened(!_authorMetadataOpened);
+    setState(() => _authorMetadataOpened = !_authorMetadataOpened);
+  }
+
   /// Callback fired when fictional value has changed.
   void onToggleIsFictional() {
     setState(() {
@@ -1369,6 +1395,12 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     });
 
     updateQuoteDoc();
+  }
+
+  /// Callback fired to toggle author metadata widget size.
+  void onToggleReferenceMetadata() {
+    Utils.vault.setAddReferenceMetadataOpened(!_referenceMetadataOpened);
+    setState(() => _referenceMetadataOpened = !_referenceMetadataOpened);
   }
 
   /// Callback fired when a topic is tapped.
@@ -1434,10 +1466,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
       Utils.passage.back(context);
     } catch (error) {
       loggy.error(error);
-      setState(() {
-        _pageState = EnumPageState.idle;
-      });
-
+      setState(() => _pageState = EnumPageState.idle);
       Utils.graphic.showSnackbar(
         context,
         message: "quote.submit.failed".tr(),
@@ -1787,17 +1816,5 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
         message: "quote.validate.failed".tr(),
       );
     }
-  }
-
-  /// Callback fired to toggle author metadata widget size.
-  void onToggleAuthorMetadata() {
-    Utils.vault.setAddAuthorMetadataOpened(!_authorMetadataOpened);
-    setState(() => _authorMetadataOpened = !_authorMetadataOpened);
-  }
-
-  /// Callback fired to toggle author metadata widget size.
-  void onToggleReferenceMetadata() {
-    Utils.vault.setAddReferenceMetadataOpened(!_referenceMetadataOpened);
-    setState(() => _referenceMetadataOpened = !_referenceMetadataOpened);
   }
 }

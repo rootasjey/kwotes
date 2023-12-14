@@ -1,9 +1,9 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/draft_quote.dart";
 import "package:kwotes/types/quote.dart";
-import "package:unicons/unicons.dart";
 
 class AddQuoteFAB extends StatelessWidget {
   const AddQuoteFAB({
@@ -14,7 +14,8 @@ class AddQuoteFAB extends StatelessWidget {
     this.fabForegroundColor,
     this.fabBackgroundColor,
     this.isQuoteValid = false,
-    this.onSubmitQuote,
+    this.onLongPress,
+    this.onPressed,
   });
 
   /// Can validate quotes if this is true.
@@ -33,7 +34,10 @@ class AddQuoteFAB extends StatelessWidget {
   final Color? fabBackgroundColor;
 
   /// Callback fired when this button is tapped.
-  final void Function()? onSubmitQuote;
+  final void Function()? onPressed;
+
+  /// Callback fired when this button is long pressed.
+  final void Function()? onLongPress;
 
   /// Quote we're editing.
   final Quote quote;
@@ -43,45 +47,50 @@ class AddQuoteFAB extends StatelessWidget {
     if (isMobileSize) {
       return Padding(
         padding: const EdgeInsets.only(bottom: 32.0),
-        child: FloatingActionButton(
-          onPressed: onSubmitQuote,
-          backgroundColor: fabBackgroundColor,
-          foregroundColor: fabForegroundColor,
-          tooltip: isQuoteValid
-              ? "quote.submit.ok".tr()
-              : "quote.submit.required".tr(),
-          elevation: 0.0,
-          disabledElevation: 0.0,
-          hoverElevation: 4.0,
-          focusElevation: 0.0,
-          highlightElevation: 0.0,
-          mini: true,
-          splashColor: Colors.white,
-          child: const Icon(UniconsLine.message),
+        child: GestureDetector(
+          onLongPress: onLongPress,
+          child: FloatingActionButton(
+            onPressed: onPressed,
+            backgroundColor: fabBackgroundColor,
+            foregroundColor: fabForegroundColor,
+            tooltip: isQuoteValid
+                ? "quote.submit.ok".tr()
+                : "quote.submit.required".tr(),
+            elevation: 0.0,
+            disabledElevation: 0.0,
+            hoverElevation: 4.0,
+            focusElevation: 0.0,
+            highlightElevation: 0.0,
+            mini: true,
+            splashColor: Colors.white,
+            child: const Icon(TablerIcons.device_floppy),
+          ),
         ),
       );
     }
-    return FloatingActionButton.extended(
-      elevation: 0.0,
-      disabledElevation: 0.0,
-      hoverElevation: 4.0,
-      focusElevation: 0.0,
-      highlightElevation: 0.0,
-      splashColor: Colors.white,
-      tooltip:
-          isQuoteValid ? "quote.submit.ok".tr() : "quote.submit.required".tr(),
-      onPressed: isQuoteValid ? onSubmitQuote : null,
-      backgroundColor: fabBackgroundColor,
-      label: Text(
-        getLabel(),
-        style: Utils.calligraphy.body(
-          textStyle: const TextStyle(
-            fontWeight: FontWeight.w500,
+    return GestureDetector(
+      onLongPress: onLongPress,
+      child: FloatingActionButton.extended(
+        elevation: 0.0,
+        disabledElevation: 0.0,
+        hoverElevation: 4.0,
+        focusElevation: 0.0,
+        highlightElevation: 0.0,
+        splashColor: Colors.white,
+        tooltip: isQuoteValid ? "" : "quote.submit.required".tr(),
+        onPressed: isQuoteValid ? onPressed : null,
+        backgroundColor: fabBackgroundColor,
+        label: Text(
+          getLabel(),
+          style: Utils.calligraphy.body(
+            textStyle: const TextStyle(
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
+        icon: const Icon(TablerIcons.device_floppy),
+        foregroundColor: fabForegroundColor,
       ),
-      icon: const Icon(UniconsLine.message),
-      foregroundColor: fabForegroundColor,
     );
   }
 
@@ -93,11 +102,7 @@ class AddQuoteFAB extends StatelessWidget {
     final DraftQuote draft = quote as DraftQuote;
 
     if (!draft.inValidation) {
-      return "quote.submit.name".tr();
-    }
-
-    if (canManageQuotes) {
-      return "quote.validate.name".tr();
+      return "quote.save.name".tr();
     }
 
     return "quote.save.name".tr();
