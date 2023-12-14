@@ -5,6 +5,7 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
+import "package:kwotes/actions/quote_actions.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/components/page_app_bar.dart";
 import "package:kwotes/globals/utils.dart";
@@ -69,6 +70,7 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
 
     return Scaffold(
@@ -89,12 +91,14 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
               ),
               FavouritesPageBody(
                 animateList: _animateList,
+                isDark: isDark,
                 isMobileSize: isMobileSize,
                 pageState: _pageState,
                 quotes: _quotes,
                 onCopy: onCopy,
                 onRemove: onRemove,
                 onTap: onTap,
+                onDoubleTap: onDoubleTap,
               ),
               const SliverPadding(
                 padding: EdgeInsets.only(bottom: 90.0),
@@ -184,6 +188,16 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
   /// Copy a quote's.
   void onCopy(Quote quote) {
     Clipboard.setData(ClipboardData(text: quote.name));
+  }
+
+  /// Copy quote and show snackbar.
+  void onDoubleTap(Quote quote) {
+    QuoteActions.copyQuote(quote);
+
+    Utils.graphic.showSnackbar(
+      context,
+      message: "quote.copy.success.name".tr(),
+    );
   }
 
   /// Remove a quote from favourites.

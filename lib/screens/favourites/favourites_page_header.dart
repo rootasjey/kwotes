@@ -19,7 +19,7 @@ class FavouritesPageHeader extends StatelessWidget {
     return Padding(
       padding: isMobileSize
           ? const EdgeInsets.only(left: 6.0, bottom: 24.0)
-          : const EdgeInsets.only(left: 48.0, bottom: 42.0),
+          : const EdgeInsets.only(bottom: 42.0),
       child: Hero(
         tag: "favourites",
         child: Material(

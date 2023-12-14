@@ -14,8 +14,10 @@ class FavouritesPageBody extends StatelessWidget {
     super.key,
     required this.quotes,
     this.animateList = false,
+    this.isDark = false,
     this.isMobileSize = false,
     this.pageState = EnumPageState.idle,
+    this.onDoubleTap,
     this.onTap,
     this.onRemove,
     this.onCopy,
@@ -23,6 +25,9 @@ class FavouritesPageBody extends StatelessWidget {
 
   /// Animate list's items if true.
   final bool animateList;
+
+  /// Adapt UI for dark mode.
+  final bool isDark;
 
   /// Adapt UI for mobile size.
   final bool isMobileSize;
@@ -42,6 +47,9 @@ class FavouritesPageBody extends StatelessWidget {
   /// On tap callback.
   final void Function(Quote quote)? onTap;
 
+  /// On double tap callback.
+  final void Function(Quote quote)? onDoubleTap;
+
   @override
   Widget build(BuildContext context) {
     if (pageState == EnumPageState.loading) {
@@ -56,9 +64,9 @@ class FavouritesPageBody extends StatelessWidget {
           : const EdgeInsets.only(top: 6.0, left: 48.0, right: 72.0),
       sliver: SliverList.separated(
         separatorBuilder: (BuildContext context, int index) {
-          return const Divider(
-            height: 54.0,
-          );
+          return isDark
+              ? const Divider(height: 54.0, color: Colors.white12)
+              : const Divider(height: 54.0, color: Colors.black12);
         },
         itemBuilder: (BuildContext context, int index) {
           final Quote quote = quotes[index];
@@ -69,6 +77,7 @@ class FavouritesPageBody extends StatelessWidget {
               tiny: isMobileSize,
               margin: const EdgeInsets.only(bottom: 0.0),
               onTap: onTap,
+              onDoubleTap: onDoubleTap,
             )
                 .animate()
                 .slideY(
