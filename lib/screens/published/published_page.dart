@@ -5,6 +5,7 @@ import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/actions/quote_actions.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/components/page_app_bar.dart";
@@ -89,6 +90,7 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
     final Signal<UserFirestore> signalUserFirestore =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       body: ImprovedScrolling(
@@ -125,6 +127,7 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
                   final bool isAdmin = userRights.canManageQuotes;
 
                   return PublishedPageBody(
+                    isDark: isDark,
                     pageState: _pageState,
                     isMobileSize: isMobileSize,
                     quotes: _quotes,
@@ -301,20 +304,62 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
       if (!mounted) return;
       Utils.graphic.showSnackbarWithCustomText(
         context,
+        duration: const Duration(seconds: 10),
         text: Row(children: [
-          Text("quote.delete.success".tr()),
-          TextButton(
-            onPressed: () {
-              setState(() => _quotes.insert(index, quote));
-              FirebaseFirestore.instance
-                  .collection(_collectionName)
-                  .doc(quote.id)
-                  .set(quote.toMap(
-                    operation: EnumQuoteOperation.create,
-                  ));
-              loggy.info("reverse add quote: ${quote.id}");
-            },
-            child: Text("revert".tr()),
+          Expanded(
+            flex: 0,
+            child: Text(
+              "quote.delete.success".tr(),
+              style: Utils.calligraphy.body(
+                textStyle: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                  color: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.color
+                      ?.withOpacity(0.6),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: TextButton(
+              onPressed: () {
+                setState(() => _quotes.insert(index, quote));
+                FirebaseFirestore.instance
+                    .collection(_collectionName)
+                    .doc(quote.id)
+                    .set(quote.toMap(
+                      operation: EnumQuoteOperation.create,
+                    ));
+
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                loggy.info("reverse add quote: ${quote.id}");
+              },
+              style: TextButton.styleFrom(
+                  textStyle: const TextStyle(
+                fontSize: 16.0,
+              )),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "rollback".tr(),
+                    style: Utils.calligraphy.body(
+                      textStyle: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 8.0),
+                    child: Icon(TablerIcons.rotate_2),
+                  ),
+                ],
+              ),
+            ),
           ),
         ]),
       );

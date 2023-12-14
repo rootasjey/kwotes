@@ -13,6 +13,7 @@ class PublishedPageBody extends StatelessWidget {
   const PublishedPageBody({
     super.key,
     required this.quotes,
+    this.isDark = false,
     this.isMobileSize = false,
     this.pageState = EnumPageState.idle,
     this.onChangeLanguage,
@@ -21,6 +22,9 @@ class PublishedPageBody extends StatelessWidget {
     this.onEdit,
     this.onTap,
   });
+
+  /// Adapt UI for mobile size if true.
+  final bool isDark;
 
   /// True if the page is mobile size.
   final bool isMobileSize;
@@ -60,9 +64,9 @@ class PublishedPageBody extends StatelessWidget {
           : const EdgeInsets.only(top: 6.0, left: 48.0, right: 72.0),
       sliver: SliverList.separated(
         separatorBuilder: (BuildContext context, int index) {
-          return const Divider(
-            height: 54.0,
-          );
+          return isDark
+              ? const Divider(height: 54.0, color: Colors.white12)
+              : const Divider(height: 54.0, color: Colors.black12);
         },
         itemBuilder: (BuildContext context, int index) {
           final Quote quote = quotes[index];
