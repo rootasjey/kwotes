@@ -63,7 +63,7 @@ class QuotePageContainer extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       side: BorderSide(
                         color: borderColor,
-                        width: isMobileSize ? 8.0 : 2.0,
+                        width: isMobileSize ? 8.0 : 0.5,
                       ),
                       borderRadius: borderRadius,
                     ),

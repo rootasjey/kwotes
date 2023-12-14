@@ -110,8 +110,8 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   @override
   Widget build(BuildContext context) {
     final Size windowSize = MediaQuery.of(context).size;
-    double widthPadding = 192.0;
-    double heightPadding = getHeightPadding();
+    const double widthPadding = 200.0;
+    final double heightPadding = getHeightPadding();
 
     _textWrapSolution = TextWrapAutoSize.solution(
       Size(windowSize.width - widthPadding, windowSize.height - heightPadding),
@@ -182,13 +182,18 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
                     userFirestore: userFirestore,
                   ),
                   Positioned(
-                    top: isMobileSize ? null : 24.0,
-                    right: isMobileSize ? 0.0 : 24.0,
-                    bottom: isMobileSize ? 24.0 : null,
-                    left: isMobileSize ? 0.0 : null,
+                    top: null,
+                    // top: isMobileSize ? null : 16.0,
+                    right: 0.0,
+                    // right: 16.0,
+                    // bottom: isMobileSize ? 16.0 : null,
+                    bottom: 24.0,
+                    // left: isMobileSize ? 0.0 : null,
+                    left: 0.0,
                     child: QuotePageActions(
                       copyIcon: copyIcon,
-                      direction: isMobileSize ? Axis.horizontal : Axis.vertical,
+                      direction: Axis.horizontal,
+                      // direction: isMobileSize ? Axis.horizontal : Axis.vertical,
                       authenticated: userFirestore.id.isNotEmpty,
                       quote: _quote,
                       copyTooltip: copyTooltip,
@@ -219,10 +224,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
 
   /// Fetch page data.
   void fetch() {
-    setState(() {
-      _pageState = EnumPageState.loading;
-    });
-
+    setState(() => _pageState = EnumPageState.loading);
     fetchQuote();
   }
 
@@ -402,7 +404,8 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   /// Returns the height padding for this widget according to available data
   /// (e.g. author, reference).
   double getHeightPadding() {
-    double heightPadding = 158.0;
+    double heightPadding = 400.0;
+    // double heightPadding = 324.0;
 
     if (_quote.author.name.isNotEmpty) {
       heightPadding += 24.0;
