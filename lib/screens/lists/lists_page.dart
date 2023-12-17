@@ -211,7 +211,7 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
     try {
       final QueryMap query = getQuery(userId);
       final QuerySnapMap snapshot = await query.get();
-      listenToDocumentChanges(query);
+      listenToListChanges(query);
 
       if (snapshot.docs.isEmpty) {
         setState(() {
@@ -264,8 +264,8 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
         .startAfterDocument(lastDocument);
   }
 
-  /// Handle added document.
-  void handleAddedDocument(DocumentSnapshotMap doc) {
+  /// Callback fired when a list is added to the collection.
+  void handleAddedList(DocumentSnapshotMap doc) {
     final Json? data = doc.data();
     if (data == null) {
       return;
@@ -287,8 +287,8 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
     setState(() => _lists.add(createdList));
   }
 
-  /// Handle modified document.
-  void handleModifiedDocument(DocumentSnapshotMap doc) {
+  /// Callback fired when a list is modifed in the collection.
+  void handleModifiedList(DocumentSnapshotMap doc) {
     final int index = _lists.indexWhere((QuoteList list) => list.id == doc.id);
 
     if (index == -1) {
@@ -306,8 +306,8 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
     setState(() => _lists[index] = newList);
   }
 
-  /// Handle removed document.
-  void handleRemovedDocument(DocumentSnapshotMap doc) {
+  /// Callback fired when a list is removed from the collection.
+  void handleRemovedList(DocumentSnapshotMap doc) {
     final int index = _lists.indexWhere((QuoteList list) => list.id == doc.id);
 
     if (index == -1) {
@@ -319,6 +319,7 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
     });
   }
 
+  /// Initialize properties.
   void initProps() async {
     Future.delayed(const Duration(seconds: 1), () {
       if (!mounted) return;
@@ -326,20 +327,20 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
     });
   }
 
-  /// Listen to document changes.
-  void listenToDocumentChanges(QueryMap query) {
+  /// Listen to list changes.
+  void listenToListChanges(QueryMap query) {
     _listSub?.cancel();
     _listSub = query.snapshots().skip(1).listen((QuerySnapMap snapshot) {
       for (final DocumentChangeMap docChange in snapshot.docChanges) {
         switch (docChange.type) {
           case DocumentChangeType.added:
-            handleAddedDocument(docChange.doc);
+            handleAddedList(docChange.doc);
             break;
           case DocumentChangeType.modified:
-            handleModifiedDocument(docChange.doc);
+            handleModifiedList(docChange.doc);
             break;
           case DocumentChangeType.removed:
-            handleRemovedDocument(docChange.doc);
+            handleRemovedList(docChange.doc);
             break;
           default:
             break;

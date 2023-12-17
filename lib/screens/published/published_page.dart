@@ -198,7 +198,7 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
     try {
       final QueryMap query = getQuery(userId);
       final QuerySnapMap snapshot = await query.get();
-      listenToDocumentChanges(query);
+      listenToQuoteChanges(query);
 
       if (snapshot.docs.isEmpty) {
         setState(() {
@@ -230,7 +230,7 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
   }
 
   /// Callback fired when a document is added to the Firestore collection.
-  void handleAddedDocument(DocumentSnapshotMap doc) {
+  void handleAddedQuote(DocumentSnapshotMap doc) {
     final Json? data = doc.data();
     if (data == null) {
       return;
@@ -241,8 +241,8 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
     setState(() => _quotes.add(draft));
   }
 
-  /// Handle modified document.
-  void handleModifiedDocument(DocumentSnapshotMap doc) {
+  /// Callback fired when a quote is modified in the Firestore collection.
+  void handleModifiedQuote(DocumentSnapshotMap doc) {
     final Json? data = doc.data();
     if (data == null) {
       return;
@@ -261,8 +261,8 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
     setState(() => _quotes[index] = draft);
   }
 
-  /// Handle removed document.
-  void handleRemovedDocument(DocumentSnapshotMap doc) {
+  /// Callback fired when a quote is removed from the Firestore collection.
+  void handleRemovedQuote(DocumentSnapshotMap doc) {
     final int index = _quotes.indexWhere(
       (Quote x) => x.id == doc.id,
     );
@@ -284,20 +284,20 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
         Constants.colors.getRandomFromPalette().withOpacity(0.6);
   }
 
-  /// Listen to document changes.
-  void listenToDocumentChanges(QueryMap query) {
+  /// Listen to quote changes.
+  void listenToQuoteChanges(QueryMap query) {
     _quoteSub?.cancel();
     _quoteSub = query.snapshots().skip(1).listen((QuerySnapMap snapshot) {
       for (final DocumentChangeMap docChange in snapshot.docChanges) {
         switch (docChange.type) {
           case DocumentChangeType.added:
-            handleAddedDocument(docChange.doc);
+            handleAddedQuote(docChange.doc);
             break;
           case DocumentChangeType.modified:
-            handleModifiedDocument(docChange.doc);
+            handleModifiedQuote(docChange.doc);
             break;
           case DocumentChangeType.removed:
-            handleRemovedDocument(docChange.doc);
+            handleRemovedQuote(docChange.doc);
             break;
           default:
             break;

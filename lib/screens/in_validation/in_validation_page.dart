@@ -183,7 +183,7 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
     try {
       final QueryMap query = getQuery(userId);
       final QuerySnapMap snapshot = await query.get();
-      listenToDocumentChanges(query);
+      listenToDraftChanges(query);
 
       if (snapshot.docs.isEmpty) {
         setState(() {
@@ -239,8 +239,8 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
     return baseQuery.startAfterDocument(lastDocument);
   }
 
-  /// Handle added document.
-  void handleAddedDocument(DocumentSnapshotMap doc) {
+  /// Callback fired when a draft is added to the Firestore collection.
+  void handleAddedDraft(DocumentSnapshotMap doc) {
     final Json? data = doc.data();
     if (data == null) return;
 
@@ -250,8 +250,8 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
     setState(() => _drafts.add(draft));
   }
 
-  /// Handle modified document.
-  void handleModifiedDocument(DocumentSnapshotMap doc) {
+  /// Callback fired when a draft is modified in the Firestore collection.
+  void handleModifiedDraft(DocumentSnapshotMap doc) {
     final int index = _drafts.indexWhere((DraftQuote x) => x.id == doc.id);
     if (index == -1) return;
 
@@ -265,7 +265,8 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
     setState(() => _drafts[index] = draft);
   }
 
-  void handleRemovedDocument(DocumentSnapshotMap doc) {
+  /// Callback fired when a draft is removed from the Firestore collection.
+  void handleRemovedDraft(DocumentSnapshotMap doc) {
     final int index = _drafts.indexWhere((DraftQuote x) => x.id == doc.id);
     if (index == -1) return;
     setState(() => _drafts.removeAt(index));
@@ -283,20 +284,20 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
     });
   }
 
-  /// Listen to document changes.
-  void listenToDocumentChanges(QueryMap query) {
+  /// Listen to draft quote changes.
+  void listenToDraftChanges(QueryMap query) {
     _draftSub?.cancel();
     _draftSub = query.snapshots().skip(1).listen((QuerySnapMap snapshot) {
       for (final DocumentChangeMap docChange in snapshot.docChanges) {
         switch (docChange.type) {
           case DocumentChangeType.added:
-            handleAddedDocument(docChange.doc);
+            handleAddedDraft(docChange.doc);
             break;
           case DocumentChangeType.modified:
-            handleModifiedDocument(docChange.doc);
+            handleModifiedDraft(docChange.doc);
             break;
           case DocumentChangeType.removed:
-            handleRemovedDocument(docChange.doc);
+            handleRemovedDraft(docChange.doc);
             break;
           default:
             break;

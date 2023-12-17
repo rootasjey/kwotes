@@ -133,7 +133,7 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
     try {
       final QueryMap query = getQuery(currentUser.value.id);
       final QuerySnapMap snapshot = await query.get();
-      listenToDocumentChanges(query);
+      listenToQuoteChanges(query);
 
       if (snapshot.docs.isEmpty) {
         setState(() {
@@ -164,8 +164,8 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
     }
   }
 
-  /// Handle added document.
-  void handleAddedDocument(DocumentSnapshotMap doc) {
+  /// Handle added favourite quote.
+  void handleAddedFavourite(DocumentSnapshotMap doc) {
     final Json? data = doc.data();
     if (data == null) return;
 
@@ -174,22 +174,22 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
     setState(() => _quotes.add(quote));
   }
 
-  /// Handle removed document.
-  void handleRemovedDocument(DocumentSnapshotMap doc) {
+  /// Handle removed favourite quote.
+  void handleRemovedFavourite(DocumentSnapshotMap doc) {
     setState(() => _quotes.removeWhere((Quote x) => x.id == doc.id));
   }
 
-  /// Listen to document changes.
-  void listenToDocumentChanges(QueryMap query) {
+  /// Listen to favourite quote changes.
+  void listenToQuoteChanges(QueryMap query) {
     _quoteSub?.cancel();
     _quoteSub = query.snapshots().skip(1).listen((QuerySnapMap snapshot) {
       for (final docChange in snapshot.docChanges) {
         switch (docChange.type) {
           case DocumentChangeType.added:
-            handleAddedDocument(docChange.doc);
+            handleAddedFavourite(docChange.doc);
             break;
           case DocumentChangeType.removed:
-            handleRemovedDocument(docChange.doc);
+            handleRemovedFavourite(docChange.doc);
             break;
           default:
             break;

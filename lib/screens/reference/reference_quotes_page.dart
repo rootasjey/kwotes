@@ -18,10 +18,12 @@ import "package:kwotes/screens/reference/reference_quotes_page_header.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
+import "package:kwotes/types/firestore/document_change_map.dart";
 import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/firestore/query_doc_snap_map.dart";
 import "package:kwotes/types/firestore/query_map.dart";
 import "package:kwotes/types/firestore/query_snap_map.dart";
+import "package:kwotes/types/firestore/query_snapshot_stream_subscription.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/reference.dart";
 import "package:loggy/loggy.dart";
@@ -71,6 +73,9 @@ class _ReferenceQuotesPageState extends State<ReferenceQuotesPage>
   /// Page's scroll controller.
   final ScrollController _pageScrollController = ScrollController();
 
+  /// Stream subscription for published quotes.
+  QuerySnapshotStreamSubscription? _quoteSub;
+
   @override
   void initState() {
     super.initState();
@@ -81,6 +86,8 @@ class _ReferenceQuotesPageState extends State<ReferenceQuotesPage>
   @override
   void dispose() {
     _pageScrollController.dispose();
+    _quoteSub?.cancel();
+    _quoteSub = null;
     super.dispose();
   }
 
@@ -204,6 +211,8 @@ class _ReferenceQuotesPageState extends State<ReferenceQuotesPage>
       final String language = _selectedLanguage.name;
       final QueryMap query = getQuotesQuery(language: language);
       final QuerySnapMap snapshot = await query.get();
+      listenToQuoteChanges(query);
+
       if (snapshot.docs.isEmpty) {
         return;
       }
@@ -241,9 +250,76 @@ class _ReferenceQuotesPageState extends State<ReferenceQuotesPage>
     return query;
   }
 
+  /// Callback fired when a quote is added to the Firestore collection.
+  void handleAddedQuote(DocumentSnapshotMap doc) {
+    final Json? data = doc.data();
+    if (data == null) {
+      return;
+    }
+
+    data["id"] = doc.id;
+    final Quote draft = Quote.fromMap(data);
+    setState(() => _quotes.add(draft));
+  }
+
+  /// Callback fired when a quote is modified to the Firestore collection.
+  void handleModifiedQuote(DocumentSnapshotMap doc) {
+    final Json? data = doc.data();
+    if (data == null) {
+      return;
+    }
+
+    final int index = _quotes.indexWhere(
+      (Quote x) => x.id == doc.id,
+    );
+
+    if (index == -1) {
+      return;
+    }
+
+    data["id"] = doc.id;
+    final Quote draft = Quote.fromMap(data);
+    setState(() => _quotes[index] = draft);
+  }
+
+  /// Callback fired when a quote is removed from the Firestore collection.
+  void handleRemovedQuote(DocumentSnapshotMap doc) {
+    final int index = _quotes.indexWhere((Quote x) => x.id == doc.id);
+    if (index == -1) {
+      return;
+    }
+
+    setState(() => _quotes.removeAt(index));
+  }
+
   /// Initialize props.
   void initProps() {
     _selectedLanguage = Utils.linguistic.getLanguageSelection();
+  }
+
+  /// Listen to quote changes.
+  void listenToQuoteChanges(QueryMap query) {
+    _quoteSub?.cancel();
+    _quoteSub = query.snapshots().skip(1).listen((QuerySnapMap snapshot) {
+      for (final DocumentChangeMap docChange in snapshot.docChanges) {
+        switch (docChange.type) {
+          case DocumentChangeType.added:
+            handleAddedQuote(docChange.doc);
+            break;
+          case DocumentChangeType.modified:
+            handleModifiedQuote(docChange.doc);
+            break;
+          case DocumentChangeType.removed:
+            handleRemovedQuote(docChange.doc);
+            break;
+          default:
+            break;
+        }
+      }
+    }, onDone: () {
+      _quoteSub?.cancel();
+      _quoteSub = null;
+    });
   }
 
   /// Callback to copy quote url.
