@@ -1,6 +1,7 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:kwotes/components/application_bar.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/buttons/colored_text_button.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 
@@ -11,13 +12,31 @@ class ThePurposePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
+
+    final Color accentColor = Constants.colors.getRandomFromPalette(
+      withGoodContrast: true,
+    );
+
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
 
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          ApplicationBar(
-            isMobileSize: isMobileSize,
+          SliverToBoxAdapter(
+            child: SafeArea(
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 12.0),
+                  child: IconButton(
+                    onPressed: () => Utils.passage.deepBack(context),
+                    icon: const Icon(
+                      TablerIcons.arrow_left,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
           SliverPadding(
             padding: isMobileSize
@@ -94,6 +113,28 @@ class ThePurposePage extends StatelessWidget {
                       ),
                     ),
                   ],
+                ),
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: ColoredTextButton(
+                textFlex: 0,
+                textValue: "back".tr(),
+                onPressed: () => Utils.passage.deepBack(context),
+                icon: const Icon(TablerIcons.arrow_narrow_left),
+                margin: const EdgeInsets.only(
+                  left: 12.0,
+                  bottom: 64.0,
+                  right: 12.0,
+                ),
+                padding: const EdgeInsets.only(
+                  right: 12.0,
+                ),
+                style: TextButton.styleFrom(
+                  backgroundColor: accentColor.withOpacity(0.2),
                 ),
               ),
             ),
