@@ -295,6 +295,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
       _quote = _quote.copyWith(reference: resultReference);
     }
 
+    if (!mounted) return;
     setState(() {});
   }
 

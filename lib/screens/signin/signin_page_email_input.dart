@@ -53,7 +53,7 @@ class SigninPageEmailInput extends StatelessWidget {
             bottom: 12.0,
           ),
           child: TextField(
-            autofocus: true,
+            autofocus: false,
             focusNode: focusNode,
             controller: emailController,
             textInputAction: TextInputAction.next,
