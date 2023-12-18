@@ -92,6 +92,7 @@ class _DashboardCardState extends State<DashboardCard> {
         borderRadius: BorderRadius.circular(4.0),
       ),
       color: widget.backgroundColor,
+      surfaceTintColor: widget.hoverColor,
       child: InkWell(
         onTap: widget.onTap,
         splashColor: widget.hoverColor,
