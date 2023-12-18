@@ -34,7 +34,8 @@ class ReferenceQuotesPageHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageAppBar(
       axis: Axis.horizontal,
-      toolbarHeight: 120.0,
+      isMobileSize: isMobileSize,
+      toolbarHeight: 74.0,
       children: [
         SizedBox(
           height: 40.0,

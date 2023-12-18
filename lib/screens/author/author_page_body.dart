@@ -187,6 +187,7 @@ class AuthorPageBody extends StatelessWidget {
                       style: Utils.calligraphy.body(
                         textStyle: const TextStyle(
                           fontSize: 16.0,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),

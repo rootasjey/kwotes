@@ -90,6 +90,7 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
             controller: _pageScrollController,
             slivers: [
               PageAppBar(
+                isMobileSize: isMobileSize,
                 children: [
                   FavouritesPageHeader(
                     isMobileSize: isMobileSize,

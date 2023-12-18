@@ -37,7 +37,8 @@ class AuthorQuotesPageHeader extends StatelessWidget {
 
     return PageAppBar(
       axis: Axis.horizontal,
-      toolbarHeight: 120.0,
+      isMobileSize: isMobileSize,
+      toolbarHeight: 74.0,
       children: [
         BetterAvatar(
           imageProvider: imageProvider as ImageProvider,

@@ -239,6 +239,7 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
     _metadataOpened = await Utils.vault.getReferenceMetadataOpened();
   }
 
+  /// Listen to reference changes.
   void listenToReference(DocumentMap query) {
     _referenceSubscription?.cancel();
     _referenceSubscription =
@@ -298,12 +299,14 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
     );
   }
 
+  /// Callback fired to edit reference.
   void onEditReference() {
     NavigationStateHelper.reference = _reference;
     final String suffix = "edit/reference/${_reference.id}";
     Beamer.of(context).beamToNamed(getEditRoute(suffix));
   }
 
+  /// Callback fired to open image viewer.
   void onTapPoster(Reference reference) {
     if (reference.urls.image.isEmpty) {
       Utils.graphic.showSnackbar(
@@ -326,6 +329,7 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
     );
   }
 
+  /// Navigate to reference's quotes page.
   void onTapRelatedQuotes() {
     final BeamerDelegate beamer = Beamer.of(context);
 

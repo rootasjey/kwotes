@@ -19,7 +19,7 @@ class FavouritesPageHeader extends StatelessWidget {
     return Padding(
       padding: isMobileSize
           ? const EdgeInsets.only(left: 6.0, bottom: 24.0)
-          : const EdgeInsets.only(bottom: 42.0),
+          : const EdgeInsets.only(left: 6.0, bottom: 42.0),
       child: Hero(
         tag: "favourites",
         child: Material(
@@ -35,7 +35,7 @@ class FavouritesPageHeader extends StatelessWidget {
             ]),
             style: Utils.calligraphy.title(
               textStyle: TextStyle(
-                fontSize: isMobileSize ? 42.0 : 74.0,
+                fontSize: 74.0,
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context)
                     .textTheme

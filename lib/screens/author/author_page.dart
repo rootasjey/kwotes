@@ -242,7 +242,7 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
     _metadataOpened = await Utils.vault.getAuthorMetadataOpened();
   }
 
-  /// Listen to author data.
+  /// Listen to author changes.
   void listenToAuthor(DocumentMap query) {
     _authorSubscription?.cancel();
     _authorSubscription =

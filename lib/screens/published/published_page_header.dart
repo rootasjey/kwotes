@@ -57,7 +57,7 @@ class PublishedPageHeader extends StatelessWidget {
     return Padding(
       padding: isMobileSize
           ? const EdgeInsets.only(left: 6.0, bottom: 24.0)
-          : const EdgeInsets.only(bottom: 42.0),
+          : const EdgeInsets.only(left: 6.0, bottom: 42.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

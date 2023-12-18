@@ -78,7 +78,7 @@ class ListPageHeader extends StatelessWidget {
       return Padding(
         padding: isMobileSize
             ? const EdgeInsets.only(left: 6.0, bottom: 24.0)
-            : const EdgeInsets.only(left: 48.0, bottom: 42.0),
+            : const EdgeInsets.only(left: 0.0, bottom: 42.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -99,6 +99,9 @@ class ListPageHeader extends StatelessWidget {
               decoration: const InputDecoration(
                 border: OutlineInputBorder(
                   borderSide: BorderSide.none,
+                ),
+                contentPadding: EdgeInsets.only(
+                  top: 16.0,
                 ),
               ),
             ),
@@ -199,15 +202,24 @@ class ListPageHeader extends StatelessWidget {
               color: Colors.transparent,
               child: TextButton(
                 onPressed: () => onEnterCreateMode?.call(true),
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.only(left: 6.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6.0),
+                  ),
+                ),
                 child: Text.rich(
-                  TextSpan(text: title, children: [
-                    TextSpan(
-                      text: ".",
-                      style: TextStyle(
-                        color: Constants.colors.inValidation,
+                  TextSpan(
+                    text: title,
+                    children: [
+                      TextSpan(
+                        text: ".",
+                        style: TextStyle(
+                          color: Constants.colors.inValidation,
+                        ),
                       ),
-                    ),
-                  ]),
+                    ],
+                  ),
                   style: Utils.calligraphy.title(
                     textStyle: TextStyle(
                       fontSize: isMobileSize ? 36.0 : 74.0,
@@ -231,6 +243,10 @@ class ListPageHeader extends StatelessWidget {
               onPressed: () => onEnterCreateMode?.call(false),
               style: TextButton.styleFrom(
                 alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.only(left: 6.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6.0),
+                ),
               ),
               child: Text(
                 description,
