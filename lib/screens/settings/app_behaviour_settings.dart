@@ -16,6 +16,8 @@ class AppBehaviourSettings extends StatelessWidget {
     this.isFullscreenQuotePage = false,
     this.isMinimalQuoteActions = false,
     this.accentColor = Colors.blue,
+    this.dividerColor,
+    this.dividerHeight = 48.0,
     this.foregroundColor,
     this.onToggleFrameBorderColor,
     this.onToggleFullscreen,
@@ -25,23 +27,29 @@ class AppBehaviourSettings extends StatelessWidget {
   /// Animate elements on settings page if true.
   final bool animateElements;
 
-  /// Color frame border if true.
-  final EnumFrameBorderStyle appBorderStyle;
-
   /// Whether quote page is fullscreen.
   final bool isFullscreenQuotePage;
-
-  /// Adapt the user interface to narrow screen's size if true.
-  final bool isMobileSize;
 
   /// Hide [close], [copy] actions if this is true.
   final bool isMinimalQuoteActions;
 
+  /// Adapt the user interface to narrow screen's size if true.
+  final bool isMobileSize;
+
   /// Accent color.
   final Color accentColor;
 
+  /// Divider color.
+  final Color? dividerColor;
+
   /// Text foreground color.
   final Color? foregroundColor;
+
+  /// Divider height.
+  final double? dividerHeight;
+
+  /// Color frame border if true.
+  final EnumFrameBorderStyle appBorderStyle;
 
   /// Callback fired to toggle quote page fullscreen.
   final void Function()? onToggleFullscreen;
@@ -129,8 +137,9 @@ class AppBehaviourSettings extends StatelessWidget {
               .fadeIn(duration: animateElements ? 150.ms : 0.ms)
               .slideY(begin: 0.8, end: 0.0),
         ),
-        const Divider(
-          height: 48.0,
+        Divider(
+          height: dividerHeight,
+          color: dividerColor,
         )
             .animate(delay: animateElements ? 250.ms : 0.ms)
             .fadeIn(duration: animateElements ? 250.ms : 0.ms)

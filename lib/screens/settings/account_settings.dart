@@ -12,8 +12,11 @@ class AccountSettings extends StatelessWidget {
     super.key,
     required this.userFirestore,
     this.animateElements = false,
+    this.isDark = false,
     this.isMobileSize = false,
     this.accentColor = Colors.blue,
+    this.dividerColor,
+    this.dividerHeight = 48.0,
     this.foregroundColor,
     this.onTapUpdateEmail,
     this.onTapUpdatePassword,
@@ -27,14 +30,23 @@ class AccountSettings extends StatelessWidget {
   /// Animate elements on settings page if true.
   final bool animateElements;
 
+  /// Dark theme if true.
+  final bool isDark;
+
   /// Adapt the user interface to narrow screen's size if true.
   final bool isMobileSize;
 
   /// Accent color.
   final Color accentColor;
 
+  /// Divider color.
+  final Color? dividerColor;
+
   /// Text foreground color.
   final Color? foregroundColor;
+
+  /// Divider height.
+  final double? dividerHeight;
 
   /// Enum representing the account displayed text value on settings page.
   final EnumAccountDisplayed enumAccountDisplayed;
@@ -154,8 +166,9 @@ class AccountSettings extends StatelessWidget {
               .fadeIn(duration: animateElements ? 150.ms : 0.ms)
               .slideY(begin: 0.8, end: 0.0),
         ),
-        const Divider(
-          height: 48.0,
+        Divider(
+          height: dividerHeight,
+          color: dividerColor,
         )
             .animate(delay: animateElements ? 300.ms : 0.ms)
             .fadeIn(duration: animateElements ? 250.ms : 0.ms)

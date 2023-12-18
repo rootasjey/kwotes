@@ -4,7 +4,6 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
-import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
@@ -15,9 +14,9 @@ import "package:kwotes/screens/settings/about_settings.dart";
 import "package:kwotes/screens/settings/account_settings.dart";
 import "package:kwotes/screens/settings/app_behaviour_settings.dart";
 import "package:kwotes/screens/settings/app_language_selection.dart";
+import "package:kwotes/screens/settings/settings_page_header.dart";
 import "package:kwotes/screens/settings/theme_switcher.dart";
 import "package:kwotes/types/enums/enum_accunt_displayed.dart";
-import "package:kwotes/types/enums/enum_app_bar_mode.dart";
 import "package:kwotes/types/enums/enum_frame_border_style.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
@@ -50,10 +49,18 @@ class _SettingsPageState extends State<SettingsPage> {
   /// For styling purpose.
   final List<Color> _accentColors = [];
 
+  final _pageScrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
     initProps();
+  }
+
+  @override
+  void dispose() {
+    _pageScrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -68,33 +75,25 @@ class _SettingsPageState extends State<SettingsPage> {
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
 
+    final bool isDark =
+        AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark;
+
+    final Color dividerColor = isDark ? Colors.white12 : Colors.black12;
+
     final Widget scaffold = Scaffold(
       body: CustomScrollView(
+        controller: _pageScrollController,
         slivers: [
-          ApplicationBar(
+          SettingsPageHeader(
             isMobileSize: isMobileSize,
-            mode: EnumAppBarMode.settings,
-            title: Padding(
-              padding: const EdgeInsets.only(left: 12.0),
-              child: Hero(
-                tag: "settings",
-                child: Text(
-                  "settings.name".tr(),
-                  style: Utils.calligraphy.body(
-                    textStyle: TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).textTheme.bodyMedium?.color,
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            onScrollToTop: scrollToTop,
           ),
           ThemeSwitcher(
             accentColor: _accentColors.elementAt(0),
             animateElements: _animateElements,
+            dividerColor: dividerColor,
             foregroundColor: foregroundColor,
+            isDark: isDark,
             isMobileSize: isMobileSize,
             onTapLightTheme: onTapLightTheme,
             onTapDarkTheme: onTapDarkTheme,
@@ -115,6 +114,8 @@ class _SettingsPageState extends State<SettingsPage> {
               return AccountSettings(
                 accentColor: _accentColors.elementAt(1),
                 animateElements: _animateElements,
+                isDark: isDark,
+                dividerColor: dividerColor,
                 enumAccountDisplayed: _enumAccountDisplayed,
                 foregroundColor: foregroundColor,
                 isMobileSize: isMobileSize,
@@ -132,6 +133,7 @@ class _SettingsPageState extends State<SettingsPage> {
             accentColor: _accentColors.elementAt(2),
             animateElements: _animateElements,
             currentLanguageCode: currentLanguageCode,
+            dividerColor: dividerColor,
             foregroundColor: foregroundColor,
             isMobileSize: isMobileSize,
             onSelectLanguage: onSelectLanguage,
@@ -139,8 +141,9 @@ class _SettingsPageState extends State<SettingsPage> {
           AppBehaviourSettings(
             accentColor: _accentColors.elementAt(3),
             animateElements: _animateElements,
-            foregroundColor: foregroundColor,
             appBorderStyle: NavigationStateHelper.frameBorderStyle,
+            dividerColor: dividerColor,
+            foregroundColor: foregroundColor,
             isMobileSize: isMobileSize,
             isFullscreenQuotePage: NavigationStateHelper.fullscreenQuotePage,
             isMinimalQuoteActions: NavigationStateHelper.minimalQuoteActions,
@@ -371,5 +374,13 @@ class _SettingsPageState extends State<SettingsPage> {
           );
 
     SystemChrome.setSystemUIOverlayStyle(overlayStyle);
+  }
+
+  void scrollToTop() {
+    _pageScrollController.animateTo(
+      0,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeIn,
+    );
   }
 }

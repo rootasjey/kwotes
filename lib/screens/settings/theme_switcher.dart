@@ -13,6 +13,8 @@ class ThemeSwitcher extends StatelessWidget {
     this.isDark = false,
     this.isMobileSize = false,
     this.accentColor = Colors.amber,
+    this.dividerColor,
+    this.dividerHeight = 48.0,
     this.foregroundColor,
     this.onTapLightTheme,
     this.onTapDarkTheme,
@@ -32,8 +34,14 @@ class ThemeSwitcher extends StatelessWidget {
   /// Accent color.
   final Color accentColor;
 
+  /// Divider color.
+  final Color? dividerColor;
+
   /// Text foreground color.
   final Color? foregroundColor;
+
+  /// Divider height.
+  final double? dividerHeight;
 
   /// Callback fired when light theme is selected.
   final void Function()? onTapLightTheme;
@@ -124,7 +132,10 @@ class ThemeSwitcher extends StatelessWidget {
               .fadeIn(duration: animateElements ? 250.ms : 0.ms)
               .slideY(begin: 0.8, end: 0.0),
         ),
-        Divider(height: 48.0, color: isDark ? Colors.white12 : null)
+        Divider(
+          height: dividerHeight,
+          color: isDark ? Colors.white12 : Colors.black12,
+        )
             .animate(delay: animateElements ? 250.ms : 0.ms)
             .fadeIn(duration: animateElements ? 250.ms : 0.ms)
             .slideY(begin: 0.8, end: 0.0),

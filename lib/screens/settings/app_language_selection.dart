@@ -11,6 +11,8 @@ class AppLanguageSelection extends StatelessWidget {
     this.animateElements = false,
     this.isMobileSize = false,
     this.accentColor = Colors.pink,
+    this.dividerColor,
+    this.dividerHeight = 48.0,
     this.foregroundColor,
     this.onSelectLanguage,
     this.currentLanguageCode,
@@ -25,8 +27,14 @@ class AppLanguageSelection extends StatelessWidget {
   /// Accent color.
   final Color accentColor;
 
+  /// Divider color.
+  final Color? dividerColor;
+
   /// Text foreground color.
   final Color? foregroundColor;
+
+  /// Divider height.
+  final double? dividerHeight;
 
   /// Callback fired when a language is selected.
   final void Function(EnumLanguageSelection locale)? onSelectLanguage;
@@ -87,8 +95,9 @@ class AppLanguageSelection extends StatelessWidget {
               .fadeIn(duration: animateElements ? 150.ms : 0.ms)
               .slideY(begin: 0.8, end: 0.0),
         ),
-        const Divider(
-          height: 48.0,
+        Divider(
+          height: dividerHeight,
+          color: dividerColor,
         )
             .animate(delay: animateElements ? 250.ms : 0.ms)
             .fadeIn(duration: animateElements ? 250.ms : 0.ms)
