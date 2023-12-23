@@ -56,12 +56,11 @@ class AddQuoteFAB extends StatelessWidget {
             tooltip: isQuoteValid
                 ? "quote.submit.ok".tr()
                 : "quote.submit.required".tr(),
-            elevation: 0.0,
+            elevation: 2.0,
             disabledElevation: 0.0,
             hoverElevation: 4.0,
             focusElevation: 0.0,
             highlightElevation: 0.0,
-            mini: true,
             splashColor: Colors.white,
             child: const Icon(TablerIcons.device_floppy),
           ),
