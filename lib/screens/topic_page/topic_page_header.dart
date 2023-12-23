@@ -6,7 +6,11 @@ class TopicPageHeader extends StatelessWidget {
   const TopicPageHeader({
     super.key,
     required this.topic,
+    this.onTapName,
   });
+
+  /// Callback fired when topic name is tapped.
+  final void Function()? onTapName;
 
   /// Topic name.
   final String topic;
@@ -19,17 +23,20 @@ class TopicPageHeader extends StatelessWidget {
       children: [
         Hero(
           tag: topic,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: Text(
-              topic,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: Utils.calligraphy.body(
-                textStyle: TextStyle(
-                  fontSize: 32.0,
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).textTheme.bodyMedium?.color,
+          child: InkWell(
+            onTap: onTapName,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Text(
+                topic,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Utils.calligraphy.body(
+                  textStyle: TextStyle(
+                    fontSize: 32.0,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).textTheme.bodyMedium?.color,
+                  ),
                 ),
               ),
             ),

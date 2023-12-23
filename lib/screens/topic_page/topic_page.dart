@@ -86,6 +86,15 @@ class _TopicPageState extends State<TopicPage> with UiLoggy {
     }
 
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    final EdgeInsets bodyPadding = isMobileSize
+        ? const EdgeInsets.only(
+            left: 16.0,
+            right: 16.0,
+          )
+        : const EdgeInsets.only(
+            left: 48.0,
+            right: 48.0,
+          );
 
     return Focus(
       autofocus: true,
@@ -100,19 +109,17 @@ class _TopicPageState extends State<TopicPage> with UiLoggy {
               slivers: [
                 TopicPageHeader(
                   topic: getTopic(),
+                  onTapName: onTapTopicName,
                 ),
                 SliverPadding(
-                  padding: const EdgeInsets.only(
-                    left: 16.0,
-                    right: 16.0,
-                  ),
+                  padding: bodyPadding,
                   sliver: SliverList.builder(
                     itemBuilder: (BuildContext context, int index) {
                       final Quote quote = _quotes[index];
                       return SearchQuoteText(
                         quote: quote,
                         onTapQuote: onTapQuote,
-                        onDoubleTapQuote: onDoubleTapQuote,
+                        // onDoubleTapQuote: onDoubleTapQuote,
                         tiny: isMobileSize,
                         margin: const EdgeInsets.symmetric(
                           vertical: 12.0,
@@ -248,5 +255,13 @@ class _TopicPageState extends State<TopicPage> with UiLoggy {
     if (_pageScrollController.position.maxScrollExtent - offset <= 200) {
       fetchQuotes();
     }
+  }
+
+  void onTapTopicName() {
+    _pageScrollController.animateTo(
+      0.0,
+      duration: const Duration(milliseconds: 150),
+      curve: Curves.decelerate,
+    );
   }
 }
