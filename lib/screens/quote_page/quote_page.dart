@@ -1,5 +1,6 @@
 import "dart:async";
 import "dart:io";
+import "dart:math";
 
 import "package:beamer/beamer.dart";
 import "package:bottom_sheet/bottom_sheet.dart";
@@ -110,13 +111,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   @override
   Widget build(BuildContext context) {
     final Size windowSize = MediaQuery.of(context).size;
-    const double widthPadding = 200.0;
-    final double heightPadding = getHeightPadding();
-
-    _textWrapSolution = TextWrapAutoSize.solution(
-      Size(windowSize.width - widthPadding, windowSize.height - heightPadding),
-      Text(_quote.name, style: Utils.calligraphy.body()),
-    );
+    _textWrapSolution = getTextSolution(windowSize);
 
     final bool isMobileSize =
         windowSize.width < Utils.measurements.mobileWidthTreshold ||
@@ -402,14 +397,30 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
     return TablerIcons.download;
   }
 
+  /// Returns navigation route for the given suffix.
+  /// This is necessary to keep the navigation context (e.g. home, search).
+  /// E.g.: author/123 -> /h/author/123
+  String getRoute(String suffix) {
+    final BeamerDelegate beamer = Beamer.of(context);
+    final BeamState beamState = beamer.currentBeamLocation.state as BeamState;
+    final List<String> pathSegments = beamState.pathPatternSegments;
+    final String prefix = pathSegments.first;
+    return "/$prefix/$suffix";
+  }
+
+  /// Get text height based on window size.
+  double getTextHeight(Size windowSize) {
+    final double heightPadding = getTextHeightPadding();
+    return max(windowSize.height - heightPadding, 200.0);
+  }
+
   /// Returns the height padding for this widget according to available data
   /// (e.g. author, reference).
-  double getHeightPadding() {
-    double heightPadding = 400.0;
-    // double heightPadding = 324.0;
+  double getTextHeightPadding() {
+    double heightPadding = 240.0;
 
     if (_quote.author.name.isNotEmpty) {
-      heightPadding += 24.0;
+      heightPadding += 42.0;
     }
 
     if (_quote.author.urls.image.isNotEmpty) {
@@ -423,15 +434,36 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
     return heightPadding;
   }
 
-  /// Returns navigation route for the given suffix.
-  /// This is necessary to keep the navigation context (e.g. home, search).
-  /// E.g.: author/123 -> /h/author/123
-  String getRoute(String suffix) {
-    final BeamerDelegate beamer = Beamer.of(context);
-    final BeamState beamState = beamer.currentBeamLocation.state as BeamState;
-    final List<String> pathSegments = beamState.pathPatternSegments;
-    final String prefix = pathSegments.first;
-    return "/$prefix/$suffix";
+  /// Get text height based on window size.
+  double getTextWidth(Size windowSize) {
+    const double widthPadding = 200.0;
+    return max(windowSize.width - widthPadding, 200.0);
+  }
+
+  /// Get text solution (style) based on window size.
+  Solution getTextSolution(Size windowSize) {
+    final double height = getTextHeight(windowSize);
+    final double width = getTextWidth(windowSize);
+
+    try {
+      return TextWrapAutoSize.solution(
+        Size(width, height),
+        Text(_quote.name, style: Utils.calligraphy.body()),
+      );
+    } catch (e) {
+      loggy.error(e);
+      return Solution(
+        Text(_quote.name),
+        Utils.calligraphy.title(
+          textStyle: const TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        Size(width, height),
+        Size(width, height),
+      );
+    }
   }
 
   /// Returns quote first topic color, if any.
