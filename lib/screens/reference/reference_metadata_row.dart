@@ -112,6 +112,7 @@ class ReferenceMetadaRow extends StatelessWidget {
                       child: ReferencePoster(
                         onTap: onTapPoster,
                         reference: reference,
+                        heroTag: "${reference.id}-avatar",
                         selected: true,
                       ),
                     ),

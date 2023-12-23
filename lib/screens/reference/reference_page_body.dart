@@ -88,6 +88,7 @@ class ReferencePageBody extends StatelessWidget {
         delegate: SliverChildListDelegate([
           GestureDetector(
             onDoubleTap: onDoubleTapName,
+            onLongPress: () => onTapPoster?.call(reference),
             child: Padding(
               padding: EdgeInsets.only(
                 left: leftPadding,
