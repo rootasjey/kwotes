@@ -115,7 +115,7 @@ class _QuotePosterState extends State<QuotePoster> {
                     padding: const EdgeInsets.all(24.0),
                     child: Text(
                       quote.name,
-                      maxLines: 9,
+                      maxLines: 8,
                       overflow: TextOverflow.ellipsis,
                       style: Utils.calligraphy.body(
                         textStyle: const TextStyle(
