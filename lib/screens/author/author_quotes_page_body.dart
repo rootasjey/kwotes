@@ -68,8 +68,7 @@ class AuthorQuotesPageBody extends StatelessWidget {
       return EmptyView.quotes(
         context,
         title: "${"quote.empty.there".tr()}\n",
-        description: "${"quote.empty.author".tr()}\n"
-            "${"language.this_parenthesis".tr()}",
+        description: "language.this_parenthesis".tr(),
         buttonTextValue: "back".tr(),
         onTapBackButton: onTapBackButton,
         foregroundColor: foregroundColor,
