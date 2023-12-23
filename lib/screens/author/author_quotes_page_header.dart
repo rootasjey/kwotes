@@ -46,6 +46,7 @@ class AuthorQuotesPageHeader extends StatelessWidget {
           avatarMargin: EdgeInsets.zero,
           margin: const EdgeInsets.only(left: 6.0, right: 12.0),
           onTap: onTapAvatar,
+          heroTag: "${author.id}-avatar",
         ),
         Expanded(
           child: InkWell(

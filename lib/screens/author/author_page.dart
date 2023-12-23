@@ -1,8 +1,8 @@
 import "dart:async";
+import "dart:math";
 
 import "package:beamer/beamer.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
-import "package:easy_image_viewer/easy_image_viewer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
@@ -11,6 +11,7 @@ import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:just_the_tooltip/just_the_tooltip.dart";
 import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
+import "package:kwotes/components/photo_view_route_wrapper.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
@@ -86,14 +87,8 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
   @override
   Widget build(BuildContext context) {
     final Size windowSize = MediaQuery.of(context).size;
-    final bool isMobileSize =
-        windowSize.width < Utils.measurements.mobileWidthTreshold ||
-            windowSize.height < Utils.measurements.mobileWidthTreshold;
-
-    final Solution textWrapSolution = TextWrapAutoSize.solution(
-      Size(windowSize.width - 48.0, windowSize.height / 3),
-      Text(_author.name, style: Utils.calligraphy.title()),
-    );
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    final Solution textWrapSolution = getTextSolution(windowSize);
 
     final Signal<UserFirestore> userFirestoreSignal =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
@@ -106,50 +101,47 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
       withGoodContrast: !isDark,
     );
 
-    return BasicShortcuts(
-      onCancel: context.beamBack,
-      child: Scaffold(
-        floatingActionButton: canManageAuthor
-            ? FloatingActionButton(
-                onPressed: onEditAuthor,
-                backgroundColor: randomColor,
-                foregroundColor: randomColor.computeLuminance() < 0.5
-                    ? Colors.white
-                    : Colors.black,
-                child: const Icon(TablerIcons.pencil),
-              )
-            : null,
-        body: CustomScrollView(
-          slivers: [
-            ApplicationBar(
-              pinned: false,
-              isMobileSize: isMobileSize,
-              title: const SizedBox.shrink(),
-              rightChildren: canManageAuthor
-                  ? AuthorAppBarChildren.getChildren(
-                      context,
-                      tooltipController: _tooltipController,
-                      onDeleteAuthor: onDeleteAuthor,
-                    )
-                  : [],
-            ),
-            AuthorPageBody(
-              areMetadataOpen: _metadataOpened,
-              authorNameTextStyle: textWrapSolution.style,
-              author: _author,
-              isDark: isDark,
-              isMobileSize: isMobileSize,
-              pageState: _pageState,
-              maxHeight: windowSize.height / 2,
-              onDoubleTapName: onDoubleTapAuthorName,
-              onDoubleTapSummary: onDoubleTapAuthorSummary,
-              onTapAvatar: onTapAuthorName,
-              onTapSeeQuotes: onTapRelatedQuotes,
-              onToggleMetadata: onToggleAuthorMetadata,
-              randomColor: randomColor,
-            ),
-          ],
-        ),
+    return Scaffold(
+      floatingActionButton: canManageAuthor
+          ? FloatingActionButton(
+              onPressed: onEditAuthor,
+              backgroundColor: randomColor,
+              foregroundColor: randomColor.computeLuminance() < 0.5
+                  ? Colors.white
+                  : Colors.black,
+              child: const Icon(TablerIcons.pencil),
+            )
+          : null,
+      body: CustomScrollView(
+        slivers: [
+          ApplicationBar(
+            pinned: false,
+            isMobileSize: isMobileSize,
+            title: const SizedBox.shrink(),
+            rightChildren: canManageAuthor
+                ? AuthorAppBarChildren.getChildren(
+                    context,
+                    tooltipController: _tooltipController,
+                    onDeleteAuthor: onDeleteAuthor,
+                  )
+                : [],
+          ),
+          AuthorPageBody(
+            areMetadataOpen: _metadataOpened,
+            authorNameTextStyle: textWrapSolution.style,
+            author: _author,
+            isDark: isDark,
+            isMobileSize: isMobileSize,
+            pageState: _pageState,
+            maxHeight: windowSize.height / 2,
+            onDoubleTapName: onDoubleTapAuthorName,
+            onDoubleTapSummary: onDoubleTapAuthorSummary,
+            onTapAvatar: onTapAuthorName,
+            onTapSeeQuotes: onTapRelatedQuotes,
+            onToggleMetadata: onToggleAuthorMetadata,
+            randomColor: randomColor,
+          ),
+        ],
       ),
     );
   }
@@ -237,6 +229,42 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
     return "/$prefix/$suffix";
   }
 
+  /// Get text height based on window size.
+  double getTextHeight(Size windowSize) {
+    return max(windowSize.height / 3, 200.0);
+  }
+
+  /// Get text height based on window size.
+  double getTextWidth(Size windowSize) {
+    return max(windowSize.width - 54.0, 200.0);
+  }
+
+  /// Get text solution (style) based on window size.
+  Solution getTextSolution(Size windowSize) {
+    final double height = getTextHeight(windowSize);
+    final double width = getTextWidth(windowSize);
+
+    try {
+      return TextWrapAutoSize.solution(
+        Size(width, height),
+        Text(_author.name, style: Utils.calligraphy.title()),
+      );
+    } catch (e) {
+      loggy.error(e);
+      return Solution(
+        Text(_author.name),
+        Utils.calligraphy.title(
+          textStyle: const TextStyle(
+            fontSize: 54.0,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        Size(width, height),
+        Size(width, height),
+      );
+    }
+  }
+
   /// Initialize properties.
   void initProps() async {
     _metadataOpened = await Utils.vault.getAuthorMetadataOpened();
@@ -322,13 +350,13 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
 
     final ImageProvider imageProvider = Image.network(_author.urls.image).image;
 
-    showImageViewer(
-      context,
-      doubleTapZoomable: true,
-      imageProvider,
-      immersive: false,
-      swipeDismissible: true,
-      useSafeArea: false,
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext context) => HeroPhotoViewRouteWrapper(
+          imageProvider: imageProvider,
+          heroTag: "${_author.id}-avatar",
+        ),
+      ),
     );
   }
 

@@ -108,6 +108,7 @@ class AuthorMetadataRow extends StatelessWidget {
                       imageProvider: NetworkImage(author.urls.image),
                       radius: 24.0,
                       onTap: onTapAvatar,
+                      heroTag: "${author.id}-avatar",
                     ),
                   if (author.job.isNotEmpty)
                     Card(

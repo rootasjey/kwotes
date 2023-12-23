@@ -88,6 +88,7 @@ class AuthorPageBody extends StatelessWidget {
         delegate: SliverChildListDelegate([
           GestureDetector(
             onDoubleTap: onDoubleTapName,
+            onLongPress: onTapAvatar,
             child: Padding(
               padding: EdgeInsets.only(
                 left: leftPadding,
