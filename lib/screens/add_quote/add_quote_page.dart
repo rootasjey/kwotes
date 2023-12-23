@@ -501,8 +501,8 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                             foregroundColor: firstColorPalette,
                             backgroundColor:
                                 firstColorPalette.computeLuminance() > 0.6
-                                    ? Colors.black87
-                                    : null,
+                                    ? Colors.black
+                                    : Colors.white,
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -1113,9 +1113,13 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
   /// Shows a "propose" button to consecutively send the draft
   /// to the global collection.
   void onSaveDraft() {
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    final SnackBarBehavior behavior =
+        isMobileSize ? SnackBarBehavior.fixed : SnackBarBehavior.floating;
+
     Utils.graphic.showSnackbarWithCustomText(
       context,
-      behavior: SnackBarBehavior.floating,
+      behavior: behavior,
       duration: const Duration(seconds: 4),
       text: SnackbarDraft(quote: NavigationStateHelper.quote),
       shape: RoundedRectangleBorder(
