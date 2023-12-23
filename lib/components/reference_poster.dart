@@ -12,6 +12,7 @@ class ReferencePoster extends StatefulWidget {
     this.onTap,
     this.onHover,
     this.maxLines,
+    this.heroTag,
     this.shape,
     this.overflow,
     this.titleTextStyle,
@@ -35,6 +36,9 @@ class ReferencePoster extends StatefulWidget {
 
   /// Title text max lines.
   final int? maxLines;
+
+  /// Hero tag.
+  final Object? heroTag;
 
   /// Reference to display.
   final Reference reference;
@@ -71,7 +75,7 @@ class _ReferencePosterState extends State<ReferencePoster> {
         ? NetworkImage(reference.urls.image)
         : const AssetImage("assets/images/reference-picture-0.png");
 
-    final Ink inkImage = Ink.image(
+    Widget inkImage = Ink.image(
       image: image as ImageProvider,
       fit: BoxFit.cover,
       colorFilter: widget.selected
@@ -89,6 +93,13 @@ class _ReferencePosterState extends State<ReferencePoster> {
         },
       ),
     );
+
+    if (widget.heroTag != null) {
+      inkImage = Hero(
+        tag: widget.heroTag as Object,
+        child: inkImage,
+      );
+    }
 
     return AnimatedPadding(
       duration: const Duration(milliseconds: 300),
