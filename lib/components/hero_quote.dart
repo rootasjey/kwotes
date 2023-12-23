@@ -264,6 +264,10 @@ class HeroQuote extends StatelessWidget {
                               style: Utils.calligraphy.body(
                                 textStyle: TextStyle(
                                   color: topic.color,
+                                  backgroundColor:
+                                      topic.color.computeLuminance() > 0.6
+                                          ? Colors.black87
+                                          : null,
                                 ),
                               ),
                             ),
