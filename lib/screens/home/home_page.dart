@@ -145,6 +145,9 @@ class _HomePageState extends State<HomePage> with UiLoggy {
 
     if (isMobileSize) {
       return MobileLayout(
+        authors: NavigationStateHelper.latestAddedAuthors.isEmpty
+            ? []
+            : NavigationStateHelper.latestAddedAuthors.sublist(0, 3),
         carouselScrollController: _referenceScrollController,
         onCopyQuote: onCopyQuote,
         onCopyQuoteUrl: onCopyQuoteUrl,
@@ -156,6 +159,7 @@ class _HomePageState extends State<HomePage> with UiLoggy {
         pageState: _pageState,
         quotes: quotes,
         refetchRandomQuotes: refetchRandomQuotes,
+        references: NavigationStateHelper.latestAddedReferences,
       );
     }
 
@@ -383,9 +387,12 @@ class _HomePageState extends State<HomePage> with UiLoggy {
 
       _subRandomQuotes.addAll(NavigationStateHelper.randomQuotes.sublist(1));
       updateAppFrameColor(NavigationStateHelper.randomQuotes.first);
+
+      if (!mounted) return;
+      setState(() => _pageState = EnumPageState.idle);
     } catch (error) {
       loggy.error(error);
-    } finally {
+      if (!mounted) return;
       setState(() => _pageState = EnumPageState.idle);
     }
   }

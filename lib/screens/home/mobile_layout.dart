@@ -8,7 +8,6 @@ import "package:kwotes/components/icons/app_icon.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/components/texts/random_quote_text.dart";
 import "package:kwotes/globals/constants.dart";
-import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/home/home_topics.dart";
 import "package:kwotes/screens/home/latest_added_authors.dart";
 import "package:kwotes/screens/home/reference_posters.dart";
@@ -27,6 +26,8 @@ class MobileLayout extends StatelessWidget {
     required this.refetchRandomQuotes,
     required this.carouselScrollController,
     required this.quotes,
+    this.authors = const [],
+    this.references = const [],
     this.pageState = EnumPageState.idle,
     this.onReferenceIndexChanged,
     this.onTapTopic,
@@ -67,8 +68,14 @@ class MobileLayout extends StatelessWidget {
   /// Carousel scroll controller.
   final InfiniteScrollController carouselScrollController;
 
+  /// Author list.
+  final List<Author> authors;
+
   /// Quote list.
   final List<Quote> quotes;
+
+  /// Reference list.
+  final List<Reference> references;
 
   @override
   Widget build(BuildContext context) {
@@ -216,13 +223,13 @@ class MobileLayout extends StatelessWidget {
                 bottom: 24.0,
               ),
               onTapReference: onTapReference,
-              references: NavigationStateHelper.latestAddedReferences,
+              references: references,
               textColor: iconColor,
               scrollController: carouselScrollController,
               onIndexChanged: onReferenceIndexChanged,
             ),
             LatestAddedAuthors(
-              authors: NavigationStateHelper.latestAddedAuthors,
+              authors: authors,
               margin: const EdgeInsets.only(
                 top: 42.0,
                 left: 26.0,
