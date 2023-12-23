@@ -2,6 +2,7 @@ import "package:beamer/beamer.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
+import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/types/intents/add_quote_intent.dart";
 import "package:kwotes/types/intents/escape_intent.dart";
 import "package:kwotes/types/intents/index_intent.dart";
@@ -16,15 +17,10 @@ class DashboardNavigationPage extends StatefulWidget {
 }
 
 class _DashboardNavigationPageState extends State<DashboardNavigationPage> {
-  /// Beamer key to navigate sub-locations.
-  final GlobalKey<BeamerState> _beamerKey = GlobalKey<BeamerState>();
-
-  /// Beamer delegate to navigate sub-locations.
-  /// NOTE: Create delegate outside build method.
-  final BeamerDelegate _routerDelegate = BeamerDelegate(
-    locationBuilder: BeamerLocationBuilder(beamLocations: [
-      DashboardContentLocation(),
-    ]),
+  /// Beamer for deep navigation.
+  final Beamer _beamer = Beamer(
+    key: NavigationStateHelper.dashboardBeamerKey,
+    routerDelegate: NavigationStateHelper.dashboardRouterDelegate,
   );
 
   /// Keyboard shortcuts definition.
@@ -95,10 +91,7 @@ class _DashboardNavigationPageState extends State<DashboardNavigationPage> {
         },
         child: HeroControllerScope(
           controller: HeroController(),
-          child: Beamer(
-            key: _beamerKey,
-            routerDelegate: _routerDelegate,
-          ),
+          child: _beamer,
         ),
       ),
     );
@@ -106,7 +99,8 @@ class _DashboardNavigationPageState extends State<DashboardNavigationPage> {
 
   /// Callback fired to navigate to favourites page.
   Object? onFirstIndexShortcut(FirstIndexIntent intent) {
-    _beamerKey.currentState?.routerDelegate.beamToNamed(
+    NavigationStateHelper.dashboardBeamerKey.currentState?.routerDelegate
+        .beamToNamed(
       DashboardContentLocation.favouritesRoute,
     );
 
@@ -115,7 +109,8 @@ class _DashboardNavigationPageState extends State<DashboardNavigationPage> {
 
   /// Callback fired to navigate to lists page.
   Object? onSecondIndexShortcut(SecondIndexIntent intent) {
-    _beamerKey.currentState?.routerDelegate.beamToNamed(
+    NavigationStateHelper.dashboardBeamerKey.currentState?.routerDelegate
+        .beamToNamed(
       DashboardContentLocation.listsRoute,
     );
 
@@ -124,16 +119,18 @@ class _DashboardNavigationPageState extends State<DashboardNavigationPage> {
 
   /// Callback fired to navigate to in validation page.
   Object? onThirdIndexShortcut(ThirdIndexIntent intent) {
-    _beamerKey.currentState?.routerDelegate.beamToNamed(
-      DashboardContentLocation.inValidationRoute,
-    );
+    // NavigationStateHelper.dashboardBeamerKey.currentState?.routerDelegate
+    //     .beamToNamed(
+    //   DashboardContentLocation.inValidationRoute,
+    // );
 
     return null;
   }
 
   /// Callback fired to navigate to published page.
   Object? onFourthIndexShortcut(FourthIndexIntent intent) {
-    _beamerKey.currentState?.routerDelegate.beamToNamed(
+    NavigationStateHelper.dashboardBeamerKey.currentState?.routerDelegate
+        .beamToNamed(
       DashboardContentLocation.publishedRoute,
     );
 
@@ -142,7 +139,8 @@ class _DashboardNavigationPageState extends State<DashboardNavigationPage> {
 
   /// Callback fired to navigate to drafts page.
   Object? onFifthIndexShortcut(FifthIndexIntent intent) {
-    _beamerKey.currentState?.routerDelegate.beamToNamed(
+    NavigationStateHelper.dashboardBeamerKey.currentState?.routerDelegate
+        .beamToNamed(
       DashboardContentLocation.draftsRoute,
     );
 
@@ -151,7 +149,8 @@ class _DashboardNavigationPageState extends State<DashboardNavigationPage> {
 
   /// Callback fired to navigate to settings page.
   Object? onSixthIndexShortcut(SixthIndexIntent intent) {
-    _beamerKey.currentState?.routerDelegate.beamToNamed(
+    NavigationStateHelper.dashboardBeamerKey.currentState?.routerDelegate
+        .beamToNamed(
       DashboardContentLocation.settingsRoute,
     );
 
@@ -161,7 +160,7 @@ class _DashboardNavigationPageState extends State<DashboardNavigationPage> {
   /// Callback fired to navigate to previous location.
   Object? onEscapeShortcut(EscapeIntent intent) {
     final BeamerDelegate? beamerDelegate =
-        _beamerKey.currentState?.routerDelegate;
+        NavigationStateHelper.dashboardBeamerKey.currentState?.routerDelegate;
 
     if (beamerDelegate?.canBeamBack ?? false) {
       beamerDelegate?.beamBack();
@@ -174,7 +173,8 @@ class _DashboardNavigationPageState extends State<DashboardNavigationPage> {
 
   /// Callback fired to navigate to add quote location.
   Object? onAddQuoteShortcut(AddQuoteIntent intent) {
-    _beamerKey.currentState?.routerDelegate.beamToNamed(
+    NavigationStateHelper.dashboardBeamerKey.currentState?.routerDelegate
+        .beamToNamed(
       DashboardContentLocation.addQuoteRoute,
     );
 

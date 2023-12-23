@@ -221,17 +221,6 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
     );
   }
 
-  void onTapBottomBarItem(int index) {
-    setState(() => _currentIndex = index);
-    Passage.homePageTabIndex = index;
-    Utils.vault.setHomePageTabIndex(index);
-  }
-
-  /// Initialize page properties.
-  void initProps() async {
-    _currentIndex = Passage.homePageTabIndex;
-  }
-
   /// Adapt UI overlay style on Android and iOS.
   void adaptUiOverlayStyle() {
     if (!Platform.isAndroid && !Platform.isIOS) {
@@ -273,6 +262,34 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
     SystemChrome.setSystemUIOverlayStyle(overlayStyle);
   }
 
+  /// Initialize page properties.
+  void initProps() async {
+    _currentIndex = Passage.homePageTabIndex;
+  }
+
+  /// Navigate back to root when tapping on already selected bottom bar item.
+  void navigateBackToRoot(int index) {
+    switch (index) {
+      case 0:
+        NavigationStateHelper.homeRouterDelegate.beamToNamed(
+          NavigationStateHelper.homeRouterDelegate.initialPath,
+        );
+        break;
+      case 1:
+        NavigationStateHelper.searchRouterDelegate.beamToNamed(
+          NavigationStateHelper.searchRouterDelegate.initialPath,
+        );
+        break;
+      case 2:
+        NavigationStateHelper.dashboardRouterDelegate.beamToNamed(
+          NavigationStateHelper.dashboardRouterDelegate.initialPath,
+        );
+        break;
+      default:
+        break;
+    }
+  }
+
   /// Callback fired to navigate to dashboard page.
   Object? onDashboardShortcut(DashboardIntent intent) {
     onTapBottomBarItem(2);
@@ -289,6 +306,16 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
   Object? onSearchShortcut(SearchIntent intent) {
     onTapBottomBarItem(1);
     return null;
+  }
+
+  void onTapBottomBarItem(int index) {
+    if (index == _currentIndex) {
+      navigateBackToRoot(index);
+    }
+
+    setState(() => _currentIndex = index);
+    Passage.homePageTabIndex = index;
+    Utils.vault.setHomePageTabIndex(index);
   }
 
   /// Update frame border color according to last saved style.

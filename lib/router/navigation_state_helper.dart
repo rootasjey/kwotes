@@ -1,4 +1,8 @@
+import "package:beamer/beamer.dart";
 import "package:flutter/widgets.dart";
+import "package:kwotes/router/locations/dashboard_location.dart";
+import "package:kwotes/router/locations/home_location.dart";
+import "package:kwotes/router/locations/search_location.dart";
 import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_frame_border_style.dart";
 import "package:kwotes/types/quote.dart";
@@ -57,4 +61,43 @@ class NavigationStateHelper {
   /// This value will be passed to the search page on navigation.
   /// Thus keeping context when navigating back and forth result pages.
   static String searchValue = "";
+
+  /// Beamer key to navigate sub-locations.
+  static GlobalKey<BeamerState> homeBeamerKey = GlobalKey<BeamerState>(
+    debugLabel: "home",
+  );
+
+  /// Beamer delegate to navigate home sub-locations.
+  /// NOTE: Create delegate outside build method in order to avoid state issues.
+  static BeamerDelegate homeRouterDelegate = BeamerDelegate(
+    locationBuilder: BeamerLocationBuilder(beamLocations: [
+      HomeContentLocation(),
+    ]),
+  );
+
+  /// Beamer key to navigate search sub-locations.
+  static GlobalKey<BeamerState> searchBeamerKey = GlobalKey<BeamerState>(
+    debugLabel: "search",
+  );
+
+  /// Beamer delegate to navigate search sub-locations.
+  /// NOTE: Create delegate outside build method in order to avoid state issues.
+  static BeamerDelegate searchRouterDelegate = BeamerDelegate(
+    locationBuilder: BeamerLocationBuilder(beamLocations: [
+      SearchContentLocation(),
+    ]),
+  );
+
+  /// Beamer key to navigate dashboard sub-locations.
+  static GlobalKey<BeamerState> dashboardBeamerKey = GlobalKey<BeamerState>(
+    debugLabel: "dashboard",
+  );
+
+  /// Beamer delegate to navigate dashboard sub-locations.
+  /// NOTE: Create delegate outside build method in order to avoid state issues.
+  static BeamerDelegate dashboardRouterDelegate = BeamerDelegate(
+    locationBuilder: BeamerLocationBuilder(beamLocations: [
+      DashboardContentLocation(),
+    ]),
+  );
 }

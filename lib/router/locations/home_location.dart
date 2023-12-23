@@ -16,13 +16,21 @@ class HomeLocation extends BeamLocation<BeamState> {
   /// Main root value for this location.
   static const String route = "/";
 
-  /// Alternate home location for deep navigation.
-  static const String routeWildCard = "/h/*";
+  /// Dashboard location for deep navigation.
+  static const String dashboardRoute = "/d/*";
+
+  /// Home location for deep navigation.
+  static const String homeRoute = "/h/*";
+
+  /// Search location for deep navigation.
+  static const String searchRoute = "/s/*";
 
   @override
   List<Pattern> get pathPatterns => [
+        dashboardRoute,
+        homeRoute,
         route,
-        routeWildCard,
+        searchRoute,
       ];
 
   @override

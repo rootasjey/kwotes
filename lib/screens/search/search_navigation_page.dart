@@ -2,7 +2,7 @@ import "package:beamer/beamer.dart";
 import "package:flutter/cupertino.dart";
 import "package:flutter/services.dart";
 import "package:kwotes/globals/utils.dart";
-import "package:kwotes/router/locations/search_location.dart";
+import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/types/intents/escape_intent.dart";
 
 class SearchNavigationPage extends StatefulWidget {
@@ -14,15 +14,10 @@ class SearchNavigationPage extends StatefulWidget {
 }
 
 class _SearchNavigationPageState extends State<SearchNavigationPage> {
-  /// Beamer key to navigate sub-locations.
-  final GlobalKey<BeamerState> _beamerKey = GlobalKey<BeamerState>();
-
-  /// Beamer delegate to navigate sub-locations.
-  /// NOTE: Create delegate outside build method.
-  final BeamerDelegate _routerDelegate = BeamerDelegate(
-    locationBuilder: BeamerLocationBuilder(beamLocations: [
-      SearchContentLocation(),
-    ]),
+  /// Beamer for deep navigation.
+  final Beamer _beamer = Beamer(
+    key: NavigationStateHelper.searchBeamerKey,
+    routerDelegate: NavigationStateHelper.searchRouterDelegate,
   );
 
   /// Keyboard shortcuts definition.
@@ -44,10 +39,7 @@ class _SearchNavigationPageState extends State<SearchNavigationPage> {
         },
         child: HeroControllerScope(
           controller: HeroController(),
-          child: Beamer(
-            key: _beamerKey,
-            routerDelegate: _routerDelegate,
-          ),
+          child: _beamer,
         ),
       ),
     );
