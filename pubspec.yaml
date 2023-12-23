@@ -43,7 +43,6 @@ dependencies:
   cloud_firestore: ^4.8.3
   cloud_functions: ^4.3.4
   dismissible_page: ^1.0.2
-  easy_image_viewer: ^1.2.1
   easy_localization: ^3.0.2
   file_picker: ^6.1.1
   firebase_auth: ^4.7.1
