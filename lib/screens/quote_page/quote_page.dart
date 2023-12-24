@@ -454,10 +454,9 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
       loggy.error(e);
       return Solution(
         Text(_quote.name),
-        Utils.calligraphy.title(
+        Utils.calligraphy.body(
           textStyle: const TextStyle(
             fontSize: 18.0,
-            fontWeight: FontWeight.w500,
           ),
         ),
         Size(width, height),
