@@ -75,9 +75,7 @@ class _SettingsPageState extends State<SettingsPage> {
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
 
-    final bool isDark =
-        AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark;
-
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final Color dividerColor = isDark ? Colors.white12 : Colors.black12;
 
     final Widget scaffold = Scaffold(
