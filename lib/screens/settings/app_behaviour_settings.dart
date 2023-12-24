@@ -87,7 +87,7 @@ class AppBehaviourSettings extends StatelessWidget {
           ]),
           style: Utils.calligraphy.body(
             textStyle: TextStyle(
-              fontSize: isMobileSize ? 42.0 : 72.0,
+              fontSize: isMobileSize ? 32.0 : 72.0,
               fontWeight: FontWeight.w100,
             ),
           ),

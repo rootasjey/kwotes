@@ -47,6 +47,8 @@ class AboutSettings extends StatefulWidget {
 class _AboutSettingsState extends State<AboutSettings> {
   @override
   Widget build(BuildContext context) {
+    const double iconSize = 48.0;
+
     return SliverPadding(
       padding: widget.isMobileSize
           ? const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0)
@@ -64,10 +66,10 @@ class _AboutSettingsState extends State<AboutSettings> {
               WidgetSpan(
                 alignment: PlaceholderAlignment.middle,
                 child: SizedBox(
-                  width: 84.0,
-                  height: 84.0,
+                  width: iconSize,
+                  height: iconSize,
                   child: LikeButtonVanilla(
-                    size: Size(84.0, 84.0),
+                    size: Size(iconSize, iconSize),
                   ),
                 ),
               ),
@@ -75,7 +77,7 @@ class _AboutSettingsState extends State<AboutSettings> {
           ),
           style: Utils.calligraphy.body(
             textStyle: TextStyle(
-              fontSize: widget.isMobileSize ? 42.0 : 72.0,
+              fontSize: widget.isMobileSize ? 32.0 : 72.0,
               fontWeight: FontWeight.w100,
               color: widget.foregroundColor,
             ),
@@ -86,6 +88,7 @@ class _AboutSettingsState extends State<AboutSettings> {
             .slideY(begin: 0.8, end: 0.0),
         Wrap(
           spacing: 12.0,
+          runSpacing: 12.0,
           children: [
             ActionChip(
               onPressed: widget.onTapColorPalette,

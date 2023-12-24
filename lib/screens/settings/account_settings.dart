@@ -96,7 +96,7 @@ class AccountSettings extends StatelessWidget {
           ]),
           style: Utils.calligraphy.body(
             textStyle: TextStyle(
-              fontSize: isMobileSize ? 42.0 : 72.0,
+              fontSize: isMobileSize ? 32.0 : 72.0,
               fontWeight: FontWeight.w100,
               color: foregroundColor,
             ),
@@ -107,6 +107,7 @@ class AccountSettings extends StatelessWidget {
             .slideY(begin: 0.8, end: 0.0),
         Wrap(
           spacing: 12.0,
+          runSpacing: 12.0,
           children: [
             ActionChip(
               onPressed: onTapUpdateUsername,
