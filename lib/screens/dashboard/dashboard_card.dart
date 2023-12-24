@@ -90,6 +90,9 @@ class _DashboardCardState extends State<DashboardCard> {
       elevation: _elevation,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4.0),
+        side: BorderSide(
+          color: _iconColor ?? Colors.transparent,
+        ),
       ),
       color: widget.backgroundColor,
       surfaceTintColor: widget.hoverColor,
