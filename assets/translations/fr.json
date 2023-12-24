@@ -846,7 +846,8 @@
       "name": "Envoyer",
       "ok": "Cette citation sera envoyée pour validation",
       "required": "Vous devez saisir une citation et sélectionner au moins un sujet de catégorisation.",
-      "success": "Votre citation a été envoyée!"
+      "success": "Votre citation a été envoyée!",
+      "tooltip": "Tapotez pour sauvegarder. Maintenez pour soumettre pour validation."
     },
     "unlike": {
       "name": "Je n'aime plus"

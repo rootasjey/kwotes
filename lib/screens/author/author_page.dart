@@ -10,7 +10,6 @@ import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:just_the_tooltip/just_the_tooltip.dart";
 import "package:kwotes/components/application_bar.dart";
-import "package:kwotes/components/basic_shortcuts.dart";
 import "package:kwotes/components/photo_view_route_wrapper.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";

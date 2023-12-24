@@ -17,7 +17,11 @@ class SnackbarDraft extends StatelessWidget {
   const SnackbarDraft({
     super.key,
     required this.quote,
+    this.isMobileSize = false,
   });
+
+  /// Adapt user interface to moile size if true.
+  final bool isMobileSize;
 
   /// The quote to propose for validation (if the action is taken).
   final Quote quote;
@@ -28,16 +32,17 @@ class SnackbarDraft extends StatelessWidget {
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
 
     return Padding(
-      padding: const EdgeInsets.only(left: 90.0),
+      padding: const EdgeInsets.only(left: 0.0),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(right: 24.0),
-            child: Icon(TablerIcons.check),
-          ),
+          if (!isMobileSize)
+            const Padding(
+              padding: EdgeInsets.only(right: 24.0),
+              child: Icon(TablerIcons.check),
+            ),
           Expanded(
-            flex: 0,
+            flex: 1,
             child: Text.rich(
               TextSpan(
                 text: "quote.save.draft.success".tr(),
@@ -49,7 +54,7 @@ class SnackbarDraft extends StatelessWidget {
               ),
               style: Utils.calligraphy.body(
                 textStyle: TextStyle(
-                  fontSize: 16.0,
+                  fontSize: isMobileSize ? 14.0 : 16.0,
                   fontWeight: FontWeight.w500,
                   color: Theme.of(context)
                       .textTheme

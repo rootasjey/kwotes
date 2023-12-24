@@ -5,8 +5,8 @@ import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/draft_quote.dart";
 import "package:kwotes/types/quote.dart";
 
-class AddQuoteFAB extends StatelessWidget {
-  const AddQuoteFAB({
+class AddQuoteFab extends StatelessWidget {
+  const AddQuoteFab({
     super.key,
     required this.quote,
     this.canManageQuotes = false,
@@ -54,7 +54,7 @@ class AddQuoteFAB extends StatelessWidget {
             backgroundColor: fabBackgroundColor,
             foregroundColor: fabForegroundColor,
             tooltip: isQuoteValid
-                ? "quote.submit.ok".tr()
+                ? "quote.submit.tooltip".tr()
                 : "quote.submit.required".tr(),
             elevation: 2.0,
             disabledElevation: 0.0,

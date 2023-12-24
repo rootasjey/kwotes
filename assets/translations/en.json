@@ -833,7 +833,8 @@
       "name": "Submit",
       "ok": "This quote will be sent for validation",
       "required": "You must enter a quote and select at least one topic",
-      "success": "Quote successfully submitted!"
+      "success": "Quote successfully submitted!",
+      "tooltip": "Tap to save. Long press to send for validation."
     },
     "unlike": {
       "name": "Unlike"

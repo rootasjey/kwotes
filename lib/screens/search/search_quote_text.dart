@@ -95,7 +95,7 @@ class _SearchQuoteTextState extends State<SearchQuoteText> {
           borderRadius: BorderRadius.circular(4.0),
           onTap: onTapQuote != null ? () => onTapQuote.call(quote) : null,
           onDoubleTap: widget.onDoubleTapQuote != null
-              ? () => widget.onDoubleTapQuote!.call(quote)
+              ? () => widget.onDoubleTapQuote?.call(quote)
               : null,
           onHover: (bool isHover) {
             if (isHover) {

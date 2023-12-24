@@ -300,7 +300,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
               UserFirestore userFirestore,
               Widget? child,
             ) {
-              return AddQuoteFAB(
+              return AddQuoteFab(
                 fabForegroundColor: fabForegroundColor,
                 fabBackgroundColor: fabBackgroundColor,
                 isQuoteValid: isQuoteValid,
@@ -1120,8 +1120,12 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     Utils.graphic.showSnackbarWithCustomText(
       context,
       behavior: behavior,
-      duration: const Duration(seconds: 4),
-      text: SnackbarDraft(quote: NavigationStateHelper.quote),
+      duration: const Duration(seconds: 6),
+      showCloseIcon: !isMobileSize,
+      text: SnackbarDraft(
+        quote: NavigationStateHelper.quote,
+        isMobileSize: isMobileSize,
+      ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(2.0),
         side: BorderSide(color: Colors.green.shade100, width: 4.0),
