@@ -3,7 +3,9 @@ import "dart:async";
 import "package:algolia/algolia.dart";
 import "package:beamer/beamer.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
@@ -656,6 +658,12 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       RouteInformation(uri: Uri(path: SearchLocation.route)),
     );
 
+    SystemChrome.setApplicationSwitcherDescription(
+      ApplicationSwitcherDescription(
+        label: "page_title.search".tr(),
+      ),
+    );
+
     setState(() {
       _resultCount = 0;
       _prevSearchTextValue = "";
@@ -762,31 +770,38 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     NavigationStateHelper.quote = quote;
     Beamer.of(context).beamToNamed(
       SearchContentLocation.quoteRoute.replaceFirst(":quoteId", quote.id),
+      routeState: {
+        "quoteName": quote.name,
+      },
     );
   }
 
   /// Callback fired when author is tapped.
   void onTapAuthor(Author author) {
     NavigationStateHelper.author = author;
-
-    final String route = SearchContentLocation.authorRoute.replaceFirst(
-      ":authorId",
-      author.id,
+    Beamer.of(context).beamToNamed(
+      SearchContentLocation.authorRoute.replaceFirst(
+        ":authorId",
+        author.id,
+      ),
+      routeState: {
+        "authorName": author.name,
+      },
     );
-
-    Beamer.of(context).beamToNamed(route);
   }
 
   /// Callback fired when reference is tapped.
   void onTapReference(Reference reference) {
     NavigationStateHelper.reference = reference;
-
-    final String route = SearchContentLocation.referenceRoute.replaceFirst(
-      ":referenceId",
-      reference.id,
+    Beamer.of(context).beamToNamed(
+      SearchContentLocation.referenceRoute.replaceFirst(
+        ":referenceId",
+        reference.id,
+      ),
+      routeState: {
+        "referenceName": reference.name,
+      },
     );
-
-    Beamer.of(context).beamToNamed(route);
   }
 
   /// Callback fired when a topic is tapped.
@@ -796,6 +811,14 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     onSearchInputChanged(
       topicColor.name,
       delay: const Duration(milliseconds: 0),
+    );
+
+    SystemChrome.setApplicationSwitcherDescription(
+      ApplicationSwitcherDescription(
+        label: "page_title.search_subject".tr(
+          args: [topicColor.name],
+        ),
+      ),
     );
   }
 

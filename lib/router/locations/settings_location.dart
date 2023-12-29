@@ -14,8 +14,12 @@ class SettingsLocation extends BeamLocation<BeamState> {
   static const String thePurposeRoute = "$route/the-purpose";
 
   @override
-  List<String> get pathPatterns =>
-      [route, colorPalette, tosRoute, thePurposeRoute];
+  List<String> get pathPatterns => [
+        route,
+        colorPalette,
+        tosRoute,
+        thePurposeRoute,
+      ];
 
   @override
   List<BeamPage> buildPages(BuildContext context, BeamState state) {

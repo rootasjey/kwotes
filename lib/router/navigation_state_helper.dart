@@ -70,8 +70,9 @@ class NavigationStateHelper {
   /// Beamer delegate to navigate home sub-locations.
   /// NOTE: Create delegate outside build method in order to avoid state issues.
   static BeamerDelegate homeRouterDelegate = BeamerDelegate(
+    initialPath: HomeContentLocation.route,
     locationBuilder: BeamerLocationBuilder(beamLocations: [
-      HomeContentLocation(),
+      HomeContentLocation(BeamState.fromUriString(HomeContentLocation.route)),
     ]),
   );
 
@@ -83,8 +84,11 @@ class NavigationStateHelper {
   /// Beamer delegate to navigate search sub-locations.
   /// NOTE: Create delegate outside build method in order to avoid state issues.
   static BeamerDelegate searchRouterDelegate = BeamerDelegate(
+    initialPath: SearchContentLocation.route,
     locationBuilder: BeamerLocationBuilder(beamLocations: [
-      SearchContentLocation(),
+      SearchContentLocation(
+        BeamState.fromUriString(SearchContentLocation.route),
+      ),
     ]),
   );
 
@@ -96,8 +100,11 @@ class NavigationStateHelper {
   /// Beamer delegate to navigate dashboard sub-locations.
   /// NOTE: Create delegate outside build method in order to avoid state issues.
   static BeamerDelegate dashboardRouterDelegate = BeamerDelegate(
+    initialPath: DashboardContentLocation.route,
     locationBuilder: BeamerLocationBuilder(beamLocations: [
-      DashboardContentLocation(),
+      DashboardContentLocation(
+        BeamState.fromUriString(DashboardContentLocation.route),
+      ),
     ]),
   );
 }

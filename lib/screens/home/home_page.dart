@@ -455,6 +455,9 @@ class _HomePageState extends State<HomePage> with UiLoggy {
     NavigationStateHelper.quote = quote;
     Beamer.of(context).beamToNamed(
       HomeContentLocation.quoteRoute.replaceFirst(":quoteId", quote.id),
+      routeState: {
+        "quoteName": quote.name,
+      },
     );
   }
 
@@ -470,6 +473,9 @@ class _HomePageState extends State<HomePage> with UiLoggy {
         ":authorId",
         author.id,
       ),
+      routeState: {
+        "authorName": author.name,
+      },
     );
   }
 
@@ -480,6 +486,9 @@ class _HomePageState extends State<HomePage> with UiLoggy {
         ":referenceId",
         reference.id,
       ),
+      routeState: {
+        "referenceName": reference.name,
+      },
     );
   }
 
@@ -490,6 +499,9 @@ class _HomePageState extends State<HomePage> with UiLoggy {
         ":topicName",
         topic.name,
       ),
+      routeState: {
+        "topicName": topic.name,
+      },
     );
   }
 

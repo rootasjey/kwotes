@@ -68,6 +68,9 @@ class DashboardLocation extends BeamLocation<BeamState> {
 }
 
 class DashboardContentLocation extends BeamLocation<BeamState> {
+  DashboardContentLocation(BeamState beamState)
+      : super(beamState.routeInformation);
+
   /// Main root value for this location.
   static const String route = "/d";
 
@@ -296,7 +299,9 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
             authorId: state.pathParameters["authorId"] ?? "",
           ),
           key: const ValueKey(editAuthorRoute),
-          title: "page_title.any".tr(),
+          title: "page_title.edit_author".tr(
+            args: [extractAuthorName(state.routeState)],
+          ),
           type: BeamPageType.fadeTransition,
           fullScreenDialog: false,
           opaque: false,
@@ -308,7 +313,9 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
             referenceId: state.pathParameters["referenceId"] ?? "",
           ),
           key: const ValueKey(editReferenceRoute),
-          title: "page_title.any".tr(),
+          title: "page_title.edit_reference".tr(
+            args: [extractReferenceName(state.routeState)],
+          ),
           type: BeamPageType.fadeTransition,
           fullScreenDialog: false,
           opaque: false,
@@ -320,7 +327,9 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
             authorId: state.pathParameters["authorId"] ?? "",
           ),
           key: const ValueKey(authorRoute),
-          title: "page_title.any".tr(),
+          title: "page_title.any".tr(
+            args: [extractAuthorName(state.routeState)],
+          ),
           type: BeamPageType.fadeTransition,
           fullScreenDialog: false,
           opaque: false,
@@ -332,7 +341,9 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
             referenceId: state.pathParameters["referenceId"] ?? "",
           ),
           key: const ValueKey(referenceRoute),
-          title: "page_title.any".tr(),
+          title: "page_title.any".tr(
+            args: [extractReferenceName(state.routeState)],
+          ),
           type: BeamPageType.fadeTransition,
           fullScreenDialog: false,
           opaque: false,
@@ -344,7 +355,9 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
             authorId: state.pathParameters["authorId"] ?? "",
           ),
           key: const ValueKey(authorQuotesRoute),
-          title: "page_title.any".tr(),
+          title: "page_title.author_quotes".tr(
+            args: [extractAuthorName(state.routeState)],
+          ),
           type: BeamPageType.fadeTransition,
           fullScreenDialog: false,
           opaque: false,
@@ -357,7 +370,9 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
             referenceId: state.pathParameters["referenceId"] ?? "",
           ),
           key: const ValueKey(referenceQuotesRoute),
-          title: "page_title.any".tr(),
+          title: "page_title.reference_quotes".tr(
+            args: [extractReferenceName(state.routeState)],
+          ),
           type: BeamPageType.fadeTransition,
           fullScreenDialog: false,
           opaque: false,
@@ -368,7 +383,7 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
             quoteId: state.pathParameters["quoteId"] ?? "",
           ),
           key: const ValueKey("quoteRoute"),
-          title: "page_title.any".tr(),
+          title: getQuotePageTitle(state.routeState),
           type: BeamPageType.fadeTransition,
           fullScreenDialog: false,
           opaque: false,
@@ -386,13 +401,32 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
     return map["listName"] ?? "";
   }
 
-  /// Extracts color's name from the route state.
+  /// Extract author name from route state.
+  String extractAuthorName(Object? routeState) {
+    return routeState is Map ? routeState["authorName"] ?? "" : "";
+  }
+
+  /// Extract reference name from route state.
+  String extractReferenceName(Object? routeState) {
+    return routeState is Map ? routeState["referenceName"] ?? "" : "";
+  }
+
+  /// Extract topic name from route state.
   String extractTopicName(Object? routeState) {
-    if (routeState == null) {
-      return "";
+    return routeState is Map ? routeState["topicName"] ?? "" : "";
+  }
+
+  /// Get quote page title from route state.
+  String getQuotePageTitle(Object? routeState) {
+    final String quoteName =
+        routeState is Map ? routeState["quoteName"] ?? "" : "";
+
+    if (quoteName.isEmpty) {
+      return "page_title.quote".tr();
     }
 
-    final Map<String, dynamic> map = routeState as Map<String, dynamic>;
-    return map["topicName"] ?? "";
+    return "page_title.any".tr(
+      args: [quoteName],
+    );
   }
 }

@@ -333,7 +333,12 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
   void onEditReference() {
     NavigationStateHelper.reference = _reference;
     final String suffix = "edit/reference/${_reference.id}";
-    Beamer.of(context).beamToNamed(getEditRoute(suffix));
+    Beamer.of(context).beamToNamed(
+      getEditRoute(suffix),
+      routeState: {
+        "referenceName": _reference.name,
+      },
+    );
   }
 
   /// Callback fired to open image viewer.
@@ -388,6 +393,9 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
           ":referenceId",
           _reference.id,
         ),
+        routeState: {
+          "referenceName": _reference.name,
+        },
       );
       return;
     }
@@ -397,6 +405,9 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
         ":referenceId",
         _reference.id,
       ),
+      routeState: {
+        "referenceName": _reference.name,
+      },
     );
   }
 

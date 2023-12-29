@@ -36,6 +36,8 @@ class SearchLocation extends BeamLocation<BeamState> {
 }
 
 class SearchContentLocation extends BeamLocation<BeamState> {
+  SearchContentLocation(BeamState state) : super(state.routeInformation);
+
   /// Main root value for this location.
   static const String route = "/s";
 
@@ -81,7 +83,7 @@ class SearchContentLocation extends BeamLocation<BeamState> {
           subjectName: extractSubjectName(state.routeState),
         ),
         key: ValueKey("$route-${extractQuery(state.routeState)}"),
-        title: "page_title.search".tr(),
+        title: getSearchPageTitle(state),
         type: BeamPageType.fadeTransition,
       ),
       if (state.pathPatternSegments.contains(authorRoute.split("/").last))
@@ -90,7 +92,9 @@ class SearchContentLocation extends BeamLocation<BeamState> {
             authorId: state.pathParameters["authorId"] ?? "",
           ),
           key: const ValueKey(authorRoute),
-          title: "page_title.any".tr(),
+          title: "page_title.any".tr(
+            args: [extractAuthorName(state.routeState)],
+          ),
           type: BeamPageType.fadeTransition,
           fullScreenDialog: false,
           opaque: false,
@@ -101,7 +105,9 @@ class SearchContentLocation extends BeamLocation<BeamState> {
             referenceId: state.pathParameters["referenceId"] ?? "",
           ),
           key: const ValueKey(referenceRoute),
-          title: "page_title.any".tr(),
+          title: "page_title.any".tr(
+            args: [extractReferenceName(state.routeState)],
+          ),
           type: BeamPageType.fadeTransition,
           fullScreenDialog: false,
           opaque: false,
@@ -113,7 +119,9 @@ class SearchContentLocation extends BeamLocation<BeamState> {
             authorId: state.pathParameters["authorId"] ?? "",
           ),
           key: const ValueKey(editAuthorRoute),
-          title: "page_title.any".tr(),
+          title: "page_title.edit_author".tr(
+            args: [extractAuthorName(state.routeState)],
+          ),
           type: BeamPageType.fadeTransition,
           fullScreenDialog: false,
           opaque: false,
@@ -125,7 +133,9 @@ class SearchContentLocation extends BeamLocation<BeamState> {
             referenceId: state.pathParameters["referenceId"] ?? "",
           ),
           key: const ValueKey(editReferenceRoute),
-          title: "page_title.any".tr(),
+          title: "page_title.edit_reference".tr(
+            args: [extractReferenceName(state.routeState)],
+          ),
           type: BeamPageType.fadeTransition,
           fullScreenDialog: false,
           opaque: false,
@@ -136,7 +146,7 @@ class SearchContentLocation extends BeamLocation<BeamState> {
             quoteId: state.pathParameters["quoteId"] ?? "",
           ),
           key: const ValueKey(quoteRoute),
-          title: "page_title.any".tr(),
+          title: getQuotePageTitle(state.routeState),
           type: BeamPageType.fadeTransition,
           fullScreenDialog: false,
           opaque: false,
@@ -144,6 +154,7 @@ class SearchContentLocation extends BeamLocation<BeamState> {
     ];
   }
 
+  /// Extract search query from route state.
   String extractQuery(Object? routeState) {
     if (routeState == null) {
       return "";
@@ -156,6 +167,7 @@ class SearchContentLocation extends BeamLocation<BeamState> {
     return "";
   }
 
+  /// Extract subject name (to search) from route state.
   String extractSubjectName(Object? routeState) {
     if (routeState == null) {
       return "";
@@ -166,5 +178,49 @@ class SearchContentLocation extends BeamLocation<BeamState> {
     }
 
     return "";
+  }
+
+  /// Extract author name from route state.
+  String extractAuthorName(Object? routeState) {
+    return routeState is Map ? routeState["authorName"] ?? "" : "";
+  }
+
+  /// Extract reference name from route state.
+  String extractReferenceName(Object? routeState) {
+    return routeState is Map ? routeState["referenceName"] ?? "" : "";
+  }
+
+  /// Extract topic name from route state.
+  String extractTopicName(Object? routeState) {
+    return routeState is Map ? routeState["topicName"] ?? "" : "";
+  }
+
+  /// Get quote page title from route state.
+  String getQuotePageTitle(Object? routeState) {
+    final String quoteName =
+        routeState is Map ? routeState["quoteName"] ?? "" : "";
+
+    if (quoteName.isEmpty) {
+      return "page_title.quote".tr();
+    }
+
+    return "page_title.any".tr(
+      args: [quoteName],
+    );
+  }
+
+  String getSearchPageTitle(BeamState state) {
+    if (state.routeState is! Map) {
+      return "page_title.search".tr();
+    }
+
+    final String subjectName = extractSubjectName(state.routeState);
+    if (subjectName.isEmpty) {
+      return "page_title.search".tr();
+    }
+
+    return "page_title.search_subject".tr(
+      args: [subjectName],
+    );
   }
 }

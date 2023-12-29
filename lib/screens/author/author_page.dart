@@ -333,7 +333,12 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
   void onEditAuthor() {
     NavigationStateHelper.author = _author;
     final String suffix = "edit/author/${_author.id}";
-    Beamer.of(context).beamToNamed(getEditRoute(suffix));
+    Beamer.of(context).beamToNamed(
+      getEditRoute(suffix),
+      routeState: {
+        "authorName": _author.name,
+      },
+    );
   }
 
   /// Callback fired when the author name is tapped.
@@ -347,7 +352,8 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
       return;
     }
 
-    final ImageProvider imageProvider = Image.network(_author.urls.image).image;
+    final Image imageNetwork = Image.network(_author.urls.image);
+    final ImageProvider imageProvider = imageNetwork.image;
 
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -384,20 +390,24 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
 
     if (hasDashboard) {
       beamer.beamToNamed(
-        DashboardContentLocation.authorQuotesRoute.replaceFirst(
-          ":authorId",
-          _author.id,
-        ),
-      );
+          DashboardContentLocation.authorQuotesRoute.replaceFirst(
+            ":authorId",
+            _author.id,
+          ),
+          routeState: {
+            "authorName": _author.name,
+          });
       return;
     }
 
     beamer.beamToNamed(
-      HomeContentLocation.authorQuotesRoute.replaceFirst(
-        ":authorId",
-        _author.id,
-      ),
-    );
+        HomeContentLocation.authorQuotesRoute.replaceFirst(
+          ":authorId",
+          _author.id,
+        ),
+        routeState: {
+          "authorName": _author.name,
+        });
   }
 
   /// Callback fired to toggle author metadata widget size.
