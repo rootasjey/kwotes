@@ -153,6 +153,11 @@ class ContextMenuComponents {
     void Function(Quote quote)? onShareText,
     String userId = "",
   }) {
+    final bool canShare =
+        onShareImage != null || onShareLink != null || onShareText != null;
+    final bool showSeparator =
+        authenticated || onChangeLanguage != null || canShare;
+
     return Menu(children: [
       MenuAction(
         callback: () => onCopyQuote?.call(quote),
@@ -164,7 +169,7 @@ class ContextMenuComponents {
         title: "quote.copy.link".tr(),
         image: MenuImage.icon(TablerIcons.link),
       ),
-      MenuSeparator(),
+      if (showSeparator) MenuSeparator(),
       if (authenticated)
         addToList(
           context,
@@ -178,7 +183,7 @@ class ContextMenuComponents {
           quote: quote,
           onChangeLanguage: onChangeLanguage,
         ),
-      if (onShareImage != null || onShareLink != null || onShareText != null)
+      if (canShare)
         share(
           context,
           quote: quote,
