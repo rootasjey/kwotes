@@ -64,10 +64,10 @@ class TopicCard extends StatefulWidget {
 
 class _TopicCardState extends State<TopicCard> {
   /// Icon color.
-  Color? _iconColor = Colors.transparent;
+  Color? _iconColor = Colors.black;
 
   /// Icon color on hover.
-  Color? _iconHoverColor = Colors.transparent;
+  Color? _iconHoverColor = Colors.black;
 
   /// Card's elevation on start.
   double _cardElevation = 0.0;

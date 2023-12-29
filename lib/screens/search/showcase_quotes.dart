@@ -63,7 +63,6 @@ class ShowcaseQuotes extends StatelessWidget {
                   return TopicCard(
                     topic: topicColor,
                     backgroundColor: backgroundColor,
-                    foregroundColor: foregroundColor,
                     onTap: onTapTopicColor,
                     size: isMobileSize
                         ? const Size(90.0, 90.0)
