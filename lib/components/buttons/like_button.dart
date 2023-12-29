@@ -1,7 +1,6 @@
-import "dart:io";
-
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/globals/utils.dart";
 import "package:rive/rive.dart";
 
 class LikeButton extends StatefulWidget {
@@ -58,7 +57,7 @@ class _LikeButtonState extends State<LikeButton> {
 
     // It seems that the button is not fully centered
     // on android. This fixes it.
-    if (Platform.isAndroid) {
+    if (Utils.graphic.isAndroid()) {
       leftPosition = 8.6;
       topPosition = 5.0;
     }

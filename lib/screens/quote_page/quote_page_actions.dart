@@ -1,9 +1,8 @@
-import "dart:io";
-
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/buttons/like_button.dart";
+import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/quote.dart";
 import "package:unicons/unicons.dart";
 
@@ -64,7 +63,7 @@ class QuotePageActions extends StatelessWidget {
 
     // It seems that the button is not fully centered
     // on android. This fixes it.
-    final EdgeInsets likeButtonMargin = Platform.isAndroid
+    final EdgeInsets likeButtonMargin = Utils.graphic.isAndroid()
         ? const EdgeInsets.only(top: 6.0)
         : const EdgeInsets.only(top: 2.0);
 

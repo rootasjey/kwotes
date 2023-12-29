@@ -1,6 +1,5 @@
-import "dart:io";
-
 import "package:adaptive_theme/adaptive_theme.dart";
+import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
@@ -10,6 +9,9 @@ import "package:kwotes/components/buttons/menu_navigation_item.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/globals/utils/passage.dart";
+import "package:kwotes/router/locations/dashboard_location.dart";
+import "package:kwotes/router/locations/home_location.dart";
+import "package:kwotes/router/locations/search_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/dashboard/dashboard_navigation_page.dart";
 import "package:kwotes/screens/home/home_navigation_page.dart";
@@ -223,7 +225,7 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
 
   /// Adapt UI overlay style on Android and iOS.
   void adaptUiOverlayStyle() {
-    if (!Platform.isAndroid && !Platform.isIOS) {
+    if (!Utils.graphic.isMobile()) {
       updateFrameBorderColor();
       return;
     }
@@ -316,6 +318,30 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
     setState(() => _currentIndex = index);
     Passage.homePageTabIndex = index;
     Utils.vault.setHomePageTabIndex(index);
+    // updateBrowserUrl(index);
+  }
+
+  /// Update browser url according to selected bottom bar item.
+  void updateBrowserUrl(int index) {
+    switch (index) {
+      case 0:
+        Beamer.of(context).updateRouteInformation(
+          RouteInformation(uri: Uri(path: HomeContentLocation.route)),
+        );
+        break;
+      case 1:
+        Beamer.of(context).updateRouteInformation(
+          RouteInformation(uri: Uri(path: SearchLocation.route)),
+        );
+        break;
+      case 2:
+        Beamer.of(context).updateRouteInformation(
+          RouteInformation(uri: Uri(path: DashboardLocation.route)),
+        );
+        break;
+      default:
+        break;
+    }
   }
 
   /// Update frame border color according to last saved style.

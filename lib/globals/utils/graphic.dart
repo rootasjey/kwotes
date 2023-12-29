@@ -1,5 +1,8 @@
+import "dart:io";
+
 import "package:bottom_sheet/bottom_sheet.dart";
 import "package:easy_localization/easy_localization.dart";
+import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/dialogs/add_to_list/add_to_list_dialog.dart";
@@ -257,6 +260,24 @@ class Graphic {
     }
 
     return null;
+  }
+
+  /// Return true if the current platform is Android.
+  bool isAndroid() {
+    if (kIsWeb) {
+      return false;
+    }
+
+    return Platform.isAndroid;
+  }
+
+  /// Return true if the current platform is mobile (e.g. Android or iOS).
+  bool isMobile() {
+    if (kIsWeb) {
+      return false;
+    }
+
+    return Platform.isAndroid || Platform.isIOS;
   }
 
   /// Show a dialog or a modal bottom sheet according to `isMobileSize` value.

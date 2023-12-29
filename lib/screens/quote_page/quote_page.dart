@@ -380,7 +380,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   /// Get label value according to the current platform.
   /// e.g. "Share" for Android, iOS. "Download" for other platforms.
   String getFabLabelValue() {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (Utils.graphic.isMobile()) {
       return "quote.share.image".tr();
     }
 
@@ -390,7 +390,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   /// Get icon data according to the current platform.
   /// e.g. "Share" for Android, iOS. "Download" for other platforms.
   IconData getFabIconData() {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (Utils.graphic.isMobile()) {
       return TablerIcons.share;
     }
 
@@ -515,7 +515,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
         return;
       }
 
-      if (Platform.isAndroid || Platform.isIOS) {
+      if (Utils.graphic.isMobile()) {
         Share.shareXFiles(
           [
             XFile.fromData(
@@ -707,7 +707,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
       return;
     }
 
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (Utils.graphic.isMobile()) {
       Share.shareUri(Uri.parse("${Constants.quoteUrl}/${_quote.id}"));
       return;
     }
@@ -734,7 +734,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
       textToShare += " — ${quote.reference.name}";
     }
 
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (Utils.graphic.isMobile()) {
       final RenderBox? box = context.findRenderObject() as RenderBox?;
       Share.share(
         textToShare,

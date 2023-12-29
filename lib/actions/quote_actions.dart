@@ -132,7 +132,7 @@ class QuoteActions {
         return false;
       }
 
-      if (Platform.isAndroid || Platform.isIOS) {
+      if (Utils.graphic.isMobile()) {
         Share.shareXFiles(
           [
             XFile.fromData(
@@ -176,7 +176,7 @@ class QuoteActions {
   /// Get label value according to the current platform.
   /// e.g. "Share" for Android, iOS. "Download" for other platforms.
   static String getShareFabLabelValue() {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (Utils.graphic.isMobile()) {
       return "quote.share.image".tr();
     }
 
@@ -186,7 +186,7 @@ class QuoteActions {
   /// Get icon data according to the current platform.
   /// e.g. "Share" for Android, iOS. "Download" for other platforms.
   static IconData getShareFabIconData() {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (Utils.graphic.isMobile()) {
       return TablerIcons.share;
     }
 
@@ -297,7 +297,7 @@ class QuoteActions {
       return;
     }
 
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (Utils.graphic.isMobile()) {
       Share.shareUri(Uri.parse("${Constants.quoteUrl}/${quote.id}"));
       return;
     }
@@ -324,7 +324,7 @@ class QuoteActions {
       textToShare += " — ${quote.reference.name}";
     }
 
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (Utils.graphic.isMobile()) {
       final RenderBox? box = context.findRenderObject() as RenderBox?;
       Share.share(
         textToShare,
