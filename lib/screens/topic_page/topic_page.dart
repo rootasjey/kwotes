@@ -232,7 +232,9 @@ class _TopicPageState extends State<TopicPage> with UiLoggy {
   void onTapQuote(Quote quote) {
     NavigationStateHelper.lastTopicName = widget.topic;
     Beamer.of(context).beamToNamed(
-      HomeContentLocation.topicQuoteRoute.replaceFirst(":quoteId", quote.id),
+      HomeContentLocation.topicQuoteRoute
+          .replaceFirst(":topicName", widget.topic)
+          .replaceFirst(":quoteId", quote.id),
     );
   }
 
