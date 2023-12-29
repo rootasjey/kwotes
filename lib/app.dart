@@ -77,7 +77,7 @@ class _AppState extends State<App> {
       child: AdaptiveTheme(
         light: lightTheme,
         dark: darkTheme,
-        initial: widget.savedThemeMode ?? AdaptiveThemeMode.light,
+        initial: widget.savedThemeMode ?? AdaptiveThemeMode.system,
         builder: (ThemeData theme, ThemeData darkTheme) {
           return MaterialApp.router(
             title: Constants.appName,

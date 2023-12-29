@@ -85,7 +85,6 @@ dependencies:
   timer_snackbar: ^0.0.3
   unicons: ^2.1.1
   url_launcher: ^6.1.12
-  url_strategy: ^0.2.0
   verbal_expressions: ^1.0.0
   window_manager: ^0.3.5
 

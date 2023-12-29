@@ -1,6 +1,7 @@
 import "dart:io";
 
 import "package:adaptive_theme/adaptive_theme.dart";
+import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:firebase_core/firebase_core.dart";
 import "package:flutter/foundation.dart";
@@ -11,7 +12,6 @@ import "package:flutter_langdetect/flutter_langdetect.dart" as langdetect;
 import "package:kwotes/globals/utils/passage.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:loggy/loggy.dart";
-import "package:url_strategy/url_strategy.dart";
 import "package:window_manager/window_manager.dart";
 
 import "package:kwotes/app.dart";
@@ -31,7 +31,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  setPathUrlStrategy();
+  Beamer.setPathUrlStrategy();
   await EasyLocalization.ensureInitialized();
   await dotenv.load(fileName: "var.env");
 
