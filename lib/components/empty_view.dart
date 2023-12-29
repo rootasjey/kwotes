@@ -305,20 +305,23 @@ class EmptyView extends StatelessWidget {
                     ),
                   ),
                 ),
-              ColoredTextButton(
-                onPressed: onReinitializeSearch,
-                textValue: "search.reinitialize".tr(),
-                textAlign: TextAlign.center,
-                margin: const EdgeInsets.only(top: 24.0),
-                icon: Icon(
-                  TablerIcons.refresh,
-                  color: accentColor,
-                ),
-                style: TextButton.styleFrom(
-                  backgroundColor: accentColor?.withOpacity(0.2),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 12.0,
-                    horizontal: 24.0,
+              Center(
+                child: ColoredTextButton(
+                  onPressed: onReinitializeSearch,
+                  textValue: "search.reinitialize".tr(),
+                  textAlign: TextAlign.center,
+                  textFlex: 0,
+                  margin: const EdgeInsets.only(top: 24.0),
+                  icon: Icon(
+                    TablerIcons.refresh,
+                    color: accentColor,
+                  ),
+                  style: TextButton.styleFrom(
+                    backgroundColor: accentColor?.withOpacity(0.2),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12.0,
+                      horizontal: 24.0,
+                    ),
                   ),
                 ),
               ),
