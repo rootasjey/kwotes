@@ -31,9 +31,12 @@ class SearchReferenceResultsPage extends StatelessWidget {
           runSpacing: 16.0,
           children: referenceResults.map((Reference reference) {
             return TextButton(
-              onPressed: () {
-                onTapReference?.call(reference);
-              },
+              onPressed: () => onTapReference?.call(reference),
+              style: TextButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+              ),
               child: Text(
                 reference.name,
                 style: Utils.calligraphy.body(

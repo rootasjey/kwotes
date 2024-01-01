@@ -31,9 +31,12 @@ class SearchAuthorResultsPage extends StatelessWidget {
           runSpacing: 16.0,
           children: authorResults.map((Author author) {
             return TextButton(
-              onPressed: () {
-                onTapAuthor?.call(author);
-              },
+              onPressed: () => onTapAuthor?.call(author),
+              style: TextButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+              ),
               child: Text(
                 author.name,
                 style: Utils.calligraphy.body(
