@@ -1117,6 +1117,14 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     final SnackBarBehavior behavior =
         isMobileSize ? SnackBarBehavior.fixed : SnackBarBehavior.floating;
 
+    bool isInValidation = false;
+    if (NavigationStateHelper.quote is DraftQuote) {
+      final DraftQuote draft = NavigationStateHelper.quote as DraftQuote;
+      if (draft.inValidation) {
+        isInValidation = true;
+      }
+    }
+
     Utils.graphic.showSnackbarWithCustomText(
       context,
       behavior: behavior,
@@ -1124,6 +1132,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
       showCloseIcon: !isMobileSize,
       text: SnackbarDraft(
         quote: NavigationStateHelper.quote,
+        isInValidation: isInValidation,
         isMobileSize: isMobileSize,
       ),
       shape: RoundedRectangleBorder(
@@ -1500,9 +1509,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
       return;
     }
 
-    setState(() {
-      _pageState = EnumPageState.submittingQuote;
-    });
+    setState(() => _pageState = EnumPageState.submittingQuote);
 
     try {
       await _docRef
@@ -1520,9 +1527,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
       Utils.passage.back(context);
     } catch (error) {
       loggy.error(error);
-      setState(() {
-        _pageState = EnumPageState.idle;
-      });
+      setState(() => _pageState = EnumPageState.idle);
 
       Utils.graphic.showSnackbar(
         context,
@@ -1532,15 +1537,9 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
   }
 
   void showPageTitle() {
-    // setState(() {
-    //   _showPageTitleTooltip = true;
-    // });
-
     _timerPageTitle?.cancel();
     _timerPageTitle = Timer(const Duration(seconds: 1), () {
-      setState(() {
-        _showPageTitleTooltip = false;
-      });
+      setState(() => _showPageTitleTooltip = false);
     });
   }
 

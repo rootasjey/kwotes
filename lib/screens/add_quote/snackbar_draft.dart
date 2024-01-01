@@ -17,8 +17,12 @@ class SnackbarDraft extends StatelessWidget {
   const SnackbarDraft({
     super.key,
     required this.quote,
+    this.isInValidation = false,
     this.isMobileSize = false,
   });
+
+  /// Don't display the "submit" button if true.
+  final bool isInValidation;
 
   /// Adapt user interface to moile size if true.
   final bool isMobileSize;
@@ -47,9 +51,10 @@ class SnackbarDraft extends StatelessWidget {
               TextSpan(
                 text: "quote.save.draft.success".tr(),
                 children: [
-                  TextSpan(
-                    text: " ${"quote.save.draft.validation".tr()}",
-                  ),
+                  if (!isInValidation)
+                    TextSpan(
+                      text: " ${"quote.save.draft.validation".tr()}",
+                    ),
                 ],
               ),
               style: Utils.calligraphy.body(
@@ -65,39 +70,40 @@ class SnackbarDraft extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: TextButton(
-              onPressed: () {
-                QuoteActions.proposeQuote(
-                  quote: quote,
-                  userId: userFirestoreSignal.value.id,
-                );
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              },
-              style: TextButton.styleFrom(
-                  textStyle: const TextStyle(
-                fontSize: 16.0,
-              )),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    "quote.submit.name".tr(),
-                    style: Utils.calligraphy.body(
-                      textStyle: const TextStyle(
-                        fontWeight: FontWeight.w500,
+          if (!isInValidation)
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: TextButton(
+                onPressed: () {
+                  QuoteActions.proposeQuote(
+                    quote: quote,
+                    userId: userFirestoreSignal.value.id,
+                  );
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                },
+                style: TextButton.styleFrom(
+                    textStyle: const TextStyle(
+                  fontSize: 16.0,
+                )),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "quote.submit.name".tr(),
+                      style: Utils.calligraphy.body(
+                        textStyle: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 8.0),
-                    child: Icon(TablerIcons.send),
-                  ),
-                ],
+                    const Padding(
+                      padding: EdgeInsets.only(left: 8.0),
+                      child: Icon(TablerIcons.send),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
         ],
       ),
     );
