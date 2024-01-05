@@ -16,6 +16,7 @@ class HeroPhotoViewRouteWrapper extends StatefulWidget {
     this.minScale = 0.3,
     this.maxScale = 2.0,
     this.heroTag = "image_hero",
+    this.initScale,
   });
 
   /// The image to display.
@@ -29,6 +30,8 @@ class HeroPhotoViewRouteWrapper extends StatefulWidget {
 
   /// Maximum scale.
   final dynamic maxScale;
+
+  final double? initScale;
 
   /// Image hero tag for transition.
   final Object heroTag;
@@ -63,6 +66,7 @@ class _HeroPhotoViewRouteWrapperState extends State<HeroPhotoViewRouteWrapper> {
   @override
   void initState() {
     super.initState();
+    _scale = widget.initScale ?? _scale;
 
     _photoViewController.outputStateStream.listen((event) {
       final double scale = event.scale ?? 1.0;

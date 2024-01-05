@@ -74,8 +74,8 @@ class DarkElevatedButton extends StatelessWidget {
     required IconData iconData,
     required String labelValue,
     Function()? onPressed,
-    Color? background,
-    Color? foreground,
+    Color? background = Colors.black,
+    Color? foreground = Colors.white,
     double? elevation,
     EdgeInsets margin = EdgeInsets.zero,
     Size? minimumSize = const Size(200.0, 60.0),
@@ -107,6 +107,9 @@ class DarkElevatedButton extends StatelessWidget {
           elevation: elevation,
           backgroundColor: background ?? Constants.colors.clairPink,
           minimumSize: minimumSize,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4.0),
+          ),
         ),
       ),
     );
