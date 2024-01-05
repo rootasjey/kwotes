@@ -5,8 +5,8 @@ import "package:kwotes/components/texts/outlined_text_field.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 
-class EmailPageBody extends StatelessWidget {
-  const EmailPageBody({
+class UpdateEmailPageBody extends StatelessWidget {
+  const UpdateEmailPageBody({
     super.key,
     required this.emailController,
     required this.passwordController,
@@ -140,24 +140,21 @@ class EmailPageBody extends StatelessWidget {
               ),
               child: SizedBox(
                 width: 320.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(14.0),
-                      child: Text(
-                        "email.update".tr().toUpperCase(),
-                        overflow: TextOverflow.ellipsis,
-                        style: Utils.calligraphy.body(
-                          textStyle: const TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
+                child: Padding(
+                  padding: const EdgeInsets.all(14.0),
+                  child: Text(
+                    "email.update".tr().toUpperCase(),
+                    softWrap: true,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    style: Utils.calligraphy.body(
+                      textStyle: const TextStyle(
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),

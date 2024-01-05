@@ -4,37 +4,33 @@ import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:kwotes/actions/user_actions.dart";
-import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/home_location.dart";
-import "package:kwotes/screens/settings/email/email_page_body.dart";
-import "package:kwotes/screens/settings/email/email_page_header.dart";
-import "package:kwotes/types/action_return_value.dart";
+import "package:kwotes/screens/settings/username/update_username_page_body.dart";
+import "package:kwotes/screens/settings/username/update_username_page_header.dart";
 import "package:kwotes/types/cloud_fun_error.dart";
+import "package:kwotes/types/cloud_fun_response.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:loggy/loggy.dart";
 
 /// Update username page.
-class EmailPage extends StatefulWidget {
-  const EmailPage({super.key});
+class UpdateUsernamePage extends StatefulWidget {
+  const UpdateUsernamePage({super.key});
 
   @override
-  State<EmailPage> createState() => _EmailPageState();
+  State<UpdateUsernamePage> createState() => _UpdateUsernamePageState();
 }
 
-class _EmailPageState extends State<EmailPage> with UiLoggy {
-  /// True if the email entered is available.
-  bool _isEmailAvailable = true;
+class _UpdateUsernamePageState extends State<UpdateUsernamePage> with UiLoggy {
+  /// True if the username entered is available.
+  bool _isNameAvailable = true;
 
   /// Password focus node.
-  final _passwordFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
 
-  /// Email text controller.
-  final _emailTextController = TextEditingController();
-
-  /// Password text controller.
-  final _passwordTextController = TextEditingController();
+  /// Username text controller.
+  final TextEditingController _usernameTextController = TextEditingController();
 
   /// Page's state (e.g. loading, idle, ...).
   EnumPageState _pageState = EnumPageState.idle;
@@ -42,27 +38,20 @@ class _EmailPageState extends State<EmailPage> with UiLoggy {
   /// Error message.
   String _errorMessage = "";
 
-  /// Password error message.
-  String _passwordErrorMessage = "";
-
-  /// Debounce timer for email check.
-  Timer? _emailCheckTimer;
+  /// Timer to debounce username check.
+  Timer? _usernameCheckTimer;
 
   @override
   void dispose() {
-    _emailTextController.dispose();
-    _passwordTextController.dispose();
+    _usernameTextController.dispose();
     _passwordFocusNode.dispose();
-    _emailCheckTimer?.cancel();
+    _usernameCheckTimer?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
-    final EdgeInsets margin = isMobileSize
-        ? const EdgeInsets.only(left: 24.0)
-        : const EdgeInsets.only(left: 48.0);
 
     return BasicShortcuts(
       autofocus: false,
@@ -70,25 +59,18 @@ class _EmailPageState extends State<EmailPage> with UiLoggy {
       child: Scaffold(
         body: CustomScrollView(
           slivers: [
-            ApplicationBar(
-              isMobileSize: isMobileSize,
-            ),
-            EmailPageHeader(
+            UpdateUsernamePageHeader(
               isMobileSize: isMobileSize,
               onTapLeftPartHeader: onTapLeftPartHeader,
             ),
-            EmailPageBody(
-              margin: margin,
+            UpdateUsernamePageBody(
               isMobileSize: isMobileSize,
-              emailController: _emailTextController,
+              usernameController: _usernameTextController,
               passwordFocusNode: _passwordFocusNode,
               pageState: _pageState,
               errorMessage: _errorMessage,
-              onEmailChanged: onEmailChanged,
-              onTapUpdateButton: tryUpdateEmail,
-              passwordController: _passwordTextController,
-              passwordErrorMessage: _passwordErrorMessage,
-              onPasswordChanged: onPasswordChanged,
+              onUsernameChanged: onUsernameChanged,
+              onTapUpdateButton: tryUpdateUsername,
             ),
           ],
         ),
@@ -97,7 +79,7 @@ class _EmailPageState extends State<EmailPage> with UiLoggy {
   }
 
   /// Return true if the username entered is in correct format.
-  bool isEmailInCorrectFormat(String text) {
+  bool isUsernameInCorrectFormat(String text) {
     if (text.isEmpty) {
       _errorMessage = "input.error.empty".tr();
       return false;
@@ -108,20 +90,29 @@ class _EmailPageState extends State<EmailPage> with UiLoggy {
       return false;
     }
 
-    final bool isWellFormatted = UserActions.checkEmailFormat(text);
+    final bool isWellFormatted = UserActions.checkUsernameFormat(text);
 
     if (!isWellFormatted) {
-      _errorMessage = "input.error.email_not_valid".tr();
+      _errorMessage = "input.error.alphanumerical".tr();
       return false;
     }
 
     return true;
   }
 
-  /// Called when the email text field changes.
-  /// Check for email availability.
-  void onEmailChanged(String newEmail) async {
-    final bool isOk = isEmailInCorrectFormat(newEmail);
+  void onTapLeftPartHeader() {
+    if (context.canBeamBack) {
+      context.beamBack();
+      return;
+    }
+
+    Beamer.of(context, root: true).beamToNamed(HomeLocation.route);
+  }
+
+  /// Called when the username text field changes.
+  /// Check for username availability.
+  void onUsernameChanged(String newUsername) async {
+    final bool isOk = isUsernameInCorrectFormat(newUsername);
     if (!isOk) {
       setState(() {});
       return;
@@ -132,11 +123,12 @@ class _EmailPageState extends State<EmailPage> with UiLoggy {
       _errorMessage = "";
     });
 
-    _emailCheckTimer?.cancel();
-    _emailCheckTimer = Timer(const Duration(seconds: 1), () async {
-      _isEmailAvailable = await UserActions.checkEmailAvailability(newEmail);
+    _usernameCheckTimer?.cancel();
+    _usernameCheckTimer = Timer(const Duration(seconds: 1), () async {
+      _isNameAvailable =
+          await UserActions.checkUsernameAvailability(newUsername);
 
-      if (!_isEmailAvailable) {
+      if (!_isNameAvailable) {
         setState(() {
           _errorMessage = "input.error.username_not_available".tr();
           _pageState = EnumPageState.idle;
@@ -152,25 +144,8 @@ class _EmailPageState extends State<EmailPage> with UiLoggy {
     });
   }
 
-  void onTapLeftPartHeader() {
-    if (context.canBeamBack) {
-      context.beamBack();
-      return;
-    }
-
-    Beamer.of(context, root: true).beamToNamed(HomeLocation.route);
-  }
-
-  void onPasswordChanged(String value) {
-    if (value.isEmpty) {
-      setState(() {
-        _passwordErrorMessage = "input.error.password_required".tr();
-      });
-    }
-  }
-
-  void tryUpdateEmail() async {
-    if (!isEmailInCorrectFormat(_emailTextController.text)) {
+  void tryUpdateUsername() async {
+    if (!isUsernameInCorrectFormat(_usernameTextController.text)) {
       setState(() {});
       return;
     }
@@ -181,11 +156,11 @@ class _EmailPageState extends State<EmailPage> with UiLoggy {
     });
 
     try {
-      _isEmailAvailable = await UserActions.checkEmailAvailability(
-        _emailTextController.text,
+      _isNameAvailable = await UserActions.checkUsernameAvailability(
+        _usernameTextController.text,
       );
 
-      if (!_isEmailAvailable) {
+      if (!_isNameAvailable) {
         setState(() {
           _pageState = EnumPageState.idle;
           _errorMessage = "input.error.username_not_available".tr();
@@ -199,14 +174,13 @@ class _EmailPageState extends State<EmailPage> with UiLoggy {
         return;
       }
 
-      final ActionReturnValue emailUpdateResp = await Utils.state.updateEmail(
-        password: _passwordTextController.text,
-        newEmail: _emailTextController.text,
+      final CloudFunResponse usernameUpdateResp =
+          await Utils.state.updateUsername(
+        _usernameTextController.text,
       );
 
-      if (!emailUpdateResp.success) {
-        final CloudFunError? exception =
-            emailUpdateResp.error as CloudFunError?;
+      if (!usernameUpdateResp.success) {
+        final CloudFunError? exception = usernameUpdateResp.error;
 
         setState(() {
           _pageState = EnumPageState.idle;
@@ -224,7 +198,7 @@ class _EmailPageState extends State<EmailPage> with UiLoggy {
 
       setState(() {
         _pageState = EnumPageState.idle;
-        _emailTextController.clear();
+        _usernameTextController.clear();
       });
 
       // stateUser.setUsername(currentUsername);

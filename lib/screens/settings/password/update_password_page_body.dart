@@ -5,8 +5,8 @@ import "package:kwotes/components/texts/outlined_text_field.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 
-class PasswordPageBody extends StatelessWidget {
-  const PasswordPageBody({
+class UpdatePasswordPageBody extends StatelessWidget {
+  const UpdatePasswordPageBody({
     super.key,
     required this.currentPasswordController,
     required this.newPasswordController,
@@ -71,15 +71,20 @@ class PasswordPageBody extends StatelessWidget {
                     onChanged: onCurrentPasswordChanged,
                     textInputAction: TextInputAction.next,
                   ),
-                  Opacity(
-                    opacity: currentPasswordErrorMessage.isEmpty ? 0.0 : 1.0,
-                    child: Text(
-                      currentPasswordErrorMessage,
-                      style: Utils.calligraphy.body(
-                        textStyle: TextStyle(
-                          color: secondaryHeaderColor,
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w600,
+                  Padding(
+                    padding: currentPasswordErrorMessage.isEmpty
+                        ? EdgeInsets.zero
+                        : const EdgeInsets.only(bottom: 6.0),
+                    child: Opacity(
+                      opacity: currentPasswordErrorMessage.isEmpty ? 0.0 : 1.0,
+                      child: Text(
+                        currentPasswordErrorMessage,
+                        style: Utils.calligraphy.body(
+                          textStyle: TextStyle(
+                            color: secondaryHeaderColor,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ),

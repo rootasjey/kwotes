@@ -2,6 +2,7 @@ import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
+import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/signin_location.dart";
 import "package:kwotes/screens/author/author_page.dart";
 import "package:kwotes/screens/author/author_quotes_page.dart";
@@ -13,6 +14,7 @@ import "package:kwotes/screens/dashboard/dashboard_navigation_page.dart";
 import "package:kwotes/screens/dashboard/dashboard_welcome_page.dart";
 import "package:kwotes/screens/drafts/drafts_page.dart";
 import "package:kwotes/screens/favourites/favourites_page.dart";
+import "package:kwotes/screens/forgot_password/forgot_password_page.dart";
 import "package:kwotes/screens/in_validation/in_validation_page.dart";
 import "package:kwotes/screens/list/list_page.dart";
 import "package:kwotes/screens/lists/lists_page.dart";
@@ -24,10 +26,12 @@ import "package:kwotes/screens/reference/reference_quotes_page.dart";
 import "package:kwotes/screens/settings/about/terms_of_service_page.dart";
 import "package:kwotes/screens/settings/about/the_purpose_page.dart";
 import "package:kwotes/screens/settings/delete_account/delete_account_page.dart";
-import "package:kwotes/screens/settings/email/email_page.dart";
-import "package:kwotes/screens/settings/password/password_page.dart";
+import "package:kwotes/screens/settings/email/update_email_page.dart";
+import "package:kwotes/screens/settings/password/update_password_page.dart";
 import "package:kwotes/screens/settings/settings_page.dart";
-import "package:kwotes/screens/settings/username/username_page.dart";
+import "package:kwotes/screens/settings/username/update_username_page.dart";
+import "package:kwotes/screens/signin/signin_page.dart";
+import "package:kwotes/screens/signup/signup_page.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 
@@ -73,6 +77,15 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
 
   /// Main root value for this location.
   static const String route = "/d";
+
+  /// Signin route location.
+  static const String signinRoute = "$route/signin";
+
+  /// Signup route location.
+  static const String signupRoute = "$route/signup";
+
+  /// Forgot password route location.
+  static const String forgotPasswordRoute = "$route/forgot-password";
 
   /// Add quote route location.
   static const String addQuoteRoute = "$route/add-quote";
@@ -146,12 +159,28 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
         settingsRoute,
         settingsTosRoute,
         settingsThePurposeRoute,
+        signinRoute,
+        signupRoute,
+        forgotPasswordRoute,
         publishedQuoteRoute,
         updateEmailRoute,
         updatePasswordRoute,
         updateUsernameRoute,
       ];
 
+  @override
+  List<BeamGuard> get guards => [
+        BeamGuard(
+          pathPatterns: [signinRoute, signupRoute, forgotPasswordRoute],
+          guardNonMatching: true,
+          beamToNamed: (origin, target) => signinRoute,
+          check: (BuildContext context, location) {
+            return Utils.state.userAuthenticated;
+          },
+        )
+      ];
+
+  @override
   @override
   List<BeamPage> buildPages(BuildContext context, BeamState state) {
     return [
@@ -161,6 +190,28 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
         title: "page_title.dashboard".tr(),
         type: BeamPageType.fadeTransition,
       ),
+      if (state.pathPatternSegments.contains(signinRoute.split("/").last))
+        BeamPage(
+          child: const SigninPage(),
+          key: const ValueKey(signinRoute),
+          title: "page_title.signin".tr(),
+          type: BeamPageType.fadeTransition,
+        ),
+      if (state.pathPatternSegments.contains(signupRoute.split("/").last))
+        BeamPage(
+          child: const SignupPage(),
+          key: const ValueKey(signupRoute),
+          title: "page_title.signup".tr(),
+          type: BeamPageType.fadeTransition,
+        ),
+      if (state.pathPatternSegments
+          .contains(forgotPasswordRoute.split("/").last))
+        BeamPage(
+          child: const ForgotPasswordPage(),
+          key: const ValueKey(forgotPasswordRoute),
+          title: "page_title.forgot_password".tr(),
+          type: BeamPageType.fadeTransition,
+        ),
       if (state.pathPatternSegments.contains(favouritesRoute.split("/").last))
         BeamPage(
           child: const FavouritesPage(),
@@ -217,7 +268,7 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
       if (state.pathPatternSegments.contains(settingsRoute.split("/").last) &&
           state.pathPatternSegments.contains(updateEmailRoute.split("/").last))
         BeamPage(
-          child: const EmailPage(),
+          child: const UpdateEmailPage(),
           key: const ValueKey(updateEmailRoute),
           title: "page_title.update_email".tr(),
           type: BeamPageType.fadeTransition,
@@ -226,7 +277,7 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
           state.pathPatternSegments
               .contains(updatePasswordRoute.split("/").last))
         BeamPage(
-          child: const PasswordPage(),
+          child: const UpdatePasswordPage(),
           key: const ValueKey(updatePasswordRoute),
           title: "page_title.update_password".tr(),
           type: BeamPageType.fadeTransition,
@@ -235,7 +286,7 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
           state.pathPatternSegments
               .contains(updateUsernameRoute.split("/").last))
         BeamPage(
-          child: const UsernamePage(),
+          child: const UpdateUsernamePage(),
           key: const ValueKey(updateUsernameRoute),
           title: "page_title.update_username".tr(),
           type: BeamPageType.fadeTransition,

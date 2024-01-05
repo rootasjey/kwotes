@@ -1,8 +1,6 @@
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:kwotes/components/application_bar.dart";
-import "package:kwotes/components/basic_shortcuts.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/home_location.dart";
@@ -11,7 +9,6 @@ import "package:kwotes/screens/settings/delete_account/delete_account_page_heade
 import "package:kwotes/types/action_return_value.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:loggy/loggy.dart";
-import "package:timer_snackbar/timer_snackbar.dart";
 
 /// Delete account page.
 class DeleteAccountPage extends StatefulWidget {
@@ -23,7 +20,7 @@ class DeleteAccountPage extends StatefulWidget {
 
 class _DeleteAccountPageState extends State<DeleteAccountPage> with UiLoggy {
   /// Password controller.
-  final _passwordTextController = TextEditingController();
+  final TextEditingController _passwordTextController = TextEditingController();
 
   /// Page's state (e.g. loading, idle, ...).
   EnumPageState _pageState = EnumPageState.idle;
@@ -44,29 +41,22 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> with UiLoggy {
       withGoodContrast: true,
     );
 
-    return BasicShortcuts(
-      autofocus: false,
-      onCancel: context.beamBack,
-      child: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            ApplicationBar(
-              isMobileSize: isMobileSize,
-            ),
-            DeleteAccountPageHeader(
-              isMobileSize: isMobileSize,
-              onTapLeftPartHeader: onTapLeftPartHeader,
-              randomColor: randomColor,
-            ),
-            DeleteAccountPageBody(
-              errorMessage: _errorMessage,
-              isMobileSize: isMobileSize,
-              passwordController: _passwordTextController,
-              pageState: _pageState,
-              onTapUpdateButton: tryDeleteAccount,
-            ),
-          ],
-        ),
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: [
+          DeleteAccountPageHeader(
+            isMobileSize: isMobileSize,
+            onTapLeftPartHeader: onTapLeftPartHeader,
+            randomColor: randomColor,
+          ),
+          DeleteAccountPageBody(
+            errorMessage: _errorMessage,
+            isMobileSize: isMobileSize,
+            passwordController: _passwordTextController,
+            pageState: _pageState,
+            onTapUpdateButton: tryDeleteAccount,
+          ),
+        ],
       ),
     );
   }
@@ -116,10 +106,9 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> with UiLoggy {
           return;
         }
 
-        timerSnackbar(
-          context: context,
-          contentText: deleteAccountResp.error.toString(),
-          afterTimeExecute: () {},
+        Utils.graphic.showSnackbar(
+          context,
+          message: deleteAccountResp.error.toString(),
         );
 
         return;
@@ -134,25 +123,19 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> with UiLoggy {
         return;
       }
 
-      timerSnackbar(
-        context: context,
-        contentText: "account.delete.success".tr(),
-        afterTimeExecute: () {},
+      Utils.graphic.showSnackbar(
+        context,
+        message: "account.delete.success".tr(),
       );
 
       Utils.state.signOut();
       context.beamBack();
     } catch (error) {
       loggy.error(error);
-
-      setState(() {
-        _pageState = EnumPageState.idle;
-      });
-
-      timerSnackbar(
-        context: context,
-        contentText: "account.delete.error".tr(),
-        afterTimeExecute: () {},
+      setState(() => _pageState = EnumPageState.idle);
+      Utils.graphic.showSnackbar(
+        context,
+        message: "account.delete.error".tr(),
       );
     }
   }

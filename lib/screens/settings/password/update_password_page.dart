@@ -3,37 +3,36 @@ import "dart:async";
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/home_location.dart";
-import "package:kwotes/screens/settings/password/password_page_body.dart";
-import "package:kwotes/screens/settings/password/password_page_header.dart";
+import "package:kwotes/screens/settings/password/update_password_page_body.dart";
+import "package:kwotes/screens/settings/password/update_password_page_header.dart";
 import "package:kwotes/types/action_return_value.dart";
 import "package:kwotes/types/cloud_fun_error.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/password_checks.dart";
 import "package:loggy/loggy.dart";
-import "package:timer_snackbar/timer_snackbar.dart";
 import "package:verbal_expressions/verbal_expressions.dart";
 
-/// Password page to update user's password.
-class PasswordPage extends StatefulWidget {
-  const PasswordPage({super.key});
+/// Update user's password page.
+class UpdatePasswordPage extends StatefulWidget {
+  const UpdatePasswordPage({super.key});
 
   @override
-  State<PasswordPage> createState() => _PasswordPageState();
+  State<UpdatePasswordPage> createState() => _UpdatePasswordPageState();
 }
 
-class _PasswordPageState extends State<PasswordPage> with UiLoggy {
+class _UpdatePasswordPageState extends State<UpdatePasswordPage> with UiLoggy {
   /// Password focus node.
-  final _newPasswordFocusNode = FocusNode();
+  final FocusNode _newPasswordFocusNode = FocusNode();
 
   /// Current password controller.
-  final _currentPasswordController = TextEditingController();
+  final TextEditingController _currentPasswordController =
+      TextEditingController();
 
   /// New password controller.
-  final _newPasswordController = TextEditingController();
+  final TextEditingController _newPasswordController = TextEditingController();
 
   /// Page's state (e.g. loading, idle, ...).
   EnumPageState _pageState = EnumPageState.idle;
@@ -78,15 +77,12 @@ class _PasswordPageState extends State<PasswordPage> with UiLoggy {
         onCancel: context.beamBack,
         child: CustomScrollView(
           slivers: [
-            ApplicationBar(
-              isMobileSize: isMobileSize,
-            ),
-            PasswordPageHeader(
+            UpdatePasswordPageHeader(
               isMobileSize: isMobileSize,
               onTapLeftPartHeader: onTapLeftPartHeader,
               passwordChecks: _passwordChecks,
             ),
-            PasswordPageBody(
+            UpdatePasswordPageBody(
               currentPasswordController: _currentPasswordController,
               isMobileSize: isMobileSize,
               newPasswordController: _newPasswordController,
@@ -226,10 +222,9 @@ class _PasswordPageState extends State<PasswordPage> with UiLoggy {
           return;
         }
 
-        timerSnackbar(
-          context: context,
-          contentText: "[code: ${exception?.code}] • ${exception?.message}",
-          afterTimeExecute: () {},
+        Utils.graphic.showSnackbar(
+          context,
+          message: "[code: ${exception?.code}] • ${exception?.message}",
         );
 
         return;
@@ -244,24 +239,18 @@ class _PasswordPageState extends State<PasswordPage> with UiLoggy {
         return;
       }
 
-      timerSnackbar(
-        context: context,
-        contentText: "username.update.success".tr(),
-        afterTimeExecute: () {},
+      Utils.graphic.showSnackbar(
+        context,
+        message: "password.update.success".tr(),
       );
 
       context.beamBack();
     } catch (error) {
       loggy.error(error);
-
-      setState(() {
-        _pageState = EnumPageState.idle;
-      });
-
-      timerSnackbar(
-        context: context,
-        contentText: "password.update.error".tr(),
-        afterTimeExecute: () {},
+      setState(() => _pageState = EnumPageState.idle);
+      Utils.graphic.showSnackbar(
+        context,
+        message: "password.update.error".tr(),
       );
     }
   }

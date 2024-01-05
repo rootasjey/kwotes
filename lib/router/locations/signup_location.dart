@@ -1,7 +1,8 @@
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/widgets.dart";
-import "package:kwotes/router/locations/home_location.dart";
+import "package:kwotes/globals/utils.dart";
+import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/screens/signup/signup_page.dart";
 
 class SignupLocation extends BeamLocation<BeamState> {
@@ -17,12 +18,9 @@ class SignupLocation extends BeamLocation<BeamState> {
         BeamGuard(
           pathPatterns: [route],
           check: (context, location) {
-            // final containerProvider = ProviderContainer();
-            // final user = containerProvider.read(AppState.userProvider.notifier);
-            // return !user.isAuthenticated;
-            return true;
+            return !Utils.state.userAuthenticated;
           },
-          beamToNamed: (origin, taraget) => HomeLocation.route,
+          beamToNamed: (origin, taraget) => DashboardContentLocation.route,
         ),
       ];
 

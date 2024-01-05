@@ -11,7 +11,6 @@ import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/dashboard/dashboard_card.dart";
 import "package:kwotes/screens/dashboard/dashboard_fab.dart";
-import "package:kwotes/screens/signin/signin_page.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/user/user_firestore.dart";
@@ -31,10 +30,6 @@ class DashboardWelcomePage extends StatelessWidget {
 
     final UserFirestore userFirestore =
         context.observe<UserFirestore>(EnumSignalId.userFirestore);
-
-    if (userFirestore.id.isEmpty) {
-      return const SigninPage();
-    }
 
     return SafeArea(
       child: Scaffold(

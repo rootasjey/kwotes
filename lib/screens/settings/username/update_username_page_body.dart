@@ -5,8 +5,8 @@ import "package:kwotes/components/texts/outlined_text_field.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 
-class UsernamePageBody extends StatelessWidget {
-  const UsernamePageBody({
+class UpdateUsernamePageBody extends StatelessWidget {
+  const UpdateUsernamePageBody({
     super.key,
     required this.usernameController,
     required this.passwordFocusNode,
@@ -43,15 +43,16 @@ class UsernamePageBody extends StatelessWidget {
     final Color secondaryHeaderColor = Theme.of(context).secondaryHeaderColor;
 
     return SliverToBoxAdapter(
-      child: Padding(
+      child: Container(
+        width: isMobileSize ? null : 360.0,
         padding: isMobileSize
             ? const EdgeInsets.all(24.0)
             : const EdgeInsets.all(40.0),
         child: Column(
           children: [
             Container(
+              width: isMobileSize ? null : 352.0,
               margin: const EdgeInsets.only(bottom: 12.0),
-              width: 352.0,
               child: Column(
                 children: <Widget>[
                   OutlinedTextField(
@@ -91,27 +92,22 @@ class UsernamePageBody extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black87,
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: isMobileSize ? null : 320.0,
-                    padding: const EdgeInsets.all(14.0),
-                    child: Text(
-                      "update.name".tr().toUpperCase(),
-                      softWrap: true,
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      style: Utils.calligraphy.body(
-                        textStyle: const TextStyle(
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
+              child: Container(
+                padding: const EdgeInsets.all(14.0),
+                width: 320.0,
+                child: Text(
+                  "update.name".tr().toUpperCase(),
+                  softWrap: true,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: Utils.calligraphy.body(
+                    textStyle: const TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
-                ],
+                ),
               ),
             ),
           ]
