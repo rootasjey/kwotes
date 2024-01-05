@@ -145,7 +145,9 @@ class ColorPalette {
       case EnumFrameBorderStyle.colored:
         return lastBorderColor;
       case EnumFrameBorderStyle.discrete:
-        return const Color.fromRGBO(241, 237, 255, 1.0);
+        return Theme.of(context).brightness == Brightness.dark
+            ? Colors.black
+            : const Color.fromRGBO(241, 237, 255, 1.0);
       case EnumFrameBorderStyle.highContrast:
         return Theme.of(context).brightness == Brightness.dark
             ? Colors.white
