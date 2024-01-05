@@ -22,22 +22,6 @@ class ThePurposePage extends StatelessWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(
-            child: SafeArea(
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 12.0),
-                  child: IconButton(
-                    onPressed: () => Utils.passage.deepBack(context),
-                    icon: const Icon(
-                      TablerIcons.arrow_left,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
           SliverPadding(
             padding: isMobileSize
                 ? const EdgeInsets.only(
@@ -56,6 +40,12 @@ class ThePurposePage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    IconButton(
+                      onPressed: () => Utils.passage.deepBack(context),
+                      icon: const Icon(
+                        TablerIcons.arrow_left,
+                      ),
+                    ),
                     Text(
                       "purpose.name".tr(),
                       style: Utils.calligraphy.body(
@@ -112,29 +102,19 @@ class ThePurposePage extends StatelessWidget {
                         ),
                       ),
                     ),
+                    ColoredTextButton(
+                      textFlex: 0,
+                      textValue: "back".tr(),
+                      onPressed: () => Utils.passage.deepBack(context),
+                      icon: const Icon(TablerIcons.arrow_narrow_left),
+                      margin: const EdgeInsets.only(
+                        top: 42.0,
+                      ),
+                      style: TextButton.styleFrom(
+                        backgroundColor: accentColor.withOpacity(0.2),
+                      ),
+                    ),
                   ],
-                ),
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Align(
-              alignment: Alignment.bottomLeft,
-              child: ColoredTextButton(
-                textFlex: 0,
-                textValue: "back".tr(),
-                onPressed: () => Utils.passage.deepBack(context),
-                icon: const Icon(TablerIcons.arrow_narrow_left),
-                margin: const EdgeInsets.only(
-                  left: 12.0,
-                  bottom: 64.0,
-                  right: 12.0,
-                ),
-                padding: const EdgeInsets.only(
-                  right: 12.0,
-                ),
-                style: TextButton.styleFrom(
-                  backgroundColor: accentColor.withOpacity(0.2),
                 ),
               ),
             ),
