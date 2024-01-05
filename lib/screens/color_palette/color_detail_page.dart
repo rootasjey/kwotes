@@ -2,6 +2,7 @@ import "dart:ui";
 
 import "package:adaptive_theme/adaptive_theme.dart";
 import "package:beamer/beamer.dart";
+import "package:dismissible_page/dismissible_page.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:kwotes/globals/utils.dart";
@@ -38,22 +39,30 @@ class ColorDetailPage extends StatelessWidget {
                 color: Colors.transparent,
                 child: Padding(
                   padding: const EdgeInsets.all(42.0),
-                  child: Material(
-                    elevation: 8.0,
-                    color: backgroundColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: borderRadius,
-                    ),
-                    child: ClipRRect(
-                      borderRadius: borderRadius,
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                        child: ColorDetailPageBody(
-                          topicName: topicName,
-                          onCopy32bitValue: onCopy32bitValue,
-                          onCopyRGBA: onCopyRGBA,
-                          onCopyHex: onCopyHex,
-                          onTapCloseButton: context.beamBack,
+                  child: DismissiblePage(
+                    onDismissed: context.beamBack,
+                    backgroundColor: Colors.transparent,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 600.0),
+                      child: Material(
+                        elevation: 8.0,
+                        color: backgroundColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: borderRadius,
+                        ),
+                        child: ClipRRect(
+                          borderRadius: borderRadius,
+                          child: BackdropFilter(
+                            filter:
+                                ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                            child: ColorDetailPageBody(
+                              topicName: topicName,
+                              onCopy32bitValue: onCopy32bitValue,
+                              onCopyRGBA: onCopyRGBA,
+                              onCopyHex: onCopyHex,
+                              onTapCloseButton: context.beamBack,
+                            ),
+                          ),
                         ),
                       ),
                     ),

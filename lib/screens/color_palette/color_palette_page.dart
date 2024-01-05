@@ -1,7 +1,6 @@
 import "package:beamer/beamer.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/screens/color_palette/color_palette_page_body.dart";
@@ -18,9 +17,6 @@ class ColorPalettePage extends StatelessWidget {
 
     return Scaffold(
       body: CustomScrollView(slivers: [
-        ApplicationBar(
-          isMobileSize: isMobileSize,
-        ),
         ColorPalettePageBody(
           isMobileSize: isMobileSize,
           onCopyHex: (Topic topic) => onCopyHex(context, topic),
