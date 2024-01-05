@@ -87,55 +87,61 @@ class AppBehaviourSettings extends StatelessWidget {
           ]),
           style: Utils.calligraphy.body(
             textStyle: TextStyle(
-              fontSize: isMobileSize ? 32.0 : 72.0,
-              fontWeight: FontWeight.w100,
+              fontSize: isMobileSize ? 32.0 : 32.0,
+              fontWeight: isMobileSize ? FontWeight.w100 : FontWeight.w400,
             ),
           ),
         )
             .animate()
             .fadeIn(duration: animateElements ? 250.ms : 0.ms)
             .slideY(begin: 0.8, end: 0.0),
-        Wrap(
-          spacing: 12.0,
-          runSpacing: 12.0,
-          children: [
-            ThemeChip(
-              tooltip: "settings.fullscreen_quote_page.description".tr(),
-              textLabel:
-                  "settings.behaviour.fullscreen_quote_page.$isFullscreenQuotePage"
-                      .tr(),
-              selected: isFullscreenQuotePage,
-              accentColor: accentColor,
-              foregroundColor: isFullscreenQuotePage
-                  ? foregroundAccentColor
-                  : foregroundColor?.withOpacity(0.6),
-              onTap: onToggleFullscreen,
+        Align(
+          alignment: Alignment.topLeft,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 700.0),
+            child: Wrap(
+              spacing: 12.0,
+              runSpacing: 12.0,
+              children: [
+                ThemeChip(
+                  tooltip: "settings.fullscreen_quote_page.description".tr(),
+                  textLabel:
+                      "settings.behaviour.fullscreen_quote_page.$isFullscreenQuotePage"
+                          .tr(),
+                  selected: isFullscreenQuotePage,
+                  accentColor: accentColor,
+                  foregroundColor: isFullscreenQuotePage
+                      ? foregroundAccentColor
+                      : foregroundColor?.withOpacity(0.6),
+                  onTap: onToggleFullscreen,
+                ),
+                ThemeChip(
+                  tooltip: "settings.minimal_quote_actions.description".tr(),
+                  textLabel:
+                      "settings.behaviour.minimal_quote_actions.$isMinimalQuoteActions"
+                          .tr(),
+                  selected: isMinimalQuoteActions,
+                  accentColor: accentColor,
+                  foregroundColor: isMinimalQuoteActions
+                      ? foregroundAccentColor
+                      : foregroundColor?.withOpacity(0.6),
+                  onTap: onToggleMinimalQuoteActions,
+                ),
+                ThemeChip(
+                  textLabel:
+                      "settings.behaviour.frame_border_style.${appBorderStyle.name}"
+                          .tr(),
+                  selected: true,
+                  accentColor: accentColor,
+                  foregroundColor: foregroundAccentColor,
+                  onTap: onToggleFrameBorderColor,
+                ),
+              ]
+                  .animate(interval: animateElements ? 150.ms : 0.ms)
+                  .fadeIn(duration: animateElements ? 150.ms : 0.ms)
+                  .slideY(begin: 0.8, end: 0.0),
             ),
-            ThemeChip(
-              tooltip: "settings.minimal_quote_actions.description".tr(),
-              textLabel:
-                  "settings.behaviour.minimal_quote_actions.$isMinimalQuoteActions"
-                      .tr(),
-              selected: isMinimalQuoteActions,
-              accentColor: accentColor,
-              foregroundColor: isMinimalQuoteActions
-                  ? foregroundAccentColor
-                  : foregroundColor?.withOpacity(0.6),
-              onTap: onToggleMinimalQuoteActions,
-            ),
-            ThemeChip(
-              textLabel:
-                  "settings.behaviour.frame_border_style.${appBorderStyle.name}"
-                      .tr(),
-              selected: true,
-              accentColor: accentColor,
-              foregroundColor: foregroundAccentColor,
-              onTap: onToggleFrameBorderColor,
-            ),
-          ]
-              .animate(interval: animateElements ? 150.ms : 0.ms)
-              .fadeIn(duration: animateElements ? 150.ms : 0.ms)
-              .slideY(begin: 0.8, end: 0.0),
+          ),
         ),
         Divider(
           height: dividerHeight,

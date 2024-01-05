@@ -66,8 +66,8 @@ class AppLanguageSelection extends StatelessWidget {
           ]),
           style: Utils.calligraphy.body(
             textStyle: TextStyle(
-              fontSize: isMobileSize ? 32.0 : 72.0,
-              fontWeight: FontWeight.w100,
+              fontSize: 32.0,
+              fontWeight: isMobileSize ? FontWeight.w100 : FontWeight.w400,
             ),
           ),
         )

@@ -21,11 +21,10 @@ class SettingsPageHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageAppBar(
       isMobileSize: isMobileSize,
+      toolbarHeight: isMobileSize ? 200.0 : 242.0,
       children: [
         Padding(
-          padding: isMobileSize
-              ? const EdgeInsets.only(left: 6.0, bottom: 24.0)
-              : const EdgeInsets.only(left: 6.0, bottom: 42.0),
+          padding: const EdgeInsets.only(left: 6.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -48,7 +47,7 @@ class SettingsPageHeader extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: Utils.calligraphy.title(
                         textStyle: TextStyle(
-                          fontSize: 74.0,
+                          fontSize: isMobileSize ? 74.0 : 124.0,
                           fontWeight: FontWeight.w600,
                           color: Theme.of(context)
                               .textTheme

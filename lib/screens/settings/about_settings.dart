@@ -77,8 +77,9 @@ class _AboutSettingsState extends State<AboutSettings> {
           ),
           style: Utils.calligraphy.body(
             textStyle: TextStyle(
-              fontSize: widget.isMobileSize ? 32.0 : 72.0,
-              fontWeight: FontWeight.w100,
+              fontSize: 32.0,
+              fontWeight:
+                  widget.isMobileSize ? FontWeight.w100 : FontWeight.w400,
               color: widget.foregroundColor,
             ),
           ),
@@ -86,46 +87,57 @@ class _AboutSettingsState extends State<AboutSettings> {
             .animate(delay: widget.animateElements ? 350.ms : 0.ms)
             .fadeIn(duration: widget.animateElements ? 150.ms : 0.ms)
             .slideY(begin: 0.8, end: 0.0),
-        Wrap(
-          spacing: 12.0,
-          runSpacing: 12.0,
-          children: [
-            ActionChip(
-              onPressed: widget.onTapColorPalette,
-              label: Text("color.palette".tr()),
-            ),
-            ActionChip(
-              onPressed: widget.onTapTermsOfService,
-              label: Text("tos.name".tr()),
-            ),
-            ActionChip(
-              onPressed: widget.onTapThePurpose,
-              label: Text("purpose.the".tr()),
-            ),
-            ActionChip(
-              onPressed: widget.onTapGitHub,
-              label: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text("GitHub"),
-                  Icon(
-                    TablerIcons.arrow_up_right,
-                    size: 16.0,
-                    color: widget.foregroundColor?.withOpacity(0.6),
+        Align(
+          alignment: Alignment.topLeft,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 700.0),
+            child: Wrap(
+              spacing: 12.0,
+              runSpacing: 12.0,
+              children: [
+                ActionChip(
+                  onPressed: widget.onTapColorPalette,
+                  label: Text("color.palette".tr()),
+                  shape: const StadiumBorder(),
+                ),
+                ActionChip(
+                  onPressed: widget.onTapTermsOfService,
+                  label: Text("tos.name".tr()),
+                  shape: const StadiumBorder(),
+                ),
+                ActionChip(
+                  onPressed: widget.onTapThePurpose,
+                  shape: const StadiumBorder(),
+                  label: Text("purpose.the".tr()),
+                ),
+                ActionChip(
+                  onPressed: widget.onTapGitHub,
+                  shape: const StadiumBorder(),
+                  label: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text("GitHub"),
+                      Icon(
+                        TablerIcons.arrow_up_right,
+                        size: 16.0,
+                        color: widget.foregroundColor?.withOpacity(0.6),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                ActionChip(
+                  label: Text("${"version".tr()}: ${Constants.appVersion}"),
+                  shape: const StadiumBorder(),
+                ),
+              ]
+                  .animate(
+                    delay: widget.animateElements ? 300.ms : 0.ms,
+                    interval: widget.animateElements ? 50.ms : 0.ms,
+                  )
+                  .fadeIn(duration: widget.animateElements ? 150.ms : 0.ms)
+                  .slideY(begin: 0.8, end: 0.0),
             ),
-            ActionChip(
-              label: Text("${"version".tr()}: ${Constants.appVersion}"),
-            ),
-          ]
-              .animate(
-                delay: widget.animateElements ? 300.ms : 0.ms,
-                interval: widget.animateElements ? 50.ms : 0.ms,
-              )
-              .fadeIn(duration: widget.animateElements ? 150.ms : 0.ms)
-              .slideY(begin: 0.8, end: 0.0),
+          ),
         )
       ]),
     );

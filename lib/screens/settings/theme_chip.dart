@@ -41,6 +41,7 @@ class ThemeChip extends StatelessWidget {
           color: foregroundColor,
         ),
       ),
+      shape: const StadiumBorder(),
       onPressed: onTap,
       backgroundColor: selected ? accentColor : null,
       tooltip: tooltip,

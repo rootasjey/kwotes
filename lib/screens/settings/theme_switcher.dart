@@ -71,7 +71,7 @@ class ThemeSwitcher extends StatelessWidget {
     return SliverPadding(
       padding: isMobileSize
           ? const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0)
-          : const EdgeInsets.only(top: 12.0, left: 48.0, right: 72.0),
+          : const EdgeInsets.only(top: 42.0, left: 48.0, right: 72.0),
       sliver: SliverList.list(children: [
         Text.rich(
           TextSpan(text: "${"theme".tr()}: ", children: [
@@ -88,8 +88,8 @@ class ThemeSwitcher extends StatelessWidget {
           ]),
           style: Utils.calligraphy.body(
             textStyle: TextStyle(
-              fontSize: isMobileSize ? 32.0 : 72.0,
-              fontWeight: FontWeight.w100,
+              fontSize: isMobileSize ? 32.0 : 32.0,
+              fontWeight: isMobileSize ? FontWeight.w100 : FontWeight.w400,
             ),
           ),
         )
