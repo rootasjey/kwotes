@@ -77,31 +77,30 @@ class ListPageHeader extends StatelessWidget {
     if (createMode) {
       return Padding(
         padding: isMobileSize
-            ? const EdgeInsets.only(left: 6.0, bottom: 24.0)
+            ? const EdgeInsets.only(left: 6.0, bottom: 0.0)
             : const EdgeInsets.only(left: 0.0, bottom: 42.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
-              autofocus: focusName,
-              controller: nameController,
-              keyboardType: TextInputType.name,
-              textCapitalization: TextCapitalization.words,
-              onChanged: onNameChanged,
-              textInputAction: TextInputAction.next,
-              style: Utils.calligraphy.title(
-                textStyle: TextStyle(
-                  fontSize: isMobileSize ? 24.0 : 74.0,
-                  fontWeight: FontWeight.w200,
-                  height: 1.0,
+            FractionallySizedBox(
+              widthFactor: isMobileSize ? 0.9 : 0.5,
+              child: TextField(
+                autofocus: focusName,
+                controller: nameController,
+                keyboardType: TextInputType.name,
+                textCapitalization: TextCapitalization.words,
+                onChanged: onNameChanged,
+                textInputAction: TextInputAction.next,
+                style: Utils.calligraphy.title(
+                  textStyle: TextStyle(
+                    fontSize: isMobileSize ? 24.0 : 74.0,
+                    fontWeight: FontWeight.w200,
+                    height: 1.0,
+                  ),
                 ),
-              ),
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                ),
-                contentPadding: EdgeInsets.only(
-                  top: 16.0,
+                decoration: const InputDecoration(
+                  border: UnderlineInputBorder(),
+                  contentPadding: EdgeInsets.zero,
                 ),
               ),
             ),
@@ -123,12 +122,11 @@ class ListPageHeader extends StatelessWidget {
                   ),
                 ),
                 decoration: InputDecoration(
-                  filled: true,
+                  filled: false,
                   hintText: descriptionHintText,
                   fillColor: accentColor.withOpacity(0.1),
-                  border: const OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                  ),
+                  contentPadding: EdgeInsets.zero,
+                  border: const UnderlineInputBorder(),
                 ),
               ),
             ),
@@ -189,78 +187,75 @@ class ListPageHeader extends StatelessWidget {
       );
     }
 
-    return Padding(
-      padding: isMobileSize
-          ? const EdgeInsets.only(bottom: 24.0)
-          : const EdgeInsets.only(bottom: 42.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Hero(
-            tag: listId,
-            child: Material(
-              color: Colors.transparent,
-              child: TextButton(
-                onPressed: () => onEnterCreateMode?.call(true),
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.only(left: 6.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6.0),
-                  ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Hero(
+          tag: listId,
+          child: Material(
+            color: Colors.transparent,
+            child: TextButton(
+              onPressed: () => onEnterCreateMode?.call(true),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.only(left: 6.0, top: 0.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6.0),
                 ),
-                child: Text.rich(
-                  TextSpan(
-                    text: title,
-                    children: [
-                      TextSpan(
-                        text: ".",
-                        style: TextStyle(
-                          color: Constants.colors.inValidation,
-                        ),
+              ),
+              child: Text.rich(
+                TextSpan(
+                  text: title,
+                  children: [
+                    TextSpan(
+                      text: ".",
+                      style: TextStyle(
+                        color: Constants.colors.inValidation,
+                      ),
+                    ),
+                  ],
+                ),
+                maxLines: 1,
+                style: Utils.calligraphy.title(
+                  textStyle: TextStyle(
+                    fontSize: isMobileSize ? 74.0 : 124.0,
+                    // fontSize: isMobileSize ? 36.0 : 74.0,
+                    fontWeight: FontWeight.w200,
+                    color: foregroundColor?.withOpacity(0.8),
+                    shadows: [
+                      Shadow(
+                        blurRadius: 0.5,
+                        offset: const Offset(-1.0, 1.0),
+                        color: Constants.colors.inValidation,
                       ),
                     ],
-                  ),
-                  style: Utils.calligraphy.title(
-                    textStyle: TextStyle(
-                      fontSize: isMobileSize ? 36.0 : 74.0,
-                      fontWeight: FontWeight.w200,
-                      color: foregroundColor?.withOpacity(0.8),
-                      shadows: [
-                        Shadow(
-                          blurRadius: 0.5,
-                          offset: const Offset(-1.0, 1.0),
-                          color: Constants.colors.inValidation,
-                        ),
-                      ],
-                    ),
                   ),
                 ),
               ),
             ),
           ),
-          if (description.isNotEmpty)
-            TextButton(
-              onPressed: () => onEnterCreateMode?.call(false),
-              style: TextButton.styleFrom(
-                alignment: Alignment.centerLeft,
-                padding: const EdgeInsets.only(left: 6.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6.0),
-                ),
+        ),
+        if (description.isNotEmpty)
+          TextButton(
+            onPressed: () => onEnterCreateMode?.call(false),
+            style: TextButton.styleFrom(
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.only(left: 6.0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6.0),
               ),
-              child: Text(
-                description,
-                style: Utils.calligraphy.body2(
-                  textStyle: TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w400,
-                    color: foregroundColor?.withOpacity(0.4),
-                  ),
+            ),
+            child: Text(
+              description,
+              style: Utils.calligraphy.body2(
+                textStyle: TextStyle(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w400,
+                  color: foregroundColor?.withOpacity(0.4),
                 ),
               ),
             ),
-        ],
-      ),
+          ),
+      ],
     );
   }
 }

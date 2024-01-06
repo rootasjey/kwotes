@@ -152,6 +152,7 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
                 slivers: [
                   PageAppBar(
                     isMobileSize: isMobileSize,
+                    toolbarHeight: isMobileSize ? 200.0 : 242.0,
                     children: [
                       ListsPageHeader(
                         isMobileSize: isMobileSize,
