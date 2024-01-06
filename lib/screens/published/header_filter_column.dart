@@ -90,6 +90,7 @@ class HeaderFilterColumn extends StatelessWidget {
                     (OwnershipData data) => Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: FilterChip(
+                        checkmarkColor: iconColor,
                         label: Text(data.labelString),
                         tooltip: data.tooltipString,
                         backgroundColor: chipBackgroundColor,
@@ -132,8 +133,9 @@ class HeaderFilterColumn extends StatelessWidget {
                     (LanguageFilterData data) => Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: FilterChip(
+                        checkmarkColor: iconColor,
                         label: data.labelString.isEmpty
-                            ? Icon(data.iconData, color: iconColor)
+                            ? Icon(data.iconData, color: iconColor, size: 20.0)
                             : Text(data.labelString),
                         tooltip: data.tooltipString,
                         backgroundColor: chipBackgroundColor,

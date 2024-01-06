@@ -126,7 +126,7 @@ class HeaderFilterWrap extends StatelessWidget {
               iconData: TablerIcons.world_longitude,
             ),
           ...Utils.linguistic.available().map(
-                (locale) => LanguageFilterData(
+                (EnumLanguageSelection locale) => LanguageFilterData(
                   labelString: "language.locale.${locale.name}".tr(),
                   tooltipString: "",
                   language: locale,
@@ -139,13 +139,13 @@ class HeaderFilterWrap extends StatelessWidget {
                 child: FilterChip(
                   checkmarkColor: iconColor,
                   label: data.labelString.isEmpty
-                      ? Icon(data.iconData)
+                      ? Icon(data.iconData, size: 20.0)
                       : Text(data.labelString),
                   tooltip: data.tooltipString,
                   backgroundColor: chipBackgroundColor,
                   selectedColor: chipSelectedColor,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16.0),
+                    borderRadius: BorderRadius.circular(24.0),
                     side: BorderSide(color: chipBorderColor),
                   ),
                   onSelected: (bool _) => onSelectLanguage?.call(data.language),
