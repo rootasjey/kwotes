@@ -17,9 +17,7 @@ class FavouritesPageHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: isMobileSize
-          ? const EdgeInsets.only(left: 6.0, bottom: 24.0)
-          : const EdgeInsets.only(left: 6.0, bottom: 42.0),
+      padding: const EdgeInsets.only(left: 6.0),
       child: Hero(
         tag: "favourites",
         child: Material(
@@ -33,10 +31,12 @@ class FavouritesPageHeader extends StatelessWidget {
                 ),
               ),
             ]),
+            maxLines: 1,
             style: Utils.calligraphy.title(
               textStyle: TextStyle(
-                fontSize: 74.0,
+                fontSize: isMobileSize ? 74.0 : 124.0,
                 fontWeight: FontWeight.w600,
+                overflow: TextOverflow.ellipsis,
                 color: Theme.of(context)
                     .textTheme
                     .bodyMedium

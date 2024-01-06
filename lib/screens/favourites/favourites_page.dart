@@ -91,6 +91,7 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
             slivers: [
               PageAppBar(
                 isMobileSize: isMobileSize,
+                toolbarHeight: isMobileSize ? 200.0 : 242.0,
                 children: [
                   FavouritesPageHeader(
                     isMobileSize: isMobileSize,
