@@ -63,20 +63,43 @@ class ReferencePosters extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: Text(
-                "reference.latest_added".tr(),
-                style: Utils.calligraphy.body(
-                  textStyle: TextStyle(
-                    color: textColor?.withOpacity(0.4),
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w500,
-                  ),
+            Text(
+              "reference.latest_added".tr(),
+              style: Utils.calligraphy.body(
+                textStyle: TextStyle(
+                  color: textColor?.withOpacity(0.4),
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
             SizedBox(
+              width: 160.0,
+              child: Divider(
+                thickness: 2.0,
+                color: isDark ? Colors.white24 : Colors.black12,
+              ),
+            ),
+            if (scrollController.hasClients)
+              FractionallySizedBox(
+                widthFactor: 0.7,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 0.0),
+                  child: Text(
+                    references.elementAt(scrollController.selectedItem).name,
+                    textAlign: TextAlign.center,
+                    style: Utils.calligraphy.body(
+                      textStyle: TextStyle(
+                        color: textColor?.withOpacity(0.4),
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            Container(
+              padding: const EdgeInsets.only(top: 8.0),
               height: 360.0,
               child: InfiniteCarousel.builder(
                 center: true,
@@ -97,13 +120,17 @@ class ReferencePosters extends StatelessWidget {
                   final Reference reference = references[index];
 
                   final double currentOffset = itemExtent * realIndex;
-                  final double diff = (scrollController.offset - currentOffset);
+                  final double diff = scrollController.offset - currentOffset;
                   const double maxPadding = 24.0;
                   final double carouselRatio = itemExtent / maxPadding;
                   final bool selected = index == scrollController.selectedItem;
 
+                  final List<Color> palette =
+                      Constants.colors.foregroundPalette;
+                  final Color accentColor = palette[index % palette.length];
+
                   return ReferencePoster(
-                    accentColor: Constants.colors.getRandomFromPalette(),
+                    accentColor: accentColor,
                     selected: selected,
                     margin: EdgeInsets.only(
                       top: selected ? 0.0 : (diff / carouselRatio).abs(),
