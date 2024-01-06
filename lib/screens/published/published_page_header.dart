@@ -55,9 +55,7 @@ class PublishedPageHeader extends StatelessWidget {
         Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6);
 
     return Padding(
-      padding: isMobileSize
-          ? const EdgeInsets.only(left: 6.0, bottom: 24.0)
-          : const EdgeInsets.only(left: 6.0, bottom: 42.0),
+      padding: const EdgeInsets.only(left: 6.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -78,7 +76,7 @@ class PublishedPageHeader extends StatelessWidget {
                   ]),
                   style: Utils.calligraphy.title(
                     textStyle: TextStyle(
-                      fontSize: isMobileSize ? 42.0 : 74.0,
+                      fontSize: getFontSize(),
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context)
                           .textTheme
@@ -117,5 +115,14 @@ class PublishedPageHeader extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  /// Get title font size.
+  double getFontSize() {
+    if (isMobileSize) {
+      return show ? 36.0 : 74.0;
+    }
+
+    return 124.0;
   }
 }

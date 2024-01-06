@@ -8,7 +8,6 @@ import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/buttons/menu_navigation_item.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
-import "package:kwotes/globals/utils/passage.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/locations/search_location.dart";
@@ -266,7 +265,7 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
 
   /// Initialize page properties.
   void initProps() async {
-    _currentIndex = Passage.homePageTabIndex;
+    _currentIndex = NavigationStateHelper.homePageTabIndex;
   }
 
   /// Navigate back to root when tapping on already selected bottom bar item.
@@ -316,7 +315,7 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
     }
 
     setState(() => _currentIndex = index);
-    Passage.homePageTabIndex = index;
+    NavigationStateHelper.homePageTabIndex = index;
     Utils.vault.setHomePageTabIndex(index);
     // updateBrowserUrl(index);
   }

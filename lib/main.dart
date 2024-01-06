@@ -1,7 +1,6 @@
 import "dart:io";
 
 import "package:adaptive_theme/adaptive_theme.dart";
-import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:firebase_core/firebase_core.dart";
 import "package:flutter/foundation.dart";
@@ -9,7 +8,6 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_dotenv/flutter_dotenv.dart";
 import "package:flutter_langdetect/flutter_langdetect.dart" as langdetect;
-import "package:kwotes/globals/utils/passage.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:loggy/loggy.dart";
 import "package:window_manager/window_manager.dart";
@@ -31,12 +29,13 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  Beamer.setPathUrlStrategy();
+  // Beamer.setPathUrlStrategy();
   await EasyLocalization.ensureInitialized();
   await dotenv.load(fileName: "var.env");
 
   final AdaptiveThemeMode? savedThemeMode = await AdaptiveTheme.getThemeMode();
-  Passage.homePageTabIndex = await Utils.vault.getHomePageTabIndex();
+  NavigationStateHelper.homePageTabIndex =
+      await Utils.vault.getHomePageTabIndex();
 
   NavigationStateHelper.fullscreenQuotePage =
       await Utils.vault.getFullscreenQuotePage();
@@ -46,6 +45,9 @@ void main() async {
 
   NavigationStateHelper.frameBorderStyle =
       await Utils.vault.getFrameBorderColored();
+
+  NavigationStateHelper.showHeaderPageOptions =
+      await Utils.vault.geShowtHeaderPageOptions();
 
   if (!kIsWeb) {
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {

@@ -11,12 +11,6 @@ import "package:kwotes/types/reference.dart";
 
 /// Helper class which contains additional navigation states.
 class NavigationStateHelper {
-  /// Last image selected.
-  /// This should be affected before navigating to EditImagePage.
-  /// This state's property allow us to pass image data
-  /// outside the page's state (because of the router behavior).
-  static ImageProvider<Object>? imageToEdit;
-
   /// Selected author and passed through author page.
   static Author author = Author.empty();
 
@@ -25,12 +19,20 @@ class NavigationStateHelper {
   /// in order to syncronously know where to navigate (with the router).
   static bool fullscreenQuotePage = true;
 
-  /// App frame border style.
-  static EnumFrameBorderStyle frameBorderStyle = EnumFrameBorderStyle.discrete;
-
   /// Hide duplicated actions (e.g. [close], [copy]) on quote page,
   /// if this is true.
   static bool minimalQuoteActions = false;
+
+  /// Show header page options (e.g. language) if true.
+  static bool showHeaderPageOptions = true;
+
+  /// App frame border style.
+  static EnumFrameBorderStyle frameBorderStyle = EnumFrameBorderStyle.discrete;
+
+  /// Current home page index (useful on mobile screen size).
+  /// 0: home, 1: search, 2: dashboard.
+  /// This will avoid having delay when retrieving value from local storage.
+  static int homePageTabIndex = 0;
 
   /// Random quotes for home page.
   static List<Quote> randomQuotes = [];

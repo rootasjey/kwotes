@@ -5,11 +5,6 @@ import "package:kwotes/router/locations/home_location.dart";
 class Passage {
   const Passage();
 
-  /// Current home page index (useful on mobile screen size).
-  /// 0: home, 1: search, 2: dashboard.
-  /// This will avoid having delay when retrieving value from local storage.
-  static int homePageTabIndex = 0;
-
   /// Better navigate back to the previous page.
   /// Takes care of the following cases:
   /// - There's no history but we're not on home page -> back to home.

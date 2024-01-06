@@ -47,9 +47,6 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
   /// True if more results can be loaded.
   bool _hasNextPage = true;
 
-  /// Show page options (e.g. language) if true.
-  bool _showPageOptions = false;
-
   /// Color of selected widgets (e.g. for filter chips).
   Color chipSelectedColor = Colors.amber;
 
@@ -112,6 +109,7 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
             slivers: [
               PageAppBar(
                 isMobileSize: isMobileSize,
+                toolbarHeight: isMobileSize ? 200.0 : 282.0,
                 children: [
                   PublishedPageHeader(
                     selectedColor: chipSelectedColor,
@@ -120,7 +118,7 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
                     onTapTitle: onTapTitle,
                     selectedLanguage: _selectedLanguage,
                     selectedOwnership: _selectedOwnership,
-                    show: _showPageOptions,
+                    show: NavigationStateHelper.showHeaderPageOptions,
                     isMobileSize: isMobileSize,
                   ),
                 ],
@@ -276,7 +274,6 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
 
   /// Load saved settings and initialize properties.
   Future<void> initProps() async {
-    _showPageOptions = await Utils.vault.geShowtHeaderOptions();
     _selectedLanguage = await Utils.vault.getPageLanguage();
     _selectedOwnership = await Utils.vault.getDataOwnership();
 
@@ -522,8 +519,12 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
 
   /// Callback to show/hide page options.
   void onTapTitle() {
-    final bool newShowPageOptions = !_showPageOptions;
+    final bool newShowPageOptions =
+        !NavigationStateHelper.showHeaderPageOptions;
     Utils.vault.setShowHeaderOptions(newShowPageOptions);
-    setState(() => _showPageOptions = newShowPageOptions);
+
+    setState(() {
+      NavigationStateHelper.showHeaderPageOptions = newShowPageOptions;
+    });
   }
 }

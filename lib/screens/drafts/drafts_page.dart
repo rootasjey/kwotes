@@ -45,9 +45,6 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
   /// True if the order is the most recent first.
   final bool _descending = true;
 
-  /// Show page options (e.g. language) if true.
-  bool _showPageOptions = true;
-
   /// Color of selected widgets (e.g. for filter chips).
   Color _selectedColor = Colors.amber.shade200;
 
@@ -103,6 +100,7 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
             slivers: [
               PageAppBar(
                 isMobileSize: isMobileSize,
+                toolbarHeight: isMobileSize ? 200.0 : 282.0,
                 children: [
                   DraftsPageHeader(
                     isMobileSize: isMobileSize,
@@ -110,7 +108,7 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
                     onTapTitle: onTapTitle,
                     selectedColor: _selectedColor,
                     selectedLanguage: _selectedLanguage,
-                    show: _showPageOptions,
+                    show: NavigationStateHelper.showHeaderPageOptions,
                   ),
                 ],
               ),
@@ -257,16 +255,13 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
 
   /// Initialize page properties.
   void initProps() async {
-    _showPageOptions = await Utils.vault.geShowtHeaderOptions();
+    _selectedLanguage = await Utils.vault.getPageLanguage();
     _selectedColor = Constants.colors.getRandomFromPalette().withOpacity(0.6);
-
     setState(() {});
 
     Future.delayed(const Duration(seconds: 1), () {
       if (!mounted) return;
-      setState(() {
-        _animateList = false;
-      });
+      setState(() => _animateList = false);
     });
   }
 
@@ -379,8 +374,12 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
 
   /// Callback to show/hide page options.
   void onTapTitle() {
-    final bool newShowPageOptions = !_showPageOptions;
+    final bool newShowPageOptions =
+        !NavigationStateHelper.showHeaderPageOptions;
     Utils.vault.setShowHeaderOptions(newShowPageOptions);
-    setState(() => _showPageOptions = newShowPageOptions);
+
+    setState(() {
+      NavigationStateHelper.showHeaderPageOptions = newShowPageOptions;
+    });
   }
 }

@@ -111,8 +111,8 @@ class Vault {
     Glutton.eat(StorageKeys.selectedPageLanguage, locale.index);
   }
 
-  /// Return the last saved value for header options.
-  Future<bool> geShowtHeaderOptions() async {
+  /// Return the last saved value for header page options visibility.
+  Future<bool> geShowtHeaderPageOptions() async {
     return await Glutton.vomit(StorageKeys.showHeaderOptions, true);
   }
 
