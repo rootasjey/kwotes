@@ -82,7 +82,6 @@ dependencies:
   smooth_page_indicator: ^1.1.0
   super_context_menu: ^0.6.4
   text_wrap_auto_size: ^1.2.1
-  timer_snackbar: ^0.0.3
   unicons: ^2.1.1
   url_launcher: ^6.1.12
   verbal_expressions: ^1.0.0
