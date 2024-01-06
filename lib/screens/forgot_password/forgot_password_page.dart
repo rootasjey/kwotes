@@ -2,11 +2,9 @@ import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
-import "package:flutter/services.dart";
 import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
-import "package:kwotes/globals/utils/snack.dart";
 import "package:kwotes/screens/forgot_password/forgot_password_page_header.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:loggy/loggy.dart";
@@ -15,7 +13,6 @@ import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/screens/forgot_password/forgot_password_page_body.dart";
 import "package:kwotes/screens/forgot_password/forgot_password_page_completed.dart";
-import "package:kwotes/types/intents/escape_intent.dart";
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -41,25 +38,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> with UiLoggy {
     final Size windowSize = MediaQuery.of(context).size;
     final double windowWidth = windowSize.width;
 
-    const shortcuts = <SingleActivator, Intent>{
-      SingleActivator(LogicalKeyboardKey.escape): EscapeIntent(),
-    };
-
-    final actions = <Type, Action<Intent>>{
-      EscapeIntent: CallbackAction(
-        onInvoke: (Intent intent) => onCancel(),
-      ),
-    };
-
     if (_pageState == EnumPageState.done) {
-      return Shortcuts(
-        shortcuts: shortcuts,
-        child: Actions(
-          actions: actions,
-          child: ForgotPasswordPageCompleted(
-            windowWidth: windowWidth,
-          ),
-        ),
+      return ForgotPasswordPageCompleted(
+        windowWidth: windowWidth,
       );
     }
 
@@ -73,37 +54,33 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> with UiLoggy {
     final bool isMobileSize =
         windowWidth <= mobileTreshold || windowSize.height <= mobileTreshold;
 
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final Color randomColor = Constants.colors.getRandomFromPalette(
       withGoodContrast: true,
     );
 
-    return Shortcuts(
-      shortcuts: shortcuts,
-      child: Actions(
-        actions: actions,
-        child: Scaffold(
-          body: CustomScrollView(slivers: [
-            ApplicationBar(
-              title: const SizedBox.shrink(),
-              isMobileSize: isMobileSize,
-            ),
-            ForgotPasswordPageHeader(
-              isMobileSize: isMobileSize,
-              margin: const EdgeInsets.only(top: 42.0, left: 12.0, right: 12.0),
-              randomColor: randomColor,
-            ),
-            ForgotPasswordPageBody(
-              isMobileSize: isMobileSize,
-              emailController: _emailController,
-              emailErrorMessage: _emailErrorMessage,
-              onCancel: onCancel,
-              onEmailChanged: onEmailChanged,
-              onSubmit: trySendResetLink,
-              randomColor: randomColor,
-            ),
-          ]),
+    return Scaffold(
+      body: CustomScrollView(slivers: [
+        ApplicationBar(
+          title: const SizedBox.shrink(),
+          isMobileSize: isMobileSize,
         ),
-      ),
+        ForgotPasswordPageHeader(
+          isMobileSize: isMobileSize,
+          margin: const EdgeInsets.only(top: 42.0, left: 12.0, right: 12.0),
+          randomColor: randomColor,
+        ),
+        ForgotPasswordPageBody(
+          isDark: isDark,
+          isMobileSize: isMobileSize,
+          emailController: _emailController,
+          emailErrorMessage: _emailErrorMessage,
+          onCancel: onCancel,
+          onEmailChanged: checkEmail,
+          onSubmit: trySendResetLink,
+          randomColor: randomColor,
+        ),
+      ]),
     );
   }
 
@@ -113,30 +90,19 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> with UiLoggy {
     email = email.trim();
 
     if (email.isEmpty) {
-      setState(() {
-        _emailErrorMessage = "email_error.empty".tr();
-      });
-
-      Snack.error(
-        context,
-        message: "email.empty_no_valid".tr(),
-      );
-
+      setState(() => _emailErrorMessage = "email.error.empty".tr());
+      Utils.graphic.showSnackbar(context, message: "email.error.empty".tr());
       return false;
     }
 
     final bool isWellFormatted = UserActions.checkEmailFormat(email);
 
     if (!isWellFormatted) {
-      setState(() {
-        _emailErrorMessage = "email_error.format".tr();
-      });
-
-      Snack.error(
+      setState(() => _emailErrorMessage = "email.error.not_valid".tr());
+      Utils.graphic.showSnackbar(
         context,
-        message: "email.not_valid".tr(),
+        message: "email.error.not_valid".tr(),
       );
-
       return false;
     }
 
@@ -151,11 +117,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> with UiLoggy {
     }
 
     Beamer.of(context, root: true).beamToNamed(HomeLocation.route);
-  }
-
-  /// React to email changes and call `checkEmail(email)` method.
-  void onEmailChanged(String email) async {
-    checkEmail(email);
   }
 
   void trySendResetLink(String email) async {
@@ -176,15 +137,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> with UiLoggy {
     } catch (error) {
       loggy.error(error);
       if (!mounted) return;
-
-      setState(() {
-        _pageState = EnumPageState.idle;
-      });
-
-      Snack.error(
-        context,
-        message: "email.doesnt_exist".tr(),
-      );
+      setState(() => _pageState = EnumPageState.idle);
+      Utils.graphic.showSnackbar(context, message: "email.doesnt_exist".tr());
     }
   }
 }

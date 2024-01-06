@@ -9,11 +9,15 @@ class ForgotPasswordPageFooter extends StatelessWidget {
   const ForgotPasswordPageFooter({
     super.key,
     required this.emailController,
+    this.isDark = false,
+    this.showBackButton = true,
     this.randomColor = Colors.amber,
     this.onCancel,
     this.onSubmit,
-    this.showBackButton = true,
   });
+
+  /// Whether the page is in dark mode.
+  final bool isDark;
 
   /// Show a back button to go back to the previous page.
   /// Hide this button when we're on mobile size screen (e.g. <=700).
@@ -34,30 +38,29 @@ class ForgotPasswordPageFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isDark = Theme.of(context).brightness == Brightness.dark;
-
     final Widget submitButton = ElevatedButton(
       onPressed: () => onSubmit?.call(emailController.text),
       style: ElevatedButton.styleFrom(
-        backgroundColor: isDark ? Colors.black : Colors.white,
+        backgroundColor: isDark ? Colors.white : Colors.black,
         elevation: 0.0,
         foregroundColor: randomColor,
         padding: const EdgeInsets.symmetric(
           horizontal: 16.0,
-          vertical: 20.0,
+          vertical: 23.0,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4.0),
         ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
-            child: Text(
-              "email.send_reset_link".tr(),
-              style: Utils.calligraphy.body(
-                textStyle: const TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w500,
-                ),
+          Text(
+            "email.send_reset_link".tr(),
+            style: Utils.calligraphy.body(
+              textStyle: const TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
@@ -100,7 +103,13 @@ class ForgotPasswordPageFooter extends StatelessWidget {
             onPressed: () => onCancel?.call(),
             minimumSize: const Size(250.0, 60.0),
           ),
-          submitButton,
+          Expanded(
+            flex: 1,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: submitButton,
+            ),
+          ),
         ].animate(delay: 180.ms).slideY(begin: 0.8, end: 0.0).fadeIn(),
       ),
     );

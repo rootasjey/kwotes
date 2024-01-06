@@ -8,12 +8,16 @@ class ForgotPasswordPageBody extends StatelessWidget {
     super.key,
     required this.emailController,
     required this.emailErrorMessage,
+    this.isDark = false,
     this.isMobileSize = false,
     this.randomColor = Colors.amber,
     this.onCancel,
     this.onEmailChanged,
     this.onSubmit,
   });
+
+  /// Whether the page is in dark mode.
+  final bool isDark;
 
   /// Adapt the user interface to small screens if true.
   final bool isMobileSize;
@@ -57,12 +61,13 @@ class ForgotPasswordPageBody extends StatelessWidget {
                 randomColor: randomColor,
               ),
               ForgotPasswordPageFooter(
+                isDark: isDark,
                 emailController: emailController,
                 onCancel: onCancel,
                 onSubmit: onSubmit,
                 randomColor: randomColor,
                 showBackButton: !isMobileSize,
-              )
+              ),
             ].animate(delay: 75.ms).slideY(begin: 0.8, end: 0.0).fadeIn(),
           ),
         ),
