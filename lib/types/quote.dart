@@ -120,7 +120,8 @@ class Quote {
         previousValue[topicString] = true;
         return previousValue;
       }),
-      if (operation == EnumQuoteOperation.create)
+      if (operation == EnumQuoteOperation.create ||
+          operation == EnumQuoteOperation.restore)
         "user": {
           "id": userId.isEmpty ? user.id : userId,
         },
