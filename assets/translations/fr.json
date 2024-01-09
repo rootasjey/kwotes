@@ -735,6 +735,12 @@
       "description": "Les citations de tous les utilisateurs",
       "name": "Toutes"
     },
+    "clear": {
+      "author": "Effacer les données de l'auteur",
+      "content": "Effacer le contenu",
+      "reference": "Effacer les données de la reference",
+      "topics": "Retirer les thèmes sélectionnés"
+    },
     "clear_all": "Effacer tout",
     "clear_topics": "Effacer les thèmes",
     "copy": {

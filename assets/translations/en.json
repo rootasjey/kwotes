@@ -721,6 +721,12 @@
       "description": "Published quotes from all users",
       "name": "All"
     },
+    "clear": {
+      "author": "Clear author",
+      "content": "Clear content",
+      "reference": "Clear reference",
+      "topics": "Clear topics"
+    },
     "clear_all": "Clear all",
     "clear_topics": "Clear topics",
     "copy": {
