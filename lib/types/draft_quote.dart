@@ -154,7 +154,11 @@ class DraftQuote extends Quote {
     };
   }
 
-  factory DraftQuote.fromMap(Map<String, dynamic> map) {
+  factory DraftQuote.fromMap(Map<String, dynamic>? map) {
+    if (map == null) {
+      return DraftQuote.empty();
+    }
+
     final List<String> topics = Quote.parseTopics(map["topics"]);
 
     return DraftQuote(
