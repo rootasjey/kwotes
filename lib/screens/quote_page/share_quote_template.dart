@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/better_avatar.dart";
 import "package:kwotes/components/buttons/colored_text_button.dart";
+import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/quote.dart";
 import "package:screenshot/screenshot.dart";
@@ -13,12 +14,11 @@ class ShareQuoteTemplate extends StatelessWidget {
     super.key,
     required this.quote,
     required this.textWrapSolution,
-    required this.borderColor,
     required this.screenshotController,
-    required this.fabLabelValue,
-    required this.fabIconData,
     this.isMobileSize = false,
-    this.backgroundColor = Colors.white70,
+    this.borderColor,
+    this.fabIconData,
+    this.fabLabelValue,
     this.margin = EdgeInsets.zero,
     this.onBack,
     this.onTapShareImage,
@@ -28,11 +28,8 @@ class ShareQuoteTemplate extends StatelessWidget {
   /// Whether the screen is mobile.
   final bool isMobileSize;
 
-  /// Border radius for this widget.
-  final Color backgroundColor;
-
   /// Border color from quote's topic.
-  final Color borderColor;
+  final Color? borderColor;
 
   /// Margin for this widget.
   final EdgeInsets margin;
@@ -44,7 +41,7 @@ class ShareQuoteTemplate extends StatelessWidget {
   final void Function()? onTapShareImage;
 
   /// Fab icon data.
-  final IconData fabIconData;
+  final IconData? fabIconData;
 
   /// Quote data.
   final Quote quote;
@@ -60,7 +57,7 @@ class ShareQuoteTemplate extends StatelessWidget {
 
   /// String label value according to the current platform.
   /// e.g. "Share" for Android, iOS. "Download" for other platforms.
-  final String fabLabelValue;
+  final String? fabLabelValue;
 
   @override
   Widget build(BuildContext context) {
@@ -73,10 +70,10 @@ class ShareQuoteTemplate extends StatelessWidget {
         controller: scrollController,
         children: [
           ColoredTextButton(
-            accentColor: borderColor,
-            textValue: fabLabelValue,
+            accentColor: borderColor ?? getTopicColor(context),
+            textValue: fabLabelValue ?? getFabLabelValue(),
             onPressed: onTapShareImage,
-            icon: Icon(fabIconData),
+            icon: Icon(fabIconData ?? getFabIconData()),
             margin: const EdgeInsets.only(
               left: 16.0,
               right: 16.0,
@@ -93,7 +90,7 @@ class ShareQuoteTemplate extends StatelessWidget {
                 color: Theme.of(context).scaffoldBackgroundColor,
                 shape: RoundedRectangleBorder(
                   side: BorderSide(
-                    color: borderColor,
+                    color: borderColor ?? getTopicColor(context),
                     width: isMobileSize ? 8.0 : 2.0,
                   ),
                   borderRadius: borderRadius,
@@ -173,6 +170,38 @@ class ShareQuoteTemplate extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  /// Get icon data according to the current platform.
+  /// e.g. "Share" for Android, iOS. "Download" for other platforms.
+  IconData getFabIconData() {
+    if (Utils.graphic.isMobile()) {
+      return TablerIcons.share;
+    }
+
+    return TablerIcons.download;
+  }
+
+  /// Get label value according to the current platform.
+  /// e.g. "Share" for Android, iOS. "Download" for other platforms.
+  String getFabLabelValue() {
+    if (Utils.graphic.isMobile()) {
+      return "quote.share.image".tr();
+    }
+
+    return "download.name".tr();
+  }
+
+  /// Returns quote first topic color, if any.
+  Color getTopicColor(BuildContext context) {
+    if (quote.topics.isEmpty) {
+      return Colors.indigo.shade200;
+    }
+
+    return Constants.colors.getColorFromTopicName(
+      context,
+      topicName: quote.topics.first,
     );
   }
 }

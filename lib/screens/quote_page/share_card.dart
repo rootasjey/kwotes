@@ -43,6 +43,7 @@ class ShareCard extends StatelessWidget {
         elevation: 0.0,
         margin: margin,
         color: cardBackgroundColor,
+        clipBehavior: Clip.hardEdge,
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(4.0),
