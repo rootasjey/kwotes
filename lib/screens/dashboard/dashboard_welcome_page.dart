@@ -88,7 +88,7 @@ class DashboardWelcomePage extends StatelessWidget {
                       ),
                       style: Utils.calligraphy.title(
                         textStyle: TextStyle(
-                          fontSize: isMobileSize ? 42.0 : 54.0,
+                          fontSize: isMobileSize ? 42.0 : 74.0,
                           height: 1.0,
                         ),
                       ),

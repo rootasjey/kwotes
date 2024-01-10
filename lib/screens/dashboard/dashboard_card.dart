@@ -125,7 +125,14 @@ class _DashboardCardState extends State<DashboardCard> {
       child: Card(
         elevation: _elevation,
         color: widget.backgroundColor,
+        surfaceTintColor: widget.hoverColor,
         clipBehavior: Clip.hardEdge,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4.0),
+          side: BorderSide(
+            color: _iconColor ?? Colors.transparent,
+          ),
+        ),
         child: InkWell(
           onTap: widget.onTap,
           splashColor: widget.hoverColor,
