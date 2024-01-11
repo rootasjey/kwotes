@@ -31,7 +31,9 @@ class QuotePageBody extends StatelessWidget {
     this.onCopyReferenceUrl,
     this.onCopyAuthor,
     this.onCopyReference,
+    this.onDeleteQuote,
     this.onDoubleTapQuote,
+    this.onEditQuote,
     this.onShareImage,
     this.onShareLink,
     this.onShareText,
@@ -69,8 +71,14 @@ class QuotePageBody extends StatelessWidget {
   /// Callback fired when reference's url is copied.
   final void Function()? onCopyReferenceUrl;
 
+  /// Callback fired when quote is deleted.
+  final void Function(Quote)? onDeleteQuote;
+
   /// Callback fired when quote's name is double tapped.
   final void Function(Quote quote)? onDoubleTapQuote;
+
+  /// Callback fired when quote is edited.
+  final void Function(Quote)? onEditQuote;
 
   /// Callback fired when image is shared.
   final void Function(Quote quote)? onShareImage;
@@ -140,13 +148,14 @@ class QuotePageBody extends StatelessWidget {
                   quote: quote,
                   onCopyQuote: onCopyQuote,
                   onCopyQuoteUrl: onCopyQuoteUrl,
-                  authenticated: authenticated,
                   selectedColor: selectedColor,
-                  userId: userFirestore.id,
                   onChangeLanguage: onChangeLanguage,
+                  onDelete: onDeleteQuote,
+                  onEdit: onEditQuote,
                   onShareImage: onShareImage,
                   onShareLink: onShareLink,
                   onShareText: onShareText,
+                  userId: userFirestore.id,
                 ),
               ),
             ),

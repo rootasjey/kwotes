@@ -1,13 +1,8 @@
 import "dart:async";
-import "dart:io";
-import "dart:math";
 
 import "package:beamer/beamer.dart";
-import "package:bottom_sheet/bottom_sheet.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
-import "package:file_picker/file_picker.dart";
-import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
@@ -21,9 +16,9 @@ import "package:kwotes/screens/quote_page/quote_page_actions.dart";
 import "package:kwotes/screens/quote_page/quote_page_body.dart";
 import "package:kwotes/screens/quote_page/quote_page_container.dart";
 import "package:kwotes/screens/quote_page/share_quote_bottom_sheet.dart";
-import "package:kwotes/screens/quote_page/share_quote_template.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/author.dart";
+import "package:kwotes/types/enums/enum_draft_quote_operation.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/firestore/document_snapshot_map.dart";
@@ -36,9 +31,7 @@ import "package:kwotes/types/user/user_firestore.dart";
 import "package:kwotes/types/user/user_rights.dart";
 import "package:loggy/loggy.dart";
 import "package:screenshot/screenshot.dart";
-import "package:share_plus/share_plus.dart";
 import "package:text_wrap_auto_size/solution.dart";
-import "package:text_wrap_auto_size/text_wrap_auto_size.dart";
 import "package:unicons/unicons.dart";
 
 class QuotePage extends StatefulWidget {
@@ -81,12 +74,16 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   /// (and we can't access context on dispoe).
   Signal<bool>? _signalNavigationBar;
 
+  /// Text wrap solution to calculate font size according to window size.
   Solution _textWrapSolution = Solution(
     const Text(""),
     const TextStyle(),
     const Size(0, 0),
     const Size(0, 0),
   );
+
+  /// Collection name.
+  final String _collectionName = "quotes";
 
   /// Copy icon tooltip.
   String copyTooltip = "quote.copy.name".tr();
@@ -111,7 +108,10 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   @override
   Widget build(BuildContext context) {
     final Size windowSize = MediaQuery.of(context).size;
-    _textWrapSolution = getTextSolution(windowSize);
+    _textWrapSolution = Utils.graphic.getTextSolution(
+      quote: _quote,
+      windowSize: windowSize,
+    );
 
     final bool isMobileSize =
         windowSize.width < Utils.measurements.mobileWidthTreshold ||
@@ -164,8 +164,10 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
                     onCopyQuoteUrl: QuoteActions.copyQuoteUrl,
                     onCopyReference: onCopyReference,
                     onCopyReferenceUrl: onCopyReferenceUrl,
+                    onDeleteQuote: canManageQuotes ? onDeleteQuote : null,
                     onDoubleTapQuote: onCopyQuote,
-                    onShareImage: onOpenShareImage,
+                    onEditQuote: canManageQuotes ? onEditQuote : null,
+                    onShareImage: onShareImage,
                     onShareLink: onShareLink,
                     onShareText: onShareText,
                     onTapAuthor: onTapAuthor,
@@ -362,41 +364,6 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
     }
   }
 
-  /// Generate file name for image to save on device.
-  String generateFileName() {
-    String name = "quote.name".tr();
-
-    if (_quote.author.name.isNotEmpty) {
-      name += " — ${_quote.author.name}";
-    }
-
-    if (_quote.reference.name.isNotEmpty) {
-      name += " — ${_quote.reference.name}";
-    }
-
-    return name;
-  }
-
-  /// Get label value according to the current platform.
-  /// e.g. "Share" for Android, iOS. "Download" for other platforms.
-  String getFabLabelValue() {
-    if (Utils.graphic.isMobile()) {
-      return "quote.share.image".tr();
-    }
-
-    return "download.name".tr();
-  }
-
-  /// Get icon data according to the current platform.
-  /// e.g. "Share" for Android, iOS. "Download" for other platforms.
-  IconData getFabIconData() {
-    if (Utils.graphic.isMobile()) {
-      return TablerIcons.share;
-    }
-
-    return TablerIcons.download;
-  }
-
   /// Returns navigation route for the given suffix.
   /// This is necessary to keep the navigation context (e.g. home, search).
   /// E.g.: author/123 -> /h/author/123
@@ -406,63 +373,6 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
     final List<String> pathSegments = beamState.pathPatternSegments;
     final String prefix = pathSegments.first;
     return "/$prefix/$suffix";
-  }
-
-  /// Get text height based on window size.
-  double getTextHeight(Size windowSize) {
-    final double heightPadding = getTextHeightPadding();
-    return max(windowSize.height - heightPadding, 200.0);
-  }
-
-  /// Returns the height padding for this widget according to available data
-  /// (e.g. author, reference).
-  double getTextHeightPadding() {
-    double heightPadding = 240.0;
-
-    if (_quote.author.name.isNotEmpty) {
-      heightPadding += 42.0;
-    }
-
-    if (_quote.author.urls.image.isNotEmpty) {
-      heightPadding += 54.0;
-    }
-
-    if (_quote.reference.name.isNotEmpty) {
-      heightPadding += 24.0;
-    }
-
-    return heightPadding;
-  }
-
-  /// Get text height based on window size.
-  double getTextWidth(Size windowSize) {
-    const double widthPadding = 200.0;
-    return max(windowSize.width - widthPadding, 200.0);
-  }
-
-  /// Get text solution (style) based on window size.
-  Solution getTextSolution(Size windowSize) {
-    final double height = getTextHeight(windowSize);
-    final double width = getTextWidth(windowSize);
-
-    try {
-      return TextWrapAutoSize.solution(
-        Size(width, height),
-        Text(_quote.name, style: Utils.calligraphy.body()),
-      );
-    } catch (e) {
-      loggy.error(e);
-      return Solution(
-        Text(_quote.name),
-        Utils.calligraphy.body(
-          textStyle: const TextStyle(
-            fontSize: 18.0,
-          ),
-        ),
-        Size(width, height),
-        Size(width, height),
-      );
-    }
   }
 
   /// Returns quote first topic color, if any.
@@ -503,65 +413,6 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
       userId: userId,
       selectedColor: getTopicColor(),
     );
-  }
-
-  /// Callback fired to capture image and share it on mobile device,
-  /// or download it on other platforms.
-  /// [pop] if true, execute additional pop
-  /// (to close previous bottom sheet on mobile).
-  void onCaptureImage({bool pop = false}) {
-    _screenshotController.capture().then((Uint8List? image) async {
-      if (image == null) {
-        return;
-      }
-
-      if (Utils.graphic.isMobile()) {
-        Share.shareXFiles(
-          [
-            XFile.fromData(
-              image,
-              name: "${generateFileName()}.png",
-              mimeType: "image/png",
-            ),
-          ],
-          sharePositionOrigin: const Rect.fromLTWH(0, 0, 0, 0),
-        );
-        return;
-      }
-
-      final String? prefix = await FilePicker.platform.getDirectoryPath();
-
-      if (prefix == null) {
-        loggy.info("`prefix` is null probably because the user cancelled. "
-            "Download cancelled.");
-
-        if (!mounted) return;
-        Utils.graphic.showSnackbar(
-          context,
-          message: "download.error.cancelled".tr(),
-        );
-        return;
-      }
-
-      final String path = "$prefix/${generateFileName()}.png";
-      await File(path).writeAsBytes(image);
-      if (!mounted) return;
-
-      Utils.graphic.showSnackbar(
-        context,
-        message: "download.success".tr(),
-      );
-
-      if (pop) {
-        Navigator.of(context).pop();
-      }
-    }).catchError((error) {
-      loggy.error(error);
-      Utils.graphic.showSnackbar(
-        context,
-        message: "download.failed".tr(),
-      );
-    }).whenComplete(() => Navigator.of(context).pop());
   }
 
   /// Callback to update a quote's language.
@@ -638,6 +489,104 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
         text: "${Constants.referenceUrl}/${_quote.reference.id}"));
   }
 
+  /// Callback to delete a published quote.
+  void onDeleteQuote(Quote quote) async {
+    final Signal<UserFirestore> currentUser =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+
+    final UserRights userRights = currentUser.value.rights;
+    final bool canManageQuotes = userRights.canManageQuotes;
+
+    if (!canManageQuotes) return;
+
+    try {
+      await FirebaseFirestore.instance
+          .collection(_collectionName)
+          .doc(quote.id)
+          .delete();
+
+      loggy.info("will delete quote: ${quote.id}");
+
+      if (!mounted) return;
+      Utils.graphic.showSnackbarWithCustomText(
+        context,
+        duration: const Duration(seconds: 10),
+        text: Row(children: [
+          Expanded(
+            flex: 0,
+            child: Text(
+              "quote.delete.success".tr(),
+              style: Utils.calligraphy.body(
+                textStyle: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                  color: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.color
+                      ?.withOpacity(0.6),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: TextButton(
+              onPressed: () {
+                FirebaseFirestore.instance
+                    .collection(_collectionName)
+                    .doc(quote.id)
+                    .set(quote.toMap(
+                      operation: EnumQuoteOperation.restore,
+                    ));
+
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                loggy.info("reverse add quote: ${quote.id}");
+              },
+              style: TextButton.styleFrom(
+                  textStyle: const TextStyle(
+                fontSize: 16.0,
+              )),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "rollback".tr(),
+                    style: Utils.calligraphy.body(
+                      textStyle: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 8.0),
+                    child: Icon(TablerIcons.rotate_2),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ]),
+      );
+
+      context.beamBack();
+    } catch (error) {
+      loggy.error(error);
+      Utils.graphic.showSnackbar(context, message: "error");
+    }
+  }
+
+  /// Callback to edit a published quote.
+  void onEditQuote(Quote quote) {
+    NavigationStateHelper.quote = quote;
+    context.beamToNamed(
+      getRoute("edit/quote/${quote.id}"),
+      data: {
+        "quoteId": quote.id,
+      },
+    );
+  }
+
   /// Callback fired to share quote.
   onShareQuote() {
     showModalBottomSheet(
@@ -653,96 +602,51 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
       builder: (BuildContext context) {
         return ShareQuoteBottomSheet(
           quote: _quote,
-          onShareImage: onOpenShareImage,
-          onShareLink: onShareLink,
-          onShareText: onShareText,
+          onShareImage: (Quote quote, {bool pop = true}) =>
+              Utils.graphic.onOpenShareImage(
+            context,
+            pop: pop,
+            quote: quote,
+            screenshotController: _screenshotController,
+            textWrapSolution: _textWrapSolution,
+            mounted: mounted,
+          ),
+          onShareLink: (Quote quote) => Utils.graphic.onShareLink(
+            context,
+            quote: quote,
+          ),
+          onShareText: (Quote quote) => Utils.graphic.onShareText(
+            context,
+            quote: quote,
+            onCopyQuote: onCopyQuote,
+          ),
         );
       },
     );
   }
 
-  /// Callback fired to share quote as image.
-  /// [pop] indicates if a bottom sheet should be popped after sharing.
-  void onOpenShareImage(Quote quote, {bool pop = false}) {
-    showFlexibleBottomSheet(
-      context: context,
-      minHeight: 0,
-      initHeight: 0.5,
-      maxHeight: 0.9,
-      anchors: [0.0, 0.9],
-      bottomSheetBorderRadius: const BorderRadius.only(
-        topLeft: Radius.circular(12.0),
-        topRight: Radius.circular(12.0),
-      ),
-      builder: (
-        BuildContext context,
-        ScrollController scrollController,
-        double bottomSheetOffset,
-      ) {
-        return ShareQuoteTemplate(
-          borderColor: getTopicColor(),
-          isMobileSize: Utils.measurements.isMobileSize(context),
-          quote: quote,
-          screenshotController: _screenshotController,
-          textWrapSolution: _textWrapSolution,
-          onBack: Navigator.of(context).pop,
-          fabLabelValue: getFabLabelValue(),
-          onTapShareImage: () => onCaptureImage(pop: pop),
-          fabIconData: getFabIconData(),
-          scrollController: scrollController,
-          margin: const EdgeInsets.only(top: 24.0),
-        );
-      },
+  void onShareImage(Quote quote) {
+    Utils.graphic.onOpenShareImage(
+      context,
+      quote: quote,
+      screenshotController: _screenshotController,
+      textWrapSolution: _textWrapSolution,
     );
   }
 
-  /// Callback fired to share quote as link.
   void onShareLink(Quote quote) {
-    if (kIsWeb || Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
-      QuoteActions.copyQuoteUrl(quote);
-      Utils.graphic.showSnackbar(
-        context,
-        message: "quote.copy_link.success".tr(),
-      );
-      return;
-    }
-
-    if (Utils.graphic.isMobile()) {
-      Share.shareUri(Uri.parse("${Constants.quoteUrl}/${_quote.id}"));
-      return;
-    }
+    Utils.graphic.onShareLink(
+      context,
+      quote: quote,
+    );
   }
 
-  /// Callback fired to share quote as text.
   void onShareText(Quote quote) {
-    if (kIsWeb || Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
-      onCopyQuote(quote);
-      Utils.graphic.showSnackbar(
-        context,
-        message: "quote.copy.success.name".tr(),
-      );
-      return;
-    }
-
-    String textToShare = "«${_quote.name}»";
-
-    if (quote.author.name.isNotEmpty) {
-      textToShare += " — ${quote.author.name}";
-    }
-
-    if (quote.reference.name.isNotEmpty) {
-      textToShare += " — ${quote.reference.name}";
-    }
-
-    if (Utils.graphic.isMobile()) {
-      final RenderBox? box = context.findRenderObject() as RenderBox?;
-      Share.share(
-        textToShare,
-        subject: "quote.name".tr(),
-        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
-      );
-      return;
-    }
+    Utils.graphic.onShareText(
+      context,
+      quote: quote,
+      onCopyQuote: onCopyQuote,
+    );
   }
 
   /// Callback fired to navigate to author page.
