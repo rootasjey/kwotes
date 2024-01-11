@@ -61,7 +61,7 @@ class DraftsPageHeader extends StatelessWidget {
                     TextSpan(
                       text: ".",
                       style: TextStyle(
-                        color: Constants.colors.inValidation,
+                        color: Constants.colors.drafts,
                       ),
                     ),
                   ]),

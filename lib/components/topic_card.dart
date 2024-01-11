@@ -96,7 +96,6 @@ class _TopicCardState extends State<TopicCard> {
       elevation: _cardElevation,
       color: widget.backgroundColor,
       shadowColor: _iconHoverColor?.withOpacity(0.2),
-      // shadowColor: _iconHoverColor?.withOpacity(0.2),
       shape: widget.shape,
       child: InkWell(
         customBorder: widget.shape,

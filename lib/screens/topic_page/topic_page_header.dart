@@ -6,8 +6,12 @@ class TopicPageHeader extends StatelessWidget {
   const TopicPageHeader({
     super.key,
     required this.topic,
+    this.isMobileSize = false,
     this.onTapName,
   });
+
+  /// Adapt the user interface to small screens if true.
+  final bool isMobileSize;
 
   /// Callback fired when topic name is tapped.
   final void Function()? onTapName;
@@ -20,6 +24,7 @@ class TopicPageHeader extends StatelessWidget {
     return PageAppBar(
       axis: Axis.horizontal,
       toolbarHeight: 120.0,
+      isMobileSize: isMobileSize,
       children: [
         Hero(
           tag: topic,
