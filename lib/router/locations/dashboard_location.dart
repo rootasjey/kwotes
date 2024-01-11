@@ -78,12 +78,6 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
   /// Main root value for this location.
   static const String route = "/d";
 
-  /// Signin route location.
-  static const String signinRoute = "$route/signin";
-
-  /// Signup route location.
-  static const String signupRoute = "$route/signup";
-
   /// Forgot password route location.
   static const String forgotPasswordRoute = "$route/forgot-password";
 
@@ -106,6 +100,10 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
   static const String deleteAccountRoute = "$settingsRoute/delete-account";
   static const String draftsRoute = "$route/drafts";
   static const String editAuthorRoute = "$route/edit/author/:authorId";
+
+  /// Add/edit quote route location.
+  static const String editQuoteRoute = "$route/edit/quote/:quoteId";
+
   static const String editReferenceRoute = "$route/edit/reference/:referenceId";
   static const String favouritesRoute = "$route/favourites";
   static const String favouritesQuoteRoute = "$favouritesRoute/:quoteId";
@@ -130,6 +128,12 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
   static const String settingsRoute = "$route/settings";
   static const String settingsTosRoute = "$settingsRoute/terms-of-service";
   static const String settingsThePurposeRoute = "$settingsRoute/the-purpose";
+
+  /// Signin route location.
+  static const String signinRoute = "$route/signin";
+
+  /// Signup route location.
+  static const String signupRoute = "$route/signup";
   static const String updateEmailRoute = "$settingsRoute/email";
   static const String updatePasswordRoute = "$settingsRoute/password";
   static const String updateUsernameRoute = "$settingsRoute/username";
@@ -145,6 +149,7 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
         deleteAccountRoute,
         draftsRoute,
         editAuthorRoute,
+        editQuoteRoute,
         editReferenceRoute,
         favouritesQuoteRoute,
         favouritesRoute,
@@ -322,6 +327,16 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
           child: const AddQuotePage(),
           key: const ValueKey(addQuoteRoute),
           title: "page_title.add_quote".tr(),
+          type: BeamPageType.fadeTransition,
+        ),
+      if (state.pathPatternSegments.contains("edit") &&
+          state.pathPatternSegments.contains(editQuoteRoute.split("/").last))
+        BeamPage(
+          child: AddQuotePage(
+            quoteId: state.pathParameters["quoteId"] ?? "",
+          ),
+          key: const ValueKey(editQuoteRoute),
+          title: "page_title.edit_quote".tr(),
           type: BeamPageType.fadeTransition,
         ),
       if (state.pathPatternSegments.contains(colorPaletteRoute.split("/").last))

@@ -1,6 +1,7 @@
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/widgets.dart";
+import "package:kwotes/screens/add_quote/add_quote_page.dart";
 import "package:kwotes/screens/author/author_page.dart";
 import "package:kwotes/screens/author/edit_author_page.dart";
 import "package:kwotes/screens/quote_page/quote_page.dart";
@@ -47,6 +48,9 @@ class SearchContentLocation extends BeamLocation<BeamState> {
   /// Edit author route location.
   static const String editAuthorRoute = "$route/edit/author/:authorId";
 
+  /// Edit quote route location.
+  static const String editQuoteRoute = "$route/edit/quote/:quoteId";
+
   /// Edit reference route location.
   static const String editReferenceRoute = "$route/edit/reference/:referenceId";
 
@@ -65,6 +69,7 @@ class SearchContentLocation extends BeamLocation<BeamState> {
   @override
   List<String> get pathPatterns => [
         route,
+        editQuoteRoute,
         quoteRoute,
         authorRoute,
         editAuthorRoute,
@@ -150,6 +155,16 @@ class SearchContentLocation extends BeamLocation<BeamState> {
           type: BeamPageType.fadeTransition,
           fullScreenDialog: false,
           opaque: false,
+        ),
+      if (state.pathPatternSegments.contains("edit") &&
+          state.pathPatternSegments.contains(editQuoteRoute.split("/").last))
+        BeamPage(
+          child: AddQuotePage(
+            quoteId: state.pathParameters["quoteId"] ?? "",
+          ),
+          key: const ValueKey(editQuoteRoute),
+          title: "page_title.edit_quote".tr(),
+          type: BeamPageType.fadeTransition,
         ),
     ];
   }
