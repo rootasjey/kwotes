@@ -360,6 +360,12 @@
       }
     },
     "name": "Liste",
+    "remove": {
+      "failed": "Une erreur s'est produite lors de la suppression de la liste",
+      "name": "Supprimer la liste",
+      "quote": "Supprimer la citation de la liste",
+      "success": "La liste a été supprimée"
+    },
     "save": {
       "name": "Enregistrer la liste"
     },

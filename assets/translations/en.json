@@ -358,6 +358,12 @@
       }
     },
     "name": "List",
+    "remove": {
+      "failed": "An error occurred while removing your list",
+      "name": "Remove list",
+      "quote": "Remove quote from list",
+      "success": "The list has been removed"
+    },
     "save": {
       "name": "Save list"
     },
