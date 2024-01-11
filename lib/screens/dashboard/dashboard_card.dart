@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter_animate/flutter_animate.dart";
 import "package:kwotes/globals/utils.dart";
 
 class DashboardCard extends StatefulWidget {
@@ -62,6 +63,9 @@ class _DashboardCardState extends State<DashboardCard> {
   /// Card's end elevation.
   double _endElevation = 0.0;
 
+  /// Shake animation value target (to animate on hover).
+  double _shakeAnimationTarget = 0.0;
+
   /// Card's start elevation.
   double _startElevation = 0.0;
 
@@ -74,16 +78,14 @@ class _DashboardCardState extends State<DashboardCard> {
   /// Card's current icon color.
   Color? _iconColor;
 
-  /// Card's subtitle text color.
-  Color? _subtitleTextColor = Colors.white54;
-
   @override
   void initState() {
     super.initState();
     _startElevation = widget.compact ? 6.0 : widget.elevation;
     _endElevation = _startElevation / 2;
     _elevation = _startElevation;
-    _backgroundColor = widget.isDark ? widget.hoverColor : null;
+
+    widget.isDark ? applyDarkTheme() : applyLightTheme();
   }
 
   @override
@@ -93,6 +95,21 @@ class _DashboardCardState extends State<DashboardCard> {
     }
 
     return largeLayout();
+  }
+
+  /// Apply dark theme.
+  void applyDarkTheme() {
+    _elevation = _endElevation;
+    _iconColor = widget.hoverColor;
+    _borderColor = widget.hoverColor.withOpacity(0.2);
+    _backgroundColor = null;
+  }
+
+  /// Apply light theme.
+  void applyLightTheme() {
+    _elevation = _startElevation;
+    _iconColor = widget.hoverColor;
+    _borderColor = widget.hoverColor.withOpacity(0.2);
   }
 
   Widget compactLayout() {
@@ -178,7 +195,7 @@ class _DashboardCardState extends State<DashboardCard> {
       child: Icon(
         widget.iconData,
         color: _iconColor,
-      ),
+      ).animate(target: _shakeAnimationTarget).shake(),
     );
   }
 
@@ -204,16 +221,19 @@ class _DashboardCardState extends State<DashboardCard> {
             ),
           ),
         ),
-        Text(
-          widget.textSubtitle,
-          maxLines: widget.isWide ? 1 : 2,
-          overflow: TextOverflow.ellipsis,
-          textAlign: TextAlign.center,
-          style: Utils.calligraphy.body(
-            textStyle: TextStyle(
-              fontSize: 14.0,
-              fontWeight: FontWeight.w400,
-              color: _subtitleTextColor,
+        // Opacity for dark/ligth theme auto switch.
+        Opacity(
+          opacity: 0.6,
+          child: Text(
+            widget.textSubtitle,
+            maxLines: widget.isWide ? 1 : 2,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: Utils.calligraphy.body(
+              textStyle: const TextStyle(
+                fontSize: 14.0,
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ),
         ),
@@ -232,16 +252,14 @@ class _DashboardCardState extends State<DashboardCard> {
       setState(() {
         _elevation = _startElevation;
         _borderColor = widget.hoverColor;
+        _shakeAnimationTarget = 1.0;
       });
       return;
     }
 
     setState(() {
-      _elevation = _endElevation;
-      _iconColor = widget.hoverColor;
-      _subtitleTextColor = Colors.white70;
-      _borderColor = widget.hoverColor.withOpacity(0.2);
-      _backgroundColor = null;
+      applyDarkTheme();
+      _shakeAnimationTarget = 0.0;
     });
   }
 
@@ -252,16 +270,14 @@ class _DashboardCardState extends State<DashboardCard> {
         _elevation = _endElevation;
         _iconColor = widget.hoverColor;
         _borderColor = widget.hoverColor;
-        _subtitleTextColor = widget.hoverColor;
+        _shakeAnimationTarget = 1.0;
       });
       return;
     }
 
     setState(() {
-      _elevation = _startElevation;
-      _iconColor = null;
-      _borderColor = null;
-      _subtitleTextColor = Colors.white38;
+      applyLightTheme();
+      _shakeAnimationTarget = 0.0;
     });
   }
 
