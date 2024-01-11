@@ -190,7 +190,7 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
 
     data["id"] = doc.id;
     final Quote quote = Quote.fromMap(data);
-    setState(() => _quotes.add(quote));
+    setState(() => _quotes.insert(0, quote));
   }
 
   /// Handle removed favourite quote.

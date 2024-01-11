@@ -254,7 +254,7 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
 
     data["id"] = doc.id;
     final Quote draft = Quote.fromMap(data);
-    setState(() => _quotes.add(draft));
+    setState(() => _quotes.insert(0, draft));
   }
 
   /// Callback fired when a quote is modified in the Firestore collection.

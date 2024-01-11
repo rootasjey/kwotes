@@ -245,7 +245,7 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
     data["id"] = doc.id;
     data["in_validation"] = true;
     final DraftQuote draft = DraftQuote.fromMap(data);
-    setState(() => _drafts.add(draft));
+    setState(() => _drafts.insert(0, draft));
   }
 
   /// Callback fired when a draft is modified in the Firestore collection.

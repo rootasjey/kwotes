@@ -217,7 +217,7 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
 
     data["id"] = doc.id;
     final DraftQuote draft = DraftQuote.fromMap(data);
-    setState(() => _drafts.add(draft));
+    setState(() => _drafts.insert(0, draft));
   }
 
   /// Callback fired when a draft is modified in the Firestore collection.
