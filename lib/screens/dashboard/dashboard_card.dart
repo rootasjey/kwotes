@@ -8,9 +8,9 @@ class DashboardCard extends StatefulWidget {
     required this.textSubtitle,
     required this.textTitle,
     this.compact = false,
+    this.isDark = false,
     this.isWide = false,
     this.noSizeConstraints = false,
-    this.backgroundColor,
     this.hoverColor = Colors.pink,
     this.elevation = 0.0,
     this.onTap,
@@ -21,14 +21,14 @@ class DashboardCard extends StatefulWidget {
   /// (height = 116.0 and width = 200 || 300).
   final bool noSizeConstraints;
 
+  /// If true, this card will be dark.
+  final bool isDark;
+
   /// This card will have less height but with normal width.
   final bool isWide;
 
   /// If true, the card's width will be 200.0.
   final bool compact;
-
-  /// Card's background color.
-  final Color? backgroundColor;
 
   /// Icon will be of this color on hover.
   final Color hoverColor;
@@ -65,8 +65,17 @@ class _DashboardCardState extends State<DashboardCard> {
   /// Card's start elevation.
   double _startElevation = 0.0;
 
+  /// Card's background color.
+  Color? _backgroundColor;
+
+  /// Card's border color.
+  Color? _borderColor;
+
   /// Card's current icon color.
   Color? _iconColor;
+
+  /// Card's subtitle text color.
+  Color? _subtitleTextColor = Colors.white54;
 
   @override
   void initState() {
@@ -74,6 +83,7 @@ class _DashboardCardState extends State<DashboardCard> {
     _startElevation = widget.compact ? 6.0 : widget.elevation;
     _endElevation = _startElevation / 2;
     _elevation = _startElevation;
+    _backgroundColor = widget.isDark ? widget.hoverColor : null;
   }
 
   @override
@@ -91,10 +101,10 @@ class _DashboardCardState extends State<DashboardCard> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4.0),
         side: BorderSide(
-          color: _iconColor ?? Colors.transparent,
+          color: _borderColor ?? Colors.transparent,
         ),
       ),
-      color: widget.backgroundColor,
+      color: _backgroundColor,
       surfaceTintColor: widget.hoverColor,
       child: InkWell(
         onTap: widget.onTap,
@@ -124,7 +134,7 @@ class _DashboardCardState extends State<DashboardCard> {
       height: 170.0,
       child: Card(
         elevation: _elevation,
-        color: widget.backgroundColor,
+        color: _backgroundColor,
         surfaceTintColor: widget.hoverColor,
         clipBehavior: Clip.hardEdge,
         shape: RoundedRectangleBorder(
@@ -165,12 +175,9 @@ class _DashboardCardState extends State<DashboardCard> {
               top: 12.0,
               bottom: 12.0,
             ),
-      child: Opacity(
-        opacity: 0.6,
-        child: Icon(
-          widget.iconData,
-          color: _iconColor,
-        ),
+      child: Icon(
+        widget.iconData,
+        color: _iconColor,
       ),
     );
   }
@@ -184,33 +191,29 @@ class _DashboardCardState extends State<DashboardCard> {
           tag: widget.heroKey,
           child: Material(
             color: Colors.transparent,
-            child: Opacity(
-              opacity: 0.6,
-              child: Text(
-                widget.textTitle,
-                textAlign: TextAlign.center,
-                style: Utils.calligraphy.body(
-                  textStyle: const TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w500,
-                  ),
+            child: Text(
+              widget.textTitle,
+              textAlign: TextAlign.center,
+              style: Utils.calligraphy.body(
+                textStyle: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                  color: _iconColor,
                 ),
               ),
             ),
           ),
         ),
-        Opacity(
-          opacity: 0.4,
-          child: Text(
-            widget.textSubtitle,
-            maxLines: widget.isWide ? 1 : 2,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: Utils.calligraphy.body(
-              textStyle: const TextStyle(
-                fontSize: 14.0,
-                fontWeight: FontWeight.w400,
-              ),
+        Text(
+          widget.textSubtitle,
+          maxLines: widget.isWide ? 1 : 2,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
+          style: Utils.calligraphy.body(
+            textStyle: TextStyle(
+              fontSize: 14.0,
+              fontWeight: FontWeight.w400,
+              color: _subtitleTextColor,
             ),
           ),
         ),
@@ -218,11 +221,38 @@ class _DashboardCardState extends State<DashboardCard> {
     );
   }
 
+  /// Callback fired when this card is hovered.
   void onHover(bool isHover) {
+    widget.isDark ? onDarkHover(isHover) : onLightHover(isHover);
+  }
+
+  /// On hover ind dark theme.
+  void onDarkHover(bool isHover) {
+    if (isHover) {
+      setState(() {
+        _elevation = _startElevation;
+        _borderColor = widget.hoverColor;
+      });
+      return;
+    }
+
+    setState(() {
+      _elevation = _endElevation;
+      _iconColor = widget.hoverColor;
+      _subtitleTextColor = Colors.white70;
+      _borderColor = widget.hoverColor.withOpacity(0.2);
+      _backgroundColor = null;
+    });
+  }
+
+  /// On hover in light theme.
+  void onLightHover(bool isHover) {
     if (isHover) {
       setState(() {
         _elevation = _endElevation;
         _iconColor = widget.hoverColor;
+        _borderColor = widget.hoverColor;
+        _subtitleTextColor = widget.hoverColor;
       });
       return;
     }
@@ -230,6 +260,8 @@ class _DashboardCardState extends State<DashboardCard> {
     setState(() {
       _elevation = _startElevation;
       _iconColor = null;
+      _borderColor = null;
+      _subtitleTextColor = Colors.white38;
     });
   }
 

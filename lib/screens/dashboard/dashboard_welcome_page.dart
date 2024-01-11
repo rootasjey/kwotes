@@ -21,6 +21,7 @@ class DashboardWelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
 
     final Color? foregroundColor =
@@ -114,6 +115,7 @@ class DashboardWelcomePage extends StatelessWidget {
                       DashboardCard(
                         compact: isMobileSize,
                         iconData: UniconsLine.heart,
+                        isDark: isDark,
                         hoverColor: Constants.colors.likes,
                         textSubtitle: "favourites.description".tr(),
                         textTitle: "favourites.name".tr(),
@@ -128,6 +130,7 @@ class DashboardWelcomePage extends StatelessWidget {
                         compact: isMobileSize,
                         hoverColor: Constants.colors.lists,
                         iconData: UniconsLine.list_ul,
+                        isDark: isDark,
                         textSubtitle: "lists.description".tr(),
                         textTitle: "lists.name".tr(),
                         heroKey: "lists",
@@ -141,6 +144,7 @@ class DashboardWelcomePage extends StatelessWidget {
                         compact: isMobileSize,
                         hoverColor: Constants.colors.inValidation,
                         iconData: UniconsLine.clock,
+                        isDark: isDark,
                         textSubtitle: "in_validation.description".tr(),
                         textTitle: "in_validation.name".tr(),
                         heroKey: "in_validation",
@@ -154,6 +158,7 @@ class DashboardWelcomePage extends StatelessWidget {
                         compact: isMobileSize,
                         hoverColor: Constants.colors.published,
                         iconData: TablerIcons.send,
+                        isDark: isDark,
                         textSubtitle: "published.description".tr(),
                         textTitle: "published.name".tr(),
                         heroKey: "published",
@@ -167,6 +172,7 @@ class DashboardWelcomePage extends StatelessWidget {
                         compact: isMobileSize,
                         hoverColor: Constants.colors.drafts,
                         iconData: TablerIcons.note,
+                        isDark: isDark,
                         textSubtitle: "drafts.description".tr(),
                         textTitle: "drafts.name".tr(),
                         heroKey: "drafts",
@@ -179,6 +185,7 @@ class DashboardWelcomePage extends StatelessWidget {
                       DashboardCard(
                         compact: isMobileSize,
                         iconData: TablerIcons.settings,
+                        isDark: isDark,
                         hoverColor: Constants.colors.settings,
                         textSubtitle: "settings.description".tr(),
                         textTitle: "settings.name".tr(),
