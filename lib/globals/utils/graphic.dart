@@ -1,22 +1,32 @@
 import "dart:io";
+import "dart:math";
 
 import "package:bottom_sheet/bottom_sheet.dart";
 import "package:easy_localization/easy_localization.dart";
+import "package:file_picker/file_picker.dart";
 import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/actions/quote_actions.dart";
 import "package:kwotes/components/dialogs/add_to_list/add_to_list_dialog.dart";
+import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/screens/quote_page/share_quote_template.dart";
 import "package:kwotes/types/enums/enum_color_value_type.dart";
 import "package:kwotes/types/enums/enum_main_genre.dart";
 import "package:kwotes/types/enums/enum_snackbar_type.dart";
 import "package:kwotes/types/enums/enum_topic.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/topic.dart";
+import "package:loggy/loggy.dart";
+import "package:screenshot/screenshot.dart";
+import "package:share_plus/share_plus.dart";
+import "package:text_wrap_auto_size/solution.dart";
+import "package:text_wrap_auto_size/text_wrap_auto_size.dart";
 import "package:unicons/unicons.dart";
 
 /// Graphic utilities (everything associated with visual and UI).
-class Graphic {
+class Graphic with UiLoggy {
   const Graphic();
 
   /// Color filter to greyed out widget.
@@ -386,6 +396,8 @@ class Graphic {
     required String message,
     Color? backgroundColor,
     SnackbarType type = SnackbarType.error,
+    SnackBarBehavior? behavior,
+    double? width,
   }) {
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
@@ -404,6 +416,7 @@ class Graphic {
             ),
           ),
         ),
+        width: width,
         elevation: 12.0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(2.0),
@@ -411,7 +424,95 @@ class Graphic {
         ),
         backgroundColor: backgroundColor ?? defaultBackgroundColor,
         closeIconColor: foregroundColor?.withOpacity(0.6),
-        behavior: SnackBarBehavior.fixed,
+        behavior: behavior,
+      ),
+    );
+  }
+
+  /// Show a copy quote name snackbar.
+  void showCopyQuoteSnackbar(
+    BuildContext context, {
+    bool isMobileSize = false,
+  }) {
+    final Color? foregroundColor =
+        Theme.of(context).textTheme.bodyMedium?.color;
+    final Color defaultBackgroundColor =
+        Theme.of(context).dialogBackgroundColor;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(right: 12.0),
+              child: Icon(TablerIcons.copy),
+            ),
+            Text(
+              "quote.copy.success.name".tr(),
+              style: Utils.calligraphy.body(
+                textStyle: TextStyle(
+                  fontSize: 14.0,
+                  color: Theme.of(context).textTheme.bodyMedium?.color,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+        width: isMobileSize ? null : 600.0,
+        elevation: 12.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(2.0),
+          side: BorderSide(color: Constants.colors.home, width: 4.0),
+        ),
+        backgroundColor: defaultBackgroundColor,
+        closeIconColor: foregroundColor?.withOpacity(0.6),
+        behavior: isMobileSize ? null : SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  /// Show a copy quote url snackbar.
+  void showCopyQuoteLinkSnackbar(
+    BuildContext context, {
+    bool isMobileSize = false,
+  }) {
+    final Color? foregroundColor =
+        Theme.of(context).textTheme.bodyMedium?.color;
+    final Color defaultBackgroundColor =
+        Theme.of(context).dialogBackgroundColor;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(right: 12.0),
+              child: Icon(TablerIcons.link),
+            ),
+            Text(
+              "quote.copy.success.link".tr(),
+              style: Utils.calligraphy.body(
+                textStyle: TextStyle(
+                  fontSize: 14.0,
+                  color: Theme.of(context).textTheme.bodyMedium?.color,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+        width: isMobileSize ? null : 600.0,
+        elevation: 12.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(2.0),
+          side: BorderSide(color: Constants.colors.home, width: 4.0),
+        ),
+        backgroundColor: defaultBackgroundColor,
+        closeIconColor: foregroundColor?.withOpacity(0.6),
+        behavior: isMobileSize ? null : SnackBarBehavior.floating,
       ),
     );
   }
@@ -425,6 +526,7 @@ class Graphic {
     ShapeBorder? shape,
     SnackBarBehavior? behavior,
     Duration duration = const Duration(seconds: 4),
+    double? width,
   }) {
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
@@ -439,6 +541,7 @@ class Graphic {
         duration: duration,
         shape: shape,
         showCloseIcon: showCloseIcon,
+        width: width,
       ),
     );
   }
@@ -495,5 +598,237 @@ class Graphic {
         quotes: quotes,
       ),
     );
+  }
+
+  /// Get text height based on window size.
+  double _getTextHeight(Quote quote, Size windowSize) {
+    final double heightPadding = _getTextHeightPadding(quote);
+    return max(windowSize.height - heightPadding, 200.0);
+  }
+
+  /// Returns the height padding for this widget according to available data
+  /// (e.g. author, reference).
+  double _getTextHeightPadding(Quote quote) {
+    double heightPadding = 240.0;
+
+    if (quote.author.name.isNotEmpty) {
+      heightPadding += 42.0;
+    }
+
+    if (quote.author.urls.image.isNotEmpty) {
+      heightPadding += 54.0;
+    }
+
+    if (quote.reference.name.isNotEmpty) {
+      heightPadding += 24.0;
+    }
+
+    return heightPadding;
+  }
+
+  /// Get text height based on window size.
+  double _getTextWidth(Size windowSize) {
+    const double widthPadding = 200.0;
+    return max(windowSize.width - widthPadding, 200.0);
+  }
+
+  /// Get text solution (style) based on window size.
+  Solution getTextSolution({required Quote quote, required Size windowSize}) {
+    final double height = _getTextHeight(quote, windowSize);
+    final double width = _getTextWidth(windowSize);
+
+    try {
+      return TextWrapAutoSize.solution(
+        Size(width, height),
+        Text(quote.name, style: Utils.calligraphy.body()),
+      );
+    } catch (e) {
+      loggy.error(e);
+      // GlobalLoggy().loggy.error(e.toString());
+      return Solution(
+        Text(quote.name),
+        Utils.calligraphy.body(
+          textStyle: const TextStyle(
+            fontSize: 18.0,
+          ),
+        ),
+        Size(width, height),
+        Size(width, height),
+      );
+    }
+  }
+
+  /// Callback fired to capture image and share it on mobile device,
+  /// or download it on other platforms.
+  /// [pop] if true, execute additional pop
+  /// (to close previous bottom sheet on mobile).
+  void onCaptureImage(
+    BuildContext context, {
+    required ScreenshotController screenshotController,
+    required Quote quote,
+    bool mounted = false,
+    bool pop = false,
+  }) {
+    screenshotController.capture().then((Uint8List? image) async {
+      if (image == null) {
+        return;
+      }
+
+      if (Utils.graphic.isMobile()) {
+        Share.shareXFiles(
+          [
+            XFile.fromData(
+              image,
+              name: "${_generateFileName(quote)}.png",
+              mimeType: "image/png",
+            ),
+          ],
+          sharePositionOrigin: const Rect.fromLTWH(0, 0, 0, 0),
+        );
+        return;
+      }
+
+      final String? prefix = await FilePicker.platform.getDirectoryPath();
+
+      if (prefix == null) {
+        loggy.info("`prefix` is null probably because the user cancelled. "
+            "Download cancelled.");
+
+        if (!mounted) return;
+        Utils.graphic.showSnackbar(
+          context,
+          message: "download.error.cancelled".tr(),
+        );
+        return;
+      }
+
+      final String path = "$prefix/${_generateFileName(quote)}.png";
+      await File(path).writeAsBytes(image);
+      if (!mounted) return;
+
+      Utils.graphic.showSnackbar(
+        context,
+        message: "download.success".tr(),
+      );
+
+      if (pop) {
+        Navigator.of(context).pop();
+      }
+    }).catchError((error) {
+      loggy.error(error);
+      Utils.graphic.showSnackbar(
+        context,
+        message: "download.failed".tr(),
+      );
+    }).whenComplete(() => Navigator.of(context).pop());
+  }
+
+  /// Callback fired to share quote as image.
+  /// [pop] indicates if a bottom sheet should be popped after sharing.
+  void onOpenShareImage(
+    BuildContext context, {
+    required Quote quote,
+    required ScreenshotController screenshotController,
+    required Solution textWrapSolution,
+    bool mounted = false,
+    bool pop = false,
+  }) {
+    showFlexibleBottomSheet(
+      context: context,
+      minHeight: 0,
+      initHeight: 0.5,
+      maxHeight: 0.9,
+      anchors: [0.0, 0.9],
+      bottomSheetBorderRadius: const BorderRadius.only(
+        topLeft: Radius.circular(12.0),
+        topRight: Radius.circular(12.0),
+      ),
+      builder: (
+        BuildContext context,
+        ScrollController scrollController,
+        double bottomSheetOffset,
+      ) {
+        return ShareQuoteTemplate(
+          isMobileSize: Utils.measurements.isMobileSize(context),
+          quote: quote,
+          screenshotController: screenshotController,
+          textWrapSolution: textWrapSolution,
+          onBack: Navigator.of(context).pop,
+          onTapShareImage: () => Utils.graphic.onCaptureImage(
+            context,
+            mounted: mounted,
+            pop: pop,
+            quote: quote,
+            screenshotController: screenshotController,
+          ),
+          scrollController: scrollController,
+          margin: const EdgeInsets.only(top: 24.0),
+        );
+      },
+    );
+  }
+
+  /// Callback fired to share quote as link.
+  void onShareLink(BuildContext context, {required Quote quote}) {
+    if (kIsWeb || Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
+      QuoteActions.copyQuoteUrl(quote);
+      Utils.graphic.showSnackbar(
+        context,
+        message: "quote.copy_link.success".tr(),
+      );
+      return;
+    }
+
+    if (Utils.graphic.isMobile()) {
+      Share.shareUri(Uri.parse("${Constants.quoteUrl}/${quote.id}"));
+      return;
+    }
+  }
+
+  /// Callback fired to share quote as text.
+  void onShareText(
+    BuildContext context, {
+    required Quote quote,
+    void Function(Quote quote)? onCopyQuote,
+  }) {
+    if (kIsWeb || Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
+      onCopyQuote?.call(quote);
+      return;
+    }
+
+    String textToShare = "«$quote.name}»";
+
+    if (quote.author.name.isNotEmpty) {
+      textToShare += " — ${quote.author.name}";
+    }
+
+    if (quote.reference.name.isNotEmpty) {
+      textToShare += " — ${quote.reference.name}";
+    }
+
+    if (Utils.graphic.isMobile()) {
+      final RenderBox? box = context.findRenderObject() as RenderBox?;
+      Share.share(
+        textToShare,
+        subject: "quote.name".tr(),
+        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+      );
+      return;
+    }
+  }
+
+  /// Generate file name for image to save on device.
+  String _generateFileName(Quote quote) {
+    String name = "quote.name".tr();
+
+    if (quote.author.name.isNotEmpty) {
+      name += " — ${quote.author.name}";
+    }
+
+    if (quote.reference.name.isNotEmpty) {
+      name += " — ${quote.reference.name}";
+    }
+
+    return name;
   }
 }
