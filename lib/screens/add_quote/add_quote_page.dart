@@ -55,7 +55,17 @@ import "package:kwotes/types/topic.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 
 class AddQuotePage extends StatefulWidget {
-  const AddQuotePage({super.key});
+  /// Add a new quote or edit an existing quote page.
+  const AddQuotePage({
+    super.key,
+    this.quoteId = "",
+  });
+
+  /// Unique id of the quote to edit.
+  /// Empty if a new quote is being created.
+  /// This parameter is useful for web browser url
+  /// and to navigate to this specific page from a link (in case of edit).
+  final String quoteId;
 
   @override
   State<AddQuotePage> createState() => _AddQuotePageState();
@@ -246,8 +256,8 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
 
     final Quote quote = NavigationStateHelper.quote;
     final bool isQuoteValid = quote.name.length > 3 && quote.topics.isNotEmpty;
-    final Color? fabForegroundColor = getFabForegroundColor(isQuoteValid);
     final Color? fabBackgroundColor = getFabBackgroundColor(isQuoteValid);
+    final Color? fabForegroundColor = getFabForegroundColor(isQuoteValid);
 
     if (_pageState == EnumPageState.submittingQuote) {
       return LoadingView.scaffold(
@@ -266,6 +276,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     }
 
     final Color firstColorPalette = Constants.colors.foregroundPalette.first;
+
     final Signal<UserFirestore> userSignalFirestore =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
 
@@ -320,6 +331,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                   AddQuoteContent(
                     appBarRightChildren: AddQuoteAppBarChildren.getChildren(
                       context,
+                      clearAllTooltip: "quote.clear.content".tr(),
                       onClearAll: onClearQuoteContent,
                       onDeleteQuote: onDeleteDraft,
                       tooltipController: _tooltipController,
@@ -335,6 +347,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                   AddQuoteTopicPage(
                     appBarRightChildren: AddQuoteAppBarChildren.getChildren(
                       context,
+                      clearAllTooltip: "quote.clear.topics".tr(),
                       onClearAll: onClearTopic,
                       onDeleteQuote: onDeleteDraft,
                       tooltipController: _tooltipController,
@@ -347,6 +360,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                   AddQuoteAuthorPage(
                     appBarRightChildren: AddQuoteAppBarChildren.getChildren(
                       context,
+                      clearAllTooltip: "quote.clear.author".tr(),
                       onClearAll: onClearAuthorData,
                       onDeleteQuote: onDeleteDraft,
                       tooltipController: _tooltipController,
@@ -376,6 +390,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                   AddQuoteReferencePage(
                     appBarRightChildren: AddQuoteAppBarChildren.getChildren(
                       context,
+                      clearAllTooltip: "quote.clear.reference".tr(),
                       onClearAll: onClearReferenceData,
                       onDeleteQuote: onDeleteDraft,
                       tooltipController: _tooltipController,
@@ -433,10 +448,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                             controller: _pageViewController,
                             count: _pageViewCount,
                             effect: ExpandingDotsEffect(
-                              activeDotColor:
-                                  Constants.colors.getRandomFromPalette(
-                                withGoodContrast: true,
-                              ),
+                              activeDotColor: getActiveDotColor(),
                             ),
                             onDotClicked: onDotIndicatorTapped,
                           ),
@@ -567,6 +579,16 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     );
   }
 
+  /// Get active dot color.
+  Color getActiveDotColor() {
+    if (!_pageViewController.hasClients) {
+      return Constants.colors.foregroundPalette.first;
+    }
+
+    return Constants.colors.foregroundPalette
+        .elementAt(_pageViewController.page?.toInt() ?? 0);
+  }
+
   DocumentMap getDraftQuoteQuery(DraftQuote quote) {
     final Signal<UserFirestore> userFirestoreSignal =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
@@ -621,6 +643,9 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     _referenceSummaryController.text = quote.reference.summary;
 
     initAutoLang();
+    updateAuthorSuggestions(quote.author.name);
+    updateReferenceSuggestions(quote.reference.name);
+
     _contentController.selection = TextSelection.fromPosition(
       TextPosition(
         affinity: TextAffinity.downstream,
@@ -632,6 +657,13 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
   /// Fetch quote document in firestore.
   void fetchQuoteDocument() async {
     final Quote quote = NavigationStateHelper.quote;
+
+    if (widget.quoteId.isNotEmpty && quote.id != widget.quoteId) {
+      fetchQuoteFromUrl(widget.quoteId);
+      return;
+    }
+
+    // final Quote quote = NavigationStateHelper.quote;
     if (quote.id.isEmpty) {
       tryCreateDraft();
       return;
@@ -686,10 +718,35 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     }
   }
 
+  /// Fetch quote document from url.
+  /// Because we have only the quote's id,
+  /// we need to try to fetch it from different collections.
+  void fetchQuoteFromUrl(String quoteId) async {
+    final Quote? publishedQuote = await tryFetchPubQuoteFromUrl(quoteId);
+    if (publishedQuote != null) {
+      NavigationStateHelper.quote = publishedQuote;
+      return;
+    }
+
+    final DraftQuote? publicDraft = await tryFetchPubDraftFromUrl(quoteId);
+    if (publicDraft != null) {
+      NavigationStateHelper.quote = publicDraft;
+      return;
+    }
+
+    final DraftQuote? privateDraft = await tryFetchPrivateDraftFromUrl(
+      quoteId,
+    );
+    if (privateDraft != null) {
+      NavigationStateHelper.quote = privateDraft;
+      return;
+    }
+  }
+
   /// Return the background color of the fab.
   Color? getFabBackgroundColor(bool isQuoteValid) {
     if (isQuoteValid) {
-      return Constants.colors.foregroundPalette.first;
+      return Theme.of(context).textTheme.bodyMedium?.color;
     }
 
     return Colors.grey.shade300;
@@ -697,13 +754,11 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
 
   /// Return the foreground color of the fab.
   Color? getFabForegroundColor(bool isQuoteValid) {
-    if (!isQuoteValid) {
-      return Theme.of(context).textTheme.bodyMedium?.color;
+    if (isQuoteValid) {
+      return Theme.of(context).scaffoldBackgroundColor;
     }
 
-    return Constants.colors.foregroundPalette.first.computeLuminance() > 0.4
-        ? Colors.black
-        : Colors.white;
+    return Theme.of(context).textTheme.bodyMedium?.color;
   }
 
   String getPageTitleTooltip() {
@@ -1536,6 +1591,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     }
   }
 
+  /// Show tooltip when page indicator is hovered.
   void showPageTitle() {
     _timerPageTitle?.cancel();
     _timerPageTitle = Timer(const Duration(seconds: 1), () {
@@ -1626,6 +1682,71 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
       populateFields(newDraft);
     } catch (error) {
       loggy.error(error);
+    }
+  }
+
+  /// Try to fetch private draft quote document from a quote's id.
+  Future<DraftQuote?> tryFetchPrivateDraftFromUrl(String quoteId) async {
+    final Signal<UserFirestore> userFirestoreSignal =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+
+    try {
+      final DocumentSnapshotMap docSnap = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userFirestoreSignal.value.id)
+          .collection("drafts")
+          .doc(quoteId)
+          .get();
+
+      if (!docSnap.exists) {
+        return null;
+      }
+
+      _docRef = docSnap.reference;
+      return DraftQuote.fromMap(docSnap.data());
+    } catch (error) {
+      loggy.error(error);
+      return null;
+    }
+  }
+
+  /// Try to fetch draft quote document from a quote's id.
+  Future<DraftQuote?> tryFetchPubDraftFromUrl(String quoteId) async {
+    try {
+      final DocumentSnapshotMap docSnap = await FirebaseFirestore.instance
+          .collection("drafts")
+          .doc(quoteId)
+          .get();
+
+      if (!docSnap.exists) {
+        return null;
+      }
+
+      _docRef = docSnap.reference;
+      return DraftQuote.fromMap(docSnap.data());
+    } catch (error) {
+      loggy.error(error);
+      return null;
+    }
+  }
+
+  /// Try to fetch published quote document from a quote's id.
+  Future<Quote?> tryFetchPubQuoteFromUrl(String quoteId) async {
+    try {
+      final DocumentSnapshotMap docSnap = await FirebaseFirestore.instance
+          .collection("quotes")
+          .doc(quoteId)
+          .get();
+
+      if (!docSnap.exists) {
+        return null;
+      }
+
+      _docRef = docSnap.reference;
+      return Quote.fromMap(docSnap.data());
+    } catch (error) {
+      loggy.error(error);
+      return null;
     }
   }
 
