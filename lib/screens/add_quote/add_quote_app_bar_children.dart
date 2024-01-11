@@ -17,12 +17,13 @@ class AddQuoteAppBarChildren {
     void Function()? onResetReference,
     void Function()? onDeleteAuthor,
     void Function()? onDeleteReference,
+    String? clearAllTooltip,
   }) {
     return [
       if (onClearAll != null)
         IconButton(
           onPressed: onClearAll,
-          tooltip: "quote.erase_all".tr(),
+          tooltip: clearAllTooltip,
           color: Theme.of(context).textTheme.bodyMedium?.color,
           icon: const Icon(TablerIcons.eraser),
         ),

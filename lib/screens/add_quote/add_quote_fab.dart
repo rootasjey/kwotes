@@ -70,7 +70,7 @@ class AddQuoteFab extends StatelessWidget {
     return GestureDetector(
       onLongPress: onLongPress,
       child: FloatingActionButton.extended(
-        elevation: 0.0,
+        elevation: 6.0,
         disabledElevation: 0.0,
         hoverElevation: 4.0,
         focusElevation: 0.0,
