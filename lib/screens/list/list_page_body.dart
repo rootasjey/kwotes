@@ -1,7 +1,6 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
-import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/context_menu_components.dart";
 import "package:kwotes/components/empty_view.dart";
 import "package:kwotes/components/loading_view.dart";
@@ -20,12 +19,16 @@ class ListPageBody extends StatelessWidget {
     required this.userId,
     this.animateList = false,
     this.isDark = false,
-    this.pageState = EnumPageState.idle,
-    this.onRemove,
-    this.onDoubleTap,
-    this.onTap,
-    this.onCopy,
     this.isMobileSize = false,
+    this.pageState = EnumPageState.idle,
+    this.onCopyQuote,
+    this.onCopyQuoteUrl,
+    this.onDoubleTap,
+    this.onRemoveFromList,
+    this.onShareImage,
+    this.onShareText,
+    this.onShareLink,
+    this.onTap,
   });
 
   /// Animate list's items if true.
@@ -44,13 +47,25 @@ class ListPageBody extends StatelessWidget {
   final List<Quote> quotes;
 
   /// Callback fired to copy a quote.
-  final void Function(Quote quote)? onCopy;
+  final void Function(Quote quote)? onCopyQuote;
+
+  /// Callback fired to copy a quote's url.
+  final void Function(Quote quote)? onCopyQuoteUrl;
 
   /// Callback fired to double tap a quote.
   final void Function(Quote quote)? onDoubleTap;
 
   /// Callback fired to remove a quote from the list.
-  final void Function(Quote quote)? onRemove;
+  final void Function(Quote quote)? onRemoveFromList;
+
+  /// Callback fired to share a quote's image.
+  final void Function(Quote quote)? onShareImage;
+
+  /// Callback fired to share a quote's name.
+  final void Function(Quote quote)? onShareText;
+
+  /// Callback fired to share a quote's link.
+  final void Function(Quote quote)? onShareLink;
 
   /// Callback fired when a quote is tapped.
   final void Function(Quote quote)? onTap;
@@ -110,25 +125,18 @@ class ListPageBody extends StatelessWidget {
                 (Topic x) => x.name == quote.topics.first,
                 orElse: () => Topic.empty(),
               );
-              return Menu(
-                children: [
-                  MenuAction(
-                    title: "quote.remove.name".tr(),
-                    callback: () => onRemove?.call(quote),
-                    image: MenuImage.icon(TablerIcons.square_rounded_minus),
-                  ),
-                  MenuAction(
-                    callback: () => onCopy?.call(quote),
-                    title: "quote.copy.name".tr(),
-                    image: MenuImage.icon(TablerIcons.copy),
-                  ),
-                  ContextMenuComponents.addToList(
-                    context,
-                    quote: quote,
-                    selectedColor: topic.color,
-                    userId: userId,
-                  ),
-                ],
+
+              return ContextMenuComponents.quoteMenuProvider(
+                context,
+                quote: quote,
+                onCopyQuote: onCopyQuote,
+                onCopyQuoteUrl: onCopyQuoteUrl,
+                onRemoveFromList: onRemoveFromList,
+                onShareImage: onShareImage,
+                onShareText: onShareText,
+                onShareLink: onShareLink,
+                selectedColor: topic.color,
+                userId: userId,
               );
             },
           );

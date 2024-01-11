@@ -32,6 +32,8 @@ import "package:kwotes/types/user/user_auth.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 import "package:kwotes/types/user/user_rights.dart";
 import "package:loggy/loggy.dart";
+import "package:screenshot/screenshot.dart";
+import "package:text_wrap_auto_size/solution.dart";
 
 class PublishedPage extends StatefulWidget {
   const PublishedPage({super.key});
@@ -71,8 +73,19 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
   /// Stream subscription for published quotes.
   QuerySnapshotStreamSubscription? _quoteSub;
 
+  /// Screenshot controller (to share quote image).
+  final ScreenshotController _screenshotController = ScreenshotController();
+
   /// Page's scroll controller.
   final ScrollController _pageScrollController = ScrollController();
+
+  /// Text wrap solution to calculate font size according to window size.
+  Solution _textWrapSolution = Solution(
+    const Text(""),
+    const TextStyle(),
+    const Size(0, 0),
+    const Size(0, 0),
+  );
 
   /// Firestore collection name.
   final String _collectionName = "quotes";
@@ -138,11 +151,16 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
                     pageState: _pageState,
                     isMobileSize: isMobileSize,
                     quotes: _quotes,
-                    onTap: onTap,
+                    onTap: onTapQuote,
                     onCopy: onCopyQuote,
+                    onCopyQuoteUrl: onCopyQuoteUrl,
                     onDelete: isAdmin ? onDeleteQuote : null,
                     onEdit: isAdmin ? onEditQuote : null,
                     onChangeLanguage: isAdmin ? onChangeQuoteLanguage : null,
+                    onShareImage: onShareImage,
+                    onShareLink: onShareLink,
+                    onShareText: onShareText,
+                    userId: userFirestore.id,
                   );
                 },
               ),
@@ -350,6 +368,18 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
   /// Copy a quote's name.
   void onCopyQuote(Quote quote) {
     QuoteActions.copyQuote(quote);
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    Utils.graphic.showCopyQuoteSnackbar(context, isMobileSize: isMobileSize);
+  }
+
+  /// Copy quote's url.
+  void onCopyQuoteUrl(Quote quote) {
+    QuoteActions.copyQuoteUrl(quote);
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    Utils.graphic.showCopyQuoteLinkSnackbar(
+      context,
+      isMobileSize: isMobileSize,
+    );
   }
 
   /// Callback to delete a published quote.
@@ -360,14 +390,10 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
     final UserRights userRights = currentUser.value.rights;
     final bool canManageQuotes = userRights.canManageQuotes;
 
-    if (!canManageQuotes) {
-      return;
-    }
+    if (!canManageQuotes) return;
 
     final int index = _quotes.indexOf(quote);
-    if (index == -1) {
-      return;
-    }
+    if (index == -1) return;
 
     setState(() => _quotes.removeAt(index));
 
@@ -376,7 +402,7 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
           .collection(_collectionName)
           .doc(quote.id)
           .delete();
-      loggy.info("delete quote: ${quote.id}");
+      loggy.info("will delete quote: ${quote.id}");
 
       if (!mounted) return;
       Utils.graphic.showSnackbarWithCustomText(
@@ -409,7 +435,7 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
                     .collection(_collectionName)
                     .doc(quote.id)
                     .set(quote.toMap(
-                      operation: EnumQuoteOperation.create,
+                      operation: EnumQuoteOperation.restore,
                     ));
 
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -474,17 +500,6 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
     }
   }
 
-  /// Navigate to quote page when a quote is tapped.
-  void onTap(Quote quote) {
-    NavigationStateHelper.quote = quote;
-    Beamer.of(context).beamToNamed(
-      DashboardContentLocation.publishedQuoteRoute.replaceFirst(
-        ":quoteId",
-        quote.id,
-      ),
-    );
-  }
-
   /// Callback to select a language.
   void onSelectedLanguage(EnumLanguageSelection language) {
     if (_selectedLanguage == language) {
@@ -515,6 +530,54 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
 
     Utils.vault.setDataOwnership(ownership);
     fetch();
+  }
+
+  /// Open share image bottom sheet.
+  void onShareImage(Quote quote) {
+    final Size windowSize = MediaQuery.of(context).size;
+    _textWrapSolution = Utils.graphic.getTextSolution(
+      quote: quote,
+      windowSize: windowSize,
+    );
+
+    Utils.graphic.onOpenShareImage(
+      context,
+      mounted: mounted,
+      quote: quote,
+      screenshotController: _screenshotController,
+      textWrapSolution: _textWrapSolution,
+    );
+  }
+
+  /// Callback fired to share quote as link.
+  void onShareLink(Quote quote) {
+    Utils.graphic.onShareLink(context, quote: quote);
+  }
+
+  /// Callback fired to share quote as text.
+  void onShareText(Quote quote) {
+    Utils.graphic.onShareText(
+      context,
+      quote: quote,
+      onCopyQuote: (Quote quote) {
+        onCopyQuote(quote);
+        Utils.graphic.showSnackbar(
+          context,
+          message: "quote.copy.success.name".tr(),
+        );
+      },
+    );
+  }
+
+  /// Navigate to quote page when a quote is tapped.
+  void onTapQuote(Quote quote) {
+    NavigationStateHelper.quote = quote;
+    Beamer.of(context).beamToNamed(
+      DashboardContentLocation.publishedQuoteRoute.replaceFirst(
+        ":quoteId",
+        quote.id,
+      ),
+    );
   }
 
   /// Callback to show/hide page options.

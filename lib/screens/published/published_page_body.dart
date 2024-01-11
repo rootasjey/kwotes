@@ -1,13 +1,11 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/context_menu_components.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/components/texts/quote_text.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/quote.dart";
 import "package:super_context_menu/super_context_menu.dart";
-import "package:unicons/unicons.dart";
 
 class PublishedPageBody extends StatelessWidget {
   const PublishedPageBody({
@@ -18,9 +16,14 @@ class PublishedPageBody extends StatelessWidget {
     this.pageState = EnumPageState.idle,
     this.onChangeLanguage,
     this.onCopy,
+    this.onCopyQuoteUrl,
     this.onDelete,
     this.onEdit,
     this.onTap,
+    this.onShareImage,
+    this.onShareLink,
+    this.onShareText,
+    this.userId = "",
   });
 
   /// Adapt UI for mobile size if true.
@@ -41,14 +44,29 @@ class PublishedPageBody extends StatelessWidget {
   /// Callback fired to copy a quote.
   final void Function(Quote quote)? onCopy;
 
+  /// Callback fired to copy a quote's url.
+  final void Function(Quote quote)? onCopyQuoteUrl;
+
   /// Callback fired when a quote is going to be deleted.
   final void Function(Quote quote)? onDelete;
 
   /// Callback fired when a quote is going to be edited.
   final void Function(Quote quote)? onEdit;
 
+  /// Callback fired to share a quote's image.
+  final void Function(Quote quote)? onShareImage;
+
+  /// Callback fired to share a quote's name.
+  final void Function(Quote quote)? onShareText;
+
+  /// Callback fired to share a quote's link.
+  final void Function(Quote quote)? onShareLink;
+
   /// Callback fired when a quote is tapped.
   final void Function(Quote quote)? onTap;
+
+  /// User id.
+  final String userId;
 
   @override
   Widget build(BuildContext context) {
@@ -79,31 +97,19 @@ class PublishedPageBody extends StatelessWidget {
               tiny: isMobileSize,
             ),
             menuProvider: (MenuRequest menuRequest) {
-              return Menu(children: [
-                MenuAction(
-                  callback: () => onCopy?.call(quote),
-                  title: "quote.copy.name".tr(),
-                  image: MenuImage.icon(TablerIcons.copy),
-                ),
-                if (onDelete != null)
-                  MenuAction(
-                    callback: () => onDelete?.call(quote),
-                    title: "quote.delete.name".tr(),
-                    image: MenuImage.icon(UniconsLine.trash),
-                  ),
-                if (onEdit != null)
-                  MenuAction(
-                    callback: () => onEdit?.call(quote),
-                    title: "quote.edit.name".tr(),
-                    image: MenuImage.icon(UniconsLine.edit_alt),
-                  ),
-                if (onChangeLanguage != null)
-                  ContextMenuComponents.changeLanguage(
-                    context,
-                    quote: quote,
-                    onChangeLanguage: onChangeLanguage,
-                  ),
-              ]);
+              return ContextMenuComponents.quoteMenuProvider(
+                context,
+                quote: quote,
+                onChangeLanguage: onChangeLanguage,
+                onCopyQuote: onCopy,
+                onCopyQuoteUrl: onCopyQuoteUrl,
+                onDelete: onDelete,
+                onEdit: onEdit,
+                onShareImage: onShareImage,
+                onShareText: onShareText,
+                onShareLink: onShareLink,
+                userId: userId,
+              );
             },
           );
         },

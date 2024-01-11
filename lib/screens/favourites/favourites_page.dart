@@ -2,7 +2,6 @@ import "package:beamer/beamer.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:flutter/services.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:kwotes/actions/quote_actions.dart";
@@ -24,6 +23,8 @@ import "package:kwotes/types/firestore/query_snapshot_stream_subscription.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
+import "package:screenshot/screenshot.dart";
+import "package:text_wrap_auto_size/solution.dart";
 
 class FavouritesPage extends StatefulWidget {
   const FavouritesPage({super.key});
@@ -54,11 +55,14 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
   /// Result count limit.
   final int _limit = 20;
 
-  /// Page's scroll controller.
-  final ScrollController _pageScrollController = ScrollController();
-
   /// Stream subscription for favourite quotes.
   QuerySnapshotStreamSubscription? _quoteSub;
+
+  /// Screenshot controller (to share quote image).
+  final ScreenshotController _screenshotController = ScreenshotController();
+
+  /// Page's scroll controller.
+  final ScrollController _pageScrollController = ScrollController();
 
   @override
   void initState() {
@@ -80,6 +84,9 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
 
+    final Signal<UserFirestore> signalUserFirestore =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+
     return Scaffold(
       body: ImprovedScrolling(
         scrollController: _pageScrollController,
@@ -98,16 +105,26 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
                   ),
                 ],
               ),
-              FavouritesPageBody(
-                animateList: _animateList,
-                isDark: isDark,
-                isMobileSize: isMobileSize,
-                pageState: _pageState,
-                quotes: _quotes,
-                onCopy: onCopy,
-                onRemove: onRemove,
-                onTap: onTap,
-                onDoubleTap: onDoubleTap,
+              SignalBuilder(
+                signal: signalUserFirestore,
+                builder: (context, userFirestore, child) {
+                  return FavouritesPageBody(
+                    animateList: _animateList,
+                    isDark: isDark,
+                    isMobileSize: isMobileSize,
+                    pageState: _pageState,
+                    quotes: _quotes,
+                    onCopy: onCopyQuote,
+                    onCopyUrl: onCopyQuoteUrl,
+                    onRemove: onRemove,
+                    onTap: onTap,
+                    onDoubleTap: onDoubleTap,
+                    onShareImage: onShareImage,
+                    onShareLink: onShareLink,
+                    onShareText: onShareText,
+                    userId: userFirestore.id,
+                  );
+                },
               ),
               const SliverPadding(
                 padding: EdgeInsets.only(bottom: 90.0),
@@ -233,8 +250,20 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
   }
 
   /// Copy a quote's.
-  void onCopy(Quote quote) {
-    Clipboard.setData(ClipboardData(text: quote.name));
+  void onCopyQuote(Quote quote) {
+    QuoteActions.copyQuote(quote);
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    Utils.graphic.showCopyQuoteSnackbar(context, isMobileSize: isMobileSize);
+  }
+
+  /// Copy a quote's url.
+  void onCopyQuoteUrl(Quote quote) {
+    QuoteActions.copyQuoteUrl(quote);
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    Utils.graphic.showCopyQuoteLinkSnackbar(
+      context,
+      isMobileSize: isMobileSize,
+    );
   }
 
   /// Copy quote and show snackbar.
@@ -308,6 +337,42 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
         ":quoteId",
         quote.id,
       ),
+    );
+  }
+
+  void onShareImage(Quote quote) {
+    final Size windowSize = MediaQuery.of(context).size;
+    final Solution textWrapSolution = Utils.graphic.getTextSolution(
+      quote: quote,
+      windowSize: windowSize,
+    );
+
+    Utils.graphic.onOpenShareImage(
+      context,
+      mounted: mounted,
+      quote: quote,
+      screenshotController: _screenshotController,
+      textWrapSolution: textWrapSolution,
+    );
+  }
+
+  /// Callback fired to share quote as link.
+  void onShareLink(Quote quote) {
+    Utils.graphic.onShareLink(context, quote: quote);
+  }
+
+  /// Callback fired to share quote as text.
+  void onShareText(Quote quote) {
+    Utils.graphic.onShareText(
+      context,
+      quote: quote,
+      onCopyQuote: (Quote quote) {
+        onCopyQuote(quote);
+        Utils.graphic.showSnackbar(
+          context,
+          message: "quote.copy.success.name".tr(),
+        );
+      },
     );
   }
 }

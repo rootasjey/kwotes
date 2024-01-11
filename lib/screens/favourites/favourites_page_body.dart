@@ -1,7 +1,7 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
-import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/context_menu_components.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/components/texts/quote_text.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
@@ -17,10 +17,15 @@ class FavouritesPageBody extends StatelessWidget {
     this.isDark = false,
     this.isMobileSize = false,
     this.pageState = EnumPageState.idle,
+    this.onCopy,
+    this.onCopyUrl,
     this.onDoubleTap,
     this.onTap,
     this.onRemove,
-    this.onCopy,
+    this.onShareImage,
+    this.onShareText,
+    this.onShareLink,
+    this.userId = "",
   });
 
   /// Animate list's items if true.
@@ -41,14 +46,29 @@ class FavouritesPageBody extends StatelessWidget {
   /// Callback fired to copy a quote.
   final void Function(Quote quote)? onCopy;
 
-  /// Callback fired when a quote is unfavorited.
-  final void Function(Quote quote)? onRemove;
+  /// Callback fired to copy a quote's url.
+  final void Function(Quote quote)? onCopyUrl;
+
+  /// On double tap callback.
+  final void Function(Quote quote)? onDoubleTap;
 
   /// On tap callback.
   final void Function(Quote quote)? onTap;
 
-  /// On double tap callback.
-  final void Function(Quote quote)? onDoubleTap;
+  /// Callback fired when a quote is unfavorited.
+  final void Function(Quote quote)? onRemove;
+
+  /// Callback fired to share a quote's image.
+  final void Function(Quote quote)? onShareImage;
+
+  /// Callback fired to share a quote's name.
+  final void Function(Quote quote)? onShareText;
+
+  /// Callback fired to share a quote's link.
+  final void Function(Quote quote)? onShareLink;
+
+  /// User's id.
+  final String userId;
 
   @override
   Widget build(BuildContext context) {
@@ -88,18 +108,17 @@ class FavouritesPageBody extends StatelessWidget {
                 )
                 .fadeIn(),
             menuProvider: (MenuRequest menuRequest) {
-              return Menu(children: [
-                MenuAction(
-                  callback: () => onCopy?.call(quote),
-                  title: "quote.copy.name".tr(),
-                  image: MenuImage.icon(TablerIcons.copy),
-                ),
-                MenuAction(
-                  callback: () => onRemove?.call(quote),
-                  title: "quote.favourite.remove.name".tr(),
-                  image: MenuImage.icon(TablerIcons.heart_minus),
-                ),
-              ]);
+              return ContextMenuComponents.quoteMenuProvider(
+                context,
+                quote: quote,
+                onCopyQuote: onCopy,
+                onCopyQuoteUrl: onCopyUrl,
+                onRemoveFromFavourites: onRemove,
+                onShareImage: onShareImage,
+                onShareText: onShareText,
+                onShareLink: onShareLink,
+                userId: userId,
+              );
             },
           );
         },

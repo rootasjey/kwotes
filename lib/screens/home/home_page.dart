@@ -433,20 +433,17 @@ class _HomePageState extends State<HomePage> with UiLoggy {
   /// Copy a specific quote's name to the clipboard.
   void onCopyQuote(Quote quote) {
     QuoteActions.copyQuote(quote);
-
-    Utils.graphic.showSnackbar(
-      context,
-      message: "quote.copy.success.name".tr(),
-    );
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    Utils.graphic.showCopyQuoteSnackbar(context, isMobileSize: isMobileSize);
   }
 
   /// Copy a specific quote's url to the clipboard.
   void onCopyQuoteUrl(Quote quote) {
-    Clipboard.setData(ClipboardData(text: "${Constants.quoteUrl}/${quote.id}"));
-
-    Utils.graphic.showSnackbar(
+    QuoteActions.copyQuoteUrl(quote);
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    Utils.graphic.showCopyQuoteLinkSnackbar(
       context,
-      message: "quote.copy.success.link".tr(),
+      isMobileSize: isMobileSize,
     );
   }
 

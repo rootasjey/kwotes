@@ -31,6 +31,8 @@ import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/quote_list.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
+import "package:screenshot/screenshot.dart";
+import "package:text_wrap_auto_size/solution.dart";
 
 class ListPage extends StatefulWidget {
   const ListPage({
@@ -95,6 +97,9 @@ class _ListPageState extends State<ListPage> with UiLoggy {
 
   /// Random description hint text.
   String _descriptionHintText = "";
+
+  /// Screenshot controller (to share quote image).
+  final ScreenshotController _screenshotController = ScreenshotController();
 
   /// Text controller to edit list's name.
   final TextEditingController _nameController = TextEditingController();
@@ -180,10 +185,14 @@ class _ListPageState extends State<ListPage> with UiLoggy {
                     isMobileSize: isMobileSize,
                     pageState: _pageState,
                     quotes: _quotes,
-                    onCopy: onCopy,
+                    onCopyQuote: onCopyQuote,
+                    onCopyQuoteUrl: onCopyQuoteUrl,
                     onDoubleTap: onDoubleTap,
+                    onRemoveFromList: onRemoveFromList,
+                    onShareImage: onShareImage,
+                    onShareLink: onShareLink,
+                    onShareText: onShareText,
                     onTap: onTap,
-                    onRemove: onRemoveFromList,
                     userId: currentUser.value.id,
                   ),
                   const SliverPadding(
@@ -418,8 +427,20 @@ class _ListPageState extends State<ListPage> with UiLoggy {
   }
 
   /// Copy a quote's name.
-  void onCopy(Quote quote) {
+  void onCopyQuote(Quote quote) {
     QuoteActions.copyQuote(quote);
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    Utils.graphic.showCopyQuoteSnackbar(context, isMobileSize: isMobileSize);
+  }
+
+  /// Copy quote's url.
+  void onCopyQuoteUrl(Quote quote) {
+    QuoteActions.copyQuoteUrl(quote);
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    Utils.graphic.showCopyQuoteLinkSnackbar(
+      context,
+      isMobileSize: isMobileSize,
+    );
   }
 
   /// Copy a quote's name when the user double taps a quote.
@@ -523,6 +544,37 @@ class _ListPageState extends State<ListPage> with UiLoggy {
     if (_scrollController.position.maxScrollExtent - offset <= 200) {
       fetchQuotes();
     }
+  }
+
+  /// Open share image bottom sheet.
+  void onShareImage(Quote quote) {
+    final Size windowSize = MediaQuery.of(context).size;
+    final Solution textWrapSolution = Utils.graphic.getTextSolution(
+      quote: quote,
+      windowSize: windowSize,
+    );
+
+    Utils.graphic.onOpenShareImage(
+      context,
+      mounted: mounted,
+      quote: quote,
+      screenshotController: _screenshotController,
+      textWrapSolution: textWrapSolution,
+    );
+  }
+
+  /// Callback fired to share quote as link.
+  void onShareLink(Quote quote) {
+    Utils.graphic.onShareLink(context, quote: quote);
+  }
+
+  /// Callback fired to share quote as text.
+  void onShareText(Quote quote) {
+    Utils.graphic.onShareText(
+      context,
+      quote: quote,
+      onCopyQuote: onCopyQuote,
+    );
   }
 
   /// Callback called when user taps a quote.
