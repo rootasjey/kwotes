@@ -1,13 +1,13 @@
 import "package:beamer/beamer.dart";
 import "package:flutter/material.dart";
 import "package:easy_localization/easy_localization.dart";
-import "package:flutter/services.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/actions/user_actions.dart";
 import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/components/buttons/circle_button.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/forgot_password_location.dart";
 import "package:kwotes/router/locations/settings_location.dart";
 import "package:kwotes/screens/signin/signin_page_body.dart";
@@ -19,7 +19,6 @@ import "package:loggy/loggy.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/locations/signup_location.dart";
-import "package:kwotes/types/intents/escape_intent.dart";
 
 class SigninPage extends StatefulWidget {
   const SigninPage({Key? key}) : super(key: key);
@@ -61,65 +60,51 @@ class _SigninPageState extends State<SigninPage> with UiLoggy {
       );
     }
 
-    const shortcuts = <SingleActivator, Intent>{
-      SingleActivator(LogicalKeyboardKey.escape): EscapeIntent(),
-    };
-
-    final actions = <Type, Action<Intent>>{
-      EscapeIntent: CallbackAction(
-        onInvoke: (Intent intent) => onCancel(),
-      ),
-    };
-
     final Color randomColor = Constants.colors.getRandomFromPalette(
       withGoodContrast: true,
     );
 
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Shortcuts(
-      shortcuts: shortcuts,
-      child: Actions(
-        actions: actions,
-        child: Scaffold(
-          body: CustomScrollView(
-            slivers: <Widget>[
-              ApplicationBar(
-                mode: EnumAppBarMode.signin,
-                isMobileSize: isMobileSize,
-                title: const SizedBox.shrink(),
-                rightChildren: [
-                  CircleButton(
-                    onTap: onGoToSettings,
-                    backgroundColor: Colors.transparent,
-                    icon: const Icon(TablerIcons.settings),
-                  ),
-                ],
-              ),
-              SigninPageHeader(
-                isMobileSize: isMobileSize,
-                onNavigateToCreateAccount: onNavigateToCreateAccount,
-                randomColor: randomColor,
-                margin: const EdgeInsets.only(top: 42.0),
-              ),
-              SigninPageBody(
-                isMobileSize: isMobileSize,
-                emailFocusNode: _emailFocusNode,
-                passwordFocusNode: _passwordFocusNode,
-                emailController: _emailController,
-                passwordController: _passwordController,
-                onNavigateToForgotPassword: onNavigatetoForgotPassword,
-                onNavigateToCreateAccount: onNavigateToCreateAccount,
-                onCancel: onCancel,
-                onSubmit: (String name, String password) => trySignin(
-                  name: name,
-                  password: password,
-                ),
-                randomColor: randomColor,
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: <Widget>[
+          ApplicationBar(
+            mode: EnumAppBarMode.signin,
+            isMobileSize: isMobileSize,
+            title: const SizedBox.shrink(),
+            rightChildren: [
+              CircleButton(
+                onTap: goToSettings,
+                backgroundColor: Colors.transparent,
+                icon: const Icon(TablerIcons.settings),
               ),
             ],
           ),
-        ),
+          SigninPageHeader(
+            isMobileSize: isMobileSize,
+            onNavigateToCreateAccount: goToSignupPage,
+            randomColor: randomColor,
+            margin: const EdgeInsets.only(top: 42.0),
+          ),
+          SigninPageBody(
+            isDark: isDark,
+            isMobileSize: isMobileSize,
+            emailFocusNode: _emailFocusNode,
+            passwordFocusNode: _passwordFocusNode,
+            emailController: _emailController,
+            passwordController: _passwordController,
+            onNavigateToForgotPassword: goToForgotPasswordPage,
+            onNavigateToCreateAccount: goToSignupPage,
+            onCancel: onCancel,
+            onSubmit: (String name, String password) => trySignin(
+              name: name,
+              password: password,
+            ),
+            randomColor: randomColor,
+          ),
+        ],
       ),
     );
   }
@@ -149,7 +134,7 @@ class _SigninPageState extends State<SigninPage> with UiLoggy {
       }
 
       if (!mounted) return;
-      Beamer.of(context).beamToNamed(HomeLocation.route);
+      Beamer.of(context).beamToReplacementNamed(DashboardContentLocation.route);
     } catch (error) {
       loggy.error("password.error.incorrect".tr());
       Utils.graphic.showSnackbar(
@@ -162,17 +147,33 @@ class _SigninPageState extends State<SigninPage> with UiLoggy {
   }
 
   /// Navigate to the forgot password page.
-  void onNavigatetoForgotPassword() {
-    Beamer.of(context, root: true).beamToNamed(
-      ForgotPasswordLocation.route,
-    );
+  void goToForgotPasswordPage() {
+    final BeamerDelegate beamer = Beamer.of(context);
+    final BeamState beamState = beamer.currentBeamLocation.state as BeamState;
+    final List<String> pathSegments = beamState.pathPatternSegments;
+    final String prefix = pathSegments.first;
+
+    if (prefix == "d") {
+      beamer.beamToNamed(DashboardContentLocation.forgotPasswordRoute);
+      return;
+    }
+
+    beamer.root.beamToNamed(ForgotPasswordLocation.route);
   }
 
   /// Navigate to the create account page.
-  void onNavigateToCreateAccount() {
-    Beamer.of(context, root: true).beamToNamed(
-      SignupLocation.route,
-    );
+  void goToSignupPage() {
+    final BeamerDelegate beamer = Beamer.of(context);
+    final BeamState beamState = beamer.currentBeamLocation.state as BeamState;
+    final List<String> pathSegments = beamState.pathPatternSegments;
+    final String prefix = pathSegments.first;
+
+    if (prefix == "d") {
+      beamer.beamToNamed(DashboardContentLocation.signupRoute);
+      return;
+    }
+
+    beamer.root.beamToNamed(SignupLocation.route);
   }
 
   /// Return true if all inputs (email, password) are in the correct format.
@@ -213,7 +214,17 @@ class _SigninPageState extends State<SigninPage> with UiLoggy {
   }
 
   /// Navigate to the settings page.
-  void onGoToSettings() {
+  void goToSettings() {
+    final BeamerDelegate beamer = Beamer.of(context);
+    final BeamState beamState = beamer.currentBeamLocation.state as BeamState;
+    final List<String> pathSegments = beamState.pathPatternSegments;
+    final String prefix = pathSegments.first;
+
+    if (prefix == "d") {
+      beamer.beamToNamed(DashboardContentLocation.settingsRoute);
+      return;
+    }
+
     Beamer.of(context, root: true).beamToNamed(SettingsLocation.route);
   }
 }

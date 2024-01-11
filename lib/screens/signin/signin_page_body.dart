@@ -10,6 +10,7 @@ class SigninPageBody extends StatelessWidget {
     super.key,
     required this.emailController,
     required this.passwordController,
+    this.isDark = false,
     this.isMobileSize = false,
     this.randomColor = Colors.amber,
     this.emailFocusNode,
@@ -21,6 +22,9 @@ class SigninPageBody extends StatelessWidget {
     this.onPasswordChanged,
     this.onSubmit,
   });
+
+  /// Whether the page is in dark mode.
+  final bool isDark;
 
   /// Adapt user interface to mobile size if true.
   final bool isMobileSize;
@@ -90,6 +94,7 @@ class SigninPageBody extends StatelessWidget {
                 randomColor: randomColor,
               ),
               SigninPageFooter(
+                isDark: isDark,
                 nameController: emailController,
                 onCancel: onCancel,
                 onSubmit: onSubmit,
