@@ -7,6 +7,7 @@ import "package:file_picker/file_picker.dart";
 import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:image_downloader_web/image_downloader_web.dart";
 import "package:kwotes/actions/quote_actions.dart";
 import "package:kwotes/components/dialogs/add_to_list/add_to_list_dialog.dart";
 import "package:kwotes/globals/constants.dart";
@@ -690,6 +691,15 @@ class Graphic with UiLoggy {
             ),
           ],
           sharePositionOrigin: const Rect.fromLTWH(0, 0, 0, 0),
+        );
+        return;
+      }
+
+      if (kIsWeb) {
+        await WebImageDownloader.downloadImageFromUInt8List(
+          uInt8List: image,
+          imageQuality: 1.0,
+          name: "${_generateFileName(quote)}.png",
         );
         return;
       }
