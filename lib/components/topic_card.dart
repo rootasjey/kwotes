@@ -8,6 +8,7 @@ class TopicCard extends StatefulWidget {
   const TopicCard({
     super.key,
     required this.topic,
+    this.isDark = false,
     this.showName = true,
     this.startElevation = 0.0,
     this.backgroundColor,
@@ -20,6 +21,9 @@ class TopicCard extends StatefulWidget {
     this.heroTag,
     this.onHover,
   });
+
+  /// Whether to use dark theme.
+  final bool isDark;
 
   /// Show topic name below icon if true.
   /// Default: true.
@@ -89,13 +93,13 @@ class _TopicCardState extends State<TopicCard> {
   @override
   Widget build(BuildContext context) {
     final Topic topicColor = widget.topic;
-    final Color? foregroundColor = widget.foregroundColor;
 
     return Card(
       margin: widget.margin,
       elevation: _cardElevation,
       color: widget.backgroundColor,
       shadowColor: _iconHoverColor?.withOpacity(0.2),
+      surfaceTintColor: _iconHoverColor,
       shape: widget.shape,
       child: InkWell(
         customBorder: widget.shape,
@@ -118,7 +122,7 @@ class _TopicCardState extends State<TopicCard> {
           setState(() {
             _cardElevation = widget.startElevation;
             _shakeAnimationTarget = 0.0;
-            _iconColor = foregroundColor?.withOpacity(0.6);
+            _iconColor = _iconHoverColor?.withOpacity(0.6);
           });
         },
         onTapDown: (details) {
@@ -137,7 +141,7 @@ class _TopicCardState extends State<TopicCard> {
             children: [
               Icon(
                 Utils.graphic.getIconDataFromTopic(topicColor.name),
-                color: _iconColor,
+                color: widget.isDark ? _iconColor : null,
                 size: widget.iconSize,
               ).animate(target: _shakeAnimationTarget).shake(),
               if (widget.showName)
@@ -152,7 +156,7 @@ class _TopicCardState extends State<TopicCard> {
                       style: Utils.calligraphy.body(
                         textStyle: TextStyle(
                           fontSize: 12.0,
-                          color: foregroundColor?.withOpacity(0.4),
+                          color: _iconHoverColor,
                           fontWeight: FontWeight.w500,
                         ),
                       ),

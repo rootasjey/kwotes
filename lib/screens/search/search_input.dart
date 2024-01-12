@@ -10,12 +10,12 @@ import "package:kwotes/types/enums/enum_search_category.dart";
 class SearchInput extends StatelessWidget {
   const SearchInput({
     super.key,
-    this.searchCategory = EnumSearchCategory.quote,
-    this.inputController,
-    this.onChangedTextField,
-    this.focusNode,
-    this.padding = const EdgeInsets.only(left: 12.0),
     this.isMobileSize = false,
+    this.searchCategory = EnumSearchCategory.quote,
+    this.padding = const EdgeInsets.only(left: 12.0),
+    this.onChangedTextField,
+    this.inputController,
+    this.focusNode,
     this.bottom,
   });
 
@@ -72,7 +72,9 @@ class SearchInput extends StatelessWidget {
         child: Padding(
           padding: isMobileSize
               ? EdgeInsets.zero
-              : padding.subtract(const EdgeInsets.only(left: 28.0)),
+              : padding.subtract(const EdgeInsets.only(left: 28.0)).add(
+                    const EdgeInsets.only(top: 72.0),
+                  ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
