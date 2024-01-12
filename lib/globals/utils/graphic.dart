@@ -172,7 +172,7 @@ class Graphic with UiLoggy {
       return TablerIcons.dental;
     }
     if (topic == EnumTopic.philosophy.name) {
-      return TablerIcons.confetti;
+      return TablerIcons.yoga;
     }
     if (topic == EnumTopic.poetry.name) {
       return TablerIcons.writing;
@@ -602,7 +602,11 @@ class Graphic with UiLoggy {
 
   /// Get text height based on window size.
   double _getTextHeight(Quote quote, Size windowSize) {
-    final double heightPadding = _getTextHeightPadding(quote);
+    double heightPadding = _getTextHeightPadding(quote);
+    if (windowSize.height > 700.0) {
+      heightPadding += 100.0;
+    }
+
     return max(windowSize.height - heightPadding, 200.0);
   }
 
@@ -628,7 +632,10 @@ class Graphic with UiLoggy {
 
   /// Get text height based on window size.
   double _getTextWidth(Size windowSize) {
-    const double widthPadding = 200.0;
+    final double widthPadding = windowSize.width > 1200.0 ? 600.0 : 200.0;
+    // if (windowSize.width > 1200.0) {
+    //   widthPadding = 300.0;
+    // }
     return max(windowSize.width - widthPadding, 200.0);
   }
 
@@ -644,7 +651,6 @@ class Graphic with UiLoggy {
       );
     } catch (e) {
       loggy.error(e);
-      // GlobalLoggy().loggy.error(e.toString());
       return Solution(
         Text(quote.name),
         Utils.calligraphy.body(
