@@ -64,6 +64,7 @@ dependencies:
   font_awesome_flutter: ^10.5.0
   glutton: ^2.0.0
   google_fonts: ^5.1.0
+  image_downloader_web: ^2.0.4
   infinite_carousel: ^1.0.3
   jiffy: ^6.2.1
   just_the_tooltip: ^0.0.12
