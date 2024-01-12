@@ -8,6 +8,7 @@ import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/globals/utils/calligraphy.dart";
 import "package:kwotes/router/app_routes.dart";
+import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
 
@@ -109,6 +110,13 @@ class _AppState extends State<App> {
     Constants.colors.fillForegroundPalette();
     Constants.colors.foregroundPalette.shuffle();
 
+    final String browserUrl = NavigationStateHelper.initialBrowserUrl;
+    final String languageCode = await Utils.linguistic.initCurrentLanguage(
+      browserLanguage: Utils.linguistic.extractLanguageFromUrl(browserUrl),
+    );
+
+    if (!mounted) return;
+    EasyLocalization.of(context)?.setLocale(Locale(languageCode));
     setState(() => _pageState = EnumPageState.idle);
   }
 }

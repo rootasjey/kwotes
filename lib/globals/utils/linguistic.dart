@@ -19,9 +19,32 @@ class Linguistic {
   /// Current language.
   static String currentLanguage = "en";
 
+  /// Extract the language from (browser) route url.
+  String? extractLanguageFromUrl(String url) {
+    final int indexLang = url.indexOf("lang=");
+    if (indexLang == -1) {
+      return null;
+    }
+
+    return url.substring(indexLang + 5, indexLang + 7);
+  }
+
+  /// Return true if the url contains the language.
+  bool hasLanguageInUrl(String url) {
+    return url.contains("lang=");
+  }
+
   /// Initialize the current language.
-  Future<void> initCurrentLanguage() async {
-    currentLanguage = await getLanguage();
+  Future<String> initCurrentLanguage({String? browserLanguage}) async {
+    browserLanguage ??= await getLanguage();
+
+    if (!available().contains(getLanguageFromString(browserLanguage))) {
+      browserLanguage = "en";
+    }
+
+    currentLanguage = browserLanguage;
+    Utils.vault.setLanguage(getLanguageSelection());
+    return currentLanguage;
   }
 
   /// List of available languages in the app.

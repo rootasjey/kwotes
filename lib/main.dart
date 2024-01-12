@@ -1,6 +1,7 @@
 import "dart:io";
 
 import "package:adaptive_theme/adaptive_theme.dart";
+import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:firebase_core/firebase_core.dart";
 import "package:flutter/foundation.dart";
@@ -8,6 +9,7 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_dotenv/flutter_dotenv.dart";
 import "package:flutter_langdetect/flutter_langdetect.dart" as langdetect;
+import "package:kwotes/router/app_routes.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:loggy/loggy.dart";
 import "package:window_manager/window_manager.dart";
@@ -29,9 +31,15 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Beamer.setPathUrlStrategy();
+  Beamer.setPathUrlStrategy();
   await EasyLocalization.ensureInitialized();
   await dotenv.load(fileName: "var.env");
+
+  final String browserUrl = "${Uri.base.path}?${Uri.base.query}";
+  NavigationStateHelper.initialBrowserUrl = browserUrl;
+  appBeamerDelegate.setInitialRoutePath(RouteInformation(
+    uri: Uri.parse(browserUrl),
+  ));
 
   final AdaptiveThemeMode? savedThemeMode = await AdaptiveTheme.getThemeMode();
   NavigationStateHelper.homePageTabIndex =
@@ -63,7 +71,6 @@ void main() async {
   }
 
   await langdetect.initLangDetect();
-  await Utils.linguistic.initCurrentLanguage();
 
   return runApp(
     EasyLocalization(

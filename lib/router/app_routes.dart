@@ -17,15 +17,4 @@ final BeamerDelegate appBeamerDelegate = BeamerDelegate(
       SettingsLocation(),
     ],
   ),
-  // locationBuilder: RoutesLocationBuilder(
-  //   routes: {
-  //     // "/forgot-password":
-  //     //     (BuildContext context, BeamState state, Object? data) =>
-  //     //         ForgotPasswordLocation(),
-  //     // "/settings": (context, state, data) => SettingsLocation(),
-  //     // "/signin": (context, state, data) => SigninLocation(),
-  //     // "/signup": (context, state, data) => SignupLocation(),
-  //     "*": (context, state, data) => const AppLocationContainer(),
-  //   },
-  // ),
 );

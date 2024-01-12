@@ -48,7 +48,7 @@ class HomeLocation extends BeamLocation<BeamState> {
 }
 
 class HomeContentLocation extends BeamLocation<BeamState> {
-  HomeContentLocation(BeamState state) : super(state.routeInformation);
+  HomeContentLocation(BeamState? state) : super(state?.routeInformation);
 
   /// Main root value for this location.
   static const String route = "/h";

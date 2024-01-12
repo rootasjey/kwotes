@@ -64,6 +64,12 @@ class NavigationStateHelper {
   /// Thus keeping context when navigating back and forth result pages.
   static String searchValue = "";
 
+  /// Initial browser url.
+  /// Necesarry to set app locale somewhere where we've access to a `context`.
+  /// We cannot set it in the `main` method because the `context`
+  /// is not available there.
+  static String initialBrowserUrl = "";
+
   /// Beamer key to navigate sub-locations.
   static GlobalKey<BeamerState> homeBeamerKey = GlobalKey<BeamerState>(
     debugLabel: "home",

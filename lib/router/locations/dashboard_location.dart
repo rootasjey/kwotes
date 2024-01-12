@@ -72,8 +72,8 @@ class DashboardLocation extends BeamLocation<BeamState> {
 }
 
 class DashboardContentLocation extends BeamLocation<BeamState> {
-  DashboardContentLocation(BeamState beamState)
-      : super(beamState.routeInformation);
+  DashboardContentLocation(BeamState? beamState)
+      : super(beamState?.routeInformation);
 
   /// Main root value for this location.
   static const String route = "/d";

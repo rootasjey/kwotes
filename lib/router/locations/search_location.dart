@@ -37,7 +37,7 @@ class SearchLocation extends BeamLocation<BeamState> {
 }
 
 class SearchContentLocation extends BeamLocation<BeamState> {
-  SearchContentLocation(BeamState state) : super(state.routeInformation);
+  SearchContentLocation(BeamState? state) : super(state?.routeInformation);
 
   /// Main root value for this location.
   static const String route = "/s";
