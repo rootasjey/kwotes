@@ -7,7 +7,7 @@ class Constants {
   static const appName = "kwotes";
 
   /// App version.
-  static const appVersion = "3.0.0";
+  static const appVersion = "3.0.1";
 
   /// App build number.
   static const appBuildNumber = 15;
