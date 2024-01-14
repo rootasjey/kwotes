@@ -42,7 +42,6 @@ class DashboardFab extends StatelessWidget {
     }
 
     return FloatingActionButton.extended(
-      elevation: isMobileSize ? 4.0 : 0.0,
       hoverElevation: 4.0,
       focusElevation: 0.0,
       highlightElevation: 0.0,
