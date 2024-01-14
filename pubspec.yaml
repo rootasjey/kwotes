@@ -127,9 +127,11 @@ flutter:
     - assets/images/app_icon/animation.gif
     - assets/images/autoportrait.png
     - assets/images/citations365_lockscreen.png
+    - assets/images/malanga.png
     - assets/images/profile-picture-avocado.png
     - assets/images/profile-picture-carrot.png
     - assets/images/reference-picture-0.png
+    - assets/images/sweet-potatoes.png
     - assets/translations/
     - var.env
 
