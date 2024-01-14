@@ -107,6 +107,7 @@ class _TopicPageState extends State<TopicPage> with UiLoggy {
       );
     }
 
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
     final Signal<UserFirestore> signalUserFirestore =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
@@ -137,7 +138,13 @@ class _TopicPageState extends State<TopicPage> with UiLoggy {
 
                     return SliverPadding(
                       padding: getBodyPadding(isMobileSize),
-                      sliver: SliverList.builder(
+                      sliver: SliverList.separated(
+                        separatorBuilder: (BuildContext context, int index) {
+                          return Divider(
+                            height: 54.0,
+                            color: isDark ? Colors.white12 : Colors.black12,
+                          );
+                        },
                         itemBuilder: (BuildContext context, int index) {
                           final Quote quote = _quotes[index];
                           return SearchQuoteText(

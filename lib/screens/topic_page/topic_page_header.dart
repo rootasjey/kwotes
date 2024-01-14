@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:kwotes/components/page_app_bar.dart";
+import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 
 class TopicPageHeader extends StatelessWidget {
@@ -21,6 +22,9 @@ class TopicPageHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final color =
+        Constants.colors.getColorFromTopicName(context, topicName: topic);
+
     return PageAppBar(
       axis: Axis.horizontal,
       toolbarHeight: 120.0,
@@ -41,6 +45,10 @@ class TopicPageHeader extends StatelessWidget {
                     fontSize: 32.0,
                     fontWeight: FontWeight.w600,
                     color: Theme.of(context).textTheme.bodyMedium?.color,
+                    decorationStyle: TextDecorationStyle.solid,
+                    decorationColor: color.withOpacity(0.8),
+                    decoration: TextDecoration.underline,
+                    decorationThickness: 6.0,
                   ),
                 ),
               ),
