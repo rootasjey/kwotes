@@ -19,6 +19,7 @@ class NotFoundPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final int randomImageInt = Random().nextInt(_imagePaths.length);
     final int randomQuoteInt = Random().nextInt(5);
     final Color? foregroundTextColor =
@@ -88,7 +89,11 @@ class NotFoundPage extends StatelessWidget {
                   textValue: "back".tr(),
                   textFlex: 0,
                   style: TextButton.styleFrom(
-                    backgroundColor: Constants.colors.getRandomPastel(),
+                    backgroundColor: isDark
+                        ? Constants.colors.getRandomFromPalette(
+                            withGoodContrast: true,
+                          )
+                        : Constants.colors.getRandomPastel(),
                   ),
                   padding: const EdgeInsets.only(right: 8.0),
                   margin: const EdgeInsets.only(top: 32.0),
