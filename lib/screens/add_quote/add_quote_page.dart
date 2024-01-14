@@ -1675,10 +1675,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
 
       if (!newDraftDoc.exists || draftMap == null) {
         loggy.error("Failed to create draft.");
-
-        if (!mounted) {
-          return;
-        }
+        if (!mounted) return;
 
         Utils.graphic.showSnackbar(
           context,
@@ -1687,11 +1684,9 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
         return;
       }
 
+      draftMap["id"] = newDraftDoc.id;
       final DraftQuote newDraft = DraftQuote.fromMap(draftMap);
-      setState(() {
-        NavigationStateHelper.quote = newDraft;
-      });
-
+      setState(() => NavigationStateHelper.quote = newDraft);
       populateFields(newDraft);
     } catch (error) {
       loggy.error(error);
