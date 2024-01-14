@@ -23,6 +23,9 @@ class SearchReferenceResultsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int index = -1;
+    final contrastPalette = Constants.colors.contrastPalette;
+
     return SliverPadding(
       padding: margin.subtract(const EdgeInsets.only(left: 12.0)),
       sliver: SliverToBoxAdapter(
@@ -30,6 +33,8 @@ class SearchReferenceResultsPage extends StatelessWidget {
           spacing: 16.0,
           runSpacing: 16.0,
           children: referenceResults.map((Reference reference) {
+            index += 1;
+
             return TextButton(
               onPressed: () => onTapReference?.call(reference),
               style: TextButton.styleFrom(
@@ -43,9 +48,7 @@ class SearchReferenceResultsPage extends StatelessWidget {
                   textStyle: TextStyle(
                     fontSize: 54.0,
                     fontWeight: FontWeight.w300,
-                    color: Constants.colors.getRandomFromPalette(
-                      withGoodContrast: true,
-                    ),
+                    color: contrastPalette[index % contrastPalette.length],
                   ),
                 ),
               ),

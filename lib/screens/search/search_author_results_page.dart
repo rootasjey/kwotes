@@ -23,6 +23,9 @@ class SearchAuthorResultsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int index = -1;
+    final contrastPalette = Constants.colors.contrastPalette;
+
     return SliverPadding(
       padding: margin.subtract(const EdgeInsets.only(left: 12.0)),
       sliver: SliverToBoxAdapter(
@@ -30,6 +33,7 @@ class SearchAuthorResultsPage extends StatelessWidget {
           spacing: 16.0,
           runSpacing: 16.0,
           children: authorResults.map((Author author) {
+            index += 1;
             return TextButton(
               onPressed: () => onTapAuthor?.call(author),
               style: TextButton.styleFrom(
@@ -43,9 +47,7 @@ class SearchAuthorResultsPage extends StatelessWidget {
                   textStyle: TextStyle(
                     fontSize: 54.0,
                     fontWeight: FontWeight.w300,
-                    color: Constants.colors.getRandomFromPalette(
-                      withGoodContrast: true,
-                    ),
+                    color: contrastPalette[index % contrastPalette.length],
                   ),
                 ),
               ),
