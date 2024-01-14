@@ -9,6 +9,7 @@ class ColorPalette {
   /// All necessary colors for the app.
   ColorPalette();
 
+  /// List of foreground colors based on topics.
   final List<Color> foregroundPalette = [
     // const Color.fromRGBO(101, 40, 247, 1),
     // const Color.fromRGBO(160, 118, 249, 1),
@@ -34,6 +35,9 @@ class ColorPalette {
     // const Color.fromRGBO(205, 233, 144, 1),
     // const Color.fromRGBO(182, 227, 136, 1),
   ];
+
+  /// List of foreground colors based on topics (with good contrast).
+  final List<Color> contrastPalette = [];
 
   final List<Color> pastelPalette = [
     Colors.blue.shade50,
@@ -63,30 +67,17 @@ class ColorPalette {
   }
 
   Color getRandomFromPalette({bool withGoodContrast = false}) {
-    if (!withGoodContrast) {
-      return foregroundPalette
-          .elementAt(Random().nextInt(foregroundPalette.length));
+    final Color defaultColor = secondary;
+
+    if (withGoodContrast) {
+      return contrastPalette.isNotEmpty
+          ? contrastPalette.elementAt(Random().nextInt(contrastPalette.length))
+          : defaultColor;
     }
 
-    const defaultColor = Colors.deepPurpleAccent;
-    const int maxTries = 12;
-    int tries = 0;
-
-    Color foundColor = foregroundPalette.elementAt(
+    return foregroundPalette.elementAt(
       Random().nextInt(foregroundPalette.length),
     );
-
-    while (foundColor.computeLuminance() > 0.4 && (tries < maxTries)) {
-      foundColor =
-          foregroundPalette[Random().nextInt(foregroundPalette.length)];
-      tries++;
-    }
-
-    if (foundColor.computeLuminance() > 0.4) {
-      return defaultColor;
-    }
-
-    return foundColor;
   }
 
   /// Create a [MaterialColor] from a [Color].
@@ -161,6 +152,15 @@ class ColorPalette {
   void fillForegroundPalette() {
     for (final Topic topic in topics) {
       foregroundPalette.add(topic.color);
+    }
+  }
+
+  /// Fill foreground palette contrast from topics.
+  void fillContrastPalette() {
+    for (final Topic topic in topics) {
+      if (topic.color.computeLuminance() > 0.4) {
+        contrastPalette.add(topic.color);
+      }
     }
   }
 
