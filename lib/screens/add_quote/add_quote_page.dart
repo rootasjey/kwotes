@@ -663,7 +663,6 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
       return;
     }
 
-    // final Quote quote = NavigationStateHelper.quote;
     if (quote.id.isEmpty) {
       tryCreateDraft();
       return;
@@ -1180,15 +1179,29 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
       }
     }
 
+    final Signal<UserFirestore> userFirestoreSignal =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+
+    final String userId = userFirestoreSignal.value.id;
+    final Quote quote = NavigationStateHelper.quote;
+
+    final bool hideSubmitButton = userId.isEmpty ||
+        quote.id.isEmpty ||
+        quote.name.isEmpty ||
+        quote.name.length < 3 ||
+        quote.topics.isEmpty;
+
     Utils.graphic.showSnackbarWithCustomText(
       context,
       behavior: behavior,
       duration: const Duration(seconds: 6),
       showCloseIcon: !isMobileSize,
       text: SnackbarDraft(
-        quote: NavigationStateHelper.quote,
+        quote: quote,
         isInValidation: isInValidation,
         isMobileSize: isMobileSize,
+        userId: userId,
+        hideSubmitButton: hideSubmitButton,
       ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(2.0),

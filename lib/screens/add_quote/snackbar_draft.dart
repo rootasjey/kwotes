@@ -1,12 +1,9 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/actions/quote_actions.dart";
 import "package:kwotes/globals/utils.dart";
-import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/quote.dart";
-import "package:kwotes/types/user/user_firestore.dart";
 
 class SnackbarDraft extends StatelessWidget {
   /// A snackbar to indicate that the quote has been saved as a draft.
@@ -17,9 +14,14 @@ class SnackbarDraft extends StatelessWidget {
   const SnackbarDraft({
     super.key,
     required this.quote,
+    this.hideSubmitButton = false,
     this.isInValidation = false,
     this.isMobileSize = false,
+    this.userId = "",
   });
+
+  /// Don't display the "propose" button if true.
+  final bool hideSubmitButton;
 
   /// Don't display the "submit" button if true.
   final bool isInValidation;
@@ -30,11 +32,12 @@ class SnackbarDraft extends StatelessWidget {
   /// The quote to propose for validation (if the action is taken).
   final Quote quote;
 
+  /// Id of the current authenticated user.
+  /// Empty if no user is authenticated.
+  final String userId;
+
   @override
   Widget build(BuildContext context) {
-    final Signal<UserFirestore> userFirestoreSignal =
-        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
-
     return Padding(
       padding: const EdgeInsets.only(left: 0.0),
       child: Row(
@@ -70,14 +73,14 @@ class SnackbarDraft extends StatelessWidget {
               ),
             ),
           ),
-          if (!isInValidation)
+          if (!isInValidation && !hideSubmitButton)
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: TextButton(
                 onPressed: () {
                   QuoteActions.proposeQuote(
                     quote: quote,
-                    userId: userFirestoreSignal.value.id,
+                    userId: userId,
                   );
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 },

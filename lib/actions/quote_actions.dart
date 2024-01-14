@@ -220,6 +220,7 @@ class QuoteActions {
     required String userId,
   }) async {
     if (userId.isEmpty ||
+        quote.id.isEmpty ||
         quote.name.isEmpty ||
         quote.name.length < 3 ||
         quote.topics.isEmpty) {
