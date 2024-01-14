@@ -309,6 +309,7 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
     return null;
   }
 
+  /// Callback fired when bottom bar item is tapped.
   void onTapBottomBarItem(int index) {
     if (index == _currentIndex) {
       navigateBackToRoot(index);
@@ -317,26 +318,33 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
     setState(() => _currentIndex = index);
     NavigationStateHelper.homePageTabIndex = index;
     Utils.vault.setHomePageTabIndex(index);
-    // updateBrowserUrl(index);
+    updateBrowserUrl(index);
   }
 
+  /// Re-set the last route information of the nested beamer.
   /// Update browser url according to selected bottom bar item.
   void updateBrowserUrl(int index) {
     switch (index) {
       case 0:
-        Beamer.of(context).updateRouteInformation(
-          RouteInformation(uri: Uri(path: HomeContentLocation.route)),
-        );
+        final RouteInformation routeInformation =
+            NavigationStateHelper.homeRouterDelegate.currentConfiguration ??
+                RouteInformation(uri: Uri(path: HomeContentLocation.route));
+
+        Beamer.of(context).update(configuration: routeInformation);
         break;
       case 1:
-        Beamer.of(context).updateRouteInformation(
-          RouteInformation(uri: Uri(path: SearchLocation.route)),
-        );
+        final RouteInformation routeInformation =
+            NavigationStateHelper.searchRouterDelegate.currentConfiguration ??
+                RouteInformation(uri: Uri(path: SearchContentLocation.route));
+
+        Beamer.of(context).update(configuration: routeInformation);
         break;
       case 2:
-        Beamer.of(context).updateRouteInformation(
-          RouteInformation(uri: Uri(path: DashboardLocation.route)),
-        );
+        final RouteInformation routeInformation = NavigationStateHelper
+                .dashboardRouterDelegate.currentConfiguration ??
+            RouteInformation(uri: Uri(path: DashboardContentLocation.route));
+
+        Beamer.of(context).update(configuration: routeInformation);
         break;
       default:
         break;
