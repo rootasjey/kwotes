@@ -1,8 +1,10 @@
 import "package:beamer/beamer.dart";
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/widgets.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/locations/search_location.dart";
+import "package:kwotes/screens/not_found_page.dart";
 import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_frame_border_style.dart";
 import "package:kwotes/types/quote.dart";
@@ -82,6 +84,12 @@ class NavigationStateHelper {
     locationBuilder: BeamerLocationBuilder(beamLocations: [
       HomeContentLocation(BeamState.fromUriString(HomeContentLocation.route)),
     ]),
+    notFoundPage: BeamPage(
+      child: const NotFoundPage(),
+      key: const ValueKey("notFoundPage-home"),
+      type: BeamPageType.fadeTransition,
+      title: "page_title.not_found".tr(),
+    ),
   );
 
   /// Beamer key to navigate search sub-locations.
@@ -98,6 +106,12 @@ class NavigationStateHelper {
         BeamState.fromUriString(SearchContentLocation.route),
       ),
     ]),
+    notFoundPage: BeamPage(
+      child: const NotFoundPage(),
+      key: const ValueKey("notFoundPage-search"),
+      type: BeamPageType.fadeTransition,
+      title: "page_title.not_found".tr(),
+    ),
   );
 
   /// Beamer key to navigate dashboard sub-locations.
@@ -114,5 +128,11 @@ class NavigationStateHelper {
         BeamState.fromUriString(DashboardContentLocation.route),
       ),
     ]),
+    notFoundPage: BeamPage(
+      child: const NotFoundPage(),
+      key: const ValueKey("notFoundPage-dashboard"),
+      type: BeamPageType.fadeTransition,
+      title: "page_title.not_found".tr(),
+    ),
   );
 }
