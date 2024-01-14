@@ -380,6 +380,16 @@
   "name": "Name",
   "next": "Next",
   "new_quote": "New quote",
+  "not_found": {
+    "name": "404",
+    "quotes": {
+      "0": "We get lost only to better find our way back.",
+      "1": "The right and the wrong way are usually a matter of perspective.",
+      "2": "I don't know what to do, I just know where to go.",
+      "3": "I don't know where I am, I just know where I'm going.",
+      "4": "This is essential: The journey of a thousand miles begins with a single step."
+    }
+  },
   "off": "Off",
   "on": "On",
   "on_boarding_come": "Come on board if it's your first time.",
@@ -402,6 +412,7 @@
     "in_validation": "@:kwotes_leading In validation",
     "list": "@:kwotes_leading {}",
     "lists": "@:kwotes_leading Lists",
+    "not_found": "@:kwotes_leading 404",
     "post": "@:kwotes_leading Post",
     "posts": "@:kwotes_leading Posts",
     "project": "@:kwotes_leading Project",

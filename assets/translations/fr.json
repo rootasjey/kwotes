@@ -382,6 +382,16 @@
   "name": "Nom",
   "next": "Suivant",
   "new_quote": "Nouvelle citation",
+  "not_found": {
+    "name": "404",
+    "quotes": {
+      "0": "Nous nous perdons seulement pour mieux retrouver notre chemin.",
+      "1": "Le bien et le mal sont souvent une question de perspective.",
+      "2": "Je ne sais pas quoi faire, mais je sais où aller.",
+      "3": "Je ne sais pas où j'en suis, mais je sais où je vais.",
+      "4": "Ceci est essentiel: Le voyage de mille kilomètres a commencé avec un simple pas."
+    }
+  },
   "off": "Off",
   "on": "On",
   "on_boarding_come": "Venez suivre les instructions basiques si ceci est votre première fois.",
@@ -404,6 +414,7 @@
     "in_validation": "@:kwotes_leading En Validation",
     "list": "@:kwotes_leading {}",
     "lists": "@:kwotes_leading Listes",
+    "not_found": "@:kwotes_leading 404",
     "post": "@:kwotes_leading Post",
     "posts": "@:kwotes_leading Posts",
     "project": "@:kwotes_leading Project",
