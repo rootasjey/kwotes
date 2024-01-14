@@ -52,6 +52,8 @@ class SearchInput extends StatelessWidget {
       hintMaxLines = 2;
     }
 
+    const double toolbarHeight = 180.0;
+
     return SliverAppBar(
       primary: false,
       backgroundColor: backgroundColor,
@@ -60,10 +62,10 @@ class SearchInput extends StatelessWidget {
       pinned: false,
       snap: true,
       elevation: 0.0,
-      toolbarHeight: 140.0,
+      toolbarHeight: toolbarHeight,
       automaticallyImplyLeading: false,
-      collapsedHeight: 140.0,
-      expandedHeight: 140.0,
+      collapsedHeight: toolbarHeight,
+      expandedHeight: toolbarHeight,
       title: BackdropFilter(
         filter: ImageFilter.blur(
           sigmaX: 5,
