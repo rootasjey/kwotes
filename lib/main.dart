@@ -37,9 +37,13 @@ void main() async {
 
   final String browserUrl = "${Uri.base.path}?${Uri.base.query}";
   NavigationStateHelper.initialBrowserUrl = browserUrl;
-  appBeamerDelegate.setInitialRoutePath(RouteInformation(
-    uri: Uri.parse(browserUrl),
-  ));
+
+  // Make sure that the initial route is kept correctly.
+  if (kIsWeb) {
+    appBeamerDelegate.setInitialRoutePath(RouteInformation(
+      uri: Uri.parse(browserUrl),
+    ));
+  }
 
   final AdaptiveThemeMode? savedThemeMode = await AdaptiveTheme.getThemeMode();
   NavigationStateHelper.homePageTabIndex =
