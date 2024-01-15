@@ -106,6 +106,18 @@
   "cookies": "Cookies",
   "cookies_content": "The application uses only necessaries cookies for usage statistiques. It's anonymized and don't track specific users. We don't volontary share cookies with third-party. We don't have id advertising.",
   "create": "Create",
+  "credits": {
+    "description": "This application has been made possible thanks to the following projects.",
+    "general_purpose": {
+      "name": "General purpose",
+      "description": "Technologies & services which helped to build this app and all aspects."
+    },
+    "libraries": {
+      "name": "Libraries",
+      "description": "Packages that sped up development."
+    },
+    "name": "Credits"
+  },
   "dark": "Dark",
   "date": {
     "last_updated": "Last updated",
@@ -400,6 +412,7 @@
     "author_quotes": "@:kwotes_leading Quotes by {}",
     "color_palette": "@:kwotes_leading Color palette",
     "color_detail": "@:kwotes_leading Color: {}",
+    "credits": "@:kwotes_leading Credits",
     "dashboard": "@:kwotes_leading Dashboard",
     "delete_account": "@:kwotes_leading Delete account",
     "drafts": "@:kwotes_leading Drafts",

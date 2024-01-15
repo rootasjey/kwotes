@@ -108,6 +108,18 @@
   "copy_link": "Copier le lien",
   "copy_link_success": "Le lien a été copié!",
   "create": "Créer",
+  "credits": {
+    "description": "Cette application a été rendue possible grâce aux projets suivants.",
+    "general_purpose": {
+      "name": "Support général",
+      "description": "Technologies & services ayant aidés à construire cette applciation sur tous les aspects."
+    },
+    "libraries": {
+      "name": "Librairies",
+      "description": "Paquets qui ont accéléré le développement."
+    },
+    "name": "Crédits"
+  },
   "dark": "Sombre",
   "date": {
     "last_updated": "Dernière mise à jour",
@@ -402,6 +414,7 @@
     "author_quotes": "@:kwotes_leading Citations de {}",
     "color_palette": "@:kwotes_leading Palette de couleurs",
     "color_detail": "@:kwotes_leading Couleur: {}",
+    "credits": "@:kwotes_leading Crédits",
     "dashboard": "@:kwotes_leading Dashboard",
     "delete_account": "@:kwotes_leading Suppression du compte",
     "drafts": "@:kwotes_leading Brouillons",
