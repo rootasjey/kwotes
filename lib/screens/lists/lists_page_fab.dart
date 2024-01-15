@@ -1,7 +1,7 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/globals/utils.dart";
-import "package:unicons/unicons.dart";
 
 class ListsPageFab extends StatelessWidget {
   const ListsPageFab({
@@ -46,8 +46,8 @@ class ListsPageFab extends StatelessWidget {
         tooltip:
             showCreate ? "list.create.close".tr() : "list.create.name".tr(),
         child: showCreate
-            ? const Icon(UniconsLine.times)
-            : const Icon(UniconsLine.plus),
+            ? const Icon(TablerIcons.x)
+            : const Icon(TablerIcons.plus),
       );
     }
 
@@ -66,9 +66,8 @@ class ListsPageFab extends StatelessWidget {
       label: showCreate
           ? Text("list.create.close".tr(), style: textStyle)
           : Text("list.create.name".tr(), style: textStyle),
-      icon: showCreate
-          ? const Icon(UniconsLine.times)
-          : const Icon(UniconsLine.plus),
+      icon:
+          showCreate ? const Icon(TablerIcons.x) : const Icon(TablerIcons.plus),
     );
   }
 }

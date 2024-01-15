@@ -1,12 +1,12 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/components/texts/quote_list_text.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/quote_list.dart";
 import "package:super_context_menu/super_context_menu.dart";
-import "package:unicons/unicons.dart";
 
 class ListsPageBody extends StatelessWidget {
   const ListsPageBody({
@@ -124,12 +124,12 @@ class ListsPageBody extends StatelessWidget {
                   MenuAction(
                     title: "list.edit.name".tr(),
                     callback: () => onEditList?.call(quoteList),
-                    image: MenuImage.icon(UniconsLine.edit_alt),
+                    image: MenuImage.icon(TablerIcons.edit),
                   ),
                   MenuAction(
                     title: "list.delete.name".tr(),
                     callback: () => onDeleteList?.call(quoteList),
-                    image: MenuImage.icon(UniconsLine.trash),
+                    image: MenuImage.icon(TablerIcons.trash),
                   ),
                 ],
               );

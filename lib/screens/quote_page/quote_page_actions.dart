@@ -4,7 +4,6 @@ import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/buttons/like_button.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/quote.dart";
-import "package:unicons/unicons.dart";
 
 class QuotePageActions extends StatelessWidget {
   /// Quote page actions.
@@ -77,7 +76,7 @@ class QuotePageActions extends StatelessWidget {
           IconButton(
             color: iconColor,
             onPressed: onNavigateBack,
-            icon: const Icon(UniconsLine.times),
+            icon: const Icon(TablerIcons.x),
           ),
         if (!minimal)
           IconButton(
@@ -89,7 +88,7 @@ class QuotePageActions extends StatelessWidget {
         IconButton(
           color: iconColor,
           onPressed: onShareQuote,
-          icon: const Icon(UniconsLine.share),
+          icon: const Icon(TablerIcons.share),
           tooltip: "quote.share.name".tr(),
         ),
         if (authenticated) ...[

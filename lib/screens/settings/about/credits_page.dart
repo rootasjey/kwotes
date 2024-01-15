@@ -160,37 +160,37 @@ class CreditsPage extends StatelessWidget {
     return [
       CreditItemData(
         title: "Flutter",
-        subtitle: "Frontend UI library",
+        subtitle: "Frontend UI library.",
         link: "https://flutter.dev",
         iconData: TablerIcons.brand_flutter,
       ),
       CreditItemData(
         title: "Dart",
-        subtitle: "Programming language",
+        subtitle: "Programming language.",
         link: "https://dart.dev",
         iconData: TablerIcons.code,
       ),
       CreditItemData(
         title: "GitHub",
-        subtitle: "Source code repository",
+        subtitle: "Source code repository.",
         link: "https://github.com",
         iconData: TablerIcons.brand_github,
       ),
       CreditItemData(
         title: "VSCode",
-        subtitle: "Code editor",
+        subtitle: "Code editor.",
         link: "https://code.visualstudio.com",
         iconData: TablerIcons.braces,
       ),
       CreditItemData(
         title: "Firebase",
-        subtitle: "Cloud database & services",
+        subtitle: "Cloud database & services.",
         link: "https://firebase.google.com",
         iconData: TablerIcons.brand_firebase,
       ),
       CreditItemData(
         title: "Codium",
-        subtitle: "AI code assistant",
+        subtitle: "AI code assistant.",
         link: "https://vscodium.com",
         iconData: TablerIcons.robot,
       ),
@@ -202,17 +202,17 @@ class CreditsPage extends StatelessWidget {
     return [
       CreditItemData(
         title: "adaptive_theme",
-        subtitle: "Theme manager",
+        subtitle: "Theme manager.",
         link: "https://pub.dev/packages/adaptive_theme",
       ),
       CreditItemData(
         title: "algolia",
-        subtitle: "Search service",
+        subtitle: "Search service.",
         link: "https://pub.dev/packages/algolia",
       ),
       CreditItemData(
         title: "animated_text_kit",
-        subtitle: "Text animation",
+        subtitle: "Text animation.",
         link: "https://pub.dev/packages/animated_text_kit",
       ),
       CreditItemData(
@@ -228,57 +228,57 @@ class CreditsPage extends StatelessWidget {
       ),
       CreditItemData(
         title: "boxy",
-        subtitle: "Additional & flexible layout widgets",
+        subtitle: "Additional & flexible layout widgets.",
         link: "https://pub.dev/packages/boxy",
       ),
       CreditItemData(
         title: "cupertino_icons",
-        subtitle: "Icons from Apple",
+        subtitle: "Icons from Apple.",
         link: "https://pub.dev/packages/cupertino_icons",
       ),
       CreditItemData(
         title: "cloud_firestore",
-        subtitle: "Firestore database to access & store quote data",
+        subtitle: "Firestore database to access & store quote data.",
         link: "https://pub.dev/packages/cloud_firestore",
       ),
       CreditItemData(
         title: "cloud_functions",
-        subtitle: "Cloud functions for server-side code",
+        subtitle: "Cloud functions for server-side code.",
         link: "https://pub.dev/packages/cloud_functions",
       ),
       CreditItemData(
         title: "dismissible_page",
-        subtitle: "Widget page implementing swipe-to-dismiss gesture",
+        subtitle: "Widget page implementing swipe-to-dismiss gesture.",
         link: "https://pub.dev/packages/dismissible_page",
       ),
       CreditItemData(
         title: "easy_localization",
-        subtitle: "Internationalization for Flutter applications",
+        subtitle: "Internationalization for Flutter applications.",
         link: "https://pub.dev/packages/easy_localization",
       ),
       CreditItemData(
         title: "file_picker",
-        subtitle: "File picker for selecting folder to save quote images",
+        subtitle: "File picker for selecting folder to save quote images.",
         link: "https://pub.dev/packages/file_picker",
       ),
       CreditItemData(
         title: "firebase_auth",
-        subtitle: "Firebase authentication for signing in users",
+        subtitle: "Firebase authentication for signing in users.",
         link: "https://pub.dev/packages/firebase_auth",
       ),
       CreditItemData(
         title: "firebase_analytics",
-        subtitle: "Firebase analytics for tracking app usage",
+        subtitle: "Firebase analytics for tracking app usage.",
         link: "https://pub.dev/packages/firebase_analytics",
       ),
       CreditItemData(
         title: "firebase_core",
-        subtitle: "Firebase core for initializing Firebase services",
+        subtitle: "Firebase core for initializing Firebase services.",
         link: "https://pub.dev/packages/firebase_core",
       ),
       CreditItemData(
         title: "firebase_storage",
-        subtitle: "Firebase storage for accessing static images",
+        subtitle: "Firebase storage for accessing static images.",
         link: "https://pub.dev/packages/firebase_storage",
       ),
       CreditItemData(
@@ -441,12 +441,6 @@ class CreditsPage extends StatelessWidget {
             "text properties and correct hyphenation."
             "Result can be accessed programmatically.",
         link: "https://pub.dev/packages/text_wrap_auto_size",
-      ),
-      CreditItemData(
-        title: "unicons",
-        subtitle: "Single context menu widget that works accross "
-            "all desktop platforms, mobile platforms and web.",
-        link: "https://pub.dev/packages/unicons",
       ),
       CreditItemData(
         title: "url_launcher",

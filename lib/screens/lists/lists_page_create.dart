@@ -1,8 +1,8 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/buttons/circle_button.dart";
 import "package:kwotes/globals/utils.dart";
-import "package:unicons/unicons.dart";
 
 class ListsPageCreate extends StatelessWidget {
   /// Create list component.
@@ -186,7 +186,7 @@ class ListsPageCreate extends StatelessWidget {
                   child: CircleButton(
                     backgroundColor: Colors.black12,
                     icon: Icon(
-                      UniconsLine.times,
+                      TablerIcons.x,
                       color: Theme.of(context).textTheme.bodyMedium?.color,
                     ),
                     onTap: onCancel,

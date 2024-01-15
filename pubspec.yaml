@@ -61,7 +61,6 @@ dependencies:
   flutter_loggy: ^2.0.2
   flutter_solidart: ^0.4.2
   flutter_tabler_icons: ^1.2.0
-  font_awesome_flutter: ^10.5.0
   glutton: ^2.0.0
   google_fonts: ^5.1.0
   image_downloader_web: ^2.0.4
@@ -79,7 +78,6 @@ dependencies:
   smooth_page_indicator: ^1.1.0
   super_context_menu: ^0.6.4
   text_wrap_auto_size: ^1.2.1
-  unicons: ^2.1.1
   url_launcher: ^6.1.12
   verbal_expressions: ^1.0.0
   window_manager: ^0.3.5

@@ -1,12 +1,12 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/components/texts/draft_quote_text.dart";
 import "package:kwotes/types/draft_quote.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:super_context_menu/super_context_menu.dart";
-import "package:unicons/unicons.dart";
 
 /// Body component page displaying a user quotes in validation.
 class DraftsPageBody extends StatelessWidget {
@@ -93,18 +93,18 @@ class DraftsPageBody extends StatelessWidget {
                     MenuAction(
                       callback: () => onDelete?.call(draftQuote),
                       title: "quote.delete.name".tr(),
-                      image: MenuImage.icon(UniconsLine.trash),
+                      image: MenuImage.icon(TablerIcons.trash),
                       attributes: const MenuActionAttributes(destructive: true),
                     ),
                     MenuAction(
                       callback: () => onCopyFrom?.call(draftQuote),
                       title: "${"quote.copy_from.name".tr()}...",
-                      image: MenuImage.icon(UniconsLine.copy),
+                      image: MenuImage.icon(TablerIcons.copy),
                     ),
                     MenuAction(
                       callback: () => onEdit?.call(draftQuote),
                       title: "quote.edit.name".tr(),
-                      image: MenuImage.icon(UniconsLine.edit_alt),
+                      image: MenuImage.icon(TablerIcons.edit),
                     ),
                   ],
                 );

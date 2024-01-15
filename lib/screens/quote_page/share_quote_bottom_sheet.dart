@@ -4,7 +4,6 @@ import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/screens/quote_page/share_card.dart";
 import "package:kwotes/types/quote.dart";
-import "package:unicons/unicons.dart";
 
 class ShareQuoteBottomSheet extends StatelessWidget {
   const ShareQuoteBottomSheet({
@@ -65,7 +64,7 @@ class ShareQuoteBottomSheet extends StatelessWidget {
                 ShareCard(
                   cardBackgroundColor: cardBackgroundColor,
                   labelValue: "text".tr(),
-                  icon: const Icon(UniconsLine.text),
+                  icon: const Icon(TablerIcons.text_caption),
                   margin: margin,
                   onTap: () {
                     Navigator.of(context).pop();

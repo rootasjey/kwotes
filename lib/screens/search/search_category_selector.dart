@@ -5,7 +5,6 @@ import "package:kwotes/globals/constants.dart";
 import "package:kwotes/screens/search/category_item_button.dart";
 import "package:kwotes/types/enums/enum_indicator_type.dart";
 import "package:kwotes/types/enums/enum_search_category.dart";
-import "package:unicons/unicons.dart";
 
 class SearchCategorySelector extends StatelessWidget {
   /// A widget to select a search type (e.g. quote, author, reference).
@@ -55,7 +54,7 @@ class SearchCategorySelector extends StatelessWidget {
             CategoryItemButton(
               defaultColor: defaultColor,
               category: EnumSearchCategory.quote,
-              iconData: UniconsLine.chat,
+              iconData: TablerIcons.message_circle_2,
               indicatorType: IndicatorType.pill,
               onSelectEntity: onSelectCategory,
               selected: quoteSelected,
@@ -75,7 +74,7 @@ class SearchCategorySelector extends StatelessWidget {
             CategoryItemButton(
               defaultColor: defaultColor,
               category: EnumSearchCategory.reference,
-              iconData: UniconsLine.book_alt,
+              iconData: TablerIcons.book_2,
               indicatorType: IndicatorType.pill,
               onSelectEntity: onSelectCategory,
               selected: referenceSelected,

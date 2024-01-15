@@ -32,7 +32,6 @@ import "package:kwotes/types/user/user_rights.dart";
 import "package:loggy/loggy.dart";
 import "package:screenshot/screenshot.dart";
 import "package:text_wrap_auto_size/solution.dart";
-import "package:unicons/unicons.dart";
 
 class QuotePage extends StatefulWidget {
   const QuotePage({
@@ -451,7 +450,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
     QuoteActions.copyQuote(quote);
 
     setState(() {
-      copyIcon = UniconsLine.check;
+      copyIcon = TablerIcons.check;
       copyTooltip = "quote.copy.success.name".tr();
     });
 
@@ -460,7 +459,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
       const Duration(seconds: 3),
       () {
         setState(() {
-          copyIcon = UniconsLine.copy;
+          copyIcon = TablerIcons.copy;
           copyTooltip = "quote.copy.name".tr();
         });
       },

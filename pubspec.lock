@@ -589,14 +589,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  font_awesome_flutter:
-    dependency: "direct main"
-    description:
-      name: font_awesome_flutter
-      sha256: "5fb789145cae1f4c3245c58b3f8fb287d055c26323879eab57a7bf0cfd1e45f3"
-      url: "https://pub.dev"
-    source: hosted
-    version: "10.5.0"
   freezed_annotation:
     dependency: transitive
     description:
@@ -1202,14 +1194,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.2"
-  unicons:
-    dependency: "direct main"
-    description:
-      name: unicons
-      sha256: dbfcf93ff4d4ea19b324113857e358e4882115ab85db04417a4ba1c72b17a670
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.1"
   universal_html:
     dependency: transitive
     description:

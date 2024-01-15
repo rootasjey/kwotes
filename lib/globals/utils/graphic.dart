@@ -24,7 +24,6 @@ import "package:screenshot/screenshot.dart";
 import "package:share_plus/share_plus.dart";
 import "package:text_wrap_auto_size/solution.dart";
 import "package:text_wrap_auto_size/text_wrap_auto_size.dart";
-import "package:unicons/unicons.dart";
 
 /// Graphic utilities (everything associated with visual and UI).
 class Graphic with UiLoggy {
@@ -137,13 +136,13 @@ class Graphic with UiLoggy {
   /// Get icon data from a topic string.
   IconData getIconDataFromTopic(String topic) {
     if (topic == EnumTopic.art.name) {
-      return UniconsLine.brush_alt;
+      return TablerIcons.brush;
     }
     if (topic == EnumTopic.biology.name) {
-      return UniconsLine.dna;
+      return TablerIcons.dna;
     }
     if (topic == EnumTopic.feelings.name) {
-      return UniconsLine.heart;
+      return TablerIcons.heart;
     }
     if (topic == EnumTopic.fun.name) {
       return TablerIcons.confetti;
@@ -206,7 +205,7 @@ class Graphic with UiLoggy {
       return TablerIcons.gavel;
     }
 
-    return UniconsLine.question;
+    return TablerIcons.question_mark;
   }
 
   /// Get the color value type suffix (for translation).

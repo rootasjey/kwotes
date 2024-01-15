@@ -20,7 +20,6 @@ import "package:loggy/loggy.dart";
 import "package:smooth_page_indicator/smooth_page_indicator.dart";
 import "package:text_wrap_auto_size/solution.dart";
 import "package:text_wrap_auto_size/text_wrap_auto_size.dart";
-import "package:unicons/unicons.dart";
 import "package:verbal_expressions/verbal_expressions.dart";
 
 import "package:kwotes/components/buttons/circle_button.dart";
@@ -440,7 +439,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                         children: [
                           CircleButton(
                             onTap: onPreviousPage,
-                            icon: const Icon(UniconsLine.arrow_left),
+                            icon: const Icon(TablerIcons.arrow_left),
                             radius: 14.0,
                             margin: const EdgeInsets.only(right: 8.0),
                           ),
@@ -454,7 +453,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                           ),
                           CircleButton(
                             onTap: onNextPage,
-                            icon: const Icon(UniconsLine.arrow_right),
+                            icon: const Icon(TablerIcons.arrow_right),
                             radius: 14.0,
                             margin: const EdgeInsets.only(left: 8.0),
                           ),

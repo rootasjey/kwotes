@@ -1,9 +1,9 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:just_the_tooltip/just_the_tooltip.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
-import "package:unicons/unicons.dart";
 
 /// A utility class for adding children to application bar on author page.
 class AuthorAppBarChildren {
@@ -39,7 +39,7 @@ class AuthorAppBarChildren {
           },
           tooltip: "author.delete.name".tr(),
           color: Theme.of(context).textTheme.bodyMedium?.color,
-          icon: const Icon(UniconsLine.trash),
+          icon: const Icon(TablerIcons.trash),
         ),
       ),
     ];

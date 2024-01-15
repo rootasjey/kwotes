@@ -1,13 +1,13 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/components/texts/draft_quote_text.dart";
 import "package:kwotes/types/draft_quote.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/quote.dart";
 import "package:super_context_menu/super_context_menu.dart";
-import "package:unicons/unicons.dart";
 
 /// Body component page displaying quotes in validation.
 class InValidationPageBody extends StatelessWidget {
@@ -87,20 +87,20 @@ class InValidationPageBody extends StatelessWidget {
                   MenuAction(
                     callback: () => onTap?.call(quote),
                     title: "quote.edit.name".tr(),
-                    image: MenuImage.icon(UniconsLine.edit_alt),
+                    image: MenuImage.icon(TablerIcons.edit),
                     attributes: const MenuActionAttributes(),
                   ),
                   MenuAction(
                     callback: () => onDelete?.call(quote),
                     title: "quote.delete.name".tr(),
-                    image: MenuImage.icon(UniconsLine.trash),
+                    image: MenuImage.icon(TablerIcons.trash),
                     attributes: const MenuActionAttributes(destructive: true),
                   ),
                   if (onValidate != null)
                     MenuAction(
                       callback: () => onValidate?.call(quote),
                       title: "quote.validate.name".tr(),
-                      image: MenuImage.icon(UniconsLine.check),
+                      image: MenuImage.icon(TablerIcons.check),
                     ),
                 ],
               );

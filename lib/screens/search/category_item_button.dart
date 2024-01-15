@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/dot_indicator.dart";
 import "package:kwotes/types/enums/enum_indicator_type.dart";
 import "package:kwotes/types/enums/enum_search_category.dart";
-import "package:unicons/unicons.dart";
 
 class CategoryItemButton extends StatelessWidget {
   /// A button for displaying a search category (e.g. quote, author, reference).
@@ -10,7 +10,7 @@ class CategoryItemButton extends StatelessWidget {
     super.key,
     required this.category,
     this.selectedColor = Colors.pink,
-    this.iconData = UniconsLine.chat,
+    this.iconData = TablerIcons.message_circle_2,
     this.selected = false,
     this.defaultColor,
     this.onSelectEntity,

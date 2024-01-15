@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/quote_list.dart";
-import "package:unicons/unicons.dart";
 
 class AddToListItem extends StatelessWidget {
   const AddToListItem({
@@ -53,7 +53,7 @@ class AddToListItem extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            if (selected) const Icon(UniconsLine.check),
+            if (selected) const Icon(TablerIcons.check),
           ],
         ),
       ),

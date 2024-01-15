@@ -20,7 +20,6 @@ import "package:kwotes/types/intents/dashboard_intent.dart";
 import "package:kwotes/types/intents/home_intent.dart";
 import "package:kwotes/types/intents/search_intent.dart";
 import "package:salomon_bottom_bar/salomon_bottom_bar.dart";
-import "package:unicons/unicons.dart";
 
 class AppLocationContainer extends StatefulWidget {
   /// App container with deep locations and navigation bar.
@@ -105,12 +104,12 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
                 selectedColor: Constants.colors.home,
               ),
               SalomonBottomBarItem(
-                icon: const Icon(UniconsLine.search),
+                icon: const Icon(TablerIcons.search),
                 title: Text("search.name".tr()),
                 selectedColor: Constants.colors.search,
               ),
               SalomonBottomBarItem(
-                icon: const Icon(UniconsLine.user),
+                icon: const Icon(TablerIcons.user),
                 title: Text("dashboard".tr()),
                 selectedColor: Constants.colors.delete,
               ),

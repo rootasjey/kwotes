@@ -19,7 +19,6 @@ import "package:kwotes/types/enums/enum_search_category.dart";
 import "package:kwotes/types/user/user_auth.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 import "package:super_context_menu/super_context_menu.dart";
-import "package:unicons/unicons.dart";
 
 class ApplicationBar extends StatelessWidget {
   const ApplicationBar({
@@ -142,7 +141,7 @@ class ApplicationBar extends StatelessWidget {
                           isMobile: isMobileSize,
                         ),
                         child: Icon(
-                          UniconsLine.arrow_left,
+                          TablerIcons.arrow_left,
                           color: foregroundColor,
                         ),
                       ),
@@ -197,7 +196,7 @@ class ApplicationBar extends StatelessWidget {
                 onSelectSearchEntity?.call(EnumSearchCategory.quote),
             tooltip: "search.quotes".tr(),
             color: quoteSelected ? Colors.pink : defaultColor,
-            icon: const Icon(UniconsLine.chat),
+            icon: const Icon(TablerIcons.message_circle_2_filled),
           ),
           DotIndicator(
             color: quoteSelected ? Colors.pink : Colors.transparent,
@@ -231,7 +230,7 @@ class ApplicationBar extends StatelessWidget {
             color: searchCategorySelected == EnumSearchCategory.reference
                 ? Colors.blue
                 : defaultColor,
-            icon: const Icon(UniconsLine.book_alt),
+            icon: const Icon(TablerIcons.book_2),
           ),
           DotIndicator(
             color: referenceSelected ? Colors.blue : Colors.transparent,
@@ -305,7 +304,7 @@ class ApplicationBar extends StatelessWidget {
       onPressed: () => context.beamToNamed(SigninLocation.route),
       tooltip: "signin".tr(),
       color: foregroundColor,
-      icon: const Icon(UniconsLine.user),
+      icon: const Icon(TablerIcons.user),
     );
   }
 
@@ -321,46 +320,46 @@ class ApplicationBar extends StatelessWidget {
       MenuSeparator(),
       MenuAction(
         title: "favourites.name".tr(),
-        image: MenuImage.icon(UniconsLine.heart),
+        image: MenuImage.icon(TablerIcons.heart),
         callback: () => context.beamToNamed(
           DashboardContentLocation.favouritesRoute,
         ),
       ),
       MenuAction(
         title: "lists.name".tr(),
-        image: MenuImage.icon(UniconsLine.list_ul),
+        image: MenuImage.icon(TablerIcons.list),
         callback: () => context.beamToNamed(
           DashboardContentLocation.listsRoute,
         ),
       ),
       MenuAction(
         title: "in_validation.name".tr(),
-        image: MenuImage.icon(UniconsLine.clock),
+        image: MenuImage.icon(TablerIcons.clock),
         callback: () =>
             context.beamToNamed(DashboardContentLocation.inValidationRoute),
       ),
       MenuAction(
         title: "published.name".tr(),
-        image: MenuImage.icon(UniconsLine.upload),
+        image: MenuImage.icon(TablerIcons.upload),
         callback: () =>
             context.beamToNamed(DashboardContentLocation.publishedRoute),
       ),
       MenuAction(
         title: "drafts.name".tr(),
-        image: MenuImage.icon(UniconsLine.notes),
+        image: MenuImage.icon(TablerIcons.notes),
         callback: () =>
             context.beamToNamed(DashboardContentLocation.draftsRoute),
       ),
       MenuAction(
         title: "settings.name".tr(),
-        image: MenuImage.icon(UniconsLine.setting),
+        image: MenuImage.icon(TablerIcons.settings),
         callback: () =>
             context.beamToNamed(DashboardContentLocation.settingsRoute),
       ),
       MenuSeparator(),
       MenuAction(
         title: "signout.name".tr(),
-        image: MenuImage.icon(UniconsLine.signout),
+        image: MenuImage.icon(TablerIcons.logout),
         callback: () {
           Utils.state.signOut();
           Beamer.of(context, root: true)

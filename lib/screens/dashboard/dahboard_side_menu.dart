@@ -8,7 +8,6 @@ import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/screens/dashboard/side_menu_item.dart";
-import "package:unicons/unicons.dart";
 
 class DashboardSideMenu extends StatefulWidget {
   const DashboardSideMenu({
@@ -83,19 +82,19 @@ class _DashboardSideMenuState extends State<DashboardSideMenu> {
           routePath: DashboardContentLocation.route,
         ),
         SideMenuItem(
-          iconData: UniconsLine.heart,
+          iconData: TablerIcons.heart,
           label: "favourites.name".tr(),
           hoverColor: Constants.colors.likes,
           routePath: DashboardContentLocation.favouritesRoute,
         ),
         SideMenuItem(
-          iconData: UniconsLine.list_ul,
+          iconData: TablerIcons.list,
           label: "lists.name".tr(),
           hoverColor: Constants.colors.lists,
           routePath: DashboardContentLocation.listsRoute,
         ),
         SideMenuItem(
-          iconData: UniconsLine.clock,
+          iconData: TablerIcons.clock,
           label: "in_validation.name".tr(),
           hoverColor: Constants.colors.inValidation,
           routePath: DashboardContentLocation.inValidationRoute,
@@ -113,7 +112,7 @@ class _DashboardSideMenuState extends State<DashboardSideMenu> {
           routePath: DashboardContentLocation.draftsRoute,
         ),
         SideMenuItem(
-          iconData: UniconsLine.setting,
+          iconData: TablerIcons.settings,
           label: "settings.name".tr(),
           hoverColor: Constants.colors.settings,
           routePath: DashboardContentLocation.settingsRoute,

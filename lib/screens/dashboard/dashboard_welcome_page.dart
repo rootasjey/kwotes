@@ -14,7 +14,6 @@ import "package:kwotes/screens/dashboard/dashboard_fab.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/user/user_firestore.dart";
-import "package:unicons/unicons.dart";
 
 class DashboardWelcomePage extends StatelessWidget {
   const DashboardWelcomePage({super.key});
@@ -114,7 +113,7 @@ class DashboardWelcomePage extends StatelessWidget {
                     children: [
                       DashboardCard(
                         compact: isMobileSize,
-                        iconData: UniconsLine.heart,
+                        iconData: TablerIcons.heart,
                         isDark: isDark,
                         hoverColor: Constants.colors.likes,
                         textSubtitle: "favourites.description".tr(),
@@ -129,7 +128,7 @@ class DashboardWelcomePage extends StatelessWidget {
                       DashboardCard(
                         compact: isMobileSize,
                         hoverColor: Constants.colors.lists,
-                        iconData: UniconsLine.list_ul,
+                        iconData: TablerIcons.list,
                         isDark: isDark,
                         textSubtitle: "lists.description".tr(),
                         textTitle: "lists.name".tr(),
@@ -143,7 +142,7 @@ class DashboardWelcomePage extends StatelessWidget {
                       DashboardCard(
                         compact: isMobileSize,
                         hoverColor: Constants.colors.inValidation,
-                        iconData: UniconsLine.clock,
+                        iconData: TablerIcons.clock,
                         isDark: isDark,
                         textSubtitle: "in_validation.description".tr(),
                         textTitle: "in_validation.name".tr(),
