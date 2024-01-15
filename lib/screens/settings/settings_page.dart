@@ -157,6 +157,7 @@ class _SettingsPageState extends State<SettingsPage> {
             onTapTermsOfService: onTapTermsOfService,
             onTapGitHub: onTapGitHub,
             onTapThePurpose: onTapThePurpose,
+            onTapCredits: onTapCredits,
           ),
           const SliverPadding(padding: EdgeInsets.only(bottom: 200.0)),
         ],
@@ -199,6 +200,13 @@ class _SettingsPageState extends State<SettingsPage> {
           ? EnumAccountDisplayed.email
           : EnumAccountDisplayed.name;
     });
+  }
+
+  /// Navigate to the credits page.
+  void onTapCredits() {
+    Beamer.of(context).beamToNamed(
+      DashboardContentLocation.creditsRoute,
+    );
   }
 
   /// Navigate to the delete account page.

@@ -23,6 +23,7 @@ import "package:kwotes/screens/quote_page/quote_page.dart";
 import "package:kwotes/screens/reference/edit_reference_page.dart";
 import "package:kwotes/screens/reference/reference_page.dart";
 import "package:kwotes/screens/reference/reference_quotes_page.dart";
+import "package:kwotes/screens/settings/about/credits_page.dart";
 import "package:kwotes/screens/settings/about/terms_of_service_page.dart";
 import "package:kwotes/screens/settings/about/the_purpose_page.dart";
 import "package:kwotes/screens/settings/delete_account/delete_account_page.dart";
@@ -97,6 +98,7 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
 
   static const String colorPaletteRoute = "$settingsRoute/color-palette";
   static const String colorDetailRoute = "$colorPaletteRoute/:topicName";
+  static const String creditsRoute = "$settingsRoute/credits";
   static const String deleteAccountRoute = "$settingsRoute/delete-account";
   static const String draftsRoute = "$route/drafts";
   static const String editAuthorRoute = "$route/edit/author/:authorId";
@@ -146,6 +148,7 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
         authorQuotesRoute,
         colorPaletteRoute,
         colorDetailRoute,
+        creditsRoute,
         deleteAccountRoute,
         draftsRoute,
         editAuthorRoute,
@@ -320,6 +323,14 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
           child: const ThePurposePage(),
           key: const ValueKey(settingsThePurposeRoute),
           title: "page_title.the_purpose".tr(),
+          type: BeamPageType.fadeTransition,
+        ),
+      if (state.pathPatternSegments.contains(settingsRoute.split("/").last) &&
+          state.pathPatternSegments.contains(creditsRoute.split("/").last))
+        BeamPage(
+          child: const CreditsPage(),
+          key: const ValueKey(creditsRoute),
+          title: "page_title.credits".tr(),
           type: BeamPageType.fadeTransition,
         ),
       if (state.pathPatternSegments.contains(addQuoteRoute.split("/").last))

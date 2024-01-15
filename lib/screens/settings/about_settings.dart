@@ -14,6 +14,7 @@ class AboutSettings extends StatefulWidget {
     this.isMobileSize = false,
     this.foregroundColor,
     this.onTapColorPalette,
+    this.onTapCredits,
     this.onTapTermsOfService,
     this.onTapGitHub,
     this.onTapThePurpose,
@@ -31,11 +32,14 @@ class AboutSettings extends StatefulWidget {
   /// Callback fired when "Color palette" button is tapped.
   final void Function()? onTapColorPalette;
 
-  /// Callback fired when "Terms of service" chip is tapped.
-  final void Function()? onTapTermsOfService;
+  /// Callback fired when "Credits" chip is tapped.
+  final void Function()? onTapCredits;
 
   /// Callback fired when "GitHub" chip is tapped.
   final void Function()? onTapGitHub;
+
+  /// Callback fired when "Terms of service" chip is tapped.
+  final void Function()? onTapTermsOfService;
 
   /// Callback fired when "The purpose" chip is tapped.
   final void Function()? onTapThePurpose;
@@ -109,6 +113,11 @@ class _AboutSettingsState extends State<AboutSettings> {
                   onPressed: widget.onTapThePurpose,
                   shape: const StadiumBorder(),
                   label: Text("purpose.the".tr()),
+                ),
+                ActionChip(
+                  onPressed: widget.onTapCredits,
+                  shape: const StadiumBorder(),
+                  label: Text("credits.name".tr()),
                 ),
                 ActionChip(
                   onPressed: widget.onTapGitHub,
