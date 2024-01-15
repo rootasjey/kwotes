@@ -263,7 +263,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   /// Automatically hide/show entity selector when scrolling.
   void autoHideEntitySelector(double offset) {
-    if (_scrollController.position.atEdge && offset == 0.0) {
+    if (_scrollController.position.atEdge && offset == 0.0 || offset < 0.0) {
       _showEntitySelector ? null : setState(() => _showEntitySelector = true);
       return;
     }
