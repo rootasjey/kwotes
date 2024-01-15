@@ -13,7 +13,9 @@ class ColorPalettePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    final Size windowSize = MediaQuery.of(context).size;
+    final bool isMobileSize =
+        windowSize.width <= Utils.measurements.mobileWidthTreshold;
 
     return Scaffold(
       body: CustomScrollView(slivers: [
@@ -27,6 +29,7 @@ class ColorPalettePage extends StatelessWidget {
             context,
             topic,
           ),
+          windowSize: windowSize,
         ),
       ]),
     );

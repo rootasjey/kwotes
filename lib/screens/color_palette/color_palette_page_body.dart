@@ -12,6 +12,7 @@ import "package:super_context_menu/super_context_menu.dart";
 class ColorPalettePageBody extends StatelessWidget {
   const ColorPalettePageBody({
     super.key,
+    required this.windowSize,
     this.onTapColorCard,
     this.onLongPressColorCard,
     this.onCopyHex,
@@ -38,6 +39,9 @@ class ColorPalettePageBody extends StatelessWidget {
   /// Callback fired to copy color's 32-bit value.
   final void Function(Topic topic)? onCopyValue;
 
+  /// Window size.
+  final Size windowSize;
+
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
@@ -55,7 +59,7 @@ class ColorPalettePageBody extends StatelessWidget {
                 top: 54.0,
               ),
         child: FractionallySizedBox(
-          widthFactor: isMobileSize ? 1.0 : 0.4,
+          widthFactor: windowSize.width < 1100.0 ? 1.0 : 0.4,
           child: Column(
             children: [
               ActionChip(
