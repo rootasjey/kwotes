@@ -5,6 +5,7 @@ import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
+import "package:kwotes/actions/quote_actions.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/components/page_app_bar.dart";
 import "package:kwotes/globals/constants.dart";
@@ -114,14 +115,15 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
               ),
               DraftsPageBody(
                 animateList: _animateList,
+                draftQuotes: _drafts,
                 isDark: isDark,
                 isMobileSize: isMobileSize,
-                pageState: _pageState,
-                draftQuotes: _drafts,
-                onTap: onTapDraftQuote,
+                onCopyFrom: onCopyFromDraftQuote,
                 onDelete: onDeleteDraftQuote,
                 onEdit: onEditDraftQuote,
-                onCopyFrom: onCopyFromDraftQuote,
+                onSubmit: onSubmitDraftQuote,
+                onTap: onTapDraftQuote,
+                pageState: _pageState,
               ),
               const SliverPadding(
                 padding: EdgeInsets.only(bottom: 96.0),
@@ -314,9 +316,7 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
   /// Callback fired when a draft quote is going to be deleted.
   void onDeleteDraftQuote(DraftQuote quote) async {
     final int index = _drafts.indexOf(quote);
-    setState(() {
-      _drafts.removeAt(index);
-    });
+    setState(() => _drafts.removeAt(index));
 
     final Signal<UserFirestore> userFirestore =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
@@ -332,10 +332,7 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
       loggy.error(error);
 
       if (!mounted) return;
-
-      setState(() {
-        _drafts.insert(index, quote);
-      });
+      setState(() => _drafts.insert(index, quote));
 
       Utils.graphic.showSnackbar(
         context,
@@ -370,6 +367,30 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
 
     Utils.vault.setPageLanguage(language);
     fetch();
+  }
+
+  /// Callback to submit a draft quote for validation.
+  void onSubmitDraftQuote(DraftQuote quote) async {
+    final Signal<UserFirestore> userFirestore =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+
+    if (userFirestore.value.id.isEmpty) {
+      Utils.graphic.showSnackbar(
+        context,
+        message: "signin_again".tr(),
+      );
+    }
+
+    final bool success = await QuoteActions.submitQuote(
+      quote: quote,
+      userId: userFirestore.value.id,
+    );
+
+    if (!mounted || success) return;
+    Utils.graphic.showSnackbar(
+      context,
+      message: "quote.submit.failed".tr(),
+    );
   }
 
   /// Callback to show/hide page options.

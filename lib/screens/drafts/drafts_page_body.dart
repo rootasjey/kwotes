@@ -1,7 +1,7 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
-import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/context_menu_components.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/components/texts/draft_quote_text.dart";
 import "package:kwotes/types/draft_quote.dart";
@@ -17,10 +17,11 @@ class DraftsPageBody extends StatelessWidget {
     this.isDark = false,
     this.isMobileSize = false,
     this.pageState = EnumPageState.idle,
-    this.onTap,
-    this.onDelete,
     this.onCopyFrom,
+    this.onDelete,
     this.onEdit,
+    this.onSubmit,
+    this.onTap,
   });
 
   /// Animate list's items if true.
@@ -38,18 +39,21 @@ class DraftsPageBody extends StatelessWidget {
   /// List of quotes in favourites.
   final List<DraftQuote> draftQuotes;
 
-  /// Callback fired to delete a quote in validation.
-  final void Function(DraftQuote quote)? onDelete;
-
-  /// Callback fired when a quote is tapped.
-  final void Function(DraftQuote quote)? onTap;
-
   /// Callback fired to validate a draft quote.
   /// It will then be added to the list of published quotes.
   final void Function(DraftQuote quote)? onCopyFrom;
 
+  /// Callback fired to delete a quote in validation.
+  final void Function(DraftQuote quote)? onDelete;
+
   /// Callback fired to navigate to the edit page with the selected quote.
   final void Function(DraftQuote quote)? onEdit;
+
+  /// Callback fired when a quote must be submitted for validation.
+  final void Function(DraftQuote quote)? onSubmit;
+
+  /// Callback fired when a quote is tapped.
+  final void Function(DraftQuote quote)? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -88,25 +92,13 @@ class DraftsPageBody extends StatelessWidget {
                   )
                   .fadeIn(),
               menuProvider: (MenuRequest menuRequest) {
-                return Menu(
-                  children: [
-                    MenuAction(
-                      callback: () => onDelete?.call(draftQuote),
-                      title: "quote.delete.name".tr(),
-                      image: MenuImage.icon(TablerIcons.trash),
-                      attributes: const MenuActionAttributes(destructive: true),
-                    ),
-                    MenuAction(
-                      callback: () => onCopyFrom?.call(draftQuote),
-                      title: "${"quote.copy_from.name".tr()}...",
-                      image: MenuImage.icon(TablerIcons.copy),
-                    ),
-                    MenuAction(
-                      callback: () => onEdit?.call(draftQuote),
-                      title: "quote.edit.name".tr(),
-                      image: MenuImage.icon(TablerIcons.edit),
-                    ),
-                  ],
+                return ContextMenuComponents.draftMenuProvider(
+                  context,
+                  draftQuote: draftQuote,
+                  onDelete: onDelete,
+                  onCopyFrom: onCopyFrom,
+                  onEdit: onEdit,
+                  onSubmit: onSubmit,
                 );
               });
         },

@@ -6,6 +6,7 @@ import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/actions/user_actions.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/author.dart";
+import "package:kwotes/types/draft_quote.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/quote_list.dart";
@@ -136,6 +137,44 @@ class ContextMenuComponents {
         title: "author.copy.link".tr(),
         image: MenuImage.icon(TablerIcons.link),
       ),
+    ]);
+  }
+
+  /// A context menu for draft quotes.
+  static FutureOr<Menu?> draftMenuProvider(
+    BuildContext context, {
+    required DraftQuote draftQuote,
+    void Function(DraftQuote quote)? onCopyFrom,
+    void Function(DraftQuote quote)? onDelete,
+    void Function(DraftQuote quote)? onEdit,
+    void Function(DraftQuote quote)? onSubmit,
+  }) {
+    return Menu(children: [
+      if (onDelete != null)
+        MenuAction(
+          callback: () => onDelete.call(draftQuote),
+          title: "quote.delete.draft".tr(),
+          image: MenuImage.icon(TablerIcons.trash),
+          attributes: const MenuActionAttributes(destructive: true),
+        ),
+      if (onCopyFrom != null)
+        MenuAction(
+          callback: () => onCopyFrom.call(draftQuote),
+          title: "${"quote.copy_from.name".tr()}...",
+          image: MenuImage.icon(TablerIcons.copy),
+        ),
+      if (onEdit != null)
+        MenuAction(
+          callback: () => onEdit.call(draftQuote),
+          title: "quote.edit.draft".tr(),
+          image: MenuImage.icon(TablerIcons.edit),
+        ),
+      if (onSubmit != null)
+        MenuAction(
+          callback: () => onSubmit.call(draftQuote),
+          title: "quote.submit.name".tr(),
+          image: MenuImage.icon(TablerIcons.send),
+        ),
     ]);
   }
 
