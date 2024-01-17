@@ -787,7 +787,10 @@
       "name": "Delete quote",
       "success": "Quote successfully deleted!"
     },
-    "edit": "Edit quote",
+    "edit": {
+      "draft": "Edit draft",
+      "name": "Edit quote"
+    },
     "empty": {
       "author": "No quotes for this author yet",
       "name": "No text yet.",

@@ -801,7 +801,10 @@
       "name": "Supprimer la citation",
       "success": "La citation a été supprimée !"
     },
-    "edit": "Modifier la citation",
+    "edit": {
+      "draft": "Modifier le brouillon",
+      "name": "Modifier la citation"
+    },
     "empty": {
       "author": "Pas de citation pour cet auteur pour le moment",
       "name": "Aucun texte.",
