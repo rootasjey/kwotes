@@ -1,5 +1,5 @@
 <p align="middle">
-  <img src="./screenshots/app-illustration-title-tagline.png" title="kwotes icon" width="60%"/>
+  <img src="./screenshots/app-illustration-title-tagline.jpg" title="kwotes icon" />
 </p>
 
 # Status
@@ -72,7 +72,7 @@
 # The Purpose
 
 <p align="left">
-  <img src="./screenshots/the-purpose.jpg" width="80%" title="kwotes - the purpose image" />
+  <img src="./screenshots/the-purpose.jpg" title="kwotes - the purpose image" />
 </p>
 
 <details>
@@ -96,7 +96,7 @@ It's available on web, Android, iOS & more to come.
 # The motive
 
 <p align="left">
-  <img src="./screenshots/the-motive.jpg" width="80%" title="kwotes home web" />
+  <img src="./screenshots/the-motive.jpg" title="kwotes home web" />
 </p>
 
 <details>
