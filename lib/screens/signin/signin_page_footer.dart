@@ -1,9 +1,9 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/buttons/dark_elevated_button.dart";
 import "package:kwotes/globals/utils.dart";
-import "package:unicons/unicons.dart";
 
 class SigninPageFooter extends StatelessWidget {
   /// Footer widget for the Signin page.
@@ -74,7 +74,7 @@ class SigninPageFooter extends StatelessWidget {
           ),
           const Padding(
             padding: EdgeInsets.only(left: 8.0),
-            child: Icon(UniconsLine.arrow_right),
+            child: Icon(TablerIcons.arrow_right),
           ),
         ],
       ),
@@ -102,7 +102,7 @@ class SigninPageFooter extends StatelessWidget {
         children: [
           DarkElevatedButton.icon(
             elevation: 0.0,
-            iconData: UniconsLine.times,
+            iconData: TablerIcons.x,
             labelValue: "cancel".tr(),
             foreground: Theme.of(context).textTheme.bodyMedium?.color,
             background: randomColor.withOpacity(0.4),

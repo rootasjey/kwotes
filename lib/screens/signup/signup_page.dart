@@ -11,10 +11,12 @@ import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/locations/signin_location.dart";
 import "package:kwotes/screens/signup/signup_page_body.dart";
 import "package:kwotes/screens/signup/signup_page_header.dart";
+import "package:kwotes/types/create_account_response.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/intents/escape_intent.dart";
 import "package:loggy/loggy.dart";
@@ -124,7 +126,7 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
               ),
               SignupPageHeader(
                 isMobileSize: isMobileSize,
-                onNavigateToSignin: onNavigateToSignin,
+                onNavigateToSignin: goToSigninPage,
                 randomColor: randomColor,
               ),
               SignupPageBody(
@@ -140,7 +142,7 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
                 onCancel: onCancel,
                 onEmailChanged: onEmailChanged,
                 onConfirmPasswordChanged: onConfirmPasswordChanged,
-                onNavigateToSignin: onNavigateToSignin,
+                onNavigateToSignin: goToSigninPage,
                 onSubmit: tryCreateAccount,
                 onUsernameChanged: onUsernameChanged,
                 randomColor: randomColor,
@@ -335,8 +337,18 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
   }
 
   /// Navigate to sign in page.
-  void onNavigateToSignin() {
-    Beamer.of(context).beamToNamed(SigninLocation.route);
+  void goToSigninPage() {
+    final BeamerDelegate beamer = Beamer.of(context);
+    final BeamState beamState = beamer.currentBeamLocation.state as BeamState;
+    final List<String> pathSegments = beamState.pathPatternSegments;
+    final String prefix = pathSegments.first;
+
+    if (prefix == "d") {
+      beamer.beamToNamed(DashboardContentLocation.signinRoute);
+      return;
+    }
+
+    beamer.root.beamToNamed(SigninLocation.route);
   }
 
   /// React to username changes.
@@ -370,36 +382,34 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
     }
 
     try {
-      // final UserNotifier userNotifier = ref.read(
-      //   AppState.userProvider.notifier,
-      // );
-
-      // final CreateAccountResp createAccountResponse = await userNotifier.signUp(
-      //   email: email,
-      //   username: username,
-      //   password: password,
-      // );
+      final CreateAccountResponse createAccountResponse =
+          await Utils.state.signUp(
+        email: email,
+        username: username,
+        password: password,
+      );
 
       setState(() => _pageState = EnumPageState.idle);
 
-      // if (createAccountResponse.success) {
-      //   if (!mounted) return;
-      //   Beamer.of(context).beamToNamed(HomeLocation.route);
-      //   return;
-      // }
-
-      // String message = "account_create_error".tr();
-      // final error = createAccountResponse.error;
-
-      // if (error != null && error.code != null && error.message != null) {
-      //   message = "[code: ${error.code}] - ${error.message}";
-      // }
-
-      if (!mounted) {
+      if (createAccountResponse.success) {
+        if (!mounted) return;
+        Beamer.of(context)
+            .beamToReplacementNamed(DashboardContentLocation.route);
         return;
       }
 
-      // Snack.error(context, message: message);
+      String message = "account_create_error".tr();
+      final error = createAccountResponse.error;
+
+      if (error != null && error.code != null && error.message != null) {
+        message = "[code: ${error.code}] - ${error.message}";
+      }
+
+      if (!mounted) return;
+      Utils.graphic.showSnackbar(
+        context,
+        message: message,
+      );
     } catch (error) {
       if (!mounted) return;
       loggy.error(error);
@@ -408,7 +418,6 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
         context,
         message: "account_create_error".tr(),
       );
-    } finally {
       setState(() => _pageState = EnumPageState.idle);
     }
   }
