@@ -75,7 +75,7 @@ class CreditsPage extends StatelessWidget {
                         "credits.general_purpose.name".tr(),
                         style: Utils.calligraphy.body(
                           textStyle: TextStyle(
-                            fontSize: 32.0,
+                            fontSize: 24.0,
                             fontWeight: FontWeight.w400,
                             color: color?.withOpacity(0.6),
                           ),
@@ -107,7 +107,7 @@ class CreditsPage extends StatelessWidget {
                         "credits.libraries.name".tr(),
                         style: Utils.calligraphy.body(
                           textStyle: TextStyle(
-                            fontSize: 32.0,
+                            fontSize: 24.0,
                             fontWeight: FontWeight.w400,
                             color: color?.withOpacity(0.6),
                           ),
@@ -336,11 +336,6 @@ class CreditsPage extends StatelessWidget {
         title: "flutter_tabler_icons",
         subtitle: "Tabler icons for Flutter.",
         link: "https://pub.dev/packages/flutter_tabler_icons",
-      ),
-      CreditItemData(
-        title: "font_awesome_flutter",
-        subtitle: "Fontawesome icons for Flutter.",
-        link: "https://pub.dev/packages/font_awesome_flutter",
       ),
       CreditItemData(
         title: "glutton",

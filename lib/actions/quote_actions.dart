@@ -213,9 +213,9 @@ class QuoteActions {
     return heightPadding;
   }
 
-  /// Propose quote as draft in the global "drafts" collection.
+  /// Submit quote as draft in the global "drafts" collection.
   /// The result of this operation is silent as it doesn't use context.
-  static void proposeQuote({
+  static Future<bool> submitQuote({
     required Quote quote,
     required String userId,
   }) async {
@@ -224,7 +224,7 @@ class QuoteActions {
         quote.name.isEmpty ||
         quote.name.length < 3 ||
         quote.topics.isEmpty) {
-      return;
+      return false;
     }
 
     final Map<String, dynamic> map = quote.toMap(
@@ -239,9 +239,10 @@ class QuoteActions {
         .doc(quote.id)
         .get();
 
-    if (!draft.exists) return; // in case of duplicate action
+    if (!draft.exists) return false; // in case of duplicate action
     await FirebaseFirestore.instance.collection("drafts").add(map);
     await draft.reference.delete();
+    return true;
   }
 
   /// Callback fired to share quote as image.

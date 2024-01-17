@@ -78,7 +78,7 @@ class SnackbarDraft extends StatelessWidget {
               padding: const EdgeInsets.only(left: 8.0),
               child: TextButton(
                 onPressed: () {
-                  QuoteActions.proposeQuote(
+                  QuoteActions.submitQuote(
                     quote: quote,
                     userId: userId,
                   );
