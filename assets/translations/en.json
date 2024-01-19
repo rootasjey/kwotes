@@ -143,6 +143,7 @@
   },
   "drafts": {
     "description": "Unfinished work",
+    "last_single": "Last draft",
     "name": "Drafts"
   },
   "email": {
@@ -479,6 +480,7 @@
   },
   "published": {
     "description": "Your contribution to the world.",
+    "last_single":"Last quote published",
     "name": "Published"
   },
   "purpose": {

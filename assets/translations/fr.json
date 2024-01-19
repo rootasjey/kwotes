@@ -145,7 +145,8 @@
     "success": "Le fichier a été téléchargeé."
   },
   "drafts": {
-    "description": "Mes ébauches",
+    "description": "Mes brouillons",
+    "last_single": "Dernier brouillon",
     "name": "Brouillons"
   },
   "email": {
@@ -481,6 +482,7 @@
   },
   "published": {
     "description": "Votre contribution au monde",
+    "last_single": "Dernière citation publiée",
     "name": "Publiées"
   },
   "purpose": {
