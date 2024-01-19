@@ -1,21 +1,27 @@
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/buttons/colored_text_button.dart";
 import "package:kwotes/components/icons/app_icon.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
+import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
-import "package:kwotes/screens/dashboard/dashboard_card.dart";
+import "package:kwotes/screens/dashboard/dashboard_card_section.dart";
 import "package:kwotes/screens/dashboard/dashboard_fab.dart";
+import "package:kwotes/screens/dashboard/dashboard_header.dart";
+import "package:kwotes/screens/dashboard/dashboard_last_draft.dart";
+import "package:kwotes/screens/dashboard/dashboard_last_published.dart";
+import "package:kwotes/screens/quote_page/share_card.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 
 class DashboardWelcomePage extends StatelessWidget {
+  /// Dashboard welcome page.
   const DashboardWelcomePage({super.key});
 
   @override
@@ -51,158 +57,36 @@ class DashboardWelcomePage extends StatelessWidget {
                         : const EdgeInsets.only(top: 24.0, left: 36.0),
                   ),
                 ),
-                Padding(
-                    padding: isMobileSize
-                        ? const EdgeInsets.only(top: 12.0, left: 24.0)
-                        : const EdgeInsets.only(
-                            top: 12.0,
-                            left: 48.0,
-                          ),
-                    child: Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: "${"welcome_back".tr()},",
-                            style: TextStyle(
-                              color: foregroundColor?.withOpacity(0.4),
-                              fontWeight: FontWeight.w100,
-                              fontSize: isMobileSize ? 16.0 : 24.0,
-                            ),
-                          ),
-                          TextSpan(
-                            text: "\n${userFirestore.name}",
-                            style: TextStyle(
-                              color: foregroundColor?.withOpacity(0.7),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          TextSpan(
-                            text: ".",
-                            style: Utils.calligraphy.title(
-                              textStyle: TextStyle(
-                                color: randomColor,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      style: Utils.calligraphy.title(
-                        textStyle: TextStyle(
-                          fontSize: isMobileSize ? 42.0 : 74.0,
-                          height: 1.0,
-                        ),
-                      ),
-                    )),
-                Padding(
-                  padding: isMobileSize
-                      ? const EdgeInsets.only(
-                          top: 36.0,
-                          left: 12.0,
-                          right: 12.0,
-                          bottom: 192.0,
-                        )
-                      : const EdgeInsets.only(
-                          top: 24.0,
-                          left: 48.0,
-                          right: 48.0,
-                          bottom: 92.0,
-                        ),
-                  child: Wrap(
-                    spacing: 12.0,
-                    runSpacing: 12.0,
-                    children: [
-                      DashboardCard(
-                        compact: isMobileSize,
-                        iconData: TablerIcons.heart,
-                        isDark: isDark,
-                        hoverColor: Constants.colors.likes,
-                        textSubtitle: "favourites.description".tr(),
-                        textTitle: "favourites.name".tr(),
-                        heroKey: "favourites",
-                        onTap: () {
-                          context.beamToNamed(
-                            DashboardContentLocation.favouritesRoute,
-                          );
-                        },
-                      ),
-                      DashboardCard(
-                        compact: isMobileSize,
-                        hoverColor: Constants.colors.lists,
-                        iconData: TablerIcons.list,
-                        isDark: isDark,
-                        textSubtitle: "lists.description".tr(),
-                        textTitle: "lists.name".tr(),
-                        heroKey: "lists",
-                        onTap: () {
-                          context.beamToNamed(
-                            DashboardContentLocation.listsRoute,
-                          );
-                        },
-                      ),
-                      DashboardCard(
-                        compact: isMobileSize,
-                        hoverColor: Constants.colors.inValidation,
-                        iconData: TablerIcons.clock,
-                        isDark: isDark,
-                        textSubtitle: "in_validation.description".tr(),
-                        textTitle: "in_validation.name".tr(),
-                        heroKey: "in_validation",
-                        onTap: () {
-                          context.beamToNamed(
-                            DashboardContentLocation.inValidationRoute,
-                          );
-                        },
-                      ),
-                      DashboardCard(
-                        compact: isMobileSize,
-                        hoverColor: Constants.colors.published,
-                        iconData: TablerIcons.send,
-                        isDark: isDark,
-                        textSubtitle: "published.description".tr(),
-                        textTitle: "published.name".tr(),
-                        heroKey: "published",
-                        onTap: () {
-                          context.beamToNamed(
-                            DashboardContentLocation.publishedRoute,
-                          );
-                        },
-                      ),
-                      DashboardCard(
-                        compact: isMobileSize,
-                        hoverColor: Constants.colors.drafts,
-                        iconData: TablerIcons.note,
-                        isDark: isDark,
-                        textSubtitle: "drafts.description".tr(),
-                        textTitle: "drafts.name".tr(),
-                        heroKey: "drafts",
-                        onTap: () {
-                          context.beamToNamed(
-                            DashboardContentLocation.draftsRoute,
-                          );
-                        },
-                      ),
-                      DashboardCard(
-                        compact: isMobileSize,
-                        iconData: TablerIcons.settings,
-                        isDark: isDark,
-                        hoverColor: Constants.colors.settings,
-                        textSubtitle: "settings.description".tr(),
-                        textTitle: "settings.name".tr(),
-                        heroKey: "settings",
-                        onTap: () {
-                          context.beamToNamed(
-                            DashboardContentLocation.settingsRoute,
-                          );
-                        },
-                      ),
-                    ]
-                        .animate(interval: 25.ms)
-                        .fadeIn(duration: 200.ms, curve: Curves.decelerate)
-                        .slideY(begin: 0.2, end: 0.0),
+                DashboardHeader(
+                  foregroundColor: foregroundColor,
+                  isDark: isDark,
+                  isMobileSize: isMobileSize,
+                  randomColor: randomColor,
+                  onTapUsername: showSignoutBottomSheet,
+                  userFirestore: userFirestore,
+                ),
+                DashboardCardSection(
+                  isDark: isDark,
+                  isMobileSize: isMobileSize,
+                ),
+                const DashboardLastDraft(),
+                const DashboardLastPublished(),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: ColoredTextButton(
+                    textValue: "signout".tr(),
+                    textFlex: 0,
+                    onPressed: () => onSignout(context),
+                    accentColor: randomColor,
+                    backgroundColor: randomColor.withOpacity(0.2),
+                    margin: isMobileSize
+                        ? const EdgeInsets.only(top: 24.0, left: 16.0)
+                        : const EdgeInsets.only(top: 24.0, left: 36.0),
                   ),
                 ),
               ]),
             ),
+            const SliverPadding(padding: EdgeInsets.only(bottom: 96.0)),
           ],
         ),
       ),
@@ -213,5 +97,72 @@ class DashboardWelcomePage extends StatelessWidget {
   void onGoToAddQuotePage(BuildContext context) {
     NavigationStateHelper.quote = Quote.empty();
     context.beamToNamed(DashboardContentLocation.addQuoteRoute);
+  }
+
+  void showSignoutBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      showDragHandle: true,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(12.0),
+          topRight: Radius.circular(12.0),
+        ),
+      ),
+      builder: (BuildContext context) {
+        return Material(
+          color: Colors.transparent,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Text(
+                    "account.name".tr().toUpperCase(),
+                    style: Utils.calligraphy.body(
+                      textStyle: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.color
+                            ?.withOpacity(0.6),
+                      ),
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ShareCard(
+                      labelValue: "signout".tr(),
+                      icon: const Icon(TablerIcons.logout),
+                      margin: EdgeInsets.zero,
+                      onTap: () async {
+                        onSignout(context);
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void onSignout(BuildContext context) async {
+    Navigator.of(context).pop();
+    final bool success = await Utils.state.signOut();
+    if (!success) return;
+    if (!context.mounted) return;
+
+    Beamer.of(context, root: true).beamToReplacementNamed(HomeLocation.route);
   }
 }

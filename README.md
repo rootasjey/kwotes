@@ -51,7 +51,7 @@
   - [What you can do?](#what-you-can-do)
 - [The motive](#the-motive)
   - [Service](#service)
-- [My main sources](#my-main-sources)
+- [My sources](#my-sources)
 - [Contribute](#contribute)
 - [Credits](#credits)
   - [General Purpose](#general-purpose)
@@ -117,7 +117,7 @@ It's one of the goals of this project in a long-term scenario. The API will prob
 
 </details>
 
-# My main sources
+# My sources
 
 I take most of my quotes in movies, tv series, books & music.
 Those sources are very different from each other and it's something I really appreciate.
@@ -131,16 +131,16 @@ Culture is very vast and rich. We don't have to stay in one medium.
 This project welcomes contributions whatever its size.
 You can participate in different ways: 
 
-* Give your general feedback & suggestion
+* Give your general feedback & suggestions
 * Submit new quotes in the app
-* Report a bug in the app
+* Report a bug/Open a GitHub issue
 
 You cannot run this app on you local environment yet.
 I'll have to clone the firebase backend into a test project for security reasons.
 
 # Credits
 
-These projecs and libraries considerably helped the development.
+These projects and libraries considerably helped the development.
 
 ## General Purpose
 

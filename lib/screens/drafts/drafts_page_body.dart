@@ -6,6 +6,7 @@ import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/components/texts/draft_quote_text.dart";
 import "package:kwotes/types/draft_quote.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
+import "package:kwotes/types/enums/enum_quote_text_magnitude.dart";
 import "package:super_context_menu/super_context_menu.dart";
 
 /// Body component page displaying a user quotes in validation.
@@ -81,7 +82,9 @@ class DraftsPageBody extends StatelessWidget {
                 draftQuote: draftQuote,
                 margin: const EdgeInsets.only(bottom: 0.0),
                 onTap: onTap,
-                tiny: isMobileSize,
+                magnitude: isMobileSize
+                    ? EnumQuoteTextMagnitude.medium
+                    : EnumQuoteTextMagnitude.big,
               )
                   .animate()
                   .slideY(

@@ -35,13 +35,22 @@ class ForgotPasswordButton extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Text(
-                  "password.forgot".tr(),
-                  style: Utils.calligraphy.code(
-                    textStyle: const TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w600,
-                      decoration: TextDecoration.underline,
+                Padding(
+                  padding: const EdgeInsets.only(top: 5.0),
+                  child: Text(
+                    "password.forgot".tr(),
+                    style: Utils.calligraphy.code(
+                      textStyle: const TextStyle(
+                        color: Colors.transparent,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w600,
+                        decoration: TextDecoration.underline,
+                        shadows: [
+                          Shadow(
+                            offset: Offset(0, -5),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

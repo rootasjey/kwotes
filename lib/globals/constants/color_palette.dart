@@ -158,7 +158,7 @@ class ColorPalette {
   /// Fill foreground palette contrast from topics.
   void fillContrastPalette() {
     for (final Topic topic in topics) {
-      if (topic.color.computeLuminance() > 0.4) {
+      if (topic.color.computeLuminance() > 0.7) {
         contrastPalette.add(topic.color);
       }
     }

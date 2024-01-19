@@ -6,6 +6,7 @@ import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/components/texts/draft_quote_text.dart";
 import "package:kwotes/types/draft_quote.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
+import "package:kwotes/types/enums/enum_quote_text_magnitude.dart";
 import "package:kwotes/types/quote.dart";
 import "package:super_context_menu/super_context_menu.dart";
 
@@ -70,7 +71,9 @@ class InValidationPageBody extends StatelessWidget {
           return ContextMenuWidget(
             child: DraftQuoteText(
               draftQuote: quote,
-              tiny: isMobileSize,
+              magnitude: isMobileSize
+                  ? EnumQuoteTextMagnitude.medium
+                  : EnumQuoteTextMagnitude.big,
               onTap: onTap,
             )
                 .animate()

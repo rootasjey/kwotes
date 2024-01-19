@@ -454,7 +454,8 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
           fullScreenDialog: false,
           opaque: false,
         ),
-      if (state.pathPatternSegments.contains(":quoteId"))
+      if (state.pathPatternSegments.contains(":quoteId") &&
+          !state.pathPatternSegments.contains("edit"))
         BeamPage(
           child: QuotePage(
             quoteId: state.pathParameters["quoteId"] ?? "",

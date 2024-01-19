@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:kwotes/components/texts/quote_text.dart";
 import "package:kwotes/types/draft_quote.dart";
+import "package:kwotes/types/enums/enum_quote_text_magnitude.dart";
 import "package:kwotes/types/quote.dart";
 
 class DraftQuoteText extends StatelessWidget {
@@ -9,19 +10,19 @@ class DraftQuoteText extends StatelessWidget {
   const DraftQuoteText({
     super.key,
     required this.draftQuote,
+    this.magnitude = EnumQuoteTextMagnitude.big,
     this.margin = EdgeInsets.zero,
     this.onTap,
-    this.tiny = false,
   });
-
-  /// Reduce font size if true.
-  final bool tiny;
 
   /// Main data.
   final DraftQuote draftQuote;
 
   /// Space around this widget.
   final EdgeInsets margin;
+
+  /// Predefined quote text size (e.g. `big`).
+  final EnumQuoteTextMagnitude magnitude;
 
   /// Callback fired when draft quote is tapped.
   final void Function(DraftQuote draftQuote)? onTap;
@@ -32,7 +33,7 @@ class DraftQuoteText extends StatelessWidget {
       key: key,
       quote: draftQuote,
       margin: margin,
-      tiny: tiny,
+      magnitude: magnitude,
       onTap: (Quote quote) => onTap?.call(draftQuote),
     );
   }

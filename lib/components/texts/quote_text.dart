@@ -2,6 +2,7 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/types/enums/enum_quote_text_magnitude.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/topic.dart";
 
@@ -10,17 +11,17 @@ class QuoteText extends StatefulWidget {
   const QuoteText({
     super.key,
     required this.quote,
-    this.tiny = false,
     this.margin = EdgeInsets.zero,
+    this.magnitude = EnumQuoteTextMagnitude.medium,
     this.onDoubleTap,
     this.onTap,
   });
 
-  /// Reduce font size if true.
-  final bool tiny;
-
   /// Space around this widget.
   final EdgeInsets margin;
+
+  /// Predefined quote text size (e.g. `big`).
+  final EnumQuoteTextMagnitude magnitude;
 
   /// Quote to display.
   final Quote quote;
@@ -94,7 +95,7 @@ class _QuoteTextState extends State<QuoteText> {
           quoteName,
           style: Utils.calligraphy.body(
             textStyle: TextStyle(
-              fontSize: widget.tiny ? 24.0 : 42.0,
+              fontSize: getFontSize(),
               fontWeight: FontWeight.w200,
               color: color,
               fontStyle: fontStyle,
@@ -110,5 +111,17 @@ class _QuoteTextState extends State<QuoteText> {
         ),
       ),
     );
+  }
+
+  /// Get the font size based on the magnitude.
+  double getFontSize() {
+    switch (widget.magnitude) {
+      case EnumQuoteTextMagnitude.big:
+        return 42.0;
+      case EnumQuoteTextMagnitude.medium:
+        return 24.0;
+      case EnumQuoteTextMagnitude.small:
+        return 18.0;
+    }
   }
 }

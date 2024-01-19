@@ -5,6 +5,7 @@ import "package:kwotes/components/context_menu_components.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/components/texts/quote_text.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
+import "package:kwotes/types/enums/enum_quote_text_magnitude.dart";
 import "package:kwotes/types/quote.dart";
 import "package:super_context_menu/super_context_menu.dart";
 
@@ -94,7 +95,9 @@ class FavouritesPageBody extends StatelessWidget {
           return ContextMenuWidget(
             child: QuoteText(
               quote: quote,
-              tiny: isMobileSize,
+              magnitude: isMobileSize
+                  ? EnumQuoteTextMagnitude.medium
+                  : EnumQuoteTextMagnitude.big,
               margin: const EdgeInsets.only(bottom: 0.0),
               onTap: onTap,
               onDoubleTap: onDoubleTap,

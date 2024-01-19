@@ -1,7 +1,6 @@
 import "package:beamer/beamer.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
-import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
@@ -28,7 +27,6 @@ import "package:kwotes/types/firestore/query_map.dart";
 import "package:kwotes/types/firestore/query_snap_map.dart";
 import "package:kwotes/types/firestore/query_snapshot_stream_subscription.dart";
 import "package:kwotes/types/quote.dart";
-import "package:kwotes/types/user/user_auth.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 import "package:kwotes/types/user/user_rights.dart";
 import "package:loggy/loggy.dart";
@@ -200,8 +198,11 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
 
   /// Fetch data.
   void fetch() async {
-    final UserAuth? currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null) {
+    final Signal<UserFirestore> signalUserFirestore =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+
+    final UserFirestore userFirestore = signalUserFirestore.value;
+    if (userFirestore.id.isEmpty) {
       return;
     }
 
@@ -209,10 +210,8 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
         ? EnumPageState.loading
         : EnumPageState.loadingMore;
 
-    final String userId = currentUser.uid;
-
     try {
-      final QueryMap query = getQuery(userId);
+      final QueryMap query = getQuery(userFirestore.id);
       final QuerySnapMap snapshot = await query.get();
       listenToQuoteChanges(query);
 
