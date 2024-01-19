@@ -4,7 +4,6 @@ import "package:flutter/services.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/types/intents/add_quote_intent.dart";
-import "package:kwotes/types/intents/escape_intent.dart";
 import "package:kwotes/types/intents/index_intent.dart";
 
 class DashboardNavigationPage extends StatefulWidget {
@@ -24,37 +23,34 @@ class _DashboardNavigationPageState extends State<DashboardNavigationPage> {
   );
 
   /// Keyboard shortcuts definition.
-  final Map<LogicalKeySet, Intent> _shortcuts = {
-    LogicalKeySet(
-      LogicalKeyboardKey.control,
+  final Map<SingleActivator, Intent> _shortcuts = {
+    const SingleActivator(
       LogicalKeyboardKey.digit1,
+      meta: true,
     ): const FirstIndexIntent(),
-    LogicalKeySet(
-      LogicalKeyboardKey.control,
+    const SingleActivator(
       LogicalKeyboardKey.digit2,
+      meta: true,
     ): const SecondIndexIntent(),
-    LogicalKeySet(
-      LogicalKeyboardKey.control,
+    const SingleActivator(
       LogicalKeyboardKey.digit3,
+      meta: true,
     ): const ThirdIndexIntent(),
-    LogicalKeySet(
-      LogicalKeyboardKey.control,
+    const SingleActivator(
       LogicalKeyboardKey.digit4,
+      meta: true,
     ): const FourthIndexIntent(),
-    LogicalKeySet(
-      LogicalKeyboardKey.control,
+    const SingleActivator(
       LogicalKeyboardKey.digit5,
+      meta: true,
     ): const FifthIndexIntent(),
-    LogicalKeySet(
-      LogicalKeyboardKey.control,
+    const SingleActivator(
       LogicalKeyboardKey.digit6,
+      meta: true,
     ): const SixthIndexIntent(),
-    LogicalKeySet(
-      LogicalKeyboardKey.escape,
-    ): const EscapeIntent(),
-    LogicalKeySet(
-      LogicalKeyboardKey.control,
+    const SingleActivator(
       LogicalKeyboardKey.keyN,
+      meta: true,
     ): const AddQuoteIntent(),
   };
 
@@ -84,9 +80,6 @@ class _DashboardNavigationPageState extends State<DashboardNavigationPage> {
           ),
           AddQuoteIntent: CallbackAction<AddQuoteIntent>(
             onInvoke: onAddQuoteShortcut,
-          ),
-          EscapeIntent: CallbackAction<EscapeIntent>(
-            onInvoke: onEscapeShortcut,
           ),
         },
         child: HeroControllerScope(
@@ -119,10 +112,10 @@ class _DashboardNavigationPageState extends State<DashboardNavigationPage> {
 
   /// Callback fired to navigate to in validation page.
   Object? onThirdIndexShortcut(ThirdIndexIntent intent) {
-    // NavigationStateHelper.dashboardBeamerKey.currentState?.routerDelegate
-    //     .beamToNamed(
-    //   DashboardContentLocation.inValidationRoute,
-    // );
+    NavigationStateHelper.dashboardBeamerKey.currentState?.routerDelegate
+        .beamToNamed(
+      DashboardContentLocation.inValidationRoute,
+    );
 
     return null;
   }
@@ -154,20 +147,6 @@ class _DashboardNavigationPageState extends State<DashboardNavigationPage> {
       DashboardContentLocation.settingsRoute,
     );
 
-    return null;
-  }
-
-  /// Callback fired to navigate to previous location.
-  Object? onEscapeShortcut(EscapeIntent intent) {
-    final BeamerDelegate? beamerDelegate =
-        NavigationStateHelper.dashboardBeamerKey.currentState?.routerDelegate;
-
-    if (beamerDelegate?.canBeamBack ?? false) {
-      beamerDelegate?.beamBack();
-      return null;
-    }
-
-    Beamer.of(context).beamBack();
     return null;
   }
 

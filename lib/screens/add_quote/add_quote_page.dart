@@ -15,6 +15,8 @@ import "package:just_the_tooltip/just_the_tooltip.dart";
 import "package:kwotes/screens/add_quote/add_quote_fab.dart";
 import "package:kwotes/screens/add_quote/snackbar_draft.dart";
 import "package:kwotes/types/enums/enum_draft_quote_operation.dart";
+import "package:kwotes/types/intents/save_intent.dart";
+import "package:kwotes/types/intents/submit_intent.dart";
 import "package:kwotes/types/user/user_rights.dart";
 import "package:loggy/loggy.dart";
 import "package:smooth_page_indicator/smooth_page_indicator.dart";
@@ -129,32 +131,40 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
   final List<Reference> _referenceSearchResults = [];
 
   /// Shortcuts map.
-  final Map<LogicalKeySet, Intent> _shortcuts = {
-    LogicalKeySet(
-      LogicalKeyboardKey.meta,
-      LogicalKeyboardKey.shift,
-      LogicalKeyboardKey.keyN,
-    ): const NextIntent(),
-    LogicalKeySet(
-      LogicalKeyboardKey.meta,
-      LogicalKeyboardKey.shift,
+  final Map<SingleActivator, Intent> _shortcuts = {
+    const SingleActivator(
+      LogicalKeyboardKey.keyS,
+      meta: true,
+    ): const SaveIntent(),
+    const SingleActivator(
       LogicalKeyboardKey.keyP,
+      meta: true,
+    ): const SubmitIntent(),
+    const SingleActivator(
+      LogicalKeyboardKey.arrowRight,
+      meta: true,
+      alt: true,
+    ): const NextIntent(),
+    const SingleActivator(
+      LogicalKeyboardKey.arrowLeft,
+      meta: true,
+      alt: true,
     ): const PreviousIntent(),
-    LogicalKeySet(
-      LogicalKeyboardKey.meta,
+    const SingleActivator(
       LogicalKeyboardKey.digit1,
+      meta: true,
     ): const FirstIndexIntent(),
-    LogicalKeySet(
-      LogicalKeyboardKey.meta,
+    const SingleActivator(
       LogicalKeyboardKey.digit2,
+      meta: true,
     ): const SecondIndexIntent(),
-    LogicalKeySet(
-      LogicalKeyboardKey.meta,
+    const SingleActivator(
       LogicalKeyboardKey.digit3,
+      meta: true,
     ): const ThirdIndexIntent(),
-    LogicalKeySet(
-      LogicalKeyboardKey.meta,
+    const SingleActivator(
       LogicalKeyboardKey.digit4,
+      meta: true,
     ): const FourthIndexIntent(),
   };
 
@@ -283,6 +293,12 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
       shortcuts: _shortcuts,
       child: Actions(
         actions: {
+          SaveIntent: CallbackAction<SaveIntent>(
+            onInvoke: onSaveShortcut,
+          ),
+          SubmitIntent: CallbackAction<SubmitIntent>(
+            onInvoke: onSubmitShortcut,
+          ),
           NextIntent: CallbackAction<NextIntent>(
             onInvoke: onNextShortcut,
           ),
@@ -1008,6 +1024,18 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
       duration: const Duration(milliseconds: 400),
       curve: Curves.decelerate,
     );
+  }
+
+  /// Callback fired to save quote.
+  Object? onSaveShortcut(SaveIntent intent) {
+    onSaveDraft();
+    return null;
+  }
+
+  /// Callback fired to submit quote.
+  Object? onSubmitShortcut(SubmitIntent intent) {
+    onSubmitQuote();
+    return null;
   }
 
   /// Callback fired when main genre has changed.
@@ -1836,6 +1864,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
       setState(() {});
     } catch (error) {
       loggy.error(error.toString());
+      if (!mounted) return;
       setState(() => _pageState = EnumPageState.idle);
     }
   }

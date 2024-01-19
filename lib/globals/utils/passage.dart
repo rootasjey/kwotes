@@ -9,14 +9,6 @@ class Passage {
   /// Takes care of the following cases:
   /// - There's no history but we're not on home page -> back to home.
   void back(BuildContext context, {bool isMobile = false}) {
-    // if (isMobile) {
-    //   final bool handled = handleMobileBack(context);
-
-    //   if (handled) {
-    //     return;
-    //   }
-    // }
-
     if (Beamer.of(context).canBeamBack) {
       Beamer.of(context).beamBack();
       return;
@@ -49,7 +41,7 @@ class Passage {
       return;
     }
 
-    Beamer.of(context, root: true).beamToNamed(HomeLocation.route);
+    Beamer.of(context, root: true).beamToNamed(beamer.initialPath);
   }
 
   /// Return hero tag stored as a string from `routeState` map if any.

@@ -17,6 +17,7 @@ import "package:kwotes/screens/home/home_navigation_page.dart";
 import "package:kwotes/screens/search/search_navigation_page.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/intents/dashboard_intent.dart";
+import "package:kwotes/types/intents/escape_intent.dart";
 import "package:kwotes/types/intents/home_intent.dart";
 import "package:kwotes/types/intents/search_intent.dart";
 import "package:salomon_bottom_bar/salomon_bottom_bar.dart";
@@ -46,22 +47,22 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
   ];
 
   /// Keyboard shortcuts definition.
-  final Map<LogicalKeySet, Intent> _shortcuts = {
-    LogicalKeySet(
-      LogicalKeyboardKey.control,
-      LogicalKeyboardKey.shift,
+  final Map<SingleActivator, Intent> _shortcuts = {
+    const SingleActivator(
       LogicalKeyboardKey.digit3,
+      control: true,
     ): const DashboardIntent(),
-    LogicalKeySet(
-      LogicalKeyboardKey.control,
-      LogicalKeyboardKey.shift,
+    const SingleActivator(
       LogicalKeyboardKey.digit1,
+      control: true,
     ): const HomeIntent(),
-    LogicalKeySet(
-      LogicalKeyboardKey.control,
-      LogicalKeyboardKey.shift,
+    const SingleActivator(
       LogicalKeyboardKey.digit2,
+      control: true,
     ): const SearchIntent(),
+    const SingleActivator(
+      LogicalKeyboardKey.escape,
+    ): const EscapeIntent(),
   };
 
   @override
@@ -79,41 +80,65 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
     final Signal<bool> signalNavigationBar =
         context.get<Signal<bool>>(EnumSignalId.navigationBar);
 
-    if (isMobile) {
-      return Scaffold(
-        body: _widgetChildren[_currentIndex],
-        bottomNavigationBar: SignalBuilder(
-          signal: signalNavigationBar,
-          builder: (BuildContext context, bool show, Widget? child) {
-            if (show) {
-              return child ?? const SizedBox.shrink();
-            }
+    final Map<Type, CallbackAction<Intent>> actions = {
+      EscapeIntent: CallbackAction<EscapeIntent>(
+        onInvoke: onEscapeShortcut,
+      ),
+      DashboardIntent: CallbackAction<DashboardIntent>(
+        onInvoke: onDashboardShortcut,
+      ),
+      SearchIntent: CallbackAction<SearchIntent>(
+        onInvoke: onSearchShortcut,
+      ),
+      HomeIntent: CallbackAction<HomeIntent>(
+        onInvoke: onHomeShortcut,
+      ),
+    };
 
-            return const SizedBox.shrink();
-          },
-          child: SalomonBottomBar(
-            backgroundColor: isDarkTheme ? Colors.black26 : Colors.white,
-            margin:
-                const EdgeInsets.symmetric(vertical: 24.0, horizontal: 24.0),
-            currentIndex: _currentIndex,
-            onTap: onTapBottomBarItem,
-            items: [
-              SalomonBottomBarItem(
-                icon: const Icon(TablerIcons.home),
-                title: Text("home".tr()),
-                selectedColor: Constants.colors.home,
+    if (isMobile) {
+      return Focus(
+        autofocus: true,
+        child: Shortcuts(
+          shortcuts: _shortcuts,
+          child: Actions(
+            actions: actions,
+            child: Scaffold(
+              body: _widgetChildren[_currentIndex],
+              bottomNavigationBar: SignalBuilder(
+                signal: signalNavigationBar,
+                builder: (BuildContext context, bool show, Widget? child) {
+                  if (show) {
+                    return child ?? const SizedBox.shrink();
+                  }
+
+                  return const SizedBox.shrink();
+                },
+                child: SalomonBottomBar(
+                  backgroundColor: isDarkTheme ? Colors.black26 : Colors.white,
+                  margin: const EdgeInsets.symmetric(
+                      vertical: 24.0, horizontal: 24.0),
+                  currentIndex: _currentIndex,
+                  onTap: onTapBottomBarItem,
+                  items: [
+                    SalomonBottomBarItem(
+                      icon: const Icon(TablerIcons.home),
+                      title: Text("home".tr()),
+                      selectedColor: Constants.colors.home,
+                    ),
+                    SalomonBottomBarItem(
+                      icon: const Icon(TablerIcons.search),
+                      title: Text("search.name".tr()),
+                      selectedColor: Constants.colors.search,
+                    ),
+                    SalomonBottomBarItem(
+                      icon: const Icon(TablerIcons.user),
+                      title: Text("dashboard".tr()),
+                      selectedColor: Constants.colors.delete,
+                    ),
+                  ],
+                ),
               ),
-              SalomonBottomBarItem(
-                icon: const Icon(TablerIcons.search),
-                title: Text("search.name".tr()),
-                selectedColor: Constants.colors.search,
-              ),
-              SalomonBottomBarItem(
-                icon: const Icon(TablerIcons.user),
-                title: Text("dashboard".tr()),
-                selectedColor: Constants.colors.delete,
-              ),
-            ],
+            ),
           ),
         ),
       );
@@ -126,17 +151,7 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
     return Shortcuts(
       shortcuts: _shortcuts,
       child: Actions(
-        actions: {
-          DashboardIntent: CallbackAction<DashboardIntent>(
-            onInvoke: onDashboardShortcut,
-          ),
-          SearchIntent: CallbackAction<SearchIntent>(
-            onInvoke: onSearchShortcut,
-          ),
-          HomeIntent: CallbackAction<HomeIntent>(
-            onInvoke: onHomeShortcut,
-          ),
-        },
+        actions: actions,
         child: SignalBuilder(
           signal: appFrameColor,
           builder: (BuildContext context, Color backgroundColor, Widget? body) {
@@ -293,6 +308,12 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
   /// Callback fired to navigate to dashboard page.
   Object? onDashboardShortcut(DashboardIntent intent) {
     onTapBottomBarItem(2);
+    return null;
+  }
+
+  /// Callback fired to navigate back from shortcuts.
+  Object? onEscapeShortcut(EscapeIntent intent) {
+    Utils.passage.deepBack(context);
     return null;
   }
 
