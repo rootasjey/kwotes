@@ -167,6 +167,7 @@ class _DashboardLastDraftState extends State<DashboardLastDraft> with UiLoggy {
 
     data["id"] = doc.id;
     final DraftQuote draft = DraftQuote.fromMap(data);
+    if (!mounted) return;
     setState(() => _drafts[index] = draft);
   }
 
@@ -180,6 +181,7 @@ class _DashboardLastDraftState extends State<DashboardLastDraft> with UiLoggy {
       return;
     }
 
+    if (!mounted) return;
     setState(() => _drafts.removeAt(index));
   }
 

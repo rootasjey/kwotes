@@ -180,6 +180,9 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
   /// Author's name text controller.
   final TextEditingController _authorNameController = TextEditingController();
 
+  /// Author's job text controller.
+  final TextEditingController _authorJobController = TextEditingController();
+
   /// Author's summary text controller.
   final TextEditingController _authorSummaryController =
       TextEditingController();
@@ -232,6 +235,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     _tooltipController.dispose();
     _authorNameFocusNode.dispose();
     _authorNameController.dispose();
+    _authorJobController.dispose();
     _referenceNameFocusNode.dispose();
     _referenceNameController.dispose();
     _referenceSummaryController.dispose();
@@ -400,6 +404,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                     onUrlChanged: onAuthorUrlChanged,
                     randomAuthorInt: _randomAuthorIndex,
                     nameController: _authorNameController,
+                    jobController: _authorJobController,
                     summaryController: _authorSummaryController,
                   ),
                   AddQuoteReferencePage(
@@ -653,6 +658,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
   void populateFields(Quote quote) {
     _contentController.text = quote.name;
     _authorNameController.text = quote.author.name;
+    _authorJobController.text = quote.author.job;
     _authorSummaryController.text = quote.author.summary;
     _referenceNameController.text = quote.reference.name;
     _referenceSummaryController.text = quote.reference.summary;
@@ -1329,6 +1335,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
       );
 
       _authorNameController.text = author.name;
+      _authorJobController.text = author.job;
       _authorSummaryController.text = author.summary;
     });
 

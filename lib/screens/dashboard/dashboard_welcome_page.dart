@@ -80,8 +80,8 @@ class DashboardWelcomePage extends StatelessWidget {
                     accentColor: randomColor,
                     backgroundColor: randomColor.withOpacity(0.2),
                     margin: isMobileSize
-                        ? const EdgeInsets.only(top: 24.0, left: 16.0)
-                        : const EdgeInsets.only(top: 24.0, left: 36.0),
+                        ? const EdgeInsets.only(top: 24.0, left: 24.0)
+                        : const EdgeInsets.only(top: 24.0, left: 42.0),
                   ),
                 ),
               ]),

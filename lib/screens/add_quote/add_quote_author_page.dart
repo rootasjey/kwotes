@@ -33,10 +33,11 @@ class AddQuoteAuthorPage extends StatelessWidget {
     this.onToggleNagativeBirthDate,
     this.onToggleNagativeDeathDate,
     this.authorSuggestions = const [],
-    this.nameController,
-    this.summaryController,
     this.floatingActionButton,
     this.authorNameErrorText,
+    this.jobController,
+    this.nameController,
+    this.summaryController,
   });
 
   /// Expand metadata widget if true.
@@ -111,6 +112,9 @@ class AddQuoteAuthorPage extends StatelessWidget {
   /// Author's name input controller.
   final TextEditingController? nameController;
 
+  /// Author's job input controller.
+  final TextEditingController? jobController;
+
   /// Author's summary input controller.
   final TextEditingController? summaryController;
 
@@ -174,7 +178,7 @@ class AddQuoteAuthorPage extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 16.0),
                   child: TextFormField(
                     onChanged: onJobChanged,
-                    initialValue: author.job,
+                    controller: jobController,
                     style: Utils.calligraphy.body(
                       textStyle: const TextStyle(
                         fontSize: 16.0,
