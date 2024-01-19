@@ -213,6 +213,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
   @override
   void dispose() {
     _docRef = null;
+    _pageViewController.removeListener(onPageViewChanged);
     _pageViewController.dispose();
     _contentFocusNode.dispose();
     _timerUpdateQuote?.cancel();
@@ -225,7 +226,6 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     _referenceNameController.dispose();
     _referenceSummaryController.dispose();
     _authorSummaryController.dispose();
-    _pageViewController.removeListener(onPageViewChanged);
     super.dispose();
   }
 
@@ -1087,6 +1087,19 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
       _prevPageIndex = currentPageIndex ?? -1;
       showPageTitle();
     });
+
+    final bool isMobilePlatform = Utils.graphic.isMobile();
+    if (isMobilePlatform) {
+      return;
+    }
+
+    if (currentPageIndex == 2) {
+      _authorNameFocusNode.requestFocus();
+    }
+
+    if (currentPageIndex == 3) {
+      _referenceNameFocusNode.requestFocus();
+    }
   }
 
   /// Callback fired to navigate to the previous page.
