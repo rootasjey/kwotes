@@ -143,10 +143,11 @@ class _DashboardLastDraftState extends State<DashboardLastDraft> with UiLoggy {
 
     data["id"] = doc.id;
     final DraftQuote draft = DraftQuote.fromMap(data);
-    setState(() {
-      _drafts.clear();
-      _drafts.add(draft);
-    });
+    _drafts.clear();
+    _drafts.add(draft);
+
+    if (!mounted) return;
+    setState(() {});
   }
 
   /// Callback fired when a draft is modified in the Firestore collection.

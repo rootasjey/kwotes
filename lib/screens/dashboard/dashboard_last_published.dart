@@ -147,10 +147,11 @@ class _DashboardLastPublishedState extends State<DashboardLastPublished>
 
     data["id"] = doc.id;
     final Quote published = Quote.fromMap(data);
-    setState(() {
-      _published.clear();
-      _published.add(published);
-    });
+    _published.clear();
+    _published.add(published);
+
+    if (!mounted) return;
+    setState(() {});
   }
 
   /// Callback fired when a quote is modified in the Firestore collection.
@@ -170,6 +171,8 @@ class _DashboardLastPublishedState extends State<DashboardLastPublished>
 
     data["id"] = doc.id;
     final Quote published = Quote.fromMap(data);
+
+    if (!mounted) return;
     setState(() => _published[index] = published);
   }
 
@@ -183,6 +186,7 @@ class _DashboardLastPublishedState extends State<DashboardLastPublished>
       return;
     }
 
+    if (!mounted) return;
     setState(() => _published.removeAt(index));
   }
 
