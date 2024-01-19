@@ -10,6 +10,8 @@ class ColoredTextButton extends StatefulWidget {
     this.icon,
     this.iconOnly = false,
     this.iconOnRight = false,
+    this.accentColor,
+    this.backgroundColor,
     this.margin = EdgeInsets.zero,
     this.padding = EdgeInsets.zero,
     this.textFlex = 1,
@@ -18,7 +20,6 @@ class ColoredTextButton extends StatefulWidget {
     this.tooltip = "",
     this.textStyle,
     this.textAlign,
-    this.accentColor,
   });
 
   /// Only show icon for this button if true.
@@ -32,6 +33,9 @@ class ColoredTextButton extends StatefulWidget {
 
   /// Accent color.
   final Color? accentColor;
+
+  /// Button background color.
+  final Color? backgroundColor;
 
   /// Spacing around this widget.
   final EdgeInsets margin;
@@ -70,11 +74,8 @@ class _ColoredTextButtonState extends State<ColoredTextButton> {
   /// True if the button is hovered by a cursor.
   bool _isHover = false;
 
-  /// Button's text color.
-  Color? _hoverForegroundColor;
-
-  /// Maximum number of iteration to find a suitable random color from palette.
-  final int _maxIteration = 4;
+  /// Button's text color on hover.
+  Color _hoverForegroundColor = Colors.transparent;
 
   @override
   void initState() {
@@ -98,6 +99,8 @@ class _ColoredTextButtonState extends State<ColoredTextButton> {
           onPressed: widget.onPressed,
           onHover: (bool isHover) => setState(() => _isHover = isHover),
           style: TextButton.styleFrom(
+            backgroundColor:
+                _isHover ? null : widget.backgroundColor?.withOpacity(0.2),
             foregroundColor: _isHover
                 ? _hoverForegroundColor
                 : foregroundColor?.withOpacity(0.6),
@@ -141,23 +144,5 @@ class _ColoredTextButtonState extends State<ColoredTextButton> {
         ),
       ),
     );
-  }
-
-  Color? getRandomForegroundColor() {
-    bool found = false;
-    int currInteration = 0;
-    Color? color;
-
-    while (!found && currInteration < _maxIteration) {
-      currInteration++;
-      color = Constants.colors.getRandomFromPalette();
-      found = color.computeLuminance() < 0.5;
-    }
-
-    if (!found) {
-      color = Colors.blue;
-    }
-
-    return color;
   }
 }
