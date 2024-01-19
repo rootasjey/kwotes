@@ -251,6 +251,9 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
       return;
     }
 
+    final int foundIndex = _quotes.indexWhere((Quote x) => x.id == doc.id);
+    if (foundIndex > -1) return;
+
     data["id"] = doc.id;
     final Quote draft = Quote.fromMap(data);
     setState(() => _quotes.insert(0, draft));
@@ -401,12 +404,11 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
           .collection(_collectionName)
           .doc(quote.id)
           .delete();
-      loggy.info("will delete quote: ${quote.id}");
 
       if (!mounted) return;
       Utils.graphic.showSnackbarWithCustomText(
         context,
-        duration: const Duration(seconds: 10),
+        duration: const Duration(seconds: 30),
         text: Row(children: [
           Expanded(
             flex: 0,
@@ -438,7 +440,6 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
                     ));
 
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                loggy.info("reverse add quote: ${quote.id}");
               },
               style: TextButton.styleFrom(
                   textStyle: const TextStyle(
