@@ -46,8 +46,12 @@ void main() async {
   }
 
   final AdaptiveThemeMode? savedThemeMode = await AdaptiveTheme.getThemeMode();
-  NavigationStateHelper.homePageTabIndex =
-      await Utils.vault.getHomePageTabIndex();
+  final int lastSavedTabIndex = await Utils.vault.getHomePageTabIndex();
+
+  NavigationStateHelper.initInitialTabIndex(
+    initialUrl: browserUrl,
+    lastSavedIndex: lastSavedTabIndex,
+  );
 
   NavigationStateHelper.fullscreenQuotePage =
       await Utils.vault.getFullscreenQuotePage();

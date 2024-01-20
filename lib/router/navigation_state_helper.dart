@@ -135,4 +135,25 @@ class NavigationStateHelper {
       title: "page_title.not_found".tr(),
     ),
   );
+
+  /// Initialize initial tab index.
+  static Future<void> initInitialTabIndex({
+    required String initialUrl,
+    int? lastSavedIndex,
+  }) async {
+    if (initialUrl.contains("/h")) {
+      homePageTabIndex = 0;
+      return;
+    }
+    if (initialUrl.contains("/s")) {
+      homePageTabIndex = 1;
+      return;
+    }
+    if (initialUrl.contains("/d")) {
+      homePageTabIndex = 2;
+      return;
+    }
+
+    homePageTabIndex = lastSavedIndex ?? 0;
+  }
 }
