@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:just_the_tooltip/just_the_tooltip.dart";
 import "package:kwotes/globals/utils.dart";
 
 class MenuNavigationItem extends StatelessWidget {
@@ -39,12 +40,27 @@ class MenuNavigationItem extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        IconButton(
-          tooltip: selected ? null : tooltip,
-          color: selected ? selectedColor : null,
-          isSelected: selected,
-          onPressed: () => onTap?.call(index),
-          icon: icon,
+        JustTheTooltip(
+          tailLength: 10.0,
+          preferredDirection: AxisDirection.left,
+          waitDuration: const Duration(seconds: 1),
+          content: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              tooltip ?? "",
+              style: Utils.calligraphy.body(
+                textStyle: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+          child: IconButton(
+            color: selected ? selectedColor : null,
+            isSelected: selected,
+            onPressed: () => onTap?.call(index),
+            icon: icon,
+          ),
         ),
         if (selected && label.isNotEmpty)
           Text(
