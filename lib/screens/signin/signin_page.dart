@@ -60,9 +60,7 @@ class _SigninPageState extends State<SigninPage> with UiLoggy {
       );
     }
 
-    final Color randomColor = Constants.colors.getRandomFromPalette(
-      withGoodContrast: true,
-    );
+    final Color randomColor = Constants.colors.secondary;
 
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
     final bool isDark = Theme.of(context).brightness == Brightness.dark;

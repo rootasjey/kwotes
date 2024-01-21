@@ -213,7 +213,6 @@ class _TopicPageState extends State<TopicPage> with UiLoggy {
   /// Return firebase query.
   QueryMap getQuery({String language = "en"}) {
     final QueryDocSnapMap? lastDocument = _lastDocument;
-
     final String topic = getTopic();
 
     final QueryMap query = FirebaseFirestore.instance

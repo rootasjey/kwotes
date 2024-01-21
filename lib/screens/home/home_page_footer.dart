@@ -157,7 +157,10 @@ class HomePageFooter extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const AppIcon(),
+                const AppIcon(
+                  size: 24.0,
+                  margin: EdgeInsets.only(right: 6.0),
+                ),
                 Text(
                   Constants.appName,
                   style: Utils.calligraphy.body(

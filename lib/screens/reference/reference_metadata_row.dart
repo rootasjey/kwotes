@@ -167,6 +167,8 @@ class ReferenceMetadaRow extends StatelessWidget {
                     ),
                   if (!reference.release.isEmpty)
                     JustTheTooltip(
+                      tailLength: 10.0,
+                      waitDuration: const Duration(seconds: 1),
                       content: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text("release_date".tr()),

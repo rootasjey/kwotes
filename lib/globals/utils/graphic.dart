@@ -632,10 +632,13 @@ class Graphic with UiLoggy {
 
   /// Get text height based on window size.
   double _getTextWidth(Size windowSize) {
-    final double widthPadding = windowSize.width > 1200.0 ? 600.0 : 200.0;
-    // if (windowSize.width > 1200.0) {
-    //   widthPadding = 300.0;
-    // }
+    double widthPadding = 200.0;
+    if (windowSize.width > 1200.0) {
+      widthPadding = 600.0;
+    } else if (windowSize.width > 900.0) {
+      widthPadding = 400.0;
+    }
+
     return max(windowSize.width - widthPadding, 200.0);
   }
 

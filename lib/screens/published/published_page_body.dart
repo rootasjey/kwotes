@@ -27,7 +27,7 @@ class PublishedPageBody extends StatelessWidget {
     this.userId = "",
   });
 
-  /// Adapt UI for mobile size if true.
+  /// Adapt UI for dark mode if true.
   final bool isDark;
 
   /// True if the page is mobile size.

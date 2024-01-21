@@ -22,12 +22,15 @@ class ForgotPasswordButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color? foregroundColor =
+        Theme.of(context).textTheme.bodyMedium?.color;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         TextButton(
           style: TextButton.styleFrom(
-            foregroundColor: Theme.of(context).textTheme.bodyMedium?.color,
+            foregroundColor: foregroundColor,
           ),
           onPressed: onNavigateToForgotPassword,
           child: Opacity(
@@ -40,14 +43,15 @@ class ForgotPasswordButton extends StatelessWidget {
                   child: Text(
                     "password.forgot".tr(),
                     style: Utils.calligraphy.code(
-                      textStyle: const TextStyle(
+                      textStyle: TextStyle(
                         color: Colors.transparent,
                         fontSize: 16.0,
                         fontWeight: FontWeight.w600,
                         decoration: TextDecoration.underline,
                         shadows: [
                           Shadow(
-                            offset: Offset(0, -5),
+                            offset: const Offset(0, -5),
+                            color: foregroundColor ?? Colors.black,
                           ),
                         ],
                       ),
