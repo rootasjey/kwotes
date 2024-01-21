@@ -7,11 +7,15 @@ import "package:super_context_menu/super_context_menu.dart";
 class SearchQuoteResultsPage extends StatelessWidget {
   const SearchQuoteResultsPage({
     super.key,
+    this.isDark = false,
     this.isMobileSize = false,
     this.margin = EdgeInsets.zero,
     this.quoteResults = const [],
     this.onTapQuote,
   });
+
+  /// Adapt UI for dark mode if true.
+  final bool isDark;
 
   /// True if this is a mobile size.
   /// Used to determine the size of the search input.
@@ -30,7 +34,12 @@ class SearchQuoteResultsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverPadding(
       padding: margin,
-      sliver: SliverList.builder(
+      sliver: SliverList.separated(
+        separatorBuilder: (BuildContext context, int index) {
+          return isDark
+              ? const Divider(height: 24.0, color: Colors.white12)
+              : const Divider(height: 24.0, color: Colors.black12);
+        },
         itemBuilder: (BuildContext context, int index) {
           final Quote quote = quoteResults[index];
           return SearchQuoteText(

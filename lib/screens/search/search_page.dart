@@ -11,6 +11,7 @@ import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/globals/utils/linguistic.dart";
 import "package:kwotes/router/locations/search_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/search/search_category_selector.dart";
@@ -108,6 +109,9 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   /// List of references in alphabetical order (for showcase).
   final List<Reference> _referenceList = [];
 
+  /// Last fetched quote document.
+  QueryDocSnapMap? _lastQuoteDocument;
+
   /// Last reference document for pagination.
   QueryDocSnapMap? _lastReferenceDocument;
 
@@ -152,6 +156,8 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       right: 24,
     );
 
+    final EdgeInsets marginBoddy = padding.copyWith(top: 24.0);
+
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
 
@@ -192,9 +198,11 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                     ),
                     SearchPageBody(
                       authorResults: _authorResults,
+                      isDark: isDark,
                       isMobileSize: isMobileSize,
                       isQueryEmpty: _searchInputController.text.isEmpty,
-                      margin: padding,
+                      margin: marginBoddy,
+                      // margin: padding,
                       onRefreshSearch: search,
                       onReinitializeSearch: onClearInput,
                       onTapQuote: onTapQuote,
@@ -324,6 +332,16 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       _searchInputController.text = NavigationStateHelper.searchValue;
       await initProps();
       search();
+      return;
+    }
+
+    final RouteInformation conf =
+        NavigationStateHelper.searchRouterDelegate.configuration;
+    final bool hasTopic = conf.uri.path.contains("/topic/");
+    if (hasTopic) {
+      final String topicName = conf.uri.pathSegments.last;
+      _searchInputController.text = topicName;
+      fetchTopic(topicName);
       return;
     }
 
@@ -471,6 +489,45 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
   }
 
+  /// Fetch quotes from a specific topic.
+  void fetchTopic(String topicName) async {
+    setState(() {
+      _pageState = _lastQuoteDocument != null
+          ? EnumPageState.loadingMore
+          : EnumPageState.loading;
+    });
+
+    try {
+      final String language = Linguistic.currentLanguage;
+      final QueryMap query = getTopicQuery(
+        topicName: topicName,
+        language: language,
+      );
+
+      final QuerySnapMap snapshot = await query.get();
+      if (snapshot.size == 0) return;
+
+      for (final DocumentSnapshotMap doc in snapshot.docs) {
+        final Json? data = doc.data();
+        if (data == null) continue;
+
+        data["id"] = doc.id;
+        final Quote quote = Quote.fromMap(data);
+        _quoteResults.add(quote);
+      }
+
+      setState(() {
+        _pageState = EnumPageState.idle;
+        _hasMoreResults = snapshot.size == _searchLimit;
+        _lastQuoteDocument = snapshot.docs.last;
+        _resultCount = _quoteResults.length;
+      });
+    } catch (error) {
+      loggy.error(error);
+      setState(() => _pageState = EnumPageState.idle);
+    }
+  }
+
   /// Directly fetch data from Firestore.
   void findDirectResults(String query) async {
     final List<String> strings = query.split(":");
@@ -503,6 +560,24 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     } catch (error) {
       loggy.error(error);
     }
+  }
+
+  /// Return firebase query to fetch quotes from a specific topic.
+  QueryMap getTopicQuery({required String topicName, String language = "en"}) {
+    final QueryDocSnapMap? lastDocument = _lastQuoteDocument;
+
+    final QueryMap query = FirebaseFirestore.instance
+        .collection("quotes")
+        .where("topics.$topicName", isEqualTo: true)
+        .where("language", isEqualTo: language)
+        .orderBy("created_at", descending: true)
+        .limit(_searchLimit);
+
+    if (lastDocument == null) {
+      return query;
+    }
+
+    return query.startAfterDocument(lastDocument);
   }
 
   /// Handle added author.
@@ -699,14 +774,14 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
 
     if (_searchInputController.text.isEmpty) {
-      fetchShowcaseData(
-        fetchMore: true,
-      );
+      fetchShowcaseData(fetchMore: true);
       return;
     }
 
     if (_scrollController.position.maxScrollExtent - offset <= 200) {
-      searchMore();
+      final RouteInformation conf = Beamer.of(context).configuration;
+      final bool hasTopic = conf.uri.path.contains("/topic/");
+      hasTopic ? fetchTopic(conf.uri.pathSegments.last) : searchMore();
     }
   }
 
@@ -805,18 +880,28 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   }
 
   /// Callback fired when a topic is tapped.
-  void onTapTopic(Topic topicColor) {
-    _searchInputController.text = topicColor.name;
+  void onTapTopic(Topic topic) {
+    _searchInputController.text = topic.name;
 
-    onSearchInputChanged(
-      topicColor.name,
-      delay: const Duration(milliseconds: 0),
+    final String path = SearchContentLocation.topicRoute.replaceFirst(
+      ":topicName",
+      topic.name,
     );
+
+    Beamer.of(context).update(
+      configuration: RouteInformation(uri: Uri(path: path)),
+    );
+
+    _lastQuoteDocument = null;
+    _searchPage = 0;
+    _pageState = EnumPageState.searching;
+    _quoteResults.clear();
+    fetchTopic(topic.name);
 
     SystemChrome.setApplicationSwitcherDescription(
       ApplicationSwitcherDescription(
         label: "page_title.search_subject".tr(
-          args: [topicColor.name],
+          args: [topic.name],
         ),
       ),
     );
@@ -920,7 +1005,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   /// Selective search (according to entity category).
   void search() async {
     _prevSearchTextValue = _searchInputController.text;
-
     final String text = removeSpecialKeywords(_searchInputController.text);
 
     switch (_searchCategory) {

@@ -52,7 +52,7 @@ class SearchInput extends StatelessWidget {
       hintMaxLines = 2;
     }
 
-    const double toolbarHeight = 180.0;
+    const double toolbarHeight = 190.0;
 
     return SliverAppBar(
       primary: false,

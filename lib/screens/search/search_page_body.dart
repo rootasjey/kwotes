@@ -14,6 +14,7 @@ import "package:kwotes/types/reference.dart";
 class SearchPageBody extends StatelessWidget {
   const SearchPageBody({
     super.key,
+    this.isDark = false,
     this.isQueryEmpty = true,
     this.isMobileSize = false,
     this.pageState = EnumPageState.idle,
@@ -28,6 +29,9 @@ class SearchPageBody extends StatelessWidget {
     this.onTapQuote,
     this.referenceResults = const [],
   });
+
+  /// Adapt UI for dark mode if true.
+  final bool isDark;
 
   /// True if this is a mobile size.
   /// Used to determine the size of the search input.
@@ -96,6 +100,7 @@ class SearchPageBody extends StatelessWidget {
 
     if (searchCategory == EnumSearchCategory.quote) {
       return SearchQuoteResultsPage(
+        isDark: isDark,
         isMobileSize: isMobileSize,
         margin: margin,
         quoteResults: quoteResults,
