@@ -1,11 +1,11 @@
 /// Search category enumeration.
 enum EnumSearchCategory {
   /// Search for authors.
-  author,
+  authors,
 
   /// Search for quotes.
-  quote,
+  quotes,
 
   /// Search for references.
-  reference,
+  references,
 }

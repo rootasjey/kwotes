@@ -27,10 +27,10 @@ class SearchCategorySelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color? defaultColor = Theme.of(context).textTheme.bodyMedium?.color;
-    final bool quoteSelected = categorySelected == EnumSearchCategory.quote;
-    final bool authorSelected = categorySelected == EnumSearchCategory.author;
+    final bool quoteSelected = categorySelected == EnumSearchCategory.quotes;
+    final bool authorSelected = categorySelected == EnumSearchCategory.authors;
     final bool referenceSelected =
-        categorySelected == EnumSearchCategory.reference;
+        categorySelected == EnumSearchCategory.references;
 
     return Material(
       elevation: 8.0,
@@ -53,7 +53,7 @@ class SearchCategorySelector extends StatelessWidget {
           children: [
             CategoryItemButton(
               defaultColor: defaultColor,
-              category: EnumSearchCategory.quote,
+              category: EnumSearchCategory.quotes,
               iconData: TablerIcons.message_circle_2,
               indicatorType: IndicatorType.pill,
               onSelectEntity: onSelectCategory,
@@ -63,7 +63,7 @@ class SearchCategorySelector extends StatelessWidget {
             ),
             CategoryItemButton(
               defaultColor: defaultColor,
-              category: EnumSearchCategory.author,
+              category: EnumSearchCategory.authors,
               iconData: TablerIcons.users,
               indicatorType: IndicatorType.pill,
               onSelectEntity: onSelectCategory,
@@ -73,7 +73,7 @@ class SearchCategorySelector extends StatelessWidget {
             ),
             CategoryItemButton(
               defaultColor: defaultColor,
-              category: EnumSearchCategory.reference,
+              category: EnumSearchCategory.references,
               iconData: TablerIcons.book_2,
               indicatorType: IndicatorType.pill,
               onSelectEntity: onSelectCategory,

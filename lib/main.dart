@@ -35,7 +35,10 @@ void main() async {
   await EasyLocalization.ensureInitialized();
   await dotenv.load(fileName: "var.env");
 
-  final String browserUrl = "${Uri.base.path}?${Uri.base.query}";
+  final String browserUrl = Uri.base.query.isEmpty
+      ? Uri.base.path
+      : "${Uri.base.path}?${Uri.base.query}";
+
   NavigationStateHelper.initialBrowserUrl = browserUrl;
 
   // Make sure that the initial route is kept correctly.

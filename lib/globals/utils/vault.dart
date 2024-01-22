@@ -64,7 +64,7 @@ class Vault {
   Future<EnumSearchCategory> getLastSearchCategory() async {
     final int index = await Glutton.vomit(
       StorageKeys.lastSearchType,
-      EnumSearchCategory.quote.index,
+      EnumSearchCategory.quotes.index,
     );
 
     return EnumSearchCategory.values[index];

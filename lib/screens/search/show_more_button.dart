@@ -28,7 +28,7 @@ class ShowMoreButton extends StatelessWidget {
       return const SliverToBoxAdapter(child: SizedBox.shrink());
     }
 
-    final String textValue = searchCategory == EnumSearchCategory.author
+    final String textValue = searchCategory == EnumSearchCategory.authors
         ? "author.show_more".tr()
         : "reference.show_more".tr();
 

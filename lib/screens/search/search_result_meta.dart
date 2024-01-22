@@ -1,6 +1,7 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:just_the_tooltip/just_the_tooltip.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 
@@ -60,11 +61,24 @@ class SearchResultMeta extends StatelessWidget {
             ),
           ),
         ),
-        IconButton(
-          onPressed: onClearInput,
-          tooltip: "search.clear".tr(),
-          color: foregroundColor?.withOpacity(0.6),
-          icon: const Icon(TablerIcons.square_rounded_x),
+        JustTheTooltip(
+          tailLength: 10.0,
+          preferredDirection: AxisDirection.down,
+          content: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              "search.clear".tr(),
+              style: Utils.calligraphy.body(
+                  textStyle: const TextStyle(
+                fontWeight: FontWeight.w500,
+              )),
+            ),
+          ),
+          child: IconButton(
+            onPressed: onClearInput,
+            color: foregroundColor?.withOpacity(0.6),
+            icon: const Icon(TablerIcons.square_rounded_x),
+          ),
         ),
       ],
     );

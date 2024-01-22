@@ -24,7 +24,7 @@ class SearchAuthorResultsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int index = -1;
-    final contrastPalette = Constants.colors.contrastPalette;
+    final List<Color> contrastPalette = Constants.colors.contrastPalette;
 
     return SliverPadding(
       padding: margin.subtract(const EdgeInsets.only(left: 12.0)),

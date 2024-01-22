@@ -11,7 +11,7 @@ class SearchInput extends StatelessWidget {
   const SearchInput({
     super.key,
     this.isMobileSize = false,
-    this.searchCategory = EnumSearchCategory.quote,
+    this.searchCategory = EnumSearchCategory.quotes,
     this.padding = const EdgeInsets.only(left: 12.0),
     this.onChangedTextField,
     this.inputController,
@@ -43,7 +43,7 @@ class SearchInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String hintText = "${"search.${searchCategory.name}s".tr()}...";
+    final String hintText = "${"search.${searchCategory.name}".tr()}...";
     final Color backgroundColor =
         Theme.of(context).scaffoldBackgroundColor.withOpacity(0.7);
 

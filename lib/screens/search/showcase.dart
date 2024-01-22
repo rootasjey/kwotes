@@ -15,7 +15,7 @@ class Showcase extends StatelessWidget {
     this.references = const [],
     this.topicColors = const [],
     this.pageState = EnumPageState.idle,
-    this.searchCategory = EnumSearchCategory.quote,
+    this.searchCategory = EnumSearchCategory.quotes,
     this.isDark = false,
     this.isMobileSize = false,
     this.show = true,
@@ -67,7 +67,7 @@ class Showcase extends StatelessWidget {
       return const SliverToBoxAdapter();
     }
 
-    if (searchCategory == EnumSearchCategory.author) {
+    if (searchCategory == EnumSearchCategory.authors) {
       return ShowcaseAuthors(
         authors: authors,
         isDark: isDark,
@@ -77,7 +77,7 @@ class Showcase extends StatelessWidget {
       );
     }
 
-    if (searchCategory == EnumSearchCategory.reference) {
+    if (searchCategory == EnumSearchCategory.references) {
       return ShowcaseReferences(
         isDark: isDark,
         isMobileSize: isMobileSize,

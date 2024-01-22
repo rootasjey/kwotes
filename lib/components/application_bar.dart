@@ -32,7 +32,7 @@ class ApplicationBar extends StatelessWidget {
     this.isMobileSize = false,
     this.mode = EnumAppBarMode.home,
     this.onSelectSearchEntity,
-    this.searchCategorySelected = EnumSearchCategory.quote,
+    this.searchCategorySelected = EnumSearchCategory.quotes,
     this.onTapIcon,
     this.onTapTitle,
     this.elevation,
@@ -181,11 +181,11 @@ class ApplicationBar extends StatelessWidget {
     }
 
     final bool quoteSelected =
-        searchCategorySelected == EnumSearchCategory.quote;
+        searchCategorySelected == EnumSearchCategory.quotes;
     final bool authorSelected =
-        searchCategorySelected == EnumSearchCategory.author;
+        searchCategorySelected == EnumSearchCategory.authors;
     final bool referenceSelected =
-        searchCategorySelected == EnumSearchCategory.reference;
+        searchCategorySelected == EnumSearchCategory.references;
 
     return [
       Column(
@@ -193,7 +193,7 @@ class ApplicationBar extends StatelessWidget {
           IconButton(
             isSelected: quoteSelected,
             onPressed: () =>
-                onSelectSearchEntity?.call(EnumSearchCategory.quote),
+                onSelectSearchEntity?.call(EnumSearchCategory.quotes),
             tooltip: "search.quotes".tr(),
             color: quoteSelected ? Colors.pink : defaultColor,
             icon: const Icon(TablerIcons.message_circle_2_filled),
@@ -206,11 +206,11 @@ class ApplicationBar extends StatelessWidget {
       Column(
         children: [
           IconButton(
-            isSelected: searchCategorySelected == EnumSearchCategory.author,
+            isSelected: searchCategorySelected == EnumSearchCategory.authors,
             onPressed: () =>
-                onSelectSearchEntity?.call(EnumSearchCategory.author),
+                onSelectSearchEntity?.call(EnumSearchCategory.authors),
             tooltip: "search.authors".tr(),
-            color: searchCategorySelected == EnumSearchCategory.author
+            color: searchCategorySelected == EnumSearchCategory.authors
                 ? Colors.amber
                 : defaultColor,
             icon: const Icon(TablerIcons.users),
@@ -223,11 +223,11 @@ class ApplicationBar extends StatelessWidget {
       Column(
         children: [
           IconButton(
-            isSelected: searchCategorySelected == EnumSearchCategory.reference,
+            isSelected: searchCategorySelected == EnumSearchCategory.references,
             onPressed: () =>
-                onSelectSearchEntity?.call(EnumSearchCategory.reference),
+                onSelectSearchEntity?.call(EnumSearchCategory.references),
             tooltip: "search.references".tr(),
-            color: searchCategorySelected == EnumSearchCategory.reference
+            color: searchCategorySelected == EnumSearchCategory.references
                 ? Colors.blue
                 : defaultColor,
             icon: const Icon(TablerIcons.book_2),

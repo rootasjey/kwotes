@@ -20,7 +20,7 @@ class SearchPageBody extends StatelessWidget {
     this.pageState = EnumPageState.idle,
     this.quoteResults = const [],
     this.margin = EdgeInsets.zero,
-    this.searchCategory = EnumSearchCategory.quote,
+    this.searchCategory = EnumSearchCategory.quotes,
     this.authorResults = const [],
     this.onRefreshSearch,
     this.onReinitializeSearch,
@@ -98,7 +98,7 @@ class SearchPageBody extends StatelessWidget {
       );
     }
 
-    if (searchCategory == EnumSearchCategory.quote) {
+    if (searchCategory == EnumSearchCategory.quotes) {
       return SearchQuoteResultsPage(
         isDark: isDark,
         isMobileSize: isMobileSize,
@@ -108,7 +108,7 @@ class SearchPageBody extends StatelessWidget {
       );
     }
 
-    if (searchCategory == EnumSearchCategory.author) {
+    if (searchCategory == EnumSearchCategory.authors) {
       return SearchAuthorResultsPage(
         margin: margin,
         authorResults: authorResults,

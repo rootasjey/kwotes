@@ -280,6 +280,7 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
   /// Initialize page properties.
   void initProps() async {
     _currentIndex = NavigationStateHelper.homePageTabIndex;
+    initBrowserUrlWithTab(_currentIndex);
   }
 
   /// Navigate back to root when tapping on already selected bottom bar item.
@@ -383,5 +384,32 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
     );
 
     frameColorSignal.update((Color previousColor) => borderColor);
+  }
+
+  /// Initialize browser url according to selected bottom bar item.
+  void initBrowserUrlWithTab(int currentIndex) {
+    if (NavigationStateHelper.initialBrowserUrl != "/") {
+      return;
+    }
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final BeamerDelegate beamer = Beamer.of(context);
+      switch (currentIndex) {
+        case 0:
+          const String path = HomeContentLocation.route;
+          beamer.update(configuration: RouteInformation(uri: Uri(path: path)));
+          break;
+        case 1:
+          const String path = SearchContentLocation.route;
+          beamer.update(configuration: RouteInformation(uri: Uri(path: path)));
+          break;
+        case 2:
+          const String path = DashboardContentLocation.route;
+          beamer.update(configuration: RouteInformation(uri: Uri(path: path)));
+          break;
+        default:
+          break;
+      }
+    });
   }
 }

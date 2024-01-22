@@ -51,11 +51,11 @@ class ColorPalette {
   /// Returns the color of the search category.
   Color getSearchColor(EnumSearchCategory categorySelected) {
     switch (categorySelected) {
-      case EnumSearchCategory.quote:
+      case EnumSearchCategory.quotes:
         return Colors.pink;
-      case EnumSearchCategory.author:
+      case EnumSearchCategory.authors:
         return Colors.amber;
-      case EnumSearchCategory.reference:
+      case EnumSearchCategory.references:
         return Colors.blue;
       default:
         return Colors.transparent;

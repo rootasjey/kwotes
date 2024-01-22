@@ -65,7 +65,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   DocumentSnapshot? _lastAuthorDocument;
 
   /// [Mobile] Show entity selector if true.
-  bool _showEntitySelector = true;
+  bool _showCategorySelector = true;
 
   /// [Mobile] Save previous offset on scroll to show/hide entity selector.
   double _prevOffset = 0.0;
@@ -74,7 +74,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   EnumPageState _pageState = EnumPageState.idle;
 
   /// What type of category we are searching.
-  EnumSearchCategory _searchCategory = EnumSearchCategory.quote;
+  EnumSearchCategory _searchCategory = EnumSearchCategory.quotes;
 
   /// Search focus node.
   final FocusNode _searchFocusNode = FocusNode();
@@ -202,7 +202,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                       isMobileSize: isMobileSize,
                       isQueryEmpty: _searchInputController.text.isEmpty,
                       margin: marginBoddy,
-                      // margin: padding,
                       onRefreshSearch: search,
                       onReinitializeSearch: onClearInput,
                       onTapQuote: onTapQuote,
@@ -235,14 +234,14 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                     ShowMoreButton(
                       searchCategory: _searchCategory,
                       show: _searchInputController.text.isEmpty &&
-                          _searchCategory != EnumSearchCategory.quote,
+                          _searchCategory != EnumSearchCategory.quotes,
                       onPressed: () => fetchShowcaseData(fetchMore: true),
                     ),
                   ],
                 ),
               ),
             ),
-            if (_showEntitySelector)
+            if (_showCategorySelector)
               Positioned(
                 bottom: 12.0,
                 left: 0.0,
@@ -251,7 +250,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                   child: SearchCategorySelector(
                     categorySelected: _searchCategory,
                     isDark: isDark,
-                    onSelectCategory: onSelectSearchEntity,
+                    onSelectCategory: onSelectSearchCategory,
                   ),
                 )
                     .animate()
@@ -269,26 +268,32 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     );
   }
 
-  /// Automatically hide/show entity selector when scrolling.
-  void autoHideEntitySelector(double offset) {
+  /// Automatically hide/show category (e.g. authors) selector when scrolling.
+  void autoHideCategorySelector(double offset) {
     if (_scrollController.position.atEdge && offset == 0.0 || offset < 0.0) {
-      _showEntitySelector ? null : setState(() => _showEntitySelector = true);
+      _showCategorySelector
+          ? null
+          : setState(() => _showCategorySelector = true);
       return;
     }
 
     if (_scrollController.position.atEdge && offset > 0.0) {
-      _showEntitySelector ? setState(() => _showEntitySelector = false) : null;
+      _showCategorySelector
+          ? setState(() => _showCategorySelector = false)
+          : null;
       return;
     }
 
     if (_prevOffset < offset) {
       _prevOffset = offset;
-      _showEntitySelector ? setState(() => _showEntitySelector = false) : null;
+      _showCategorySelector
+          ? setState(() => _showCategorySelector = false)
+          : null;
       return;
     }
 
     _prevOffset = offset;
-    _showEntitySelector ? null : setState(() => _showEntitySelector = true);
+    _showCategorySelector ? null : setState(() => _showCategorySelector = true);
   }
 
   /// Check text input to automatically adjust search settings.
@@ -299,13 +304,13 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
 
     if (text.startsWith("quote:") || text.startsWith("q:")) {
-      onSelectSearchEntity(EnumSearchCategory.quote);
+      onSelectSearchCategory(EnumSearchCategory.quotes);
     }
     if (text.startsWith("author:") || text.startsWith("a:")) {
-      onSelectSearchEntity(EnumSearchCategory.author);
+      onSelectSearchCategory(EnumSearchCategory.authors);
     }
     if (text.startsWith("reference:") || text.startsWith("r:")) {
-      onSelectSearchEntity(EnumSearchCategory.reference);
+      onSelectSearchCategory(EnumSearchCategory.references);
     }
   }
 
@@ -318,7 +323,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       _searchInputController.text = widget.subjectName;
 
       final String searchType = query.split(":").first;
-      manualSelectSearchEntity(searchType);
+      manualSelectSearchCategory(searchType);
 
       if (query.indexOf(":") != query.lastIndexOf(":")) {
         findDirectResults(query);
@@ -335,13 +340,12 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       return;
     }
 
-    final RouteInformation conf =
-        NavigationStateHelper.searchRouterDelegate.configuration;
-    final bool hasTopic = conf.uri.path.contains("/topic/");
-    if (hasTopic) {
-      final String topicName = conf.uri.pathSegments.last;
-      _searchInputController.text = topicName;
-      fetchTopic(topicName);
+    if (handleSearchByTopic()) {
+      return;
+    }
+
+    if (handleSearchQueryParam()) {
+      search();
       return;
     }
 
@@ -472,7 +476,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     bool reinit = false,
     bool fetchMore = false,
   }) async {
-    if (_searchCategory == EnumSearchCategory.author) {
+    if (_searchCategory == EnumSearchCategory.authors) {
       fetchAuthors(
         reinit: reinit,
         fetchMore: fetchMore,
@@ -480,7 +484,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       return;
     }
 
-    if (_searchCategory == EnumSearchCategory.reference) {
+    if (_searchCategory == EnumSearchCategory.references) {
       fetchReferences(
         reinit: reinit,
         fetchMore: fetchMore,
@@ -562,6 +566,11 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
   }
 
+  /// Return query string category.
+  String getCategoryQueryString() {
+    return "?category=${_searchCategory.name}";
+  }
+
   /// Return firebase query to fetch quotes from a specific topic.
   QueryMap getTopicQuery({required String topicName, String language = "en"}) {
     final QueryDocSnapMap? lastDocument = _lastQuoteDocument;
@@ -591,12 +600,12 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   /// Handle added document.
   void handleAddedDocument(DocumentSnapshotMap doc) {
-    if (_searchCategory == EnumSearchCategory.author) {
+    if (_searchCategory == EnumSearchCategory.authors) {
       handleAddedAuthor(doc);
       return;
     }
 
-    if (_searchCategory == EnumSearchCategory.reference) {
+    if (_searchCategory == EnumSearchCategory.references) {
       handleAddedReference(doc);
       return;
     }
@@ -625,12 +634,12 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   /// Handle modified document.
   void handleModifiedDocument(DocumentSnapshotMap doc) {
-    if (_searchCategory == EnumSearchCategory.author) {
+    if (_searchCategory == EnumSearchCategory.authors) {
       handleModifiedAuthor(doc);
       return;
     }
 
-    if (_searchCategory == EnumSearchCategory.reference) {
+    if (_searchCategory == EnumSearchCategory.references) {
       handleModifiedReference(doc);
       return;
     }
@@ -658,12 +667,12 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   /// Handle removed document.
   void handleRemovedDocument(DocumentSnapshotMap doc) {
-    if (_searchCategory == EnumSearchCategory.author) {
+    if (_searchCategory == EnumSearchCategory.authors) {
       handleRemovedAuthor(doc);
       return;
     }
 
-    if (_searchCategory == EnumSearchCategory.reference) {
+    if (_searchCategory == EnumSearchCategory.references) {
       handleRemovedReference(doc);
       return;
     }
@@ -677,6 +686,49 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
     if (index == -1) return;
     setState(() => _referenceList.removeAt(index));
+  }
+
+  /// Handle start url for search by topic.
+  bool handleSearchByTopic() {
+    final RouteInformation conf =
+        NavigationStateHelper.searchRouterDelegate.configuration;
+    final bool hasTopic = conf.uri.path.contains("/topic/");
+
+    if (hasTopic) {
+      final String topicName = conf.uri.pathSegments.last;
+      _searchInputController.text = topicName;
+      fetchTopic(topicName);
+
+      SystemChrome.setApplicationSwitcherDescription(
+        ApplicationSwitcherDescription(
+          label: "page_title.search_subject".tr(args: [topicName]),
+        ),
+      );
+      return true;
+    }
+
+    return false;
+  }
+
+  /// Handle search query param on initialization.
+  bool handleSearchQueryParam() {
+    final RouteInformation conf =
+        NavigationStateHelper.searchRouterDelegate.configuration;
+    final Map<String, String> queryParameters = conf.uri.queryParameters;
+
+    bool handled = false;
+
+    if (queryParameters.containsKey("category")) {
+      updateCategoryFromKey(queryParameters["category"] ?? "");
+      handled = true;
+    }
+
+    if (queryParameters.containsKey("q")) {
+      _searchInputController.text = queryParameters["q"] ?? "";
+      handled = true;
+    }
+
+    return handled;
   }
 
   /// Initialize properties (search category).
@@ -710,17 +762,17 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     });
   }
 
-  /// Manually select search entity.
-  void manualSelectSearchEntity(String value) {
+  /// Manually select search category.
+  void manualSelectSearchCategory(String value) {
     switch (value) {
       case "quote":
-        onSelectSearchEntity(EnumSearchCategory.quote);
+        onSelectSearchCategory(EnumSearchCategory.quotes);
         break;
       case "author":
-        onSelectSearchEntity(EnumSearchCategory.author);
+        onSelectSearchCategory(EnumSearchCategory.authors);
         break;
       case "reference":
-        onSelectSearchEntity(EnumSearchCategory.reference);
+        onSelectSearchCategory(EnumSearchCategory.references);
         break;
       default:
     }
@@ -729,9 +781,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   /// Callback fired to clear the search input.
   void onClearInput() {
     _searchInputController.text = "";
-    Beamer.of(context).updateRouteInformation(
-      RouteInformation(uri: Uri(path: SearchLocation.route)),
-    );
+    updateBrowserUrl();
 
     SystemChrome.setApplicationSwitcherDescription(
       ApplicationSwitcherDescription(
@@ -756,7 +806,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   /// Callback event when scrolling.
   void onScroll(double offset) {
-    autoHideEntitySelector(offset);
+    autoHideCategorySelector(offset);
 
     if (!_hasMoreResults) {
       return;
@@ -805,6 +855,13 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
 
     NavigationStateHelper.searchValue = value;
+    SystemChrome.setApplicationSwitcherDescription(
+      ApplicationSwitcherDescription(
+        label: "page_title.search_subject".tr(args: [value]),
+      ),
+    );
+
+    updateBrowserUrl();
 
     if (value.isEmpty) {
       setState(() {
@@ -827,7 +884,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   /// Callback fired when a different search category is selected (e.g. author).
   /// Clear previous results.
-  void onSelectSearchEntity(EnumSearchCategory searchEntity) {
+  void onSelectSearchCategory(EnumSearchCategory searchEntity) {
     Utils.vault.saveLastSearchCategory(searchEntity);
 
     setState(() {
@@ -835,7 +892,12 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       _resultCount = 0;
     });
 
-    // _searchFocusNode.requestFocus();
+    updateBrowserUrl();
+
+    if (!Utils.graphic.isMobile()) {
+      _searchFocusNode.requestFocus();
+    }
+
     search();
     fetchShowcaseData(reinit: true);
   }
@@ -1008,13 +1070,13 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     final String text = removeSpecialKeywords(_searchInputController.text);
 
     switch (_searchCategory) {
-      case EnumSearchCategory.quote:
+      case EnumSearchCategory.quotes:
         preSearchQuotes(text);
         break;
-      case EnumSearchCategory.author:
+      case EnumSearchCategory.authors:
         preSearchAuthors(text);
         break;
-      case EnumSearchCategory.reference:
+      case EnumSearchCategory.references:
         preSearchReferences(text);
         break;
       default:
@@ -1067,13 +1129,13 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     final String text = removeSpecialKeywords(_searchInputController.text);
 
     switch (_searchCategory) {
-      case EnumSearchCategory.quote:
+      case EnumSearchCategory.quotes:
         preSearchMoreQuotes(text);
         break;
-      case EnumSearchCategory.author:
+      case EnumSearchCategory.authors:
         preSearchMoreAuthors(text);
         break;
-      case EnumSearchCategory.reference:
+      case EnumSearchCategory.references:
         preSearchMoreReferences(text);
         break;
       default:
@@ -1153,5 +1215,41 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       loggy.error(error.toString());
       setState(() => _pageState = EnumPageState.idle);
     }
+  }
+
+  /// Update browser URL on input changes.
+  void updateBrowserUrl() {
+    final String queryCategory = getCategoryQueryString();
+    final String text = _searchInputController.text;
+    final String querySearch = text.isEmpty ? "" : "&q=$text";
+
+    final String path =
+        "${SearchContentLocation.route}$queryCategory$querySearch";
+
+    Beamer.of(context).updateRouteInformation(
+      RouteInformation(uri: Uri(path: path)),
+    );
+  }
+
+  /// Update search category from query param.
+  void updateCategoryFromKey(String key) {
+    EnumSearchCategory searchCategory = EnumSearchCategory.quotes;
+
+    switch (key) {
+      case "authors":
+        searchCategory = EnumSearchCategory.authors;
+        break;
+      case "quotes":
+        searchCategory = EnumSearchCategory.quotes;
+        break;
+      case "references":
+        searchCategory = EnumSearchCategory.references;
+        break;
+      default:
+        searchCategory = EnumSearchCategory.quotes;
+        break;
+    }
+
+    setState(() => _searchCategory = searchCategory);
   }
 }
