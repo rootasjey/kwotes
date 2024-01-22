@@ -26,27 +26,33 @@ class _DashboardNavigationPageState extends State<DashboardNavigationPage> {
   final Map<SingleActivator, Intent> _shortcuts = {
     const SingleActivator(
       LogicalKeyboardKey.digit1,
-      meta: true,
+      control: true,
+      shift: true,
     ): const FirstIndexIntent(),
     const SingleActivator(
       LogicalKeyboardKey.digit2,
-      meta: true,
+      control: true,
+      shift: true,
     ): const SecondIndexIntent(),
     const SingleActivator(
       LogicalKeyboardKey.digit3,
-      meta: true,
+      control: true,
+      shift: true,
     ): const ThirdIndexIntent(),
     const SingleActivator(
       LogicalKeyboardKey.digit4,
-      meta: true,
+      control: true,
+      shift: true,
     ): const FourthIndexIntent(),
     const SingleActivator(
       LogicalKeyboardKey.digit5,
-      meta: true,
+      control: true,
+      shift: true,
     ): const FifthIndexIntent(),
     const SingleActivator(
       LogicalKeyboardKey.digit6,
-      meta: true,
+      control: true,
+      shift: true,
     ): const SixthIndexIntent(),
     const SingleActivator(
       LogicalKeyboardKey.keyN,
