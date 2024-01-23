@@ -101,6 +101,7 @@ export const createAccount = functions
     .collection('users')
     .doc(userRecord.uid)
     .set({
+      created_at: adminApp.firestore.Timestamp.now(),
       developer: {
         apps: {
           current: 0,
@@ -128,14 +129,14 @@ export const createAccount = functions
       name: username,
       name_lower_case: username.toLowerCase(),
       rights: {
-        'user:manage_data'     : false,
+        'user:manage_data'      : false,
         'user:manage_authors'   : false,
         'user:manage_quotes'    : false,
         'user:manage_quotidians': false,
         'user:manage_references': false,
-        'user:propose_quote'   : true,
-        'user:read_quote'      : true,
-        'user:validate_quote'  : false,
+        'user:propose_quote'    : true,
+        'user:read_quote'       : true,
+        'user:validate_quote'   : false,
       },
       settings: {
         notifications: {
@@ -150,19 +151,21 @@ export const createAccount = functions
         },
       },
       urls: {
-        image: '',
-        twitter: '',
-        facebook: '',
-        instagram: '',
-        twitch: '',
-        website: '',
-        wikipedia: '',
-        youtube: '',
+        image:      '',
+        twitter:    '',
+        facebook:   '',
+        instagram:  '',
+        twitch:     '',
+        website:    '',
+        wikipedia:  '',
+        youtube:    '',
       },
       uid: userRecord.uid,
     });
 
     return {
+      message: "",
+      success: true,
       user: {
         id: userRecord.uid, 
         email,
@@ -231,6 +234,7 @@ export const deleteAccount = functions
 
     await firebaseTools.firestore
       .delete(userSnap.ref.path, {
+        force: true,
         project: process.env.GCLOUD_PROJECT,
         recursive: true,
         yes: true,
