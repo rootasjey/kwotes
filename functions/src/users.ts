@@ -6,29 +6,20 @@ import { checkUserIsSignedIn } from './utils';
 const firebaseTools = require('firebase-tools');
 const firestore = adminApp.firestore();
 
+/**
+ * Check if an email is available in the database.
+ * @param email - Email to check.
+ * @returns True if the email is available, false otherwise.
+ * @throws HttpsError if the email is not valid.
+ * @throws HttpsError if the email is not a string.
+ * @throws HttpsError if the email is empty.
+ */
 export const checkEmailAvailability = functions
   .region('europe-west3')
   .https
   .onCall(async (data) => {
     const email: string = data.email;
-
-    if (typeof email !== 'string' || email.length === 0) {
-      throw new functions.https.HttpsError(
-        'invalid-argument', 
-        `The function must be called with one (string)
-         argument [email] which is the email to check.`,
-      );
-    }
-
-    if (!validateEmailFormat(email)) {
-      throw new functions.https.HttpsError(
-        'invalid-argument', 
-        `The function must be called with a valid email address.`,
-      );
-    }
-
-    const exists = await isUserExistsByEmail(email);
-    const isAvailable = !exists;
+    const isAvailable = await isEmailAvailable(email);
 
     return {
       email,
@@ -36,37 +27,24 @@ export const checkEmailAvailability = functions
     };
   });
 
+/**
+ * Check if a username is available in the database.
+ * @param username - Username to check.
+ * @returns True if the username is available, false otherwise.
+ * @throws HttpsError if the username is not valid.
+ * @throws HttpsError if the username is not a string.
+ * @throws HttpsError if the username is empty.
+ */
 export const checkUsernameAvailability = functions
   .region('europe-west3')
   .https
   .onCall(async (data) => {
-    const name: string = data.name;
-
-    if (typeof name !== 'string' || name.length === 0) {
-      throw new functions.https.HttpsError(
-        'invalid-argument', 
-        `The function must be called with one (string)
-         argument "name" which is the name to check.`,
-      );
-    }
-
-    if (!validateNameFormat(name)) {
-      throw new functions.https.HttpsError(
-        'invalid-argument', 
-        `The function must be called with a valid [name]
-         with at least 3 alpha-numeric characters (underscore is allowed) (A-Z, 0-9, _).`,
-      );
-    }
-
-    const nameSnap = await firestore
-      .collection('users')
-      .where('name_lower_case', '==', name.toLowerCase())
-      .limit(1)
-      .get();
+    const username: string = data.username;
+    const isAvailable: boolean = await isUsernameAvailable(username);
 
     return {
-      name: name,
-      isAvailable: nameSnap.empty,
+      username,
+      isAvailable,
     };
   });
 
@@ -87,6 +65,22 @@ export const createAccount = functions
     }
 
     const { username, password, email } = data;
+    const isUsernameOk: boolean = await isUsernameAvailable(username);
+    const isEmailOk: boolean = await isEmailAvailable(email);
+
+    if (!isUsernameOk) {
+      throw new functions.https.HttpsError(
+        'invalid-argument', 
+        `The function must be called with a valid username.`,
+      );
+    }
+
+    if (!isEmailOk) {
+      throw new functions.https.HttpsError(
+        'invalid-argument', 
+        `The function must be called with a valid email.`,
+      );
+    }
 
     const userRecord = await adminApp
     .auth()
@@ -134,9 +128,9 @@ export const createAccount = functions
         'user:manage_quotes'    : false,
         'user:manage_quotidians': false,
         'user:manage_references': false,
-        'user:propose_quote'    : true,
-        'user:read_quote'       : true,
-        'user:validate_quote'   : false,
+        'user:propose_quotes'   : true,
+        'user:read_quotes'      : true,
+        'user:validate_quotes'  : false,
       },
       settings: {
         notifications: {
@@ -172,28 +166,6 @@ export const createAccount = functions
       },
     };
   });
-
-function checkCreateAccountData(data: any) {
-  if (Object.keys(data).length !== 3) {
-    return false;
-  }
-
-  const keys = Object.keys(data);
-
-  if (!keys.includes('username') 
-    || !keys.includes('email') 
-    || !keys.includes('password')) {
-    return false;
-  }
-
-  if (typeof data['username'] !== 'string' || 
-    typeof data['email'] !== 'string' || 
-    typeof data['password'] !== 'string') {
-    return false;
-  }
-
-  return true;
-}
 
 /**
  * Delete user's document from Firebase auth & Firestore.
@@ -247,47 +219,6 @@ export const deleteAccount = functions
       },
     };
   });
-
-async function isUserExistsByEmail(email: string) {
-  const emailSnapshot = await firestore
-    .collection('users')
-    .where('email', '==', email)
-    .limit(1)
-    .get();
-
-  if (!emailSnapshot.empty) {
-    return true;
-  }
-
-  try {
-    const userRecord = await adminApp
-      .auth()
-      .getUserByEmail(email);
-
-    if (userRecord) {
-      return true;
-    }
-
-    return false;
-
-  } catch (error) {
-    return false;
-  }
-}
-
-async function isUserExistsByUsername(nameLowerCase: string) {
-  const nameSnapshot = await firestore
-    .collection('users')
-    .where('name_lower_case', '==', nameLowerCase)
-    .limit(1)
-    .get();
-
-  if (nameSnapshot.empty) {
-    return false;
-  }
-
-  return true;
-}
 
 /**
  * Update an user's email in Firebase auth and in Firestore.
@@ -408,11 +339,165 @@ export const updateUsername = functions
     };
   });
 
+/**
+ * Checks if the provided data object contains the required keys and their values are of the correct types.
+ *
+ * @param {any} data - the data object to be checked
+ * @return {boolean} true if the data object is valid, false otherwise
+ */
+function checkCreateAccountData(data: any) {
+  if (Object.keys(data).length !== 3) {
+    return false;
+  }
+
+  const keys = Object.keys(data);
+
+  if (!keys.includes('username')
+    || !keys.includes('email')
+    || !keys.includes('password')) {
+    return false;
+  }
+
+  if (typeof data['username'] !== 'string' ||
+    typeof data['email'] !== 'string' ||
+    typeof data['password'] !== 'string') {
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * Checks if the given email is available for use.
+ *
+ * @param {string} email - the email to check
+ * @return {Promise<boolean>} whether the email is available
+ */
+async function isEmailAvailable(email: string) {
+  if (typeof email !== 'string' || email.length === 0) {
+    throw new functions.https.HttpsError(
+      'invalid-argument',
+      `The function must be called with one (string)
+         argument [email] which is the email to check.`,
+    );
+  }
+
+  if (!validateEmailFormat(email)) {
+    throw new functions.https.HttpsError(
+      'invalid-argument',
+      `The function must be called with a valid email address. ${email} is not in a correct format.`,
+    );
+  }
+
+  const exists = await isUserExistsByEmail(email);
+  const isAvailable = !exists;
+  return isAvailable;
+}
+
+/**
+ * Check if a user exists by their email.
+ * 
+ * @param {string} email - the email to check
+ * @return {boolean} whether the user exists or not
+ * @throws {functions.https.HttpsError} if the email is not in a correct format
+ * @throws {functions.https.HttpsError} if the email is not available
+ **/
+async function isUserExistsByEmail(email: string) {
+  const emailSnapshot = await firestore
+    .collection('users')
+    .where('email', '==', email)
+    .limit(1)
+    .get();
+
+  if (!emailSnapshot.empty) {
+    return true;
+  }
+
+  try {
+    const userRecord = await adminApp
+      .auth()
+      .getUserByEmail(email);
+
+    if (userRecord) {
+      return true;
+    }
+
+    return false;
+
+  } catch (error) {
+    return false;
+  }
+}
+
+  /**
+ * Check if a user exists by their username in lowercase.
+ *
+ * @param {string} nameLowerCase - the lowercase username to check
+ * @return {boolean} whether the user exists or not
+ */
+async function isUserExistsByUsername(nameLowerCase: string) {
+  const nameSnapshot = await firestore
+    .collection('users')
+    .where('name_lower_case', '==', nameLowerCase)
+    .limit(1)
+    .get();
+
+  if (nameSnapshot.empty) {
+    return false;
+  }
+
+  return true;
+}
+
+  /**
+ * Checks if the given username is available.
+ *
+ * @param {string} username - the username to check
+ * @return {Promise<boolean>} whether the username is available
+ */
+async function isUsernameAvailable(username: string): Promise<boolean> {
+  if (typeof username !== 'string' || username.length === 0) {
+    throw new functions.https.HttpsError(
+      'invalid-argument',
+      `The function must be called with one (string)
+         argument "username" which is the username to check.`,
+    );
+  }
+
+  if (!validateNameFormat(username)) {
+    throw new functions.https.HttpsError(
+      'invalid-argument',
+      `The function must be called with a valid [username]
+         with at least 3 alpha-numeric characters (underscore is allowed) (A-Z, 0-9, _).`,
+    );
+  }
+
+  const usernameSnapshot = await firestore
+    .collection('users')
+    .where('name_lower_case', '==', username.toLowerCase())
+    .limit(1)
+    .get();
+
+  return usernameSnapshot.empty;
+}
+
+/**
+ * Validates the format of the email.
+ *
+ * @param {string} email - the email to be validated
+ * @return {boolean} true if the email format is valid, false otherwise
+ */
 function validateEmailFormat(email: string) {
   const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(email);
 }
 
+/**
+ * Validates the format of the given name string.
+ *
+ * @param {string} name - The name string to be validated
+ * @return {boolean} Whether the name string has a valid format
+ */
 function validateNameFormat(name: string) {
   const re = /[a-zA-Z0-9_]{3,}/;
   const matches = re.exec(name);
