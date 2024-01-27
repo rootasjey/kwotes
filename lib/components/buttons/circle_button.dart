@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:kwotes/globals/utils.dart";
 
 class CircleButton extends StatelessWidget {
   /// An alternative to IconButton.
@@ -54,8 +55,8 @@ class CircleButton extends StatelessWidget {
     );
 
     if (tooltip != null) {
-      child = Tooltip(
-        message: tooltip,
+      child = Utils.graphic.tooltip(
+        tooltipString: tooltip ?? "",
         child: child,
       );
     }

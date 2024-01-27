@@ -89,6 +89,7 @@ class NotFoundPage extends StatelessWidget {
                   textValue: "back".tr(),
                   textFlex: 0,
                   style: TextButton.styleFrom(
+                    foregroundColor: foregroundTextColor,
                     backgroundColor: isDark
                         ? Constants.colors.getRandomFromPalette(
                             onlyDarkerColors: true,

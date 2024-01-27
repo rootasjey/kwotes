@@ -91,6 +91,7 @@ class _SigninPageState extends State<SigninPage> with UiLoggy {
             rightChildren: [
               CircleButton(
                 onTap: navigateToSettings,
+                tooltip: "settings.name".tr(),
                 backgroundColor: Colors.transparent,
                 icon: const Icon(TablerIcons.settings),
               ),

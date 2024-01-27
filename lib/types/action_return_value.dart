@@ -37,10 +37,17 @@ class ActionReturnValue {
   }
 
   factory ActionReturnValue.fromMap(Map<String, dynamic>? map) {
+    if (map == null) {
+      return ActionReturnValue(
+        success: false,
+        reason: "",
+      );
+    }
+
     return ActionReturnValue(
-      success: map?["success"] ?? false,
-      error: map?["error"],
-      reason: map?["reason"] ?? "",
+      success: map["success"] ?? false,
+      error: map["error"],
+      reason: map["reason"] ?? "",
     );
   }
 

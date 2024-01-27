@@ -128,6 +128,8 @@ class AppState with UiLoggy {
     return createAccountResponse;
   }
 
+  /// Delete the user account.
+  /// Calls the `users-deleteAccount` lambda function.
   Future<ActionReturnValue> deleteAccount({
     required String password,
   }) async {

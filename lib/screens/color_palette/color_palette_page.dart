@@ -36,6 +36,7 @@ class ColorPalettePage extends StatelessWidget {
   }
 
   /// Callback fired when color card is tapped.
+  /// Navigates to the color detail page.
   void onTapColorCard(BuildContext context, Topic topic) {
     context.beamToNamed(
       DashboardContentLocation.colorDetailRoute.replaceFirst(
@@ -58,6 +59,7 @@ class ColorPalettePage extends StatelessWidget {
     );
   }
 
+  /// Callback fired to copy color's RGBA value.
   void onCopyRGBA(BuildContext context, Topic topic) {
     final Color color = topic.color;
 
@@ -78,6 +80,7 @@ class ColorPalettePage extends StatelessWidget {
     );
   }
 
+  /// Callback fired to copy color's hex value.
   void onCopyHex(BuildContext context, Topic topic) {
     final Color color = topic.color;
 

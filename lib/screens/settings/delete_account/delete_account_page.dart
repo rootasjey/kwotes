@@ -4,8 +4,8 @@ import "package:flutter/material.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
-import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/settings/delete_account/delete_account_page_body.dart";
 import "package:kwotes/screens/settings/delete_account/delete_account_page_header.dart";
 import "package:kwotes/types/action_return_value.dart";
@@ -64,7 +64,7 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> with UiLoggy {
             passwordController: _passwordTextController,
             pageState: _pageState,
             onHidePasswordChanged: onHidePasswordChanged,
-            onValidateDeletion: tryDeleteAccount,
+            onValidateDeletion: deleteAccount,
           ),
         ],
       ),
@@ -81,6 +81,8 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> with UiLoggy {
     return true;
   }
 
+  /// Callback fired when left part header is tapped.
+  /// If the user can beam back, do so.
   void onTapLeftPartHeader() {
     if (context.canBeamBack) {
       context.beamBack();
@@ -90,7 +92,8 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> with UiLoggy {
     Beamer.of(context, root: true).beamToNamed(HomeLocation.route);
   }
 
-  void tryDeleteAccount() async {
+  /// Delete account.
+  void deleteAccount() async {
     if (!isPasswordInCorrectFormat(_passwordTextController.text)) {
       Utils.graphic.showSnackbar(context, message: _errorMessage);
       setState(() {});
@@ -124,19 +127,13 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> with UiLoggy {
         _passwordTextController.clear();
       });
 
-      if (!mounted) {
-        return;
-      }
-
+      if (!mounted) return;
       Utils.graphic.showSnackbar(
         context,
         message: "account.delete.success".tr(),
       );
 
-      Utils.state.signOut();
-      Beamer.of(context, root: true).beamToNamed(
-        NavigationStateHelper.initialBrowserUrl,
-      );
+      context.beamToNamed(DashboardContentLocation.signinRoute);
     } catch (error) {
       loggy.error(error);
       setState(() => _pageState = EnumPageState.idle);
@@ -147,6 +144,7 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> with UiLoggy {
     }
   }
 
+  /// Callback to hide/show password.
   void onHidePasswordChanged(bool value) {
     setState(() => _hidePassword = value);
   }

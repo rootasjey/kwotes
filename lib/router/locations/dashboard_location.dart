@@ -56,7 +56,7 @@ class DashboardLocation extends BeamLocation<BeamState> {
                 context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
             return currentUser.value.id.isNotEmpty;
           },
-        )
+        ),
       ];
 
   @override
@@ -179,7 +179,17 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
   @override
   List<BeamGuard> get guards => [
         BeamGuard(
-          pathPatterns: [signinRoute, signupRoute, forgotPasswordRoute],
+          pathPatterns: [
+            signinRoute,
+            signupRoute,
+            forgotPasswordRoute,
+            settingsRoute,
+            settingsTosRoute,
+            settingsThePurposeRoute,
+            colorPaletteRoute,
+            colorDetailRoute,
+            creditsRoute,
+          ],
           guardNonMatching: true,
           beamToNamed: (origin, target) => signinRoute,
           check: (BuildContext context, location) {

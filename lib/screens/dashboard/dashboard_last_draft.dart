@@ -60,8 +60,8 @@ class _DashboardLastDraftState extends State<DashboardLastDraft> with UiLoggy {
 
     return Padding(
       padding: isMobileSize
-          ? const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0)
-          : const EdgeInsets.symmetric(vertical: 12.0, horizontal: 48.0),
+          ? const EdgeInsets.only(top: 24.0, left: 24.0, right: 24.0)
+          : const EdgeInsets.only(top: 42.0, left: 48.0, right: 48.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -26,18 +26,8 @@ class DashboardCardSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: isMobileSize
-          ? const EdgeInsets.only(
-              top: 36.0,
-              left: 12.0,
-              right: 12.0,
-              bottom: 42.0,
-            )
-          : const EdgeInsets.only(
-              top: 24.0,
-              left: 48.0,
-              right: 48.0,
-              bottom: 92.0,
-            ),
+          ? const EdgeInsets.only(top: 36.0, left: 12.0, right: 12.0)
+          : const EdgeInsets.only(top: 24.0, left: 48.0, right: 48.0),
       child: Wrap(
         spacing: 12.0,
         runSpacing: 12.0,

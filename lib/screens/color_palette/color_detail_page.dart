@@ -76,6 +76,7 @@ class ColorDetailPage extends StatelessWidget {
     );
   }
 
+  /// Callback fired to copy 32bit color value.
   void onCopy32bitValue(BuildContext context, Color color) {
     Clipboard.setData(ClipboardData(text: "${color.value}"));
 
@@ -88,6 +89,7 @@ class ColorDetailPage extends StatelessWidget {
     );
   }
 
+  /// Callback fired to copy RGBA color value.
   void onCopyRGBA(BuildContext context, Color color) {
     Clipboard.setData(
       ClipboardData(
@@ -106,6 +108,7 @@ class ColorDetailPage extends StatelessWidget {
     );
   }
 
+  /// Callback fired to copy HEX color value.
   void onCopyHex(BuildContext context, Color color) {
     Clipboard.setData(
       ClipboardData(

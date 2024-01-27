@@ -55,11 +55,17 @@ class CreateAccountResponse {
       return CreateAccountResponse.empty();
     }
 
+    final Map<String, dynamic> userMap = {};
+    if (map["user"] != null) {
+      userMap.putIfAbsent("id", () => map["user"]["id"]);
+      userMap.putIfAbsent("email", () => map["user"]["email"]);
+    }
+
     return CreateAccountResponse(
       success: map["success"] ?? false,
       message: map["message"] ?? "",
       error: CloudFunError.fromMap(map["error"]),
-      user: UserFirestore.fromMap(map["user"]),
+      user: UserFirestore.fromMap(userMap),
     );
   }
 

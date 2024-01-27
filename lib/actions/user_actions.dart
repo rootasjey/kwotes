@@ -117,6 +117,7 @@ class UserActions {
         ),
       );
     } catch (error) {
+      GlobalLoggy().loggy.error(error);
       return CreateAccountResponse(
         success: false,
         error: CloudFunError(

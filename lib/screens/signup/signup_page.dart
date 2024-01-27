@@ -274,7 +274,7 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
     }
 
     if (!UserActions.checkUsernameFormat(username)) {
-      setState(() => _usernameErrorMessage = "username_error.invalid".tr());
+      setState(() => _usernameErrorMessage = "username.error.format".tr());
       _usernameFocusNode.requestFocus();
       return false;
     }
