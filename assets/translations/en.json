@@ -144,6 +144,10 @@
   },
   "drafts": {
     "description": "Unfinished work",
+    "empty": {
+      "description": "Drafts are quotes you're not sure to submit yet. There are only visible by you.",
+      "name": "No drafts"
+    },
     "last_single": "Last draft",
     "name": "Drafts"
   },
@@ -176,6 +180,10 @@
   "ending": "Ending",
   "favourites": {
     "description": "All liked quotes",
+    "empty": {
+      "description": "You have no favourite quotes yet. You can add some by taping on the little heart icon (on a quote).",
+      "name": "No favourite quotes"
+    },
     "name": "Favourites"
   },
   "fictional": "Fictional",
@@ -234,6 +242,10 @@
   "image": "Image",
   "in_validation": {
     "description": "Your quotes in validation",
+    "empty": {
+      "description": "You have no quotes in validation yet. They will appear here after submitting a draft quote.",
+      "name": "No quotes in validation"
+    },
     "name": "In validation"
   },
   "input": {
@@ -388,6 +400,10 @@
   },
   "lists": {
     "description": "Put some quotes together",
+    "empty": {
+      "description": "You have not created any lists yet. Lists let you group quotes together.",
+      "name": "No lists there"
+    },
     "name": "Lists"
   },
   "loading": "Loading...",
@@ -485,6 +501,10 @@
   },
   "published": {
     "description": "Your contribution to the world.",
+    "empty": {
+      "description": "You haven't published any quotes yet. When your drafts will be validated, they will appear here.",
+      "name": "No published quotes"
+    },
     "last_single":"Last quote published",
     "name": "Published"
   },

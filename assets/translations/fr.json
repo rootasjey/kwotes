@@ -147,6 +147,10 @@
   },
   "drafts": {
     "description": "Mes brouillons",
+    "empty": {
+      "description": "Les citations dont vous n'êtes pas encore sûr.e de publier. Ils ne sont visibles que par vous.",
+      "name": "Aucun brouillon"
+    },
     "last_single": "Dernier brouillon",
     "name": "Brouillons"
   },
@@ -178,6 +182,10 @@
   "ending": "À la fin",
   "favourites": {
     "description": "Les citations appréciées",
+    "empty": {
+      "description": "Vous n'avez aucune citation en favoris pour le moment. Vous pouvez en ajouter en tapotant l'icone de cœur (des citations).",
+      "name": "Aucune citation en favoris"
+    },
     "name": "Favoris"
   },
   "fictional": "Fictionnel",
@@ -236,6 +244,10 @@
   "image": "Image",
   "in_validation": {
     "description": "Les citations en validation",
+    "empty": {
+      "description": "Il n'y a aucune citation en validation pour le moment. Elles apparaîtront ici lorsque vous en soumetterez.",
+      "name": "Aucune citation en validation"
+    },
     "name": "En validation"
   },
   "input": {
@@ -390,6 +402,10 @@
   },
   "lists": {
     "description": "Rangez des citations ensemble",
+    "empty": {
+      "description": "Vous n'avez pas encore créé de listes. Les listes vous permettent de grouper des citations ensemble.",
+      "name": "Aucune liste"
+    },
     "name": "Listes"
   },
   "loading": "Chargement...",
@@ -487,6 +503,10 @@
   },
   "published": {
     "description": "Votre contribution au monde",
+    "empty": {
+      "description": "Vous n'avez pas encore de citation publiée. Lorsque vos citations seront validées, elles apparaîtront ici.",
+      "name": "Aucune citation publiee"
+    },
     "last_single": "Dernière citation publiée",
     "name": "Publiées"
   },
