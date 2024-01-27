@@ -1106,6 +1106,7 @@
     "error": {
       "already_taken": "The username is already taken.",
       "empty": "The username cannot be empty.",
+      "format": "The username format is invalid. It must be at least 3 characters long, only contain alpha-numeric characters, hyphen (-) and underscore (_).",
       "invalid": "The username is invalid.",
       "minimum_length": "The username must be at least 3 characters long."
     },

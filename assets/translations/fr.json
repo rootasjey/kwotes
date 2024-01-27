@@ -1119,6 +1119,7 @@
     "error": {
       "already_taken": "Ce nom d'utilisateur est déjà pris.",
       "empty": "Le nom d'utilisateur ne peut pas être vide.",
+      "format": "Le nom d'utilisateur est invalide. Il doit avoir au moins 3 caractères, seulement contenir des caractères alphanumériques, des tirets (-) ou underscores (_).",
       "invalid":  "Ce nom d'utilisateur est invalide.",
       "minimum_length": "Le nom d'utilisateur doit contenir au moins 3 caractères."
     },
