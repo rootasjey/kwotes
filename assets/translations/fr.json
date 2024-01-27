@@ -11,6 +11,7 @@
     "creating": "Création du compte",
     "delete": {
       "error": "Une erreur s'est produite lors de la suppression de votre compte",
+      "ing": "Suppression du compte",
       "name": "Supprimer mon compte",
       "success": "Votre compte a été supprimé",
       "tips": "Cet action est irréversible. Vos données personnelles seront supprimées. Veuillez saisir votre mot de passe si vous voulez continuer."
@@ -155,6 +156,7 @@
       "doesnt_exist": "Désolés, cette adresse email n'existe pas.",
       "empty_forbidden": "L'email ne peut pas être vide",
       "empty": "Le champ email est vide. Veuillez saisir une adresse email valide.",
+      "not_available": "Désolés, cette adresse email n'est pas disponible. Veuillez en choisir une autre.",
       "not_valid": "L'adresse email saisie n'est pas valide"
     },
     "password_reset_link": "Un lien pour réinitialiser votre mot de passe vous a été envoyé dans votre boîte email",
@@ -458,14 +460,17 @@
       "incorrect": "Le mot de passe actuel est incorrect",
       "minimum_length": "Veuillez utiliser au moins {} caractères",
       "new_empty": "Le champ est vide. Veuillez saisir votre mot de passe actuel.",
+      "nomatch": "Les mots de passe ne correspondent pas",
       "not_valid": "Le mot de passe n'est pas valide",
       "required": "Le mot de passe est requis"
     },
     "forgot": "Mot de passe oublié",
     "forgot_reset_process": "Nous vous enverrons un lien de réinitialisation dans votre boîte de réception.",
+    "hide": "Cacher le mot de passe",
     "name": "Mot de passe",
     "new": "Nouveau mot de passe",
     "not_valid": "Le mot de passe n'est pas valide",
+    "show": "Montrer le mot de passe",
     "update": {
       "error": "Une erreur est survenue lors de la mise à jour de votre mot de passe",
       "name": "Mettre à jour mon mot de passe",
@@ -1026,9 +1031,13 @@
   "share": "Partager",
   "share_on_twitter": "Partager sur Twitter",
   "skip": "Passer",
-  "signin": "Se connecter",
-  "signin_again": "Veuillez vous reconnecter",
-  "signin_existing_account": "Connectez-vous avec votre compte existant",
+  "signin": {
+    "again": "Veuillez vous reconnecter",
+    "existing_account": "Connectez-vous avec votre compte existant",
+    "failed": "Echec de l'authentification. Veuillez reessayer.",
+    "in": "Connexion en cours",
+    "name": "Se connecter"
+  },
   "signout": "Se déconnecter",
   "signup": "S'inscrire",
   "suggestions": "Suggestions",

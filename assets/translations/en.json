@@ -11,6 +11,7 @@
     "creating": "Creating account",
     "delete": {
       "error": "An error occurred while deleting your account",
+      "ing": "Deleting account",
       "name": "Delete account",
       "success": "Your account has been deleted",
       "tips": "This action is irreversible. You will loose all data associated with your account. Type your password if you want to continue."
@@ -152,6 +153,7 @@
       "doesnt_exist": "Sorry, this email doesn't exist.",
       "empty_forbidden": "Email cannot be empty",
       "empty": "The email field is empty. Please enter a valid email address.",
+      "not_available": "Sorry, this email is not available. Please try another one.",
       "not_valid": "The value entered is not a valid email address"
     },
     "name": "Email",
@@ -455,15 +457,18 @@
       "empty_no_valid": "The password field is empty. Please enter a valid password.",
       "incorrect": "Your current password is incorrect.",
       "minimum_length": "Password must be at least {} characters long.",
+      "nomatch": "Passwords do not match.",
       "new_empty": "The field is empty. Please enter your new password.",
       "not_valid": "The value entered is not a valid password.",
       "required": "Password is required."
     },
     "forgot": "Forgot password",
     "forgot_reset_process": "We will send a reset link to your mail box.",
+    "hide": "Hide password",
     "name": "Password",
     "new": "New password",
     "not_valid": "The value entered is not a valid password",
+    "show": "Show password",
     "update": {
       "error": "Error updating password",
       "name": "Update password",
@@ -1012,9 +1017,13 @@
   },
   "share": "Share",
   "share_on_twitter": "Share on Twitter",
-  "signin": "Sign in",
-  "signin_again": "Please sign in again",
-  "signin_existing_account": "Already have an account?",
+  "signin": {
+    "again": "Please sign in again",
+    "existing_account": "Already have an account?",
+    "failed": "Failed to sign in. Please try again.",
+    "in": "Connecting",
+    "name": "Sign in"
+  },
   "signout": "Sign out",
   "signup": "Sign up",
   "skip": "Skip",
