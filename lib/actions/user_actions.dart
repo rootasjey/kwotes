@@ -69,7 +69,7 @@ class UserActions {
     try {
       final HttpsCallableResult resp = await Utils.lambda
           .fun("users-checkUsernameAvailability")
-          .call({"name": username});
+          .call({"username": username});
       return resp.data["isAvailable"] ?? false;
     } on FirebaseFunctionsException catch (exception) {
       GlobalLoggy()
@@ -96,7 +96,8 @@ class UserActions {
     required String password,
   }) async {
     try {
-      final response = await Utils.lambda.fun("users-createAccount").call({
+      final HttpsCallableResult response =
+          await Utils.lambda.fun("users-createAccount").call({
         "username": username,
         "password": password,
         "email": email,
