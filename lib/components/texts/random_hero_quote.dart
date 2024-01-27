@@ -63,7 +63,7 @@ class RandomHeroQuote extends StatelessWidget {
     );
 
     final Color accentColor = Constants.colors.getRandomFromPalette(
-      withGoodContrast: !isDark,
+      onlyDarkerColors: !isDark,
     );
 
     return SliverToBoxAdapter(

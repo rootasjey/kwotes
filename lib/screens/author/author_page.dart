@@ -97,7 +97,7 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
 
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final Color randomColor = Constants.colors.getRandomFromPalette(
-      withGoodContrast: !isDark,
+      onlyDarkerColors: !isDark,
     );
 
     return Scaffold(

@@ -15,7 +15,7 @@ class TermsOfServicePage extends StatelessWidget {
         Theme.of(context).textTheme.bodyMedium?.color;
 
     final Color accentColor = Constants.colors.getRandomFromPalette(
-      withGoodContrast: true,
+      onlyDarkerColors: true,
     );
 
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
@@ -49,7 +49,7 @@ class TermsOfServicePage extends StatelessWidget {
                           fontSize: isMobileSize ? 36.0 : 84.0,
                           fontWeight: FontWeight.w700,
                           color: Constants.colors.getRandomFromPalette(
-                            withGoodContrast: true,
+                            onlyDarkerColors: true,
                           ),
                         ),
                       ),

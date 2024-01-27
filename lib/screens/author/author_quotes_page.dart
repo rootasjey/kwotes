@@ -131,7 +131,7 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
               ),
               AuthorQuotesPageBody(
                 accentColor: Constants.colors.getRandomFromPalette(
-                  withGoodContrast: true,
+                  onlyDarkerColors: true,
                 ),
                 isDark: isDark,
                 isMobileSize: isMobileSize,

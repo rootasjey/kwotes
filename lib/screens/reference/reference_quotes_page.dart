@@ -133,7 +133,7 @@ class _ReferenceQuotesPageState extends State<ReferenceQuotesPage>
               ),
               ReferenceQuotesPageBody(
                 accentColor: Constants.colors.getRandomFromPalette(
-                  withGoodContrast: true,
+                  onlyDarkerColors: true,
                 ),
                 isDark: isDark,
                 isMobileSize: isMobileSize,

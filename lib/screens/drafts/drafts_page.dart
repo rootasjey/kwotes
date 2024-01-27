@@ -381,7 +381,7 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
     if (userFirestore.value.id.isEmpty) {
       Utils.graphic.showSnackbar(
         context,
-        message: "signin_again".tr(),
+        message: "signin.again".tr(),
       );
     }
 

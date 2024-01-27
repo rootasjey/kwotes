@@ -14,7 +14,7 @@ class ThePurposePage extends StatelessWidget {
         Theme.of(context).textTheme.bodyMedium?.color;
 
     final Color accentColor = Constants.colors.getRandomFromPalette(
-      withGoodContrast: true,
+      onlyDarkerColors: true,
     );
 
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
@@ -53,7 +53,7 @@ class ThePurposePage extends StatelessWidget {
                           fontSize: 84.0,
                           fontWeight: FontWeight.w700,
                           color: Constants.colors.getRandomFromPalette(
-                            withGoodContrast: true,
+                            onlyDarkerColors: true,
                           ),
                         ),
                       ),
@@ -72,7 +72,7 @@ class ThePurposePage extends StatelessWidget {
                             text: " ${"purpose.content.3".tr()}.",
                             style: TextStyle(
                               color: Constants.colors.getRandomFromPalette(
-                                withGoodContrast: true,
+                                onlyDarkerColors: true,
                               ),
                               fontWeight: FontWeight.w800,
                             ),

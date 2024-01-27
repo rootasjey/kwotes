@@ -14,17 +14,19 @@ class SignupPageBody extends StatelessWidget {
     required this.usernameErrorMessage,
     required this.confirmPasswordController,
     required this.emailController,
+    this.hidePassword = true,
     this.isMobileSize = false,
     this.pageState = EnumPageState.idle,
-    this.randomColor = Colors.amber,
+    this.accentColor = Colors.amber,
     this.onSubmit,
     this.onUsernameChanged,
     this.onPasswordChanged,
     this.onNavigateToForgotPassword,
     this.onNavigateToSignin,
     this.onCancel,
-    this.onEmailChanged,
     this.onConfirmPasswordChanged,
+    this.onEmailChanged,
+    this.onHidePasswordChanged,
     this.confirmPasswordErrorMessage = "",
     this.confirmPasswordFocusNode,
     this.emailFocusNode,
@@ -32,12 +34,15 @@ class SignupPageBody extends StatelessWidget {
     this.usernameFocusNode,
   });
 
+  /// Hide password input if true.
+  final bool hidePassword;
+
   /// Adapt user interface to the screen's size.
   /// True if the screen is small (e.g. <= 700 px).
   final bool isMobileSize;
 
-  /// A random accent color.
-  final Color randomColor;
+  /// Accent color.
+  final Color accentColor;
 
   /// Page's state (e.g. idle, checking username, etc.).
   final EnumPageState pageState;
@@ -65,6 +70,9 @@ class SignupPageBody extends StatelessWidget {
 
   /// Callback fired when typed email changed.
   final void Function(String email)? onEmailChanged;
+
+  /// Callback called when the user wants to hide/show password.
+  final void Function(bool value)? onHidePasswordChanged;
 
   /// Callback fired to the forgot password page.
   final void Function()? onNavigateToForgotPassword;
@@ -125,14 +133,14 @@ class SignupPageBody extends StatelessWidget {
                 focusNode: usernameFocusNode,
                 onUsernameChanged: onUsernameChanged,
                 pageState: pageState,
-                randomColor: randomColor,
+                randomColor: accentColor,
                 usernameController: usernameController,
                 usernameErrorMessage: usernameErrorMessage,
               ),
               SignupPageEmailInput(
                 focusNode: emailFocusNode,
                 emailController: emailController,
-                randomColor: randomColor,
+                randomColor: accentColor,
                 onEmailChanged: onEmailChanged,
                 emailErrorMessage: emailErrorMessage,
               ),
@@ -141,12 +149,14 @@ class SignupPageBody extends StatelessWidget {
                 confirmPasswordErrorMessage: confirmPasswordErrorMessage,
                 confirmPasswordFocusNode: confirmPasswordFocusNode,
                 emailController: emailController,
+                hidePassword: hidePassword,
                 isMobileSize: isMobileSize,
                 onConfirmPasswordChanged: onConfirmPasswordChanged,
+                onHidePasswordChanged: onHidePasswordChanged,
                 onPasswordChanged: onPasswordChanged,
                 onSubmit: onSubmit,
                 passwordController: passwordController,
-                randomColor: randomColor,
+                randomColor: accentColor,
                 usernameController: usernameController,
               ),
               SignupPageFooter(
@@ -156,7 +166,7 @@ class SignupPageBody extends StatelessWidget {
                 confirmPasswordController: confirmPasswordController,
                 emailController: emailController,
                 passwordController: passwordController,
-                randomColor: randomColor,
+                randomColor: accentColor,
                 usernameController: usernameController,
               ),
             ],

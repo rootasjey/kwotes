@@ -5,6 +5,7 @@ import "package:flutter/material.dart";
 import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/forgot_password/forgot_password_page_header.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:loggy/loggy.dart";
@@ -34,6 +35,18 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> with UiLoggy {
   final TextEditingController _emailController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    _emailController.text = NavigationStateHelper.userEmailInput;
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final Size windowSize = MediaQuery.of(context).size;
     final double windowWidth = windowSize.width;
@@ -56,7 +69,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> with UiLoggy {
 
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final Color randomColor = Constants.colors.getRandomFromPalette(
-      withGoodContrast: true,
+      onlyDarkerColors: true,
     );
 
     return Scaffold(

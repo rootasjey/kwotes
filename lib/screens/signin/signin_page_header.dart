@@ -8,7 +8,7 @@ class SigninPageHeader extends StatelessWidget {
   const SigninPageHeader({
     super.key,
     this.isMobileSize = false,
-    this.randomColor = Colors.amber,
+    this.accentColor = Colors.amber,
     this.onNavigateToCreateAccount,
     this.margin = EdgeInsets.zero,
   });
@@ -17,8 +17,8 @@ class SigninPageHeader extends StatelessWidget {
   /// Back behavior is different if this is true.
   final bool isMobileSize;
 
-  /// A random accent color.
-  final Color randomColor;
+  /// Accent color.
+  final Color accentColor;
 
   /// Spacing around this widget.
   final EdgeInsets margin;
@@ -37,12 +37,12 @@ class SigninPageHeader extends StatelessWidget {
               padding: const EdgeInsets.only(top: 12.0, bottom: 8.0),
               child: Icon(
                 TablerIcons.air_balloon,
-                color: randomColor,
+                color: accentColor,
                 size: 42.0,
               ),
             ),
             Text(
-              "signin".tr(),
+              "signin.name".tr(),
               style: Utils.calligraphy.body(
                 textStyle: TextStyle(
                   fontSize: isMobileSize ? 24.0 : 54.0,
@@ -55,7 +55,7 @@ class SigninPageHeader extends StatelessWidget {
               child: TextButton(
                 onPressed: onNavigateToCreateAccount,
                 style: TextButton.styleFrom(
-                  backgroundColor: randomColor.withOpacity(0.1),
+                  backgroundColor: accentColor.withOpacity(0.1),
                 ),
                 child: Opacity(
                   opacity: 0.6,

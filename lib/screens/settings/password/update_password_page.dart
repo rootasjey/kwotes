@@ -4,6 +4,7 @@ import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
+import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/screens/settings/password/update_password_page_body.dart";
@@ -70,6 +71,9 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> with UiLoggy {
   @override
   Widget build(BuildContext context) {
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    final Color accentColor = Constants.colors.getRandomFromPalette(
+      onlyDarkerColors: true,
+    );
 
     return Scaffold(
       body: BasicShortcuts(
@@ -78,6 +82,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> with UiLoggy {
         child: CustomScrollView(
           slivers: [
             UpdatePasswordPageHeader(
+              accentColor: accentColor,
               isMobileSize: isMobileSize,
               onTapLeftPartHeader: onTapLeftPartHeader,
               passwordChecks: _passwordChecks,

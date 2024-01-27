@@ -50,16 +50,16 @@ class CreateAccountResponse {
     };
   }
 
-  factory CreateAccountResponse.fromMap(Map<String, dynamic> map) {
+  factory CreateAccountResponse.fromMap(Map<String, dynamic>? map) {
+    if (map == null) {
+      return CreateAccountResponse.empty();
+    }
+
     return CreateAccountResponse(
-      success: map["success"] as bool,
-      message: map["message"] as String,
-      error: map["error"] != null
-          ? CloudFunError.fromMap(map["error"] as Map<String, dynamic>)
-          : null,
-      user: map["user"] != null
-          ? UserFirestore.fromMap(map["user"] as Map<String, dynamic>)
-          : null,
+      success: map["success"] ?? false,
+      message: map["message"] ?? "",
+      error: CloudFunError.fromMap(map["error"]),
+      user: UserFirestore.fromMap(map["user"]),
     );
   }
 

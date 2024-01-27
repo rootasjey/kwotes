@@ -66,7 +66,7 @@ class _ShowcaseTextState extends State<ShowcaseText> {
   /// Initializes properties.
   void initProps() {
     _accentColor = Constants.colors.getRandomFromPalette(
-      withGoodContrast: !widget.isDark,
+      onlyDarkerColors: !widget.isDark,
     );
 
     setState(() {

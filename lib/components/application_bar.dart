@@ -302,7 +302,7 @@ class ApplicationBar extends StatelessWidget {
 
     return IconButton(
       onPressed: () => context.beamToNamed(SigninLocation.route),
-      tooltip: "signin".tr(),
+      tooltip: "signin.name".tr(),
       color: foregroundColor,
       icon: const Icon(TablerIcons.user),
     );

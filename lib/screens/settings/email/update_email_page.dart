@@ -55,7 +55,7 @@ class _UpdateEmailPageState extends State<UpdateEmailPage> with UiLoggy {
   void initState() {
     super.initState();
     _accentColor = Constants.colors.getRandomFromPalette(
-      withGoodContrast: true,
+      onlyDarkerColors: true,
     );
   }
 

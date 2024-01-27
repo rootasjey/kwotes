@@ -1,21 +1,23 @@
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
-import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
-import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 
 class UpdateUsernamePageHeader extends StatelessWidget {
   const UpdateUsernamePageHeader({
     super.key,
     this.isMobileSize = false,
+    this.randomColor = Colors.amber,
     this.onTapLeftPartHeader,
   });
 
   /// Adapt the user interface to narrow screen's size if true.
   final bool isMobileSize;
+
+  /// Random accent color.
+  final Color randomColor;
 
   /// Callback fired when left part header is tapped.
   final void Function()? onTapLeftPartHeader;
@@ -37,50 +39,51 @@ class UpdateUsernamePageHeader extends StatelessWidget {
               ? CrossAxisAlignment.start
               : CrossAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: ActionChip(
-                onPressed: context.beamBack,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24.0),
-                ),
-                label: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(TablerIcons.arrow_left),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text("back".tr()),
-                    ),
-                  ],
-                ),
+            ActionChip(
+              onPressed: context.beamBack,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24.0),
+              ),
+              label: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(TablerIcons.arrow_left),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Text("back".tr()),
+                  ),
+                ],
               ),
             ),
-            Text.rich(
-              TextSpan(
-                text: "${"settings.name".tr()}: ",
-                children: [
-                  TextSpan(
-                    text: isMobileSize
-                        ? "\n${"username.name".tr()}"
-                        : "username.name".tr(),
+            Padding(
+              padding: const EdgeInsets.only(top: 32.0),
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: onTapLeftPartHeader,
+                  child: Text(
+                    "settings.name".tr(),
+                    textAlign: isMobileSize ? TextAlign.left : TextAlign.center,
                     style: Utils.calligraphy.body(
                       textStyle: TextStyle(
-                        color: Constants.colors.getRandomFromPalette(
-                          withGoodContrast: true,
-                        ),
+                        fontSize: 24.0,
                         fontWeight: fontWeight,
+                        height: 1.0,
+                        color: foregroundColor?.withOpacity(0.6),
                       ),
                     ),
                   ),
-                ],
-                recognizer: TapGestureRecognizer()..onTap = onTapLeftPartHeader,
+                ),
               ),
+            ),
+            Text(
+              "username.name".tr(),
+              textAlign: isMobileSize ? TextAlign.left : TextAlign.center,
               style: Utils.calligraphy.body(
                 textStyle: TextStyle(
-                  fontSize: isMobileSize ? 24.0 : 54.0,
+                  color: randomColor,
                   fontWeight: fontWeight,
-                  color: foregroundColor?.withOpacity(0.6),
+                  fontSize: 54.0,
                 ),
               ),
             ),

@@ -8,7 +8,7 @@ class SignupPageHeader extends StatelessWidget {
   const SignupPageHeader({
     super.key,
     this.isMobileSize = false,
-    this.randomColor = Colors.amber,
+    this.accentColor = Colors.amber,
     this.onNavigateToSignin,
   });
 
@@ -16,8 +16,8 @@ class SignupPageHeader extends StatelessWidget {
   /// Back behavior is different if this is true.
   final bool isMobileSize;
 
-  /// A random accent color.
-  final Color randomColor;
+  /// Accent color.
+  final Color accentColor;
 
   /// Callback fired to navigate to signin page.
   final void Function()? onNavigateToSignin;
@@ -32,7 +32,7 @@ class SignupPageHeader extends StatelessWidget {
             child: Icon(
               TablerIcons.hammer,
               size: 42.0,
-              color: randomColor,
+              color: accentColor,
             ),
           ),
           Text(
@@ -49,7 +49,7 @@ class SignupPageHeader extends StatelessWidget {
             child: TextButton(
                 onPressed: onNavigateToSignin,
                 style: TextButton.styleFrom(
-                  backgroundColor: randomColor.withOpacity(0.3),
+                  backgroundColor: accentColor.withOpacity(0.3),
                   // foregroundColor: Colors.black,
                 ),
                 child: Opacity(

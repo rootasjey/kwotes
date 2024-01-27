@@ -7,15 +7,19 @@ class SigninPageEmailInput extends StatelessWidget {
   const SigninPageEmailInput({
     super.key,
     required this.emailController,
-    this.randomColor = Colors.amber,
+    this.accentColor = Colors.amber,
     this.focusNode,
+    this.onEmailChanged,
   });
 
-  /// Random accent color.
-  final Color randomColor;
+  /// Accent color.
+  final Color accentColor;
 
   /// Used to focus the email input.
   final FocusNode? focusNode;
+
+  /// Callback fired when typed email changed.
+  final void Function(String email)? onEmailChanged;
 
   /// Input controller for the name/email.
   final TextEditingController emailController;
@@ -36,7 +40,7 @@ class SigninPageEmailInput extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                "username.name".tr(),
+                "email.name".tr(),
                 style: Utils.calligraphy.body(
                   textStyle: TextStyle(
                     fontSize: 16.0,
@@ -55,6 +59,7 @@ class SigninPageEmailInput extends StatelessWidget {
           child: TextField(
             autofocus: false,
             focusNode: focusNode,
+            onChanged: onEmailChanged,
             controller: emailController,
             textInputAction: TextInputAction.next,
             keyboardType: TextInputType.emailAddress,
@@ -62,7 +67,7 @@ class SigninPageEmailInput extends StatelessWidget {
               hintText: "steven@universe.galaxy",
               border: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: randomColor,
+                  color: accentColor,
                   width: 2.0,
                 ),
               ),
@@ -74,7 +79,7 @@ class SigninPageEmailInput extends StatelessWidget {
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: randomColor,
+                  color: accentColor,
                   width: 4.0,
                 ),
               ),

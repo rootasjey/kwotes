@@ -477,7 +477,7 @@ class _EditAuthorPageState extends State<EditAuthorPage> with UiLoggy {
     if (userFirestore.id.isEmpty) {
       Utils.graphic.showSnackbar(
         context,
-        message: "signin_again".tr(),
+        message: "signin.again".tr(),
       );
       return;
     }

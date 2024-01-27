@@ -1,6 +1,8 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/buttons/sufffix_button.dart";
 import "package:kwotes/globals/utils.dart";
 
 class SigninPagePasswordInput extends StatelessWidget {
@@ -8,16 +10,28 @@ class SigninPagePasswordInput extends StatelessWidget {
     super.key,
     required this.nameController,
     required this.passwordController,
-    this.randomColor = Colors.amber,
-    this.onSubmit,
+    this.hidePassword = true,
+    this.accentColor = Colors.amber,
     this.focusNode,
+    this.onHidePasswordChanged,
+    this.onPasswordChanged,
+    this.onSubmit,
   });
 
-  /// A random accent color.
-  final Color randomColor;
+  /// Hide password input if true.
+  final bool hidePassword;
+
+  /// Accent color.
+  final Color accentColor;
 
   /// Used to focus the password input.
   final FocusNode? focusNode;
+
+  /// Callback called when the user wants to hide/show password.
+  final void Function(bool value)? onHidePasswordChanged;
+
+  /// Callback fired when typed password changed.
+  final void Function(String password)? onPasswordChanged;
 
   /// Callback fired when the user validate their information and want to signin.
   final void Function(String name, String password)? onSubmit;
@@ -59,8 +73,9 @@ class SigninPagePasswordInput extends StatelessWidget {
         ),
         TextField(
           autofocus: false,
-          obscureText: true,
+          obscureText: hidePassword,
           focusNode: focusNode,
+          onChanged: onPasswordChanged,
           controller: passwordController,
           textInputAction: TextInputAction.go,
           keyboardType: TextInputType.visiblePassword,
@@ -70,9 +85,15 @@ class SigninPagePasswordInput extends StatelessWidget {
           ),
           decoration: InputDecoration(
             hintText: "•••••••••••",
+            suffixIcon: SuffixButton(
+              icon: Icon(hidePassword ? TablerIcons.eye : TablerIcons.eye_off),
+              tooltipString:
+                  hidePassword ? "password.show".tr() : "password.hide".tr(),
+              onPressed: () => onHidePasswordChanged?.call(!hidePassword),
+            ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                color: randomColor,
+                color: accentColor,
                 width: 4.0,
               ),
             ),

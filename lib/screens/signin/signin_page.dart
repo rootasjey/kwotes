@@ -10,6 +10,7 @@ import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/forgot_password_location.dart";
 import "package:kwotes/router/locations/settings_location.dart";
+import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/signin/signin_page_body.dart";
 import "package:kwotes/screens/signin/signin_page_header.dart";
 import "package:kwotes/types/enums/enum_app_bar_mode.dart";
@@ -28,6 +29,11 @@ class SigninPage extends StatefulWidget {
 }
 
 class _SigninPageState extends State<SigninPage> with UiLoggy {
+  /// Used to hide/show password.
+  bool _hidePassword = true;
+
+  Color _accentColor = Colors.amber;
+
   /// Page's current state (e.g. loading, idle, etc).
   EnumPageState _pageState = EnumPageState.idle;
 
@@ -44,6 +50,18 @@ class _SigninPageState extends State<SigninPage> with UiLoggy {
   final FocusNode _passwordFocusNode = FocusNode();
 
   @override
+  void initState() {
+    super.initState();
+
+    _accentColor = Constants.colors.getRandomFromPalette(
+      onlyDarkerColors: true,
+    );
+
+    _emailController.text = NavigationStateHelper.userEmailInput;
+    _passwordController.text = NavigationStateHelper.userPasswordInput;
+  }
+
+  @override
   void dispose() {
     _passwordController.dispose();
     _emailController.dispose();
@@ -56,11 +74,9 @@ class _SigninPageState extends State<SigninPage> with UiLoggy {
   Widget build(BuildContext context) {
     if (_pageState == EnumPageState.loading) {
       return LoadingView.scaffold(
-        message: "signin".tr(),
+        message: "signin.in".tr(),
       );
     }
-
-    final Color randomColor = Constants.colors.secondary;
 
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
@@ -74,7 +90,7 @@ class _SigninPageState extends State<SigninPage> with UiLoggy {
             title: const SizedBox.shrink(),
             rightChildren: [
               CircleButton(
-                onTap: goToSettings,
+                onTap: navigateToSettings,
                 backgroundColor: Colors.transparent,
                 icon: const Icon(TablerIcons.settings),
               ),
@@ -82,33 +98,38 @@ class _SigninPageState extends State<SigninPage> with UiLoggy {
           ),
           SigninPageHeader(
             isMobileSize: isMobileSize,
-            onNavigateToCreateAccount: goToSignupPage,
-            randomColor: randomColor,
+            onNavigateToCreateAccount: navigateToSignupPage,
+            accentColor: _accentColor,
             margin: const EdgeInsets.only(top: 42.0),
           ),
           SigninPageBody(
+            accentColor: _accentColor,
             isDark: isDark,
-            isMobileSize: isMobileSize,
             emailFocusNode: _emailFocusNode,
-            passwordFocusNode: _passwordFocusNode,
             emailController: _emailController,
+            hidePassword: _hidePassword,
+            isMobileSize: isMobileSize,
             passwordController: _passwordController,
-            onNavigateToForgotPassword: goToForgotPasswordPage,
-            onNavigateToCreateAccount: goToSignupPage,
+            onEmailChanged: onEmailChanged,
+            onHidePasswordChanged: onHidePasswordChanged,
+            onPasswordChanged: onPasswordChanged,
+            onNavigateToForgotPassword: navigateToForgotPasswordPage,
+            onNavigateToCreateAccount: navigateToSignupPage,
             onCancel: onCancel,
-            onSubmit: (String name, String password) => trySignin(
+            onSubmit: (String name, String password) => connectToAccount(
               name: name,
               password: password,
             ),
-            randomColor: randomColor,
+            passwordFocusNode: _passwordFocusNode,
           ),
         ],
       ),
     );
   }
 
-  /// Attempt to sign in.
-  void trySignin({required String name, required String password}) async {
+  /// Attempt to sign in user.
+  void connectToAccount(
+      {required String name, required String password}) async {
     if (!inputValuesOk(name: name, password: password)) {
       return;
     }
@@ -144,8 +165,43 @@ class _SigninPageState extends State<SigninPage> with UiLoggy {
     }
   }
 
+  /// Return true if all inputs (email, password) are in the correct format.
+  bool inputValuesOk({required String name, required String password}) {
+    if (name.isEmpty) {
+      Utils.graphic.showSnackbar(
+        context,
+        message: "email.error.empty_forbidden".tr(),
+      );
+
+      _emailFocusNode.requestFocus();
+      return false;
+    }
+
+    if (password.isEmpty) {
+      Utils.graphic.showSnackbar(
+        context,
+        message: "password.error.empty_forbidden".tr(),
+      );
+
+      _passwordFocusNode.requestFocus();
+      return false;
+    }
+
+    if (!UserActions.checkEmailFormat(name)) {
+      Utils.graphic.showSnackbar(
+        context,
+        message: "email.error.not_valid".tr(),
+      );
+
+      _emailFocusNode.requestFocus();
+      return false;
+    }
+
+    return true;
+  }
+
   /// Navigate to the forgot password page.
-  void goToForgotPasswordPage() {
+  void navigateToForgotPasswordPage() {
     final BeamerDelegate beamer = Beamer.of(context);
     final BeamState beamState = beamer.currentBeamLocation.state as BeamState;
     final List<String> pathSegments = beamState.pathPatternSegments;
@@ -160,7 +216,7 @@ class _SigninPageState extends State<SigninPage> with UiLoggy {
   }
 
   /// Navigate to the create account page.
-  void goToSignupPage() {
+  void navigateToSignupPage() {
     final BeamerDelegate beamer = Beamer.of(context);
     final BeamState beamState = beamer.currentBeamLocation.state as BeamState;
     final List<String> pathSegments = beamState.pathPatternSegments;
@@ -174,31 +230,19 @@ class _SigninPageState extends State<SigninPage> with UiLoggy {
     beamer.root.beamToNamed(SignupLocation.route);
   }
 
-  /// Return true if all inputs (email, password) are in the correct format.
-  bool inputValuesOk({required String name, required String password}) {
-    if (!UserActions.checkEmailFormat(name)) {
-      loggy.error("email.error.empty".tr());
-      Utils.graphic.showSnackbar(
-        context,
-        message: "email.error.empty".tr(),
-      );
+  /// Navigate to the settings page.
+  void navigateToSettings() {
+    final BeamerDelegate beamer = Beamer.of(context);
+    final BeamState beamState = beamer.currentBeamLocation.state as BeamState;
+    final List<String> pathSegments = beamState.pathPatternSegments;
+    final String prefix = pathSegments.first;
 
-      _emailFocusNode.requestFocus();
-      return false;
+    if (prefix == "d") {
+      beamer.beamToNamed(DashboardContentLocation.settingsRoute);
+      return;
     }
 
-    if (password.isEmpty) {
-      loggy.error("password.error.empty_forbidden".tr());
-      Utils.graphic.showSnackbar(
-        context,
-        message: "password.error.empty_forbidden".tr(),
-      );
-
-      _passwordFocusNode.requestFocus();
-      return false;
-    }
-
-    return true;
+    Beamer.of(context, root: true).beamToNamed(SettingsLocation.route);
   }
 
   /// Navigate to the previous page.
@@ -211,18 +255,18 @@ class _SigninPageState extends State<SigninPage> with UiLoggy {
     Beamer.of(context, root: true).beamToNamed(HomeLocation.route);
   }
 
-  /// Navigate to the settings page.
-  void goToSettings() {
-    final BeamerDelegate beamer = Beamer.of(context);
-    final BeamState beamState = beamer.currentBeamLocation.state as BeamState;
-    final List<String> pathSegments = beamState.pathPatternSegments;
-    final String prefix = pathSegments.first;
+  /// Show or hide password input value.
+  void onHidePasswordChanged(bool value) {
+    setState(() => _hidePassword = value);
+  }
 
-    if (prefix == "d") {
-      beamer.beamToNamed(DashboardContentLocation.settingsRoute);
-      return;
-    }
+  /// React to email changes
+  void onEmailChanged(String email) {
+    NavigationStateHelper.userEmailInput = email;
+  }
 
-    Beamer.of(context, root: true).beamToNamed(SettingsLocation.route);
+  /// React to password changes
+  void onPasswordChanged(String password) {
+    NavigationStateHelper.userPasswordInput = password;
   }
 }

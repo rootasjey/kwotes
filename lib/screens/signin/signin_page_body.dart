@@ -10,18 +10,23 @@ class SigninPageBody extends StatelessWidget {
     super.key,
     required this.emailController,
     required this.passwordController,
+    this.hidePassword = true,
     this.isDark = false,
     this.isMobileSize = false,
-    this.randomColor = Colors.amber,
+    this.accentColor = Colors.amber,
     this.emailFocusNode,
     this.passwordFocusNode,
     this.onCancel,
-    this.onNameChanged,
+    this.onEmailChanged,
+    this.onHidePasswordChanged,
     this.onNavigateToCreateAccount,
     this.onNavigateToForgotPassword,
     this.onPasswordChanged,
     this.onSubmit,
   });
+
+  /// Hide password input if true.
+  final bool hidePassword;
 
   /// Whether the page is in dark mode.
   final bool isDark;
@@ -29,8 +34,8 @@ class SigninPageBody extends StatelessWidget {
   /// Adapt user interface to mobile size if true.
   final bool isMobileSize;
 
-  /// Random accent color.
-  final Color randomColor;
+  /// Accent color.
+  final Color accentColor;
 
   /// Used to focus email input (e.g. after error).
   final FocusNode? emailFocusNode;
@@ -41,8 +46,11 @@ class SigninPageBody extends StatelessWidget {
   /// Callback fired to go back or exit this page.
   final void Function()? onCancel;
 
-  /// Callback fired when typed name changed.
-  final void Function(String name)? onNameChanged;
+  /// Callback fired when typed email changed.
+  final void Function(String name)? onEmailChanged;
+
+  /// Callback called when the user wants to hide/show password.
+  final void Function(bool value)? onHidePasswordChanged;
 
   /// Callback fired to the create account page.
   final void Function()? onNavigateToCreateAccount;
@@ -77,30 +85,34 @@ class SigninPageBody extends StatelessWidget {
           child: Column(
             children: <Widget>[
               SigninPageEmailInput(
+                accentColor: accentColor,
                 focusNode: emailFocusNode,
                 emailController: emailController,
-                randomColor: randomColor,
+                onEmailChanged: onEmailChanged,
               ),
               SigninPagePasswordInput(
+                accentColor: accentColor,
                 focusNode: passwordFocusNode,
+                hidePassword: hidePassword,
                 nameController: emailController,
+                onHidePasswordChanged: onHidePasswordChanged,
+                onPasswordChanged: onPasswordChanged,
                 onSubmit: onSubmit,
                 passwordController: passwordController,
-                randomColor: randomColor,
               ),
               ForgotPasswordButton(
+                accentColor: accentColor,
                 isMobileSize: isMobileSize,
                 onNavigateToForgotPassword: onNavigateToForgotPassword,
-                randomColor: randomColor,
               ),
               SigninPageFooter(
+                accentColor: accentColor,
                 isDark: isDark,
                 nameController: emailController,
                 onCancel: onCancel,
                 onSubmit: onSubmit,
                 passwordController: passwordController,
                 showBackButton: !isMobileSize,
-                randomColor: randomColor,
               ),
             ],
           ),

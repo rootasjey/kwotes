@@ -36,8 +36,8 @@ class ColorPalette {
     // const Color.fromRGBO(182, 227, 136, 1),
   ];
 
-  /// List of foreground colors based on topics (with good contrast).
-  final List<Color> contrastPalette = [];
+  /// List of darker foreground colors based on topics.
+  final List<Color> darkerForegroundPalette = [];
 
   final List<Color> pastelPalette = [
     Colors.blue.shade50,
@@ -62,16 +62,19 @@ class ColorPalette {
     }
   }
 
+  /// Returns a random color from the pastel palette.
   Color getRandomPastel() {
     return pastelPalette.elementAt(Random().nextInt(pastelPalette.length));
   }
 
-  Color getRandomFromPalette({bool withGoodContrast = false}) {
+  /// Returns a random color from the foreground palette.
+  Color getRandomFromPalette({bool onlyDarkerColors = false}) {
     final Color defaultColor = secondary;
 
-    if (withGoodContrast) {
-      return contrastPalette.isNotEmpty
-          ? contrastPalette.elementAt(Random().nextInt(contrastPalette.length))
+    if (onlyDarkerColors) {
+      return darkerForegroundPalette.isNotEmpty
+          ? darkerForegroundPalette
+              .elementAt(Random().nextInt(darkerForegroundPalette.length))
           : defaultColor;
     }
 
@@ -103,6 +106,7 @@ class ColorPalette {
 
   List<Topic> topics = [];
 
+  /// Returns topic color from topic name.
   Color getColorFromTopicName(
     BuildContext context, {
     required String topicName,
@@ -123,6 +127,7 @@ class ColorPalette {
     return topic.color;
   }
 
+  /// Returns a random topic.
   Topic getRandomTopic() {
     return topics.elementAt(Random().nextInt(topics.length));
   }
@@ -155,11 +160,11 @@ class ColorPalette {
     }
   }
 
-  /// Fill foreground palette contrast from topics.
-  void fillContrastPalette() {
+  /// Fill foreground palette with darker colors from topics.
+  void fillDarkerPalette() {
     for (final Topic topic in topics) {
-      if (topic.color.computeLuminance() > 0.7) {
-        contrastPalette.add(topic.color);
+      if (topic.color.computeLuminance() < 0.5) {
+        darkerForegroundPalette.add(topic.color);
       }
     }
   }

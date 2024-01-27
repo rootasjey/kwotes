@@ -108,7 +108,7 @@ class _AppState extends State<App> {
     ]);
 
     Constants.colors.fillForegroundPalette();
-    Constants.colors.fillContrastPalette();
+    Constants.colors.fillDarkerPalette();
     Constants.colors.foregroundPalette.shuffle();
 
     final String browserUrl = NavigationStateHelper.initialBrowserUrl;

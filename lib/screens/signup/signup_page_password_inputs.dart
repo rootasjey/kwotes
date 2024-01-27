@@ -1,6 +1,8 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/buttons/sufffix_button.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 
@@ -12,13 +14,18 @@ class SignupPagePasswordInputs extends StatelessWidget {
     required this.passwordController,
     required this.usernameController,
     this.isMobileSize = false,
+    this.hidePassword = true,
     this.randomColor = Colors.amber,
     this.onConfirmPasswordChanged,
+    this.onHidePasswordChanged,
     this.onPasswordChanged,
     this.onSubmit,
     this.confirmPasswordErrorMessage = "",
     this.confirmPasswordFocusNode,
   });
+
+  /// Hide password input if true.
+  final bool hidePassword;
 
   /// Adapt user interface to the screen's size.
   /// True if the screen is small (e.g. <= 700 px).
@@ -29,6 +36,9 @@ class SignupPagePasswordInputs extends StatelessWidget {
 
   /// Used to focus confirm password input.
   final FocusNode? confirmPasswordFocusNode;
+
+  /// Callback called when the user wants to hide/show password.
+  final void Function(bool value)? onHidePasswordChanged;
 
   /// Callback fired when typed confirm password changed.
   final void Function(
@@ -100,12 +110,22 @@ class SignupPagePasswordInputs extends StatelessWidget {
                       child: TextField(
                         autofocus: false,
                         controller: passwordController,
-                        obscureText: true,
+                        obscureText: hidePassword,
                         textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.visiblePassword,
                         onChanged: onPasswordChanged,
                         decoration: InputDecoration(
                           hintText: "•••••••••••",
+                          suffixIcon: SuffixButton(
+                            icon: Icon(hidePassword
+                                ? TablerIcons.eye
+                                : TablerIcons.eye_off),
+                            tooltipString: hidePassword
+                                ? "password.show".tr()
+                                : "password.hide".tr(),
+                            onPressed: () =>
+                                onHidePasswordChanged?.call(!hidePassword),
+                          ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: randomColor,
@@ -146,7 +166,7 @@ class SignupPagePasswordInputs extends StatelessWidget {
                         autofocus: false,
                         controller: confirmPasswordController,
                         focusNode: confirmPasswordFocusNode,
-                        obscureText: true,
+                        obscureText: hidePassword,
                         textInputAction: TextInputAction.go,
                         keyboardType: TextInputType.visiblePassword,
                         onSubmitted: (String confirmPassword) {
@@ -165,6 +185,16 @@ class SignupPagePasswordInputs extends StatelessWidget {
                         },
                         decoration: InputDecoration(
                           hintText: "•••••••••••",
+                          suffixIcon: SuffixButton(
+                            icon: Icon(hidePassword
+                                ? TablerIcons.eye
+                                : TablerIcons.eye_off),
+                            tooltipString: hidePassword
+                                ? "password.show".tr()
+                                : "password.hide".tr(),
+                            onPressed: () =>
+                                onHidePasswordChanged?.call(!hidePassword),
+                          ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: randomColor,
@@ -186,8 +216,9 @@ class SignupPagePasswordInputs extends StatelessWidget {
                       ),
                     ),
                     if (confirmPasswordErrorMessage.isNotEmpty)
-                      Padding(
+                      Container(
                         padding: const EdgeInsets.only(top: 8.0),
+                        width: isMobileSize ? null : inputWidth,
                         child: Text(
                           confirmPasswordErrorMessage,
                           style: TextStyle(

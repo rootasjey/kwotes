@@ -79,7 +79,7 @@ class LatestAddedReferences extends StatelessWidget {
                           ..onTap = () => onTapReference?.call(reference),
                         style: TextStyle(
                           color: Constants.colors.getRandomFromPalette(
-                            withGoodContrast: !isDark,
+                            onlyDarkerColors: !isDark,
                           ),
                         ),
                       ),

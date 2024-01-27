@@ -1,6 +1,5 @@
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
-import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
@@ -39,43 +38,48 @@ class UpdateEmailPageHeader extends StatelessWidget {
               ? CrossAxisAlignment.start
               : CrossAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: ActionChip(
-                onPressed: context.beamBack,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24.0),
-                ),
-                label: Row(mainAxisSize: MainAxisSize.min, children: [
-                  const Icon(TablerIcons.arrow_left),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Text("back".tr()),
-                  ),
-                ]),
+            ActionChip(
+              onPressed: context.beamBack,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24.0),
               ),
+              label: Row(mainAxisSize: MainAxisSize.min, children: [
+                const Icon(TablerIcons.arrow_left),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text("back".tr()),
+                ),
+              ]),
             ),
-            Text.rich(
-              TextSpan(
-                text: "${"settings.name".tr()}: ",
-                children: [
-                  TextSpan(
-                    text: "email.name".tr(),
+            Padding(
+              padding: const EdgeInsets.only(top: 32.0),
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: onTapLeftPartHeader,
+                  child: Text(
+                    "settings.name".tr(),
+                    textAlign: isMobileSize ? TextAlign.left : TextAlign.center,
                     style: Utils.calligraphy.body(
                       textStyle: TextStyle(
-                        color: accentColor,
+                        fontSize: 24.0,
                         fontWeight: fontWeight,
+                        height: 1.0,
+                        color: foregroundColor?.withOpacity(0.6),
                       ),
                     ),
                   ),
-                ],
-                recognizer: TapGestureRecognizer()..onTap = onTapLeftPartHeader,
+                ),
               ),
+            ),
+            Text(
+              "email.name".tr(),
+              textAlign: isMobileSize ? TextAlign.left : TextAlign.center,
               style: Utils.calligraphy.body(
                 textStyle: TextStyle(
-                  fontSize: isMobileSize ? 24.0 : 54.0,
+                  color: accentColor,
                   fontWeight: fontWeight,
-                  color: foregroundColor?.withOpacity(0.6),
+                  fontSize: 54.0,
                 ),
               ),
             ),

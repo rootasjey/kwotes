@@ -14,27 +14,40 @@ import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/locations/signin_location.dart";
+import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/signup/signup_page_body.dart";
 import "package:kwotes/screens/signup/signup_page_header.dart";
+import "package:kwotes/types/cloud_fun_error.dart";
 import "package:kwotes/types/create_account_response.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/intents/escape_intent.dart";
 import "package:loggy/loggy.dart";
 
 class SignupPage extends StatefulWidget {
-  final void Function(bool isAuthenticated)? onSignupResult;
+  const SignupPage({
+    Key? key,
+    this.onSignupResult,
+  }) : super(key: key);
 
-  const SignupPage({Key? key, this.onSignupResult}) : super(key: key);
+  /// Called when the user signs up.
+  final void Function(bool isAuthenticated)? onSignupResult;
 
   @override
   createState() => _SignupPageState();
 }
 
 class _SignupPageState extends State<SignupPage> with UiLoggy {
-  EnumPageState _pageState = EnumPageState.idle;
+  /// Used to hide/show password.
+  bool _hidePassword = true;
+
+  /// A random accent color.
+  Color _accentColor = Colors.amber;
 
   /// Time to wait before checking an input value against the backend.
   final Duration _debounceDuration = const Duration(seconds: 1);
+
+  /// Page's state (e.g. idle, checking username, etc.).
+  EnumPageState _pageState = EnumPageState.idle;
 
   /// Used to focus confirm password input.
   final FocusNode _confirmPasswordFocusNode = FocusNode();
@@ -77,6 +90,16 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
       TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    _emailController.text = NavigationStateHelper.userEmailInput;
+    _passwordController.text = NavigationStateHelper.userPasswordInput;
+    _accentColor = Constants.colors.getRandomFromPalette(
+      onlyDarkerColors: true,
+    );
+  }
+
+  @override
   void dispose() {
     super.dispose();
     _emailFocusNode.dispose();
@@ -99,9 +122,6 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
     }
 
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
-    final Color randomColor = Constants.colors.getRandomFromPalette(
-      withGoodContrast: true,
-    );
 
     const shortcuts = <SingleActivator, Intent>{
       SingleActivator(LogicalKeyboardKey.escape): EscapeIntent(),
@@ -126,8 +146,8 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
               ),
               SignupPageHeader(
                 isMobileSize: isMobileSize,
-                onNavigateToSignin: goToSigninPage,
-                randomColor: randomColor,
+                onNavigateToSignin: navigateToSigninPage,
+                accentColor: _accentColor,
               ),
               SignupPageBody(
                 confirmPasswordController: _confirmPasswordController,
@@ -136,16 +156,19 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
                 emailController: _emailController,
                 emailErrorMessage: _emailErrorMessage,
                 emailFocusNode: _emailFocusNode,
+                hidePassword: _hidePassword,
                 isMobileSize: isMobileSize,
                 pageState: _pageState,
                 passwordController: _passwordController,
                 onCancel: onCancel,
                 onEmailChanged: onEmailChanged,
+                onHidePasswordChanged: onHidePasswordChanged,
+                onPasswordChanged: onPasswordChanged,
                 onConfirmPasswordChanged: onConfirmPasswordChanged,
-                onNavigateToSignin: goToSigninPage,
-                onSubmit: tryCreateAccount,
+                onNavigateToSignin: navigateToSigninPage,
+                onSubmit: createAccount,
                 onUsernameChanged: onUsernameChanged,
-                randomColor: randomColor,
+                accentColor: _accentColor,
                 usernameController: _usernameController,
                 usernameErrorMessage: _usernameErrorMessage,
                 usernameFocusNode: _usernameFocusNode,
@@ -165,13 +188,9 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
     required String password,
     required String confirmPassword,
   }) async {
-    final bool passwordOk = checkConfirmPassword(
-      password,
-      confirmPassword,
-    );
+    final bool passwordOk = checkConfirmPassword(password, confirmPassword);
     final bool emailOk = await checkEmail(email);
     final bool usernameOk = await checkUsername(username);
-
     return usernameOk && emailOk && passwordOk;
   }
 
@@ -191,17 +210,14 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
 
     if (confirmPassword != password) {
       setState(() {
-        _confirmPasswordErrorMessage = "password_error.mismatch".tr();
+        _confirmPasswordErrorMessage = "password.error.nomatch".tr();
       });
 
       _confirmPasswordFocusNode.requestFocus();
       return false;
     }
 
-    setState(() {
-      _confirmPasswordErrorMessage = "";
-    });
-
+    setState(() => _confirmPasswordErrorMessage = "");
     return true;
   }
 
@@ -211,10 +227,7 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
     email = email.trim();
 
     if (email.isEmpty) {
-      setState(() {
-        _emailErrorMessage = "email.error.empty".tr();
-      });
-
+      setState(() => _emailErrorMessage = "email.error.empty".tr());
       _emailFocusNode.requestFocus();
       return false;
     }
@@ -222,34 +235,20 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
     final bool isWellFormatted = UserActions.checkEmailFormat(email);
 
     if (!isWellFormatted) {
-      setState(() {
-        _pageState = EnumPageState.idle;
-        _emailErrorMessage = "email.error.not_valid".tr();
-      });
-
+      setState(() => _emailErrorMessage = "email.error.not_valid".tr());
       _emailFocusNode.requestFocus();
       return false;
     }
-
-    setState(() => _pageState = EnumPageState.checkingEmail);
 
     final bool isAvailable = await UserActions.checkEmailAvailability(email);
 
     if (!isAvailable) {
-      setState(() {
-        _pageState = EnumPageState.idle;
-        _emailErrorMessage = "input.error.username_not_available".tr();
-      });
-
+      setState(() => _emailErrorMessage = "email.error.not_available".tr());
       _emailFocusNode.requestFocus();
       return false;
     }
 
-    setState(() {
-      _pageState = EnumPageState.idle;
-      _emailErrorMessage = "";
-    });
-
+    setState(() => _emailErrorMessage = "");
     return true;
   }
 
@@ -260,10 +259,7 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
     username = username.trim();
 
     if (username.isEmpty) {
-      setState(() {
-        _usernameErrorMessage = "username.error.empty".tr();
-      });
-
+      setState(() => _usernameErrorMessage = "username.error.empty".tr());
       _usernameFocusNode.requestFocus();
       return false;
     }
@@ -278,15 +274,10 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
     }
 
     if (!UserActions.checkUsernameFormat(username)) {
-      setState(() {
-        _usernameErrorMessage = "username_error.invalid".tr();
-      });
-
+      setState(() => _usernameErrorMessage = "username_error.invalid".tr());
       _usernameFocusNode.requestFocus();
       return false;
     }
-
-    setState(() => _pageState = EnumPageState.checkingUsername);
 
     final bool isAvailable = await UserActions.checkUsernameAvailability(
       _usernameController.text,
@@ -294,7 +285,6 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
 
     if (!isAvailable) {
       setState(() {
-        _pageState = EnumPageState.idle;
         _usernameErrorMessage = "username.error.already_taken".tr(
           args: [username],
         );
@@ -304,71 +294,18 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
       return false;
     }
 
-    setState(() {
-      _pageState = EnumPageState.idle;
-      _usernameErrorMessage = "";
-    });
-
+    setState(() => _usernameErrorMessage = "");
     return true;
   }
 
-  /// Navigate back to previous or home page.
-  void onCancel() {
-    if (Beamer.of(context).beamingHistory.isNotEmpty) {
-      Beamer.of(context).beamBack();
-      return;
-    }
-
-    Beamer.of(context, root: true).beamToNamed(HomeLocation.route);
-  }
-
-  /// React to email changes and call `checkEmail(email)` method.
-  void onEmailChanged(String email) async {
-    setState(() => _emailErrorMessage = "");
-    _emailTimer?.cancel();
-    _emailTimer = Timer(_debounceDuration, () => checkEmail(email));
-  }
-
-  /// React to confirm password changes
-  /// and call `checkUsername(username)` method.
-  void onConfirmPasswordChanged(String password, String confirmPassword) {
-    setState(() => _confirmPasswordErrorMessage = "");
-    checkConfirmPassword(password, confirmPassword);
-  }
-
-  /// Navigate to sign in page.
-  void goToSigninPage() {
-    final BeamerDelegate beamer = Beamer.of(context);
-    final BeamState beamState = beamer.currentBeamLocation.state as BeamState;
-    final List<String> pathSegments = beamState.pathPatternSegments;
-    final String prefix = pathSegments.first;
-
-    if (prefix == "d") {
-      beamer.beamToNamed(DashboardContentLocation.signinRoute);
-      return;
-    }
-
-    beamer.root.beamToNamed(SigninLocation.route);
-  }
-
-  /// React to username changes.
-  /// Check for input validity: emptyness, format, availability.
-  /// Poppulate username error message if there's an error in one of those steps.
-  void onUsernameChanged(String username) async {
-    setState(() => _usernameErrorMessage = "");
-    _usernameTimer?.cancel();
-    _usernameTimer = Timer(_debounceDuration, () => checkUsername(username));
-  }
-
   /// Ask backend to create a new user account with the specified values.
-  void tryCreateAccount(
+  void createAccount(
     String username,
     String email,
     String password,
     String confirmPassword,
   ) async {
     setState(() => _pageState = EnumPageState.creatingAccount);
-
     final bool inputsAreOk = await checkAllInputs(
       username: username,
       email: email,
@@ -389,17 +326,15 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
         password: password,
       );
 
-      setState(() => _pageState = EnumPageState.idle);
-
+      if (!mounted) return;
       if (createAccountResponse.success) {
-        if (!mounted) return;
-        Beamer.of(context)
-            .beamToReplacementNamed(DashboardContentLocation.route);
-        return;
+        return Beamer.of(context).beamToReplacementNamed(
+          DashboardContentLocation.route,
+        );
       }
 
-      String message = "account_create_error".tr();
-      final error = createAccountResponse.error;
+      String message = "account.error.create".tr();
+      final CloudFunError? error = createAccountResponse.error;
 
       if (error != null && error.code != null && error.message != null) {
         message = "[code: ${error.code}] - ${error.message}";
@@ -410,15 +345,85 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
         context,
         message: message,
       );
+
+      setState(() => _pageState = EnumPageState.idle);
     } catch (error) {
       if (!mounted) return;
       loggy.error(error);
 
       Utils.graphic.showSnackbar(
         context,
-        message: "account_create_error".tr(),
+        message: "account.error.create".tr(),
       );
       setState(() => _pageState = EnumPageState.idle);
     }
+  }
+
+  /// Navigate to sign in page.
+  void navigateToSigninPage() {
+    final BeamerDelegate beamer = Beamer.of(context);
+    final BeamState beamState = beamer.currentBeamLocation.state as BeamState;
+    final List<String> pathSegments = beamState.pathPatternSegments;
+    final String prefix = pathSegments.first;
+
+    if (prefix == "d") {
+      beamer.beamToNamed(DashboardContentLocation.signinRoute);
+      return;
+    }
+
+    beamer.root.beamToNamed(SigninLocation.route);
+  }
+
+  /// Navigate back to previous or home page.
+  void onCancel() {
+    if (Beamer.of(context).beamingHistory.isNotEmpty) {
+      Beamer.of(context).beamBack();
+      return;
+    }
+
+    Beamer.of(context, root: true).beamToNamed(HomeLocation.route);
+  }
+
+  /// React to email changes and call `checkEmail(email)` method.
+  void onEmailChanged(String email) async {
+    setState(() => _emailErrorMessage = "");
+    _emailTimer?.cancel();
+    _emailTimer = Timer(_debounceDuration, () async {
+      setState(() => _pageState = EnumPageState.checkingEmail);
+      await checkEmail(email);
+      setState(() => _pageState = EnumPageState.idle);
+    });
+
+    NavigationStateHelper.userEmailInput = email;
+  }
+
+  /// React to confirm password changes
+  /// and call `checkUsername(username)` method.
+  void onConfirmPasswordChanged(String password, String confirmPassword) {
+    setState(() => _confirmPasswordErrorMessage = "");
+    checkConfirmPassword(password, confirmPassword);
+  }
+
+  /// Show or hide password input value.
+  void onHidePasswordChanged(bool value) {
+    setState(() => _hidePassword = value);
+  }
+
+  /// React to password changes.
+  void onPasswordChanged(String password) {
+    NavigationStateHelper.userPasswordInput = password;
+  }
+
+  /// React to username changes.
+  /// Check for input validity: emptyness, format, availability.
+  /// Poppulate username error message if there's an error in one of those steps.
+  void onUsernameChanged(String username) async {
+    setState(() => _usernameErrorMessage = "");
+    _usernameTimer?.cancel();
+    _usernameTimer = Timer(_debounceDuration, () async {
+      setState(() => _pageState = EnumPageState.checkingUsername);
+      await checkUsername(username);
+      setState(() => _pageState = EnumPageState.idle);
+    });
   }
 }

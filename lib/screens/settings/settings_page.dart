@@ -176,10 +176,10 @@ class _SettingsPageState extends State<SettingsPage> {
 
   void initProps() async {
     _accentColors
-      ..add(Constants.colors.getRandomFromPalette(withGoodContrast: true))
-      ..add(Constants.colors.getRandomFromPalette(withGoodContrast: true))
-      ..add(Constants.colors.getRandomFromPalette(withGoodContrast: true))
-      ..add(Constants.colors.getRandomFromPalette(withGoodContrast: true));
+      ..add(Constants.colors.getRandomFromPalette(onlyDarkerColors: true))
+      ..add(Constants.colors.getRandomFromPalette(onlyDarkerColors: true))
+      ..add(Constants.colors.getRandomFromPalette(onlyDarkerColors: true))
+      ..add(Constants.colors.getRandomFromPalette(onlyDarkerColors: true));
 
     Future.delayed(const Duration(seconds: 1), () {
       if (!mounted) return;

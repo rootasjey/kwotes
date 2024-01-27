@@ -1667,7 +1667,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     if (userFirestoreSignal.value.id.isEmpty) {
       Utils.graphic.showSnackbar(
         context,
-        message: "signin_again".tr(),
+        message: "signin.again".tr(),
       );
       return;
     }

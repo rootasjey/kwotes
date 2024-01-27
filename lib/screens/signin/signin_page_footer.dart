@@ -13,7 +13,7 @@ class SigninPageFooter extends StatelessWidget {
     required this.passwordController,
     this.isDark = false,
     this.showBackButton = true,
-    this.randomColor = Colors.amber,
+    this.accentColor = Colors.amber,
     this.onSubmit,
     this.onCancel,
   });
@@ -26,8 +26,8 @@ class SigninPageFooter extends StatelessWidget {
   /// Default to true.
   final bool showBackButton;
 
-  /// Random accent color.
-  final Color randomColor;
+  /// Accent color.
+  final Color accentColor;
 
   /// Callback fired to go back or exit this page.
   final void Function()? onCancel;
@@ -51,7 +51,7 @@ class SigninPageFooter extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: isDark ? Colors.white : Colors.black,
         elevation: 0.0,
-        foregroundColor: randomColor,
+        foregroundColor: accentColor,
         padding: const EdgeInsets.symmetric(
           horizontal: 16.0,
           vertical: 23.0,
@@ -64,7 +64,7 @@ class SigninPageFooter extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            "signin".tr(),
+            "signin.name".tr(),
             style: Utils.calligraphy.body(
               textStyle: const TextStyle(
                 fontSize: 16.0,
@@ -105,7 +105,7 @@ class SigninPageFooter extends StatelessWidget {
             iconData: TablerIcons.x,
             labelValue: "cancel".tr(),
             foreground: Theme.of(context).textTheme.bodyMedium?.color,
-            background: randomColor.withOpacity(0.4),
+            background: accentColor.withOpacity(0.4),
             onPressed: onCancel,
             minimumSize: const Size(250.0, 60.0),
           ),

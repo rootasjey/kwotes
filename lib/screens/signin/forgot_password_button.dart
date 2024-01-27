@@ -8,11 +8,11 @@ class ForgotPasswordButton extends StatelessWidget {
     super.key,
     this.onNavigateToForgotPassword,
     this.isMobileSize = false,
-    this.randomColor = Colors.amber,
+    this.accentColor = Colors.amber,
   });
 
-  /// A random accent color.
-  final Color randomColor;
+  /// Accent color.
+  final Color accentColor;
 
   /// Adapt user interface to mobile size if true.
   final bool isMobileSize;

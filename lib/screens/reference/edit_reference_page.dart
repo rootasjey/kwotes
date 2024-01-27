@@ -451,7 +451,7 @@ class _EditReferencePageState extends State<EditReferencePage> with UiLoggy {
     if (userFirestore.id.isEmpty) {
       Utils.graphic.showSnackbar(
         context,
-        message: "signin_again".tr(),
+        message: "signin.again".tr(),
       );
       return;
     }

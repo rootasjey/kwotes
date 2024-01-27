@@ -1,6 +1,5 @@
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
-import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
@@ -13,12 +12,16 @@ class UpdatePasswordPageHeader extends StatelessWidget {
     super.key,
     required this.passwordChecks,
     this.isMobileSize = false,
+    this.accentColor,
     this.margin = EdgeInsets.zero,
     this.onTapLeftPartHeader,
   });
 
   /// Adapt the user interface to narrow screen's size if true.
   final bool isMobileSize;
+
+  /// Accent color.
+  final Color? accentColor;
 
   /// Space around this widget.
   final EdgeInsets margin;
@@ -61,31 +64,35 @@ class UpdatePasswordPageHeader extends StatelessWidget {
                 ],
               ),
             ),
-            Text.rich(
-              TextSpan(
-                text: "${"settings.name".tr()}: ",
-                children: [
-                  TextSpan(
-                    text: isMobileSize
-                        ? "\n${"password.name".tr()}"
-                        : "password.name".tr(),
+            Padding(
+              padding: const EdgeInsets.only(top: 32.0),
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: onTapLeftPartHeader,
+                  child: Text(
+                    "settings.name".tr(),
+                    textAlign: isMobileSize ? TextAlign.left : TextAlign.center,
                     style: Utils.calligraphy.body(
                       textStyle: TextStyle(
+                        fontSize: 24.0,
                         fontWeight: fontWeight,
-                        color: Constants.colors.getRandomFromPalette(
-                          withGoodContrast: true,
-                        ),
+                        height: 1.0,
+                        color: foregroundColor?.withOpacity(0.6),
                       ),
                     ),
                   ),
-                ],
-                recognizer: TapGestureRecognizer()..onTap = onTapLeftPartHeader,
+                ),
               ),
+            ),
+            Text(
+              "password.name".tr(),
+              textAlign: isMobileSize ? TextAlign.left : TextAlign.center,
               style: Utils.calligraphy.body(
                 textStyle: TextStyle(
-                  fontSize: isMobileSize ? 24.0 : 54.0,
+                  color: accentColor,
                   fontWeight: fontWeight,
-                  color: foregroundColor?.withOpacity(0.6),
+                  fontSize: 54.0,
                 ),
               ),
             ),
