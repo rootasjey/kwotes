@@ -13,6 +13,8 @@ class HeaderFilterColumn extends StatelessWidget {
   const HeaderFilterColumn({
     super.key,
     this.show = true,
+    this.showAllLanguage = true,
+    this.showAllOwnership = false,
     this.showLanguageSelector = true,
     this.showOwnershipSelector = true,
     this.chipBackgroundColor = Colors.white,
@@ -27,6 +29,14 @@ class HeaderFilterColumn extends StatelessWidget {
 
   /// Show this widget if true.
   final bool show;
+
+  /// Show "all language" selector if true.
+  /// Default to true.
+  final bool showAllLanguage;
+
+  /// Show "all ownership" chip selector if true.
+  /// Default to false.
+  final bool showAllOwnership;
 
   /// Show language selector if true.
   /// Default to true.
@@ -75,11 +85,12 @@ class HeaderFilterColumn extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               shrinkWrap: true,
               children: [
-                OwnershipData(
-                  ownership: EnumDataOwnership.all,
-                  labelString: "quote.all.name".tr(),
-                  tooltipString: "quote.all.description".tr(),
-                ),
+                if (showAllOwnership)
+                  OwnershipData(
+                    ownership: EnumDataOwnership.all,
+                    labelString: "quote.all.name".tr(),
+                    tooltipString: "quote.all.description".tr(),
+                  ),
                 OwnershipData(
                   ownership: EnumDataOwnership.owned,
                   labelString: "quote.owned.name".tr(),
@@ -115,12 +126,13 @@ class HeaderFilterColumn extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               shrinkWrap: true,
               children: [
-                LanguageFilterData(
-                  labelString: "",
-                  tooltipString: "language.all".tr(),
-                  language: EnumLanguageSelection.all,
-                  iconData: TablerIcons.world_longitude,
-                ),
+                if (showAllLanguage)
+                  LanguageFilterData(
+                    labelString: "",
+                    tooltipString: "language.all".tr(),
+                    language: EnumLanguageSelection.all,
+                    iconData: TablerIcons.world_longitude,
+                  ),
                 ...Utils.linguistic.available().map(
                       (locale) => LanguageFilterData(
                         labelString: "language.locale.${locale.name}".tr(),

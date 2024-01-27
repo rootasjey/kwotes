@@ -13,6 +13,7 @@ class HeaderFilterWrap extends StatelessWidget {
     super.key,
     this.show = true,
     this.showAllLanguage = true,
+    this.showAllOwnership = false,
     this.showLanguageSelector = true,
     this.showOwnershipSelector = true,
     this.useSliver = false,
@@ -33,6 +34,10 @@ class HeaderFilterWrap extends StatelessWidget {
   /// Show "all language" selector if true.
   /// Default to true.
   final bool showAllLanguage;
+
+  /// Show "all ownership" chip selector if true.
+  /// Default to false.
+  final bool showAllOwnership;
 
   /// Show language selector if true.
   /// Default to true.
@@ -78,34 +83,39 @@ class HeaderFilterWrap extends StatelessWidget {
     final List<Widget> ownershipChips = [];
     if (showOwnershipSelector) {
       ownershipChips.addAll([
-        FilterChip(
-          checkmarkColor: iconColor,
-          label: Text("quote.owned.name".tr()),
-          tooltip: "quote.owned.description".tr(),
-          backgroundColor: chipBackgroundColor,
-          selectedColor: chipSelectedColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
-            side: BorderSide(color: chipBorderColor),
+        Utils.graphic.tooltip(
+          tooltipString: "quote.owned.description".tr(),
+          child: FilterChip(
+            checkmarkColor: iconColor,
+            label: Text("quote.owned.name".tr()),
+            backgroundColor: chipBackgroundColor,
+            selectedColor: chipSelectedColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+              side: BorderSide(color: chipBorderColor),
+            ),
+            onSelected: (bool _) =>
+                onSelectedOwnership?.call(EnumDataOwnership.owned),
+            selected: selectedOwnership == EnumDataOwnership.owned,
           ),
-          onSelected: (bool _) =>
-              onSelectedOwnership?.call(EnumDataOwnership.owned),
-          selected: selectedOwnership == EnumDataOwnership.owned,
         ),
-        FilterChip(
-          checkmarkColor: iconColor,
-          label: Text("quote.all.name".tr()),
-          tooltip: "quote.all.description".tr(),
-          backgroundColor: chipBackgroundColor,
-          selectedColor: chipSelectedColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
-            side: BorderSide(color: chipBorderColor),
+        if (showAllOwnership)
+          Utils.graphic.tooltip(
+            tooltipString: "quote.all.description".tr(),
+            child: FilterChip(
+              checkmarkColor: iconColor,
+              label: Text("quote.all.name".tr()),
+              backgroundColor: chipBackgroundColor,
+              selectedColor: chipSelectedColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0),
+                side: BorderSide(color: chipBorderColor),
+              ),
+              onSelected: (bool _) =>
+                  onSelectedOwnership?.call(EnumDataOwnership.all),
+              selected: selectedOwnership == EnumDataOwnership.all,
+            ),
           ),
-          onSelected: (bool _) =>
-              onSelectedOwnership?.call(EnumDataOwnership.all),
-          selected: selectedOwnership == EnumDataOwnership.all,
-        ),
         if (showLanguageSelector)
           const SizedBox(
             height: 28.0,
@@ -136,20 +146,23 @@ class HeaderFilterWrap extends StatelessWidget {
             .map(
               (LanguageFilterData data) => Padding(
                 padding: const EdgeInsets.only(right: 8.0),
-                child: FilterChip(
-                  checkmarkColor: iconColor,
-                  label: data.labelString.isEmpty
-                      ? Icon(data.iconData, size: 20.0)
-                      : Text(data.labelString),
-                  tooltip: data.tooltipString,
-                  backgroundColor: chipBackgroundColor,
-                  selectedColor: chipSelectedColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24.0),
-                    side: BorderSide(color: chipBorderColor),
+                child: Utils.graphic.tooltip(
+                  tooltipString: data.tooltipString,
+                  child: FilterChip(
+                    checkmarkColor: iconColor,
+                    label: data.labelString.isEmpty
+                        ? Icon(data.iconData, size: 20.0)
+                        : Text(data.labelString),
+                    backgroundColor: chipBackgroundColor,
+                    selectedColor: chipSelectedColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24.0),
+                      side: BorderSide(color: chipBorderColor),
+                    ),
+                    onSelected: (bool _) =>
+                        onSelectLanguage?.call(data.language),
+                    selected: selectedLanguage == data.language,
                   ),
-                  onSelected: (bool _) => onSelectLanguage?.call(data.language),
-                  selected: selectedLanguage == data.language,
                 ),
               ),
             )

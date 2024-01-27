@@ -13,6 +13,7 @@ class PublishedPageHeader extends StatelessWidget {
     required this.selectedLanguage,
     this.isMobileSize = false,
     this.show = true,
+    this.showAllOwnership = true,
     this.selectedColor = Colors.amber,
     this.selectedOwnership = EnumDataOwnership.owned,
     this.onSelectedOwnership,
@@ -25,6 +26,9 @@ class PublishedPageHeader extends StatelessWidget {
 
   /// Display this widget if true.
   final bool show;
+
+  /// Display all ownership filter if true.
+  final bool showAllOwnership;
 
   /// Background color of the selected filter chip.
   final Color selectedColor;
@@ -107,6 +111,7 @@ class PublishedPageHeader extends StatelessWidget {
                   onSelectedOwnership: onSelectedOwnership,
                   onSelectLanguage: onSelectLanguage,
                   selectedLanguage: selectedLanguage,
+                  showAllOwnership: showAllOwnership,
                   show: show,
                 ),
               ),

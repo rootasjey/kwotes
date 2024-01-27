@@ -20,6 +20,7 @@ class OutlinedTextField extends StatelessWidget {
     this.focusNode,
     this.obscureText = false,
     this.textCapitalization = TextCapitalization.sentences,
+    this.suffixIcon,
   }) : super(key: key);
 
   /// Will immediately request focus on mount if true.
@@ -28,6 +29,7 @@ class OutlinedTextField extends StatelessWidget {
   /// Will hide characters of true (usually for passwords).
   final bool obscureText;
 
+  /// Accent color (of the border when focused).
   final Color accentColor;
 
   /// Limit this widget constrants.
@@ -62,6 +64,9 @@ class OutlinedTextField extends StatelessWidget {
 
   /// Adapt mobile keyboard to this input (sentences, email, ...).
   final TextInputType? keyboardType;
+
+  /// Icon to display at the end of the input.
+  final Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +117,7 @@ class OutlinedTextField extends StatelessWidget {
               filled: true,
               fillColor: fillColor,
               hintText: hintText,
+              suffixIcon: suffixIcon,
               contentPadding: EdgeInsets.symmetric(
                 horizontal: 8.0,
                 vertical: maxLines == null ? 8.0 : 0.0,

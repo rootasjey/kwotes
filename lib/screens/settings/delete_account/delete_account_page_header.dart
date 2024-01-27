@@ -1,6 +1,5 @@
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
-import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
@@ -10,15 +9,15 @@ class DeleteAccountPageHeader extends StatelessWidget {
   const DeleteAccountPageHeader({
     super.key,
     this.isMobileSize = false,
-    this.randomColor = Colors.amber,
+    this.accentColor = Colors.amber,
     this.onTapLeftPartHeader,
   });
 
   /// Adapt the user interface to narrow screen's size if true.
   final bool isMobileSize;
 
-  /// Random accent color.
-  final Color randomColor;
+  /// Accent color.
+  final Color accentColor;
 
   /// Callback fired when left part header is tapped.
   final void Function()? onTapLeftPartHeader;
@@ -59,30 +58,36 @@ class DeleteAccountPageHeader extends StatelessWidget {
                     ],
                   ),
                 ),
-                Text.rich(
-                  TextSpan(
-                    text: "${"settings.name".tr()}: ",
-                    children: [
-                      if (isMobileSize) const TextSpan(text: "\n"),
-                      TextSpan(
-                        text: "account.delete.name".tr(),
+                Padding(
+                  padding: const EdgeInsets.only(top: 32.0),
+                  child: MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: onTapLeftPartHeader,
+                      child: Text(
+                        "settings.name".tr(),
+                        textAlign:
+                            isMobileSize ? TextAlign.left : TextAlign.center,
                         style: Utils.calligraphy.body(
                           textStyle: TextStyle(
-                            color: randomColor,
+                            fontSize: 24.0,
                             fontWeight: fontWeight,
+                            height: 1.0,
+                            color: foregroundColor?.withOpacity(0.6),
                           ),
                         ),
                       ),
-                    ],
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = onTapLeftPartHeader,
+                    ),
                   ),
+                ),
+                Text(
+                  "account.delete.name".tr(),
                   textAlign: isMobileSize ? TextAlign.left : TextAlign.center,
                   style: Utils.calligraphy.body(
                     textStyle: TextStyle(
-                      fontSize: isMobileSize ? 24.0 : 54.0,
+                      color: accentColor,
                       fontWeight: fontWeight,
-                      color: foregroundColor?.withOpacity(0.6),
+                      fontSize: 54.0,
                     ),
                   ),
                 ),

@@ -62,8 +62,6 @@ class AppBehaviourSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final Color? defaultForegroundColor =
-    //     Theme.of(context).textTheme.bodyMedium?.color;
     final Color foregroundAccentColor =
         accentColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
 

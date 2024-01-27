@@ -1,9 +1,11 @@
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/home_location.dart";
+import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/settings/delete_account/delete_account_page_body.dart";
 import "package:kwotes/screens/settings/delete_account/delete_account_page_header.dart";
 import "package:kwotes/types/action_return_value.dart";
@@ -19,8 +21,8 @@ class DeleteAccountPage extends StatefulWidget {
 }
 
 class _DeleteAccountPageState extends State<DeleteAccountPage> with UiLoggy {
-  /// Password controller.
-  final TextEditingController _passwordTextController = TextEditingController();
+  /// Hide password input text if true.
+  bool _hidePassword = true;
 
   /// Page's state (e.g. loading, idle, ...).
   EnumPageState _pageState = EnumPageState.idle;
@@ -28,6 +30,8 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> with UiLoggy {
   /// Error message.
   String _errorMessage = "";
 
+  /// Password controller.
+  final TextEditingController _passwordTextController = TextEditingController();
   @override
   void dispose() {
     _passwordTextController.dispose();
@@ -37,9 +41,13 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> with UiLoggy {
   @override
   Widget build(BuildContext context) {
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
-    final Color randomColor = Constants.colors.getRandomFromPalette(
-      withGoodContrast: true,
-    );
+    final Color accentColor = Constants.colors.delete;
+
+    if (_pageState == EnumPageState.loading) {
+      return LoadingView.scaffold(
+        message: "${"account.delete.ing".tr()}...",
+      );
+    }
 
     return Scaffold(
       body: CustomScrollView(
@@ -47,14 +55,16 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> with UiLoggy {
           DeleteAccountPageHeader(
             isMobileSize: isMobileSize,
             onTapLeftPartHeader: onTapLeftPartHeader,
-            randomColor: randomColor,
+            accentColor: accentColor,
           ),
           DeleteAccountPageBody(
             errorMessage: _errorMessage,
+            hidePassword: _hidePassword,
             isMobileSize: isMobileSize,
             passwordController: _passwordTextController,
             pageState: _pageState,
-            onTapUpdateButton: tryDeleteAccount,
+            onHidePasswordChanged: onHidePasswordChanged,
+            onValidateDeletion: tryDeleteAccount,
           ),
         ],
       ),
@@ -98,13 +108,8 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> with UiLoggy {
 
       if (!deleteAccountResp.success) {
         loggy.error(deleteAccountResp.error);
-        setState(() {
-          _pageState = EnumPageState.idle;
-        });
-
-        if (!mounted) {
-          return;
-        }
+        setState(() => _pageState = EnumPageState.idle);
+        if (!mounted) return;
 
         Utils.graphic.showSnackbar(
           context,
@@ -129,7 +134,9 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> with UiLoggy {
       );
 
       Utils.state.signOut();
-      context.beamBack();
+      Beamer.of(context, root: true).beamToNamed(
+        NavigationStateHelper.initialBrowserUrl,
+      );
     } catch (error) {
       loggy.error(error);
       setState(() => _pageState = EnumPageState.idle);
@@ -138,5 +145,9 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> with UiLoggy {
         message: "account.delete.error".tr(),
       );
     }
+  }
+
+  void onHidePasswordChanged(bool value) {
+    setState(() => _hidePassword = value);
   }
 }

@@ -123,14 +123,15 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
                 toolbarHeight: isMobileSize ? 200.0 : 282.0,
                 children: [
                   PublishedPageHeader(
-                    selectedColor: chipSelectedColor,
+                    isMobileSize: isMobileSize,
                     onSelectedOwnership: onSelectedOnwership,
                     onSelectLanguage: onSelectedLanguage,
                     onTapTitle: onTapTitle,
+                    selectedColor: chipSelectedColor,
                     selectedLanguage: _selectedLanguage,
                     selectedOwnership: _selectedOwnership,
                     show: NavigationStateHelper.showHeaderPageOptions,
-                    isMobileSize: isMobileSize,
+                    showAllOwnership: true,
                   ),
                 ],
               ),

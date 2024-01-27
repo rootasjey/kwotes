@@ -2,6 +2,7 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/empty_view.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/components/texts/draft_quote_text.dart";
 import "package:kwotes/types/draft_quote.dart";
@@ -56,10 +57,20 @@ class InValidationPageBody extends StatelessWidget {
       );
     }
 
+    final EdgeInsets margin = isMobileSize
+        ? const EdgeInsets.only(top: 6.0, left: 24.0, right: 24.0)
+        : const EdgeInsets.only(top: 54.0, left: 48.0, right: 72.0);
+
+    if (quotes.isEmpty) {
+      return EmptyView(
+        title: "in_validation.empty.name".tr(),
+        description: "in_validation.empty.description".tr(),
+        margin: margin,
+      );
+    }
+
     return SliverPadding(
-      padding: isMobileSize
-          ? const EdgeInsets.only(top: 6.0, left: 24.0, right: 24.0)
-          : const EdgeInsets.only(top: 54.0, left: 48.0, right: 72.0),
+      padding: margin,
       sliver: SliverList.separated(
         separatorBuilder: (BuildContext context, int index) {
           return isDark

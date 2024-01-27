@@ -135,6 +135,8 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
                         selectedLanguage: _selectedLanguage,
                         selectedOwnership: _selectedOwnership,
                         show: NavigationStateHelper.showHeaderPageOptions,
+                        showAllOwnership: canManage,
+                        showAllLanguagesChip: true,
                         isMobileSize: isMobileSize,
                       ),
                     ],

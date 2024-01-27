@@ -12,12 +12,14 @@ class InValidationPageHeader extends StatelessWidget {
     super.key,
     this.isMobileSize = false,
     this.show = false,
+    this.showAllLanguagesChip = false,
+    this.showAllOwnership = false,
     this.selectedColor = Colors.amber,
     this.selectedOwnership = EnumDataOwnership.owned,
+    this.selectedLanguage = EnumLanguageSelection.all,
     this.onSelectedOwnership,
     this.onSelectLanguage,
     this.onTapTitle,
-    this.selectedLanguage = EnumLanguageSelection.all,
   });
 
   /// Adpat UI for mobile size if true.
@@ -26,11 +28,20 @@ class InValidationPageHeader extends StatelessWidget {
   /// Display this widget if true.
   final bool show;
 
+  /// Display all languages chip if true.
+  final bool showAllLanguagesChip;
+
+  /// Display all ownership chip if true.
+  final bool showAllOwnership;
+
   /// Color of selected widgets.
   final Color selectedColor;
 
   /// Selected quotes ownership (owned | all).
   final EnumDataOwnership selectedOwnership;
+
+  /// Current selected language to fetch published quotes.
+  final EnumLanguageSelection selectedLanguage;
 
   /// Callback fired when a quote filter is selected (owned | all).
   final void Function(EnumDataOwnership ownership)? onSelectedOwnership;
@@ -40,9 +51,6 @@ class InValidationPageHeader extends StatelessWidget {
 
   /// Callback fired when the title is tapped.
   final void Function()? onTapTitle;
-
-  /// Current selected language to fetch published quotes.
-  final EnumLanguageSelection selectedLanguage;
 
   @override
   Widget build(BuildContext context) {
@@ -109,6 +117,8 @@ class InValidationPageHeader extends StatelessWidget {
                   onSelectedOwnership: onSelectedOwnership,
                   onSelectLanguage: onSelectLanguage,
                   selectedLanguage: selectedLanguage,
+                  showAllLanguage: showAllLanguagesChip,
+                  showAllOwnership: showAllOwnership,
                   show: show,
                 ),
               ),

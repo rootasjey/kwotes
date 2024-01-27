@@ -1,6 +1,8 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/buttons/sufffix_button.dart";
 import "package:kwotes/components/texts/outlined_text_field.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
@@ -9,11 +11,16 @@ class DeleteAccountPageBody extends StatelessWidget {
   const DeleteAccountPageBody({
     super.key,
     required this.passwordController,
+    this.hidePassword = true,
     this.isMobileSize = false,
     this.pageState = EnumPageState.idle,
+    this.onHidePasswordChanged,
+    this.onValidateDeletion,
     this.errorMessage = "",
-    this.onTapUpdateButton,
   });
+
+  /// Hide password input text if true.
+  final bool hidePassword;
 
   /// True if the screen's size is narrow.
   final bool isMobileSize;
@@ -21,8 +28,11 @@ class DeleteAccountPageBody extends StatelessWidget {
   /// Page's state (e.g. loading, idle, ...).
   final EnumPageState pageState;
 
-  /// On username input changed.
-  final void Function()? onTapUpdateButton;
+  /// Called when the user wants to hide/show password.
+  final void Function(bool value)? onHidePasswordChanged;
+
+  /// Called when the delete button is pressed (or validate through pwd input).
+  final void Function()? onValidateDeletion;
 
   /// Error message.
   final String errorMessage;
@@ -46,17 +56,20 @@ class DeleteAccountPageBody extends StatelessWidget {
                 children: <Widget>[
                   OutlinedTextField(
                     autofocus: true,
+                    obscureText: hidePassword,
                     controller: passwordController,
-                    label: "username.new".tr(),
-                    keyboardType: TextInputType.text,
+                    label: "password.confirm".tr(),
+                    keyboardType: TextInputType.visiblePassword,
                     textInputAction: TextInputAction.go,
-                  ),
-                  Opacity(
-                    opacity:
-                        pageState == EnumPageState.checkingUsername ? 1.0 : 0.0,
-                    child: const Padding(
-                      padding: EdgeInsets.only(top: 4.0),
-                      child: LinearProgressIndicator(),
+                    onSubmitted: (_) => onValidateDeletion?.call(),
+                    suffixIcon: SuffixButton(
+                      icon: Icon(
+                          hidePassword ? TablerIcons.eye : TablerIcons.eye_off),
+                      tooltipString: hidePassword
+                          ? "password.show".tr()
+                          : "password.hide".tr(),
+                      onPressed: () =>
+                          onHidePasswordChanged?.call(!hidePassword),
                     ),
                   ),
                   Opacity(
@@ -76,9 +89,10 @@ class DeleteAccountPageBody extends StatelessWidget {
               ),
             ),
             ElevatedButton(
-              onPressed: onTapUpdateButton,
+              onPressed: onValidateDeletion,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black87,
+                surfaceTintColor: Colors.pink,
               ),
               child: SizedBox(
                 width: 320.0,

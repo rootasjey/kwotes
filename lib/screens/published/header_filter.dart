@@ -10,6 +10,8 @@ class HeaderFilter extends StatelessWidget {
     super.key,
     this.direction = Axis.horizontal,
     this.show = true,
+    this.showAllLanguage = true,
+    this.showAllOwnership = false,
     this.showLanguageSelector = true,
     this.showOwnershipSelector = true,
     this.chipBackgroundColor = Colors.white,
@@ -30,6 +32,12 @@ class HeaderFilter extends StatelessWidget {
 
   /// Show this widget if true.
   final bool show;
+
+  /// Show all language chip if true.
+  final bool showAllLanguage;
+
+  /// Show all ownership chip if true.
+  final bool showAllOwnership;
 
   /// Show language selector if true.
   /// Default to true.
@@ -81,6 +89,8 @@ class HeaderFilter extends StatelessWidget {
         selectedLanguage: selectedLanguage,
         showLanguageSelector: showLanguageSelector,
         showOwnershipSelector: showOwnershipSelector,
+        showAllLanguage: showAllLanguage,
+        showAllOwnership: showAllOwnership,
         show: show,
       );
     }
@@ -96,6 +106,8 @@ class HeaderFilter extends StatelessWidget {
       selectedLanguage: selectedLanguage,
       showLanguageSelector: showLanguageSelector,
       showOwnershipSelector: showOwnershipSelector,
+      showAllLanguage: showAllLanguage,
+      showAllOwnership: showAllOwnership,
       show: show,
     );
   }

@@ -8,6 +8,7 @@ import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:image_downloader_web/image_downloader_web.dart";
+import "package:just_the_tooltip/just_the_tooltip.dart";
 import "package:kwotes/actions/quote_actions.dart";
 import "package:kwotes/components/dialogs/add_to_list/add_to_list_dialog.dart";
 import "package:kwotes/globals/constants.dart";
@@ -848,5 +849,33 @@ class Graphic with UiLoggy {
     }
 
     return name;
+  }
+
+  /// Wrap a widget with a tooltip.
+  Widget tooltip({
+    required Widget child,
+    required String tooltipString,
+  }) {
+    if (tooltipString.isEmpty) {
+      return child;
+    }
+
+    return JustTheTooltip(
+      tailLength: 4.0,
+      tailBaseWidth: 12.0,
+      waitDuration: const Duration(seconds: 1),
+      content: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          tooltipString,
+          style: Utils.calligraphy.body(
+            textStyle: const TextStyle(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+      child: child,
+    );
   }
 }

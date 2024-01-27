@@ -75,6 +75,9 @@ class EmptyView extends StatelessWidget {
                 Opacity(
                   opacity: 0.6,
                   child: TextButton(
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.all(6.0),
+                    ),
                     onPressed: onTapDescription != null
                         ? () => onTapDescription?.call()
                         : null,

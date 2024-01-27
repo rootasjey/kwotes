@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:just_the_tooltip/just_the_tooltip.dart";
 import "package:kwotes/globals/utils.dart";
 
 class SuffixButton extends StatelessWidget {
@@ -25,25 +24,11 @@ class SuffixButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: 8.0),
-      child: JustTheTooltip(
-        tailLength: 4.0,
-        tailBaseWidth: 12.0,
-        waitDuration: const Duration(seconds: 1),
-        content: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            tooltipString,
-            style: Utils.calligraphy.body(
-              textStyle: const TextStyle(
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ),
+      child: Utils.graphic.tooltip(
+        tooltipString: tooltipString,
         child: IconButton(
           icon: icon,
           onPressed: onPressed,
-          // onPressed: () => onHidePasswordChanged?.call(!hidePassword),
         ),
       ),
     );

@@ -2,6 +2,7 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/empty_view.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/components/texts/quote_list_text.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
@@ -79,10 +80,20 @@ class ListsPageBody extends StatelessWidget {
       );
     }
 
+    final EdgeInsets margin = isMobileSize
+        ? const EdgeInsets.only(left: 24.0, right: 24.0)
+        : const EdgeInsets.only(left: 48.0, right: 72.0, top: 54.0);
+
+    if (lists.isEmpty) {
+      return EmptyView(
+        title: "lists.empty.name".tr(),
+        description: "lists.empty.description".tr(),
+        margin: margin,
+      );
+    }
+
     return SliverPadding(
-      padding: isMobileSize
-          ? const EdgeInsets.only(left: 24.0, right: 24.0)
-          : const EdgeInsets.only(left: 48.0, right: 72.0, top: 54.0),
+      padding: margin,
       sliver: SliverList.separated(
         separatorBuilder: (BuildContext context, int index) {
           return Divider(
