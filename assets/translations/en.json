@@ -1047,7 +1047,10 @@
   "signout": "Sign out",
   "signup": "Sign up",
   "skip": "Skip",
-  "suggestions": "Suggestions",
+  "suggestions": {
+    "name": "Suggestions",
+    "show_as_list": "Show as list"
+  },
   "summary": "Summary",
   "system": "System",
   "text": "Text",

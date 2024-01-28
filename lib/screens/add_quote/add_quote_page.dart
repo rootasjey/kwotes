@@ -397,6 +397,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                     onTapAuthorSuggestion: onTapAuthorSuggestion,
                     onTapBirthDate: onTapBirthDate,
                     onTapDeathDate: onTapDeathDate,
+                    onTapShowSuggestionsAsList: openAuthorListSuggestions,
                     onToggleMetadata: onToggleAuthorMetadata,
                     onToggleIsFictional: onToggleIsFictional,
                     onToggleNagativeBirthDate: onToggleNagativeBirthDate,
@@ -427,6 +428,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                     onSummaryChanged: onReferenceSummaryChanged,
                     onTapSuggestion: onTapReferenceSuggestion,
                     onTapReleaseDate: onTapReleaseDate,
+                    onTapShowSuggestionsAsList: openReferenceListSuggestions,
                     onToggleMetadata: onToggleReferenceMetadata,
                     onToggleNagativeReleaseDate: onToggleNagativeReleaseDate,
                     onUrlChanged: onReferenceUrlChanged,
@@ -1134,6 +1136,106 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     if (currentPageIndex == 3) {
       _referenceNameFocusNode.requestFocus();
     }
+  }
+
+  /// Open author list suggestions as list.
+  void openAuthorListSuggestions() {
+    final List<Color> darkPalette = Constants.colors.darkerForegroundPalette;
+
+    showModalBottomSheet(
+      context: context,
+      showDragHandle: true,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(12.0),
+          topRight: Radius.circular(12.0),
+        ),
+      ),
+      builder: (BuildContext context) {
+        return ListView.builder(
+          itemBuilder: (BuildContext context, int index) {
+            final Author author = _authorSearchResults[index];
+            return TextButton(
+              onPressed: () {
+                onTapAuthorSuggestion.call(author);
+                Navigator.of(context).pop();
+              },
+              style: TextButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+              ),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  author.name,
+                  style: Utils.calligraphy.body(
+                    textStyle: TextStyle(
+                      fontSize: 54.0,
+                      fontWeight: FontWeight.w300,
+                      color: darkPalette[index % darkPalette.length],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+          shrinkWrap: true,
+          itemCount: _authorSearchResults.length,
+        );
+      },
+    );
+  }
+
+  /// Open reference list suggestions as list.
+  void openReferenceListSuggestions() {
+    final List<Color> darkPalette = Constants.colors.darkerForegroundPalette;
+
+    showModalBottomSheet(
+      context: context,
+      showDragHandle: true,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(12.0),
+          topRight: Radius.circular(12.0),
+        ),
+      ),
+      builder: (BuildContext context) {
+        return ListView.builder(
+          itemBuilder: (BuildContext context, int index) {
+            final Reference reference = _referenceSearchResults[index];
+            return TextButton(
+              onPressed: () {
+                onTapReferenceSuggestion.call(reference);
+                Navigator.of(context).pop();
+              },
+              style: TextButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+              ),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  reference.name,
+                  style: Utils.calligraphy.body(
+                    textStyle: TextStyle(
+                      fontSize: 54.0,
+                      fontWeight: FontWeight.w300,
+                      color: darkPalette[index % darkPalette.length],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+          shrinkWrap: true,
+          itemCount: _referenceSearchResults.length,
+        );
+      },
+    );
   }
 
   /// Callback fired to navigate to the previous page.

@@ -12,6 +12,7 @@ class ReferenceSuggestions extends StatelessWidget {
     this.isMobileSize = false,
     this.margin = EdgeInsets.zero,
     this.onTapSuggestion,
+    this.onTapShowAsList,
   });
 
   /// Adapt the user interface to narrow screen's size if true.
@@ -26,6 +27,9 @@ class ReferenceSuggestions extends StatelessWidget {
   /// Callback fired when a suggestion is tapped.
   final void Function(Reference reference)? onTapSuggestion;
 
+  /// Callback fired when show as list button is tapped.
+  final void Function()? onTapShowAsList;
+
   /// Currently selected reference.
   final Reference selectedReference;
 
@@ -37,6 +41,7 @@ class ReferenceSuggestions extends StatelessWidget {
         onTapSuggestion: onTapSuggestion,
         references: references,
         selectedReference: selectedReference,
+        onTapShowAsList: onTapShowAsList,
       );
     }
 
@@ -45,6 +50,7 @@ class ReferenceSuggestions extends StatelessWidget {
       onTapSuggestion: onTapSuggestion,
       references: references,
       selectedReference: selectedReference,
+      onTapShowAsList: onTapShowAsList,
     );
   }
 }

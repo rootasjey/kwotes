@@ -1060,7 +1060,10 @@
   },
   "signout": "Se déconnecter",
   "signup": "S'inscrire",
-  "suggestions": "Suggestions",
+  "suggestions": {
+    "name": "Suggestions",
+    "show_as_list": "Afficher en liste"
+  },
   "summary": "Résumé",
   "system": "Système",
   "text": "Texte",

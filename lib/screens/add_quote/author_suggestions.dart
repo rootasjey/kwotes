@@ -12,6 +12,7 @@ class AuthorSuggestions extends StatelessWidget {
     this.isMobileSize = false,
     this.margin = EdgeInsets.zero,
     this.onTapSuggestion,
+    this.onTapShowAsList,
   });
 
   /// Adapt the user interface to narrow screen's size if true.
@@ -26,6 +27,9 @@ class AuthorSuggestions extends StatelessWidget {
   /// Callback fired when a suggestion is tapped.
   final void Function(Author author)? onTapSuggestion;
 
+  /// Callback fired when show as list button is tapped.
+  final void Function()? onTapShowAsList;
+
   /// Currently selected author.
   final Author selectedAuthor;
 
@@ -37,6 +41,7 @@ class AuthorSuggestions extends StatelessWidget {
         onTapSuggestion: onTapSuggestion,
         authors: authors,
         selectedAuthor: selectedAuthor,
+        onTapShowAsList: onTapShowAsList,
       );
     }
 
@@ -45,6 +50,7 @@ class AuthorSuggestions extends StatelessWidget {
       onTapSuggestion: onTapSuggestion,
       authors: authors,
       selectedAuthor: selectedAuthor,
+      onTapShowAsList: onTapShowAsList,
     );
   }
 }

@@ -24,6 +24,7 @@ class AddQuoteAuthorPage extends StatelessWidget {
     this.onSummaryChanged,
     this.onToggleIsFictional,
     this.onTapBirthDate,
+    this.onTapShowSuggestionsAsList,
     this.onTapDeathDate,
     this.onToggleMetadata,
     this.onUrlChanged,
@@ -52,6 +53,7 @@ class AddQuoteAuthorPage extends StatelessWidget {
   /// Random int for displaying hint texts.
   final int randomAuthorInt;
 
+  /// Floating action button.
   final FloatingActionButton? floatingActionButton;
 
   /// Focus node for author's name input.
@@ -71,6 +73,9 @@ class AddQuoteAuthorPage extends StatelessWidget {
 
   /// Callback fired when author suggestion is tapped.
   final void Function(Author author)? onTapAuthorSuggestion;
+
+  /// Callback fired when show as list button is tapped.
+  final void Function()? onTapShowSuggestionsAsList;
 
   /// Callback fired when birth date chip is tapped.
   final void Function()? onTapBirthDate;
@@ -203,6 +208,7 @@ class AddQuoteAuthorPage extends StatelessWidget {
                   isMobileSize: isMobileSize,
                   margin: const EdgeInsets.symmetric(vertical: 12.0),
                   onTapSuggestion: onTapAuthorSuggestion,
+                  onTapShowAsList: onTapShowSuggestionsAsList,
                   selectedAuthor: author,
                 ),
                 AddAuthorMetadaColumn(

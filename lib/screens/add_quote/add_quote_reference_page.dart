@@ -33,6 +33,7 @@ class AddQuoteReferencePage extends StatelessWidget {
     this.onToggleMetadata,
     this.onToggleNagativeReleaseDate,
     this.referenceSuggestions = const [],
+    this.onTapShowSuggestionsAsList,
     this.onTapSuggestion,
     this.summaryController,
     this.floatingActionButton,
@@ -68,6 +69,9 @@ class AddQuoteReferencePage extends StatelessWidget {
 
   /// Callback fired when reference's summary has changed.
   final void Function(String summary)? onSummaryChanged;
+
+  /// Callback fired when show as list button is tapped.
+  final void Function()? onTapShowSuggestionsAsList;
 
   /// Callback fired when a suggestion is tapped.
   final void Function(Reference reference)? onTapSuggestion;
@@ -190,6 +194,7 @@ class AddQuoteReferencePage extends StatelessWidget {
                   selectedReference: reference,
                   references: referenceSuggestions,
                   onTapSuggestion: onTapSuggestion,
+                  onTapShowAsList: onTapShowSuggestionsAsList,
                   margin: const EdgeInsets.symmetric(vertical: 12.0),
                 ),
                 AddReferenceMetadaColumn(
