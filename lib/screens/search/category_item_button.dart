@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/dot_indicator.dart";
+import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/enums/enum_indicator_type.dart";
 import "package:kwotes/types/enums/enum_search_category.dart";
 
@@ -46,29 +47,31 @@ class CategoryItemButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 3.0),
-      child: Column(
-        children: [
-          IconButton(
-            isSelected: selected,
-            onPressed: () => onSelectEntity?.call(category),
-            tooltip: tooltip,
-            color: selected ? selectedColor : defaultColor,
-            icon: Icon(iconData),
-          ),
-          if (indicatorType == IndicatorType.pill)
-            Container(
-              width: 16.0,
-              height: 4.0,
-              foregroundDecoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6.0),
-                color: selected ? selectedColor : null,
+      child: Utils.graphic.tooltip(
+        tooltipString: tooltip ?? "",
+        child: Column(
+          children: [
+            IconButton(
+              isSelected: selected,
+              onPressed: () => onSelectEntity?.call(category),
+              color: selected ? selectedColor : defaultColor,
+              icon: Icon(iconData),
+            ),
+            if (indicatorType == IndicatorType.pill)
+              Container(
+                width: 16.0,
+                height: 4.0,
+                foregroundDecoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6.0),
+                  color: selected ? selectedColor : null,
+                ),
               ),
-            ),
-          if (indicatorType == IndicatorType.dot)
-            DotIndicator(
-              color: selected ? selectedColor : Colors.transparent,
-            ),
-        ],
+            if (indicatorType == IndicatorType.dot)
+              DotIndicator(
+                color: selected ? selectedColor : Colors.transparent,
+              ),
+          ],
+        ),
       ),
     );
   }

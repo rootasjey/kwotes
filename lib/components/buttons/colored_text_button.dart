@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 
 class ColoredTextButton extends StatefulWidget {
@@ -75,21 +74,21 @@ class _ColoredTextButtonState extends State<ColoredTextButton> {
   bool _isHover = false;
 
   /// Button's text color on hover.
-  Color _hoverForegroundColor = Colors.transparent;
+  // Color _hoverForegroundColor = Colors.transparent;
 
   @override
   void initState() {
     super.initState();
-    _hoverForegroundColor = widget.accentColor ??
-        Constants.colors.getRandomFromPalette(
-          withGoodContrast: true,
-        );
+    // _hoverForegroundColor = widget.accentColor ??
+    //     Constants.colors.getRandomFromPalette(
+    //       withGoodContrast: true,
+    //     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final Color? foregroundColor =
-        Theme.of(context).textTheme.bodyMedium?.color;
+    // final Color? foregroundColor =
+    //     Theme.of(context).textTheme.bodyMedium?.color;
 
     return Tooltip(
       message: widget.tooltip,
@@ -99,11 +98,10 @@ class _ColoredTextButtonState extends State<ColoredTextButton> {
           onPressed: widget.onPressed,
           onHover: (bool isHover) => setState(() => _isHover = isHover),
           style: TextButton.styleFrom(
-            backgroundColor:
-                _isHover ? null : widget.backgroundColor?.withOpacity(0.2),
-            foregroundColor: _isHover
-                ? _hoverForegroundColor
-                : foregroundColor?.withOpacity(0.6),
+            backgroundColor: _isHover ? null : widget.backgroundColor,
+            // foregroundColor: _isHover
+            //     ? _hoverForegroundColor
+            //     : foregroundColor?.withOpacity(0.6),
           ).merge(widget.style),
           child: Padding(
             padding: widget.padding,

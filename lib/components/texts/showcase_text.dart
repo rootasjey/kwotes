@@ -100,11 +100,10 @@ class _ShowcaseTextState extends State<ShowcaseText> {
             tag: widget.docId,
             child: Text(
               widget.textValue,
-              style: Utils.calligraphy.body(
+              style: Utils.calligraphy.body4(
                 textStyle: TextStyle(
                   fontSize: widget.isMobileSize ? 32.0 : 24.0,
-                  fontWeight:
-                      widget.isMobileSize ? FontWeight.w300 : FontWeight.w400,
+                  fontWeight: FontWeight.w200,
                   color: _foregroundColor,
                 ),
               ),
