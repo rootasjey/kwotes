@@ -30,41 +30,6 @@ import "package:text_wrap_auto_size/text_wrap_auto_size.dart";
 class Graphic with UiLoggy {
   const Graphic();
 
-  /// Color filter to greyed out widget.
-  final ColorFilter greyColorFilter = const ColorFilter.matrix(<double>[
-    0.2126,
-    0.7152,
-    0.0722,
-    0,
-    0,
-    0.2126,
-    0.7152,
-    0.0722,
-    0,
-    0,
-    0.2126,
-    0.7152,
-    0.0722,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    0,
-  ]);
-
-  /// Starting delay for fade in y animmation.
-  static int _delay = 0;
-
-  /// Amount to add to delay for the next widget to animate.
-  final int _step = 25;
-
-  /// Where to start the fade in Y animation.
-  double getBeginY() {
-    return 60.0;
-  }
-
   /// Return the color based on the content type.
   Color getSnackbarColorType(SnackbarType type) {
     switch (type) {
@@ -83,16 +48,6 @@ class Graphic with UiLoggy {
       default:
         return Colors.blue.shade100;
     }
-  }
-
-  int getNextAnimationDelay({String animationName = "", bool reset = false}) {
-    if (reset) {
-      _delay = 0;
-    }
-
-    final int prevDelay = _delay;
-    _delay += _step;
-    return prevDelay;
   }
 
   /// Get icon data from a primary genre.
@@ -399,6 +354,7 @@ class Graphic with UiLoggy {
     SnackbarType type = SnackbarType.error,
     SnackBarBehavior? behavior,
     double? width,
+    Duration duration = const Duration(seconds: 4),
   }) {
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
@@ -407,6 +363,7 @@ class Graphic with UiLoggy {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
+        duration: duration,
         content: Text(
           message,
           style: Utils.calligraphy.body(

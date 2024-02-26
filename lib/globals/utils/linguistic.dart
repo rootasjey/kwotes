@@ -88,10 +88,6 @@ class Linguistic {
     }
   }
 
-  // List<String> available() {
-  //   return [en, fr];
-  // }
-
   /// Return 2-characters string from full language string.
   String toCode(String? fullLanguage) {
     switch (fullLanguage) {
