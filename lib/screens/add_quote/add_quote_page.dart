@@ -1156,26 +1156,51 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
         return ListView.builder(
           itemBuilder: (BuildContext context, int index) {
             final Author author = _authorSearchResults[index];
-            return TextButton(
-              onPressed: () {
-                onTapAuthorSuggestion.call(author);
-                Navigator.of(context).pop();
-              },
-              style: TextButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4.0),
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: TextButton(
+                onPressed: () {
+                  onTapAuthorSuggestion.call(author);
+                  Navigator.of(context).pop();
+                },
+                style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4.0),
+                  ),
                 ),
-              ),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  author.name,
-                  style: Utils.calligraphy.body(
-                    textStyle: TextStyle(
-                      fontSize: 54.0,
-                      fontWeight: FontWeight.w300,
-                      color: darkPalette[index % darkPalette.length],
-                    ),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        author.name,
+                        style: Utils.calligraphy.body(
+                          textStyle: TextStyle(
+                            fontSize: 54.0,
+                            height: 1.0,
+                            fontWeight: FontWeight.w300,
+                            color: darkPalette[index % darkPalette.length],
+                          ),
+                        ),
+                      ),
+                      Text(
+                        author.summary,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: Utils.calligraphy.body(
+                          textStyle: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w400,
+                            color: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.color
+                                ?.withOpacity(0.6),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -1218,15 +1243,36 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
               ),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  reference.name,
-                  style: Utils.calligraphy.body(
-                    textStyle: TextStyle(
-                      fontSize: 54.0,
-                      fontWeight: FontWeight.w300,
-                      color: darkPalette[index % darkPalette.length],
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      reference.name,
+                      style: Utils.calligraphy.body(
+                        textStyle: TextStyle(
+                          fontSize: 54.0,
+                          fontWeight: FontWeight.w300,
+                          color: darkPalette[index % darkPalette.length],
+                        ),
+                      ),
                     ),
-                  ),
+                    Text(
+                      reference.summary,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Utils.calligraphy.body(
+                        textStyle: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w400,
+                          color: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.color
+                              ?.withOpacity(0.6),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             );
