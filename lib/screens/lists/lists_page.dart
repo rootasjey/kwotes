@@ -98,7 +98,9 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
     super.initState();
     initProps();
     fetch();
-    _accentColor = Constants.colors.getRandomFromPalette();
+    _accentColor = Constants.colors.getRandomFromPalette(
+      onlyDarkerColors: true,
+    );
 
     final int hintIndex = Random().nextInt(9);
     _hintListName = "list.create.hints.names.$hintIndex".tr();

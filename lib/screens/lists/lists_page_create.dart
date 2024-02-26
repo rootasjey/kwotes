@@ -8,22 +8,22 @@ class ListsPageCreate extends StatelessWidget {
   /// Create list component.
   const ListsPageCreate({
     super.key,
+    this.isMobileSize = false,
     this.show = false,
-    this.onCreate,
-    this.onNameChanged,
-    this.onDescriptionChanged,
+    this.accentColor = Colors.amber,
     this.onCancel,
+    this.onCreate,
+    this.onDescriptionChanged,
+    this.onNameChanged,
     this.hintName = "",
     this.hintDescription = "",
-    this.accentColor = Colors.amber,
-    this.isMobileSize = false,
   });
-
-  /// Display this widget if true.
-  final bool show;
 
   /// Adapt UI for mobile size.
   final bool isMobileSize;
+
+  /// Display this widget if true.
+  final bool show;
 
   /// Accent color.
   final Color accentColor;
@@ -48,6 +48,8 @@ class ListsPageCreate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color? textColor = Theme.of(context).textTheme.bodyMedium?.color;
+
     return SliverToBoxAdapter(
       child: AnimatedSize(
         duration: const Duration(milliseconds: 200),
@@ -69,6 +71,7 @@ class ListsPageCreate extends StatelessWidget {
             shape: RoundedRectangleBorder(
               side: BorderSide(
                 color: accentColor,
+                width: 2.0,
               ),
               borderRadius: BorderRadius.circular(4.0),
             ),
@@ -99,7 +102,7 @@ class ListsPageCreate extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const Divider(),
+                      Divider(color: textColor?.withOpacity(0.4)),
                       TextField(
                         textCapitalization: TextCapitalization.words,
                         onChanged: onDescriptionChanged,
@@ -121,7 +124,7 @@ class ListsPageCreate extends StatelessWidget {
                         padding: const EdgeInsets.only(
                           top: 24.0,
                           left: 8.0,
-                          bottom: 12.0,
+                          bottom: 6.0,
                         ),
                         child: Wrap(
                           spacing: 12.0,
@@ -129,33 +132,37 @@ class ListsPageCreate extends StatelessWidget {
                           alignment: WrapAlignment.start,
                           children: [
                             TextButton(
-                                onPressed: onCancel,
-                                style: TextButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 18.0,
-                                    vertical: 14.0,
-                                  ),
-                                  backgroundColor: Colors.black12,
-                                  foregroundColor: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.color,
-                                  textStyle: Utils.calligraphy.body4(
-                                    textStyle: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14.0,
-                                    ),
+                              onPressed: onCancel,
+                              style: TextButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 18.0,
+                                  vertical: 12.0,
+                                ),
+                                backgroundColor: Colors.black12,
+                                foregroundColor: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.color,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4.0),
+                                ),
+                                textStyle: Utils.calligraphy.body4(
+                                  textStyle: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14.0,
                                   ),
                                 ),
-                                child: Text(
-                                  "cancel".tr(),
-                                )),
+                              ),
+                              child: Text(
+                                "cancel".tr(),
+                              ),
+                            ),
                             TextButton(
                               onPressed: onCreate,
                               style: TextButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 18.0,
-                                  vertical: 14.0,
+                                  vertical: 12.0,
                                 ),
                                 backgroundColor:
                                     onCreate != null ? accentColor : null,
@@ -163,6 +170,9 @@ class ListsPageCreate extends StatelessWidget {
                                     accentColor.computeLuminance() > 0.4
                                         ? Colors.black87
                                         : Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4.0),
+                                ),
                                 textStyle: Utils.calligraphy.body4(
                                   textStyle: const TextStyle(
                                     fontWeight: FontWeight.w600,
@@ -181,13 +191,13 @@ class ListsPageCreate extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  top: 8.0,
-                  right: 8.0,
+                  top: 24.0,
+                  right: 16.0,
                   child: CircleButton(
                     backgroundColor: Colors.black12,
                     icon: Icon(
                       TablerIcons.x,
-                      color: Theme.of(context).textTheme.bodyMedium?.color,
+                      color: textColor,
                     ),
                     onTap: onCancel,
                   ),

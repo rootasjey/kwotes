@@ -104,6 +104,8 @@ class ListsPageBody extends StatelessWidget {
         },
         itemBuilder: (BuildContext context, int index) {
           final QuoteList quoteList = lists[index];
+          final bool isDeleting =
+              deletingListId.isNotEmpty && deletingListId == quoteList.id;
           final bool isEditing =
               (editingListId == quoteList.id) && editingListId.isNotEmpty;
 
@@ -112,7 +114,7 @@ class ListsPageBody extends StatelessWidget {
               quoteList: quoteList,
               tiny: isMobileSize,
               isEditing: isEditing,
-              isDeleting: deletingListId == quoteList.id,
+              isDeleting: isDeleting,
               margin: const EdgeInsets.only(bottom: 0.0),
               onCancelEditMode: onCancelEditListMode,
               onTap: quoteList.id.isEmpty ? null : onTap,

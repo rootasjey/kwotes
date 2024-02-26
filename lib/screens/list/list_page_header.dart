@@ -144,6 +144,9 @@ class ListPageHeader extends StatelessWidget {
                           horizontal: 18.0,
                           vertical: 8.0,
                         ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
                         backgroundColor: Colors.black12,
                         foregroundColor:
                             Theme.of(context).textTheme.bodyMedium?.color,
@@ -163,6 +166,9 @@ class ListPageHeader extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                         horizontal: 18.0,
                         vertical: 8.0,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0),
                       ),
                       backgroundColor: onSave != null ? accentColor : null,
                       foregroundColor: accentColor.computeLuminance() > 0.4
