@@ -75,31 +75,33 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> with UiLoggy {
       onlyDarkerColors: true,
     );
 
-    return Scaffold(
-      body: BasicShortcuts(
-        autofocus: false,
-        onCancel: context.beamBack,
-        child: CustomScrollView(
-          slivers: [
-            UpdatePasswordPageHeader(
-              accentColor: accentColor,
-              isMobileSize: isMobileSize,
-              onTapLeftPartHeader: onTapLeftPartHeader,
-              passwordChecks: _passwordChecks,
-            ),
-            UpdatePasswordPageBody(
-              currentPasswordController: _currentPasswordController,
-              isMobileSize: isMobileSize,
-              newPasswordController: _newPasswordController,
-              newPasswordFocusNode: _newPasswordFocusNode,
-              pageState: _pageState,
-              currentPasswordErrorMessage: _currentPasswordErrorMessage,
-              newPasswordErrorMessage: _newPasswordErrorMessage,
-              onCurrentPasswordChanged: onCurrentPasswordChanged,
-              onNewPasswordChanged: onNewPasswordChanged,
-              onTapUpdateButton: tryUpdatePassword,
-            ),
-          ],
+    return BasicShortcuts(
+      autofocus: false,
+      onCancel: context.beamBack,
+      child: SafeArea(
+        child: Scaffold(
+          body: CustomScrollView(
+            slivers: [
+              UpdatePasswordPageHeader(
+                accentColor: accentColor,
+                isMobileSize: isMobileSize,
+                onTapLeftPartHeader: onTapLeftPartHeader,
+                passwordChecks: _passwordChecks,
+              ),
+              UpdatePasswordPageBody(
+                currentPasswordController: _currentPasswordController,
+                isMobileSize: isMobileSize,
+                newPasswordController: _newPasswordController,
+                newPasswordFocusNode: _newPasswordFocusNode,
+                pageState: _pageState,
+                currentPasswordErrorMessage: _currentPasswordErrorMessage,
+                newPasswordErrorMessage: _newPasswordErrorMessage,
+                onCurrentPasswordChanged: onCurrentPasswordChanged,
+                onNewPasswordChanged: onNewPasswordChanged,
+                onTapUpdateButton: tryUpdatePassword,
+              ),
+            ],
+          ),
         ),
       ),
     );

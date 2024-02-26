@@ -1,6 +1,7 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
+import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/components/texts/outlined_text_field.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
@@ -10,6 +11,7 @@ class UpdateUsernamePageBody extends StatelessWidget {
     super.key,
     required this.usernameController,
     required this.passwordFocusNode,
+    this.accentColor = Colors.amber,
     this.isMobileSize = false,
     this.pageState = EnumPageState.idle,
     this.errorMessage = "",
@@ -20,14 +22,14 @@ class UpdateUsernamePageBody extends StatelessWidget {
   /// True if the screen's size is narrow.
   final bool isMobileSize;
 
-  /// Username text controller.
-  final TextEditingController usernameController;
-
-  /// Password focus node.
-  final FocusNode passwordFocusNode;
+  /// Accent color.
+  final Color accentColor;
 
   /// Page's state (e.g. loading, idle, ...).
   final EnumPageState pageState;
+
+  /// Password focus node.
+  final FocusNode passwordFocusNode;
 
   /// On username input changed.
   final void Function(String value)? onUsernameChanged;
@@ -38,9 +40,18 @@ class UpdateUsernamePageBody extends StatelessWidget {
   /// Error message.
   final String errorMessage;
 
+  /// Username text controller.
+  final TextEditingController usernameController;
+
   @override
   Widget build(BuildContext context) {
     final Color secondaryHeaderColor = Theme.of(context).secondaryHeaderColor;
+
+    if (pageState == EnumPageState.updatingUsername) {
+      return LoadingView(
+        message: "${"username.update.ing".tr()}...",
+      );
+    }
 
     return SliverToBoxAdapter(
       child: Container(
@@ -66,9 +77,11 @@ class UpdateUsernamePageBody extends StatelessWidget {
                   Opacity(
                     opacity:
                         pageState == EnumPageState.checkingUsername ? 1.0 : 0.0,
-                    child: const Padding(
-                      padding: EdgeInsets.only(top: 4.0),
-                      child: LinearProgressIndicator(),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 4.0),
+                      child: LinearProgressIndicator(
+                        color: accentColor,
+                      ),
                     ),
                   ),
                   Opacity(

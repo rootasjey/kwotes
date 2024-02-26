@@ -9,15 +9,15 @@ class UpdateUsernamePageHeader extends StatelessWidget {
   const UpdateUsernamePageHeader({
     super.key,
     this.isMobileSize = false,
-    this.randomColor = Colors.amber,
+    this.accentColor = Colors.amber,
     this.onTapLeftPartHeader,
   });
 
   /// Adapt the user interface to narrow screen's size if true.
   final bool isMobileSize;
 
-  /// Random accent color.
-  final Color randomColor;
+  /// Accent color.
+  final Color accentColor;
 
   /// Callback fired when left part header is tapped.
   final void Function()? onTapLeftPartHeader;
@@ -81,7 +81,7 @@ class UpdateUsernamePageHeader extends StatelessWidget {
               textAlign: isMobileSize ? TextAlign.left : TextAlign.center,
               style: Utils.calligraphy.body(
                 textStyle: TextStyle(
-                  color: randomColor,
+                  color: accentColor,
                   fontWeight: fontWeight,
                   fontSize: 54.0,
                 ),

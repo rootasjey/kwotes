@@ -16,7 +16,7 @@ import "package:kwotes/screens/settings/app_behaviour_settings.dart";
 import "package:kwotes/screens/settings/app_language_selection.dart";
 import "package:kwotes/screens/settings/settings_page_header.dart";
 import "package:kwotes/screens/settings/theme_switcher.dart";
-import "package:kwotes/types/enums/enum_accunt_displayed.dart";
+import "package:kwotes/types/enums/enum_account_displayed.dart";
 import "package:kwotes/types/enums/enum_frame_border_style.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
@@ -78,89 +78,91 @@ class _SettingsPageState extends State<SettingsPage> {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final Color dividerColor = isDark ? Colors.white12 : Colors.black12;
 
-    final Widget scaffold = Scaffold(
-      body: CustomScrollView(
-        controller: _pageScrollController,
-        slivers: [
-          SettingsPageHeader(
-            isMobileSize: isMobileSize,
-            onScrollToTop: scrollToTop,
-          ),
-          ThemeSwitcher(
-            accentColor: _accentColors.elementAt(0),
-            animateElements: _animateElements,
-            dividerColor: dividerColor,
-            foregroundColor: foregroundColor,
-            isDark: isDark,
-            isMobileSize: isMobileSize,
-            onTapLightTheme: onTapLightTheme,
-            onTapDarkTheme: onTapDarkTheme,
-            onTapSystemTheme: onTapSystemTheme,
-            onToggleThemeMode: onToggleThemeMode,
-          ),
-          SignalBuilder(
-            signal: signalUserFirestore,
-            builder: (
-              BuildContext context,
-              UserFirestore userFirestore,
-              Widget? child,
-            ) {
-              if (userFirestore.id.isEmpty) {
-                return const SliverToBoxAdapter(child: SizedBox.shrink());
-              }
+    final Widget scaffold = SafeArea(
+      child: Scaffold(
+        body: CustomScrollView(
+          controller: _pageScrollController,
+          slivers: [
+            SettingsPageHeader(
+              isMobileSize: isMobileSize,
+              onScrollToTop: scrollToTop,
+            ),
+            ThemeSwitcher(
+              accentColor: _accentColors.elementAt(0),
+              animateElements: _animateElements,
+              dividerColor: dividerColor,
+              foregroundColor: foregroundColor,
+              isDark: isDark,
+              isMobileSize: isMobileSize,
+              onTapLightTheme: onTapLightTheme,
+              onTapDarkTheme: onTapDarkTheme,
+              onTapSystemTheme: onTapSystemTheme,
+              onToggleThemeMode: onToggleThemeMode,
+            ),
+            SignalBuilder(
+              signal: signalUserFirestore,
+              builder: (
+                BuildContext context,
+                UserFirestore userFirestore,
+                Widget? child,
+              ) {
+                if (userFirestore.id.isEmpty) {
+                  return const SliverToBoxAdapter(child: SizedBox.shrink());
+                }
 
-              return AccountSettings(
-                accentColor: _accentColors.elementAt(1),
-                animateElements: _animateElements,
-                isDark: isDark,
-                dividerColor: dividerColor,
-                enumAccountDisplayed: _enumAccountDisplayed,
-                foregroundColor: foregroundColor,
-                isMobileSize: isMobileSize,
-                onTapUpdateEmail: onTapUpdateEmail,
-                onTapUpdatePassword: onTapUpdatePassword,
-                onTapUpdateUsername: onTapUpdateUsername,
-                onTapSignout: onTapSignOut,
-                onTapDeleteAccount: onTapDeleteAccount,
-                onTapAccountDisplayedValue: onTapAccountDisplayedValue,
-                userFirestore: userFirestore,
-              );
-            },
-          ),
-          AppLanguageSelection(
-            accentColor: _accentColors.elementAt(2),
-            animateElements: _animateElements,
-            currentLanguageCode: currentLanguageCode,
-            dividerColor: dividerColor,
-            foregroundColor: foregroundColor,
-            isMobileSize: isMobileSize,
-            onSelectLanguage: onSelectLanguage,
-          ),
-          AppBehaviourSettings(
-            accentColor: _accentColors.elementAt(3),
-            animateElements: _animateElements,
-            appBorderStyle: NavigationStateHelper.frameBorderStyle,
-            dividerColor: dividerColor,
-            foregroundColor: foregroundColor,
-            isMobileSize: isMobileSize,
-            isFullscreenQuotePage: NavigationStateHelper.fullscreenQuotePage,
-            isMinimalQuoteActions: NavigationStateHelper.minimalQuoteActions,
-            onToggleFrameBorderColor: onToggleFrameBorderColor,
-            onToggleFullscreen: onToggleFullscreen,
-            onToggleMinimalQuoteActions: onToggleMinimalQuoteActions,
-          ),
-          AboutSettings(
-            animateElements: _animateElements,
-            foregroundColor: foregroundColor,
-            isMobileSize: isMobileSize,
-            onTapColorPalette: onTapColorPalette,
-            onTapTermsOfService: onTapTermsOfService,
-            onTapGitHub: onTapGitHub,
-            onTapThePurpose: onTapThePurpose,
-            onTapCredits: onTapCredits,
-          ),
-          const SliverPadding(padding: EdgeInsets.only(bottom: 200.0)),
-        ],
+                return AccountSettings(
+                  accentColor: _accentColors.elementAt(1),
+                  animateElements: _animateElements,
+                  isDark: isDark,
+                  dividerColor: dividerColor,
+                  enumAccountDisplayed: _enumAccountDisplayed,
+                  foregroundColor: foregroundColor,
+                  isMobileSize: isMobileSize,
+                  onTapUpdateEmail: onTapUpdateEmail,
+                  onTapUpdatePassword: onTapUpdatePassword,
+                  onTapUpdateUsername: onTapUpdateUsername,
+                  onTapSignout: onTapSignOut,
+                  onTapDeleteAccount: onTapDeleteAccount,
+                  onTapAccountDisplayedValue: onTapAccountDisplayedValue,
+                  userFirestore: userFirestore,
+                );
+              },
+            ),
+            AppLanguageSelection(
+              accentColor: _accentColors.elementAt(2),
+              animateElements: _animateElements,
+              currentLanguageCode: currentLanguageCode,
+              dividerColor: dividerColor,
+              foregroundColor: foregroundColor,
+              isMobileSize: isMobileSize,
+              onSelectLanguage: onSelectLanguage,
+            ),
+            AppBehaviourSettings(
+              accentColor: _accentColors.elementAt(3),
+              animateElements: _animateElements,
+              appBorderStyle: NavigationStateHelper.frameBorderStyle,
+              dividerColor: dividerColor,
+              foregroundColor: foregroundColor,
+              isMobileSize: isMobileSize,
+              isFullscreenQuotePage: NavigationStateHelper.fullscreenQuotePage,
+              isMinimalQuoteActions: NavigationStateHelper.minimalQuoteActions,
+              onToggleFrameBorderColor: onToggleFrameBorderColor,
+              onToggleFullscreen: onToggleFullscreen,
+              onToggleMinimalQuoteActions: onToggleMinimalQuoteActions,
+            ),
+            AboutSettings(
+              animateElements: _animateElements,
+              foregroundColor: foregroundColor,
+              isMobileSize: isMobileSize,
+              onTapColorPalette: onTapColorPalette,
+              onTapTermsOfService: onTapTermsOfService,
+              onTapGitHub: onTapGitHub,
+              onTapThePurpose: onTapThePurpose,
+              onTapCredits: onTapCredits,
+            ),
+            const SliverPadding(padding: EdgeInsets.only(bottom: 200.0)),
+          ],
+        ),
       ),
     );
 

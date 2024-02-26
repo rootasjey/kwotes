@@ -3,6 +3,7 @@ import "dart:async";
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:flutter_solidart/flutter_solidart.dart";
 import "package:kwotes/actions/user_actions.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
 import "package:kwotes/globals/constants.dart";
@@ -13,6 +14,8 @@ import "package:kwotes/screens/settings/email/update_email_page_header.dart";
 import "package:kwotes/types/action_return_value.dart";
 import "package:kwotes/types/cloud_fun_error.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
+import "package:kwotes/types/enums/enum_signal_id.dart";
+import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
 
 class UpdateEmailPage extends StatefulWidget {
@@ -75,31 +78,46 @@ class _UpdateEmailPageState extends State<UpdateEmailPage> with UiLoggy {
         ? const EdgeInsets.only(left: 24.0)
         : const EdgeInsets.only(left: 48.0);
 
+    final Signal<UserFirestore> signalUser =
+        context.get(EnumSignalId.userFirestore);
+
     return BasicShortcuts(
       autofocus: false,
       onCancel: context.beamBack,
-      child: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            UpdateEmailPageHeader(
-              accentColor: _accentColor,
-              isMobileSize: isMobileSize,
-              onTapLeftPartHeader: onTapLeftPartHeader,
-            ),
-            UpdateEmailPageBody(
-              margin: margin,
-              isMobileSize: isMobileSize,
-              emailController: _emailTextController,
-              passwordFocusNode: _passwordFocusNode,
-              pageState: _pageState,
-              errorMessage: _errorMessage,
-              onEmailChanged: onEmailChanged,
-              onTapUpdateButton: tryUpdateEmail,
-              passwordController: _passwordTextController,
-              passwordErrorMessage: _passwordErrorMessage,
-              onPasswordChanged: onPasswordChanged,
-            ),
-          ],
+      child: SafeArea(
+        child: Scaffold(
+          body: CustomScrollView(
+            slivers: [
+              SignalBuilder(
+                signal: signalUser,
+                builder: (
+                  BuildContext tcontext,
+                  UserFirestore user,
+                  Widget? child,
+                ) {
+                  return UpdateEmailPageHeader(
+                    accentColor: _accentColor,
+                    isMobileSize: isMobileSize,
+                    onTapLeftPartHeader: onTapLeftPartHeader,
+                    email: user.email,
+                  );
+                },
+              ),
+              UpdateEmailPageBody(
+                margin: margin,
+                isMobileSize: isMobileSize,
+                emailController: _emailTextController,
+                passwordFocusNode: _passwordFocusNode,
+                pageState: _pageState,
+                errorMessage: _errorMessage,
+                onEmailChanged: onEmailChanged,
+                onTapUpdateButton: tryUpdateEmail,
+                passwordController: _passwordTextController,
+                passwordErrorMessage: _passwordErrorMessage,
+                onPasswordChanged: onPasswordChanged,
+              ),
+            ],
+          ),
         ),
       ),
     );

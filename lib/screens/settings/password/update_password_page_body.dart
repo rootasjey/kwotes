@@ -128,7 +128,7 @@ class UpdatePasswordPageBody extends StatelessWidget {
                 backgroundColor: Colors.black87,
               ),
               child: Container(
-                width: isMobileSize ? null : 352.0,
+                width: 320.0,
                 padding: const EdgeInsets.all(14.0),
                 child: Text(
                   "password.update.name".tr().toUpperCase(),

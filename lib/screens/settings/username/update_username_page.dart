@@ -56,23 +56,25 @@ class _UpdateUsernamePageState extends State<UpdateUsernamePage> with UiLoggy {
     return BasicShortcuts(
       autofocus: false,
       onCancel: context.beamBack,
-      child: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            UpdateUsernamePageHeader(
-              isMobileSize: isMobileSize,
-              onTapLeftPartHeader: onTapLeftPartHeader,
-            ),
-            UpdateUsernamePageBody(
-              isMobileSize: isMobileSize,
-              usernameController: _usernameTextController,
-              passwordFocusNode: _passwordFocusNode,
-              pageState: _pageState,
-              errorMessage: _errorMessage,
-              onUsernameChanged: onUsernameChanged,
-              onTapUpdateButton: tryUpdateUsername,
-            ),
-          ],
+      child: SafeArea(
+        child: Scaffold(
+          body: CustomScrollView(
+            slivers: [
+              UpdateUsernamePageHeader(
+                isMobileSize: isMobileSize,
+                onTapLeftPartHeader: onTapLeftPartHeader,
+              ),
+              UpdateUsernamePageBody(
+                isMobileSize: isMobileSize,
+                usernameController: _usernameTextController,
+                passwordFocusNode: _passwordFocusNode,
+                pageState: _pageState,
+                errorMessage: _errorMessage,
+                onUsernameChanged: onUsernameChanged,
+                onTapUpdateButton: tryUpdateUsername,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -155,44 +157,47 @@ class _UpdateUsernamePageState extends State<UpdateUsernamePage> with UiLoggy {
       _pageState = EnumPageState.loading;
     });
 
+    setState(() => _pageState = EnumPageState.updatingUsername);
+    final String username = _usernameTextController.text;
+
     try {
       _isNameAvailable = await UserActions.checkUsernameAvailability(
-        _usernameTextController.text,
+        username,
       );
 
       if (!_isNameAvailable) {
         setState(() {
           _pageState = EnumPageState.idle;
-          _errorMessage = "input.error.username_not_available".tr();
+          _errorMessage =
+              "${"input.error.username_not_available".tr()} : $username";
         });
 
-        // Snack.e(
-        //   context: context,
-        //   message: "The name $newUserName is not available",
-        // );
+        if (!mounted) return;
 
+        Utils.graphic.showSnackbar(
+          context,
+          duration: const Duration(seconds: 8),
+          message: _errorMessage,
+        );
         return;
       }
 
       final CloudFunResponse usernameUpdateResp =
           await Utils.state.updateUsername(
-        _usernameTextController.text,
+        username,
       );
 
       if (!usernameUpdateResp.success) {
         final CloudFunError? exception = usernameUpdateResp.error;
-
-        setState(() {
-          _pageState = EnumPageState.idle;
-        });
-
         loggy.error(exception?.message);
+        setState(() => _pageState = EnumPageState.idle);
 
-        // Snack.e(
-        //   context: context,
-        //   message: "[code: ${exception.code}] - ${exception.message}",
-        // );
-
+        if (!mounted) return;
+        Utils.graphic.showSnackbar(
+          context,
+          duration: const Duration(seconds: 8),
+          message: "${exception?.code} - ${exception?.message}",
+        );
         return;
       }
 
@@ -207,23 +212,18 @@ class _UpdateUsernamePageState extends State<UpdateUsernamePage> with UiLoggy {
       //   message: "Your username has been successfully updated.",
       // );
 
-      if (!mounted) {
-        return;
-      }
-
+      if (!mounted) return;
       context.beamBack();
     } catch (error) {
       loggy.error(error);
+      setState(() => _pageState = EnumPageState.idle);
 
-      setState(() {
-        _pageState = EnumPageState.idle;
-      });
-
-      // Snack.e(
-      //   context: context,
-      //   message: "Sorry, there was an error. "
-      //       "Can you try again later or contact us if the issue persists?",
-      // );
+      if (!mounted) return;
+      Utils.graphic.showSnackbar(
+        context,
+        duration: const Duration(seconds: 8),
+        message: error.toString(),
+      );
     }
   }
 }

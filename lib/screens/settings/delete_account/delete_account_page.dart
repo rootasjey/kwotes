@@ -49,24 +49,26 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> with UiLoggy {
       );
     }
 
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          DeleteAccountPageHeader(
-            isMobileSize: isMobileSize,
-            onTapLeftPartHeader: onTapLeftPartHeader,
-            accentColor: accentColor,
-          ),
-          DeleteAccountPageBody(
-            errorMessage: _errorMessage,
-            hidePassword: _hidePassword,
-            isMobileSize: isMobileSize,
-            passwordController: _passwordTextController,
-            pageState: _pageState,
-            onHidePasswordChanged: onHidePasswordChanged,
-            onValidateDeletion: deleteAccount,
-          ),
-        ],
+    return SafeArea(
+      child: Scaffold(
+        body: CustomScrollView(
+          slivers: [
+            DeleteAccountPageHeader(
+              isMobileSize: isMobileSize,
+              onTapLeftPartHeader: onTapLeftPartHeader,
+              accentColor: accentColor,
+            ),
+            DeleteAccountPageBody(
+              errorMessage: _errorMessage,
+              hidePassword: _hidePassword,
+              isMobileSize: isMobileSize,
+              passwordController: _passwordTextController,
+              pageState: _pageState,
+              onHidePasswordChanged: onHidePasswordChanged,
+              onValidateDeletion: deleteAccount,
+            ),
+          ],
+        ),
       ),
     );
   }

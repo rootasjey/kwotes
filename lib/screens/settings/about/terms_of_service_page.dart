@@ -20,112 +20,115 @@ class TermsOfServicePage extends StatelessWidget {
 
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
 
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverPadding(
-            padding: isMobileSize
-                ? const EdgeInsets.all(24.0)
-                : const EdgeInsets.symmetric(
-                    horizontal: 48.0,
-                    vertical: 48.0,
-                  ),
-            sliver: SliverToBoxAdapter(
-              child: FractionallySizedBox(
-                widthFactor: isMobileSize ? 1.0 : 0.80,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    IconButton(
-                      onPressed: () => Utils.passage.deepBack(context),
-                      icon: const Icon(
-                        TablerIcons.arrow_left,
-                      ),
+    return SafeArea(
+      child: Scaffold(
+        body: CustomScrollView(
+          slivers: [
+            SliverPadding(
+              padding: isMobileSize
+                  ? const EdgeInsets.all(24.0)
+                  : const EdgeInsets.symmetric(
+                      horizontal: 48.0,
+                      vertical: 48.0,
                     ),
-                    Text(
-                      "tos.name".tr(),
-                      style: Utils.calligraphy.body(
-                        textStyle: TextStyle(
-                          fontSize: isMobileSize ? 36.0 : 84.0,
-                          fontWeight: FontWeight.w700,
-                          color: Constants.colors.getRandomFromPalette(
-                            onlyDarkerColors: true,
+              sliver: SliverToBoxAdapter(
+                child: FractionallySizedBox(
+                  widthFactor: isMobileSize ? 1.0 : 0.80,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        onPressed: () => Utils.passage.deepBack(context),
+                        icon: const Icon(TablerIcons.arrow_left),
+                        style: IconButton.styleFrom(
+                          backgroundColor: accentColor.withOpacity(0.1),
+                        ),
+                      ),
+                      Text(
+                        "tos.name".tr(),
+                        style: Utils.calligraphy.body(
+                          textStyle: TextStyle(
+                            fontSize: isMobileSize ? 36.0 : 84.0,
+                            fontWeight: FontWeight.w700,
+                            color: Constants.colors.getRandomFromPalette(
+                              onlyDarkerColors: true,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 24.0),
-                      child: Text.rich(
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 24.0),
+                        child: Text.rich(
+                          TextSpan(
+                            text: "${"date.last_updated".tr()} : ",
+                            children: [
+                              TextSpan(
+                                text: Jiffy.parseFromDateTime(
+                                        Constants.termsOfServiceLastUpdated)
+                                    .yMMMMEEEEd,
+                              ),
+                            ],
+                          ),
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w500,
+                              color: foregroundColor?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Text.rich(
                         TextSpan(
-                          text: "${"date.last_updated".tr()} : ",
+                          text: "${"tos.content.0".tr()}\n\n",
                           children: [
                             TextSpan(
-                              text: Jiffy.parseFromDateTime(
-                                      Constants.termsOfServiceLastUpdated)
-                                  .yMMMMEEEEd,
+                              text: "${"tos.content.1".tr()}\n\n",
+                            ),
+                            TextSpan(
+                              text: "${"tos.content.2".tr()}\n\n",
+                            ),
+                            TextSpan(
+                              text: "${"tos.content.3".tr()}\n\n",
+                            ),
+                            TextSpan(
+                              text: "${"tos.content.4".tr()}\n\n",
+                            ),
+                            TextSpan(
+                              text: "${"tos.content.5".tr()}\n\n",
+                            ),
+                            TextSpan(
+                              text: "${"tos.content.6".tr()}\n\n",
+                            ),
+                            TextSpan(
+                              text: "${"tos.content.7".tr()}\n\n",
                             ),
                           ],
                         ),
                         style: Utils.calligraphy.body(
                           textStyle: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w500,
-                            color: foregroundColor?.withOpacity(0.4),
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.w300,
+                            color: foregroundColor?.withOpacity(0.6),
                           ),
                         ),
                       ),
-                    ),
-                    Text.rich(
-                      TextSpan(
-                        text: "${"tos.content.0".tr()}\n\n",
-                        children: [
-                          TextSpan(
-                            text: "${"tos.content.1".tr()}\n\n",
-                          ),
-                          TextSpan(
-                            text: "${"tos.content.2".tr()}\n\n",
-                          ),
-                          TextSpan(
-                            text: "${"tos.content.3".tr()}\n\n",
-                          ),
-                          TextSpan(
-                            text: "${"tos.content.4".tr()}\n\n",
-                          ),
-                          TextSpan(
-                            text: "${"tos.content.5".tr()}\n\n",
-                          ),
-                          TextSpan(
-                            text: "${"tos.content.6".tr()}\n\n",
-                          ),
-                          TextSpan(
-                            text: "${"tos.content.7".tr()}\n\n",
-                          ),
-                        ],
-                      ),
-                      style: Utils.calligraphy.body(
-                        textStyle: TextStyle(
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.w300,
-                          color: foregroundColor?.withOpacity(0.6),
+                      ColoredTextButton(
+                        textFlex: 0,
+                        textValue: "back".tr(),
+                        onPressed: () => Utils.passage.deepBack(context),
+                        icon: const Icon(TablerIcons.arrow_narrow_left),
+                        style: TextButton.styleFrom(
+                          backgroundColor: accentColor.withOpacity(0.2),
                         ),
                       ),
-                    ),
-                    ColoredTextButton(
-                      textFlex: 0,
-                      textValue: "back".tr(),
-                      onPressed: () => Utils.passage.deepBack(context),
-                      icon: const Icon(TablerIcons.arrow_narrow_left),
-                      style: TextButton.styleFrom(
-                        backgroundColor: accentColor.withOpacity(0.2),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

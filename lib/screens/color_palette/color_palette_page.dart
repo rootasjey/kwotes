@@ -17,21 +17,23 @@ class ColorPalettePage extends StatelessWidget {
     final bool isMobileSize =
         windowSize.width <= Utils.measurements.mobileWidthTreshold;
 
-    return Scaffold(
-      body: CustomScrollView(slivers: [
-        ColorPalettePageBody(
-          isMobileSize: isMobileSize,
-          onCopyHex: (Topic topic) => onCopyHex(context, topic),
-          onCopyRGBA: (Topic topic) => onCopyRGBA(context, topic),
-          onCopyValue: (Topic topic) => onCopyValue(context, topic),
-          onTapColorCard: (Topic topic) => onTapColorCard(context, topic),
-          onLongPressColorCard: (Topic topic) => onCopyValue(
-            context,
-            topic,
+    return SafeArea(
+      child: Scaffold(
+        body: CustomScrollView(slivers: [
+          ColorPalettePageBody(
+            isMobileSize: isMobileSize,
+            onCopyHex: (Topic topic) => onCopyHex(context, topic),
+            onCopyRGBA: (Topic topic) => onCopyRGBA(context, topic),
+            onCopyValue: (Topic topic) => onCopyValue(context, topic),
+            onTapColorCard: (Topic topic) => onTapColorCard(context, topic),
+            onLongPressColorCard: (Topic topic) => onCopyValue(
+              context,
+              topic,
+            ),
+            windowSize: windowSize,
           ),
-          windowSize: windowSize,
-        ),
-      ]),
+        ]),
+      ),
     );
   }
 

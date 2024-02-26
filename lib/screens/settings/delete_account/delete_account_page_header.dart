@@ -59,7 +59,7 @@ class DeleteAccountPageHeader extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 32.0),
+                  padding: const EdgeInsets.only(top: 32.0, bottom: 6.0),
                   child: MouseRegion(
                     cursor: SystemMouseCursors.click,
                     child: GestureDetector(
@@ -85,8 +85,9 @@ class DeleteAccountPageHeader extends StatelessWidget {
                   textAlign: isMobileSize ? TextAlign.left : TextAlign.center,
                   style: Utils.calligraphy.body(
                     textStyle: TextStyle(
-                      color: accentColor,
-                      fontWeight: fontWeight,
+                      color: accentColor.withOpacity(0.8),
+                      height: 1.0,
+                      fontWeight: FontWeight.w700,
                       fontSize: 54.0,
                     ),
                   ),

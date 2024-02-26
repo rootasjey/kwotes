@@ -20,137 +20,140 @@ class CreditsPage extends StatelessWidget {
 
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
 
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverPadding(
-            padding: isMobileSize
-                ? const EdgeInsets.only(
-                    top: 24.0,
-                    left: 24.0,
-                    right: 24.0,
-                    bottom: 200.0,
-                  )
-                : const EdgeInsets.symmetric(
-                    horizontal: 48.0,
-                    vertical: 48.0,
+    return SafeArea(
+      child: Scaffold(
+        body: CustomScrollView(
+          slivers: [
+            SliverPadding(
+              padding: isMobileSize
+                  ? const EdgeInsets.only(
+                      top: 24.0,
+                      left: 24.0,
+                      right: 24.0,
+                      bottom: 200.0,
+                    )
+                  : const EdgeInsets.symmetric(
+                      horizontal: 48.0,
+                      vertical: 48.0,
+                    ),
+              sliver: SliverToBoxAdapter(
+                child: FractionallySizedBox(
+                  widthFactor: isMobileSize ? 1.0 : 0.80,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        onPressed: () => Utils.passage.deepBack(context),
+                        icon: const Icon(TablerIcons.arrow_left),
+                        style: IconButton.styleFrom(
+                          backgroundColor: accentColor.withOpacity(0.1),
+                        ),
+                      ),
+                      Text(
+                        "credits.name".tr(),
+                        style: Utils.calligraphy.body(
+                          textStyle: TextStyle(
+                            fontSize: 84.0,
+                            fontWeight: FontWeight.w700,
+                            color: Constants.colors.getRandomFromPalette(
+                              onlyDarkerColors: true,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Text(
+                        "credits.description".tr(),
+                        style: Utils.calligraphy.body(
+                          textStyle: TextStyle(
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.w300,
+                            color: color?.withOpacity(0.6),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 32.0),
+                        child: Text(
+                          "credits.general_purpose.name".tr(),
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.w400,
+                              color: color?.withOpacity(0.6),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "credits.general_purpose.description".tr(),
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              color: color?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: getGeneralPurposeItems()
+                            .map((CreditItemData data) => toTile(color, data))
+                            .toList(),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 32.0),
+                        child: Text(
+                          "credits.libraries.name".tr(),
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.w400,
+                              color: color?.withOpacity(0.6),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "credits.libraries.description".tr(),
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              color: color?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: getPackageItems()
+                            .map((CreditItemData data) => toTile(color, data))
+                            .toList(),
+                      ),
+                      ColoredTextButton(
+                        textFlex: 0,
+                        textValue: "back".tr(),
+                        onPressed: () => Utils.passage.deepBack(context),
+                        icon: const Icon(TablerIcons.arrow_narrow_left),
+                        margin: const EdgeInsets.only(
+                          top: 42.0,
+                        ),
+                        style: TextButton.styleFrom(
+                          backgroundColor: accentColor.withOpacity(0.2),
+                        ),
+                      ),
+                    ],
                   ),
-            sliver: SliverToBoxAdapter(
-              child: FractionallySizedBox(
-                widthFactor: isMobileSize ? 1.0 : 0.80,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    IconButton(
-                      onPressed: () => Utils.passage.deepBack(context),
-                      icon: const Icon(
-                        TablerIcons.arrow_left,
-                      ),
-                    ),
-                    Text(
-                      "credits.name".tr(),
-                      style: Utils.calligraphy.body(
-                        textStyle: TextStyle(
-                          fontSize: 84.0,
-                          fontWeight: FontWeight.w700,
-                          color: Constants.colors.getRandomFromPalette(
-                            onlyDarkerColors: true,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Text(
-                      "credits.description".tr(),
-                      style: Utils.calligraphy.body(
-                        textStyle: TextStyle(
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.w300,
-                          color: color?.withOpacity(0.6),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 32.0),
-                      child: Text(
-                        "credits.general_purpose.name".tr(),
-                        style: Utils.calligraphy.body(
-                          textStyle: TextStyle(
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.w400,
-                            color: color?.withOpacity(0.6),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Text(
-                        "credits.general_purpose.description".tr(),
-                        style: Utils.calligraphy.body(
-                          textStyle: TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w400,
-                            color: color?.withOpacity(0.4),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: getGeneralPurposeItems()
-                          .map((CreditItemData data) => toTile(color, data))
-                          .toList(),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 32.0),
-                      child: Text(
-                        "credits.libraries.name".tr(),
-                        style: Utils.calligraphy.body(
-                          textStyle: TextStyle(
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.w400,
-                            color: color?.withOpacity(0.6),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Text(
-                        "credits.libraries.description".tr(),
-                        style: Utils.calligraphy.body(
-                          textStyle: TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w400,
-                            color: color?.withOpacity(0.4),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: getPackageItems()
-                          .map((CreditItemData data) => toTile(color, data))
-                          .toList(),
-                    ),
-                    ColoredTextButton(
-                      textFlex: 0,
-                      textValue: "back".tr(),
-                      onPressed: () => Utils.passage.deepBack(context),
-                      icon: const Icon(TablerIcons.arrow_narrow_left),
-                      margin: const EdgeInsets.only(
-                        top: 42.0,
-                      ),
-                      style: TextButton.styleFrom(
-                        backgroundColor: accentColor.withOpacity(0.2),
-                      ),
-                    ),
-                  ],
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
