@@ -284,7 +284,7 @@ class AppState with UiLoggy {
   Future<CloudFunResponse> updateUsername(String newUsername) async {
     try {
       final response = await Utils.lambda.fun("users-updateUsername").call({
-        "username": newUsername,
+        "newUsername": newUsername,
       });
 
       return CloudFunResponse.fromMap(response.data);
