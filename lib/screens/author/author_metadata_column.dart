@@ -5,6 +5,7 @@ import "package:jiffy/jiffy.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/components/buttons/colored_text_button.dart";
 import "package:kwotes/types/author.dart";
+import "package:wave_divider/wave_divider.dart";
 
 class AuthorMetadataColumn extends StatelessWidget {
   const AuthorMetadataColumn({
@@ -203,6 +204,7 @@ class AuthorMetadataColumn extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4.0),
                 ),
+                surfaceTintColor: Colors.grey.shade50,
                 color: isDark ? null : Colors.grey.shade100,
                 child: InkWell(
                   onTap: onToggleOpen,
@@ -220,7 +222,9 @@ class AuthorMetadataColumn extends StatelessWidget {
                         );
                       },
                       separatorBuilder: (BuildContext context, int index) {
-                        return Divider(color: foregroundColor.withOpacity(0.2));
+                        return WaveDivider(
+                          color: foregroundColor.withOpacity(0.2),
+                        );
                       },
                       itemCount: children.length,
                     ),
