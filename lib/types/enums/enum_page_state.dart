@@ -51,6 +51,15 @@ enum EnumPageState {
   /// Updating a quote.
   updatingQuote,
 
+  /// Updating an email.
+  updatingEmail,
+
+  /// Updating a password.
+  updatingPassword,
+
+  /// Updating a username.
+  updatingUsername,
+
   /// Validating a quote.
   validatingQuote,
 }
