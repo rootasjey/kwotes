@@ -112,17 +112,21 @@ class _QuoteListTextState extends State<QuoteListText> {
                 ),
               ),
             ),
-            Wrap(
-              spacing: 12.0,
-              runSpacing: 12.0,
-              alignment: WrapAlignment.start,
-              children: [
-                TextButton(
+            if (widget.quoteList.id.isNotEmpty)
+              Wrap(
+                spacing: 12.0,
+                runSpacing: 12.0,
+                alignment: WrapAlignment.start,
+                children: [
+                  TextButton(
                     onPressed: widget.onCancelEditMode,
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 18.0,
-                        vertical: 14.0,
+                        vertical: 6.0,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0),
                       ),
                       backgroundColor: Colors.black12,
                       foregroundColor:
@@ -136,34 +140,38 @@ class _QuoteListTextState extends State<QuoteListText> {
                     ),
                     child: Text(
                       "cancel".tr(),
-                    )),
-                TextButton(
-                  onPressed: _nameController.text.isEmpty
-                      ? null
-                      : () =>
-                          widget.onSaveChanges?.call(_nameController.text, ""),
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 18.0,
-                      vertical: 14.0,
                     ),
-                    backgroundColor: _nameController.text.isEmpty
+                  ),
+                  TextButton(
+                    onPressed: _nameController.text.isEmpty
                         ? null
-                        : Constants.colors.lists.withOpacity(0.1),
-                    foregroundColor: Constants.colors.lists,
-                    textStyle: Utils.calligraphy.body4(
-                      textStyle: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14.0,
+                        : () => widget.onSaveChanges
+                            ?.call(_nameController.text, ""),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 18.0,
+                        vertical: 6.0,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                      backgroundColor: _nameController.text.isEmpty
+                          ? null
+                          : Constants.colors.lists.withOpacity(0.1),
+                      foregroundColor: Constants.colors.lists,
+                      textStyle: Utils.calligraphy.body4(
+                        textStyle: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14.0,
+                        ),
                       ),
                     ),
+                    child: Text(
+                      "list.save.name".tr(),
+                    ),
                   ),
-                  child: Text(
-                    "list.save.name".tr(),
-                  ),
-                ),
-              ],
-            ),
+                ],
+              ),
           ],
         ),
       );
@@ -245,27 +253,31 @@ class _QuoteListTextState extends State<QuoteListText> {
                 alignment: WrapAlignment.start,
                 children: [
                   TextButton(
-                      onPressed: widget.onCancelDelete != null
-                          ? () => widget.onCancelDelete?.call(widget.quoteList)
-                          : null,
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 18.0,
-                          vertical: 14.0,
-                        ),
-                        backgroundColor: Colors.black12,
-                        foregroundColor:
-                            Theme.of(context).textTheme.bodyMedium?.color,
-                        textStyle: Utils.calligraphy.body4(
-                          textStyle: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14.0,
-                          ),
+                    onPressed: widget.onCancelDelete != null
+                        ? () => widget.onCancelDelete?.call(widget.quoteList)
+                        : null,
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 18.0,
+                        vertical: 6.0,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                      backgroundColor: Colors.black12,
+                      foregroundColor:
+                          Theme.of(context).textTheme.bodyMedium?.color,
+                      textStyle: Utils.calligraphy.body4(
+                        textStyle: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14.0,
                         ),
                       ),
-                      child: Text(
-                        "cancel".tr(),
-                      )),
+                    ),
+                    child: Text(
+                      "cancel".tr(),
+                    ),
+                  ),
                   TextButton(
                     onPressed: widget.onConfirmDelete != null
                         ? () => widget.onConfirmDelete?.call(widget.quoteList)
@@ -273,7 +285,10 @@ class _QuoteListTextState extends State<QuoteListText> {
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 18.0,
-                        vertical: 14.0,
+                        vertical: 6.0,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0),
                       ),
                       backgroundColor: Constants.colors.delete.withOpacity(0.1),
                       foregroundColor: Constants.colors.delete,
