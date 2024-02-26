@@ -88,6 +88,7 @@ class SearchInput extends StatelessWidget {
                 controller: inputController,
                 keyboardType: TextInputType.multiline,
                 textCapitalization: TextCapitalization.sentences,
+                textInputAction: TextInputAction.search,
                 onChanged: onChangedTextField,
                 textAlign: TextAlign.center,
                 style: Utils.calligraphy.body(

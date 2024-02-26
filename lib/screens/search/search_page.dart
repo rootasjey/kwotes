@@ -915,6 +915,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   /// Callback fired when author is tapped.
   void onTapAuthor(Author author) {
+    FocusManager.instance.primaryFocus?.unfocus();
     NavigationStateHelper.author = author;
     Beamer.of(context).beamToNamed(
       SearchContentLocation.authorRoute.replaceFirst(
@@ -929,6 +930,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   /// Callback fired when reference is tapped.
   void onTapReference(Reference reference) {
+    FocusManager.instance.primaryFocus?.unfocus();
     NavigationStateHelper.reference = reference;
     Beamer.of(context).beamToNamed(
       SearchContentLocation.referenceRoute.replaceFirst(
@@ -943,6 +945,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   /// Callback fired when a topic is tapped.
   void onTapTopic(Topic topic) {
+    FocusManager.instance.primaryFocus?.unfocus();
     _searchInputController.text = topic.name;
 
     final String path = SearchContentLocation.topicRoute.replaceFirst(
