@@ -1117,9 +1117,10 @@
     "new": "New username",
     "update": {
       "error": "Error updating username",
+      "ing": "Updating username",
       "name": "Update username",
       "success": "Username successfully updated!",
-      "tips": "You can choose a new username as long as it is available, at least 3 characters long, only contains alpha-numeric characters, hyphen (-) and underscore (_)."
+      "tips": "You can choose a new username as long as it is available, at least 3 characters long, only contains alpha-numeric characters, and underscore (_)."
     }
   },
   "version": "Version",

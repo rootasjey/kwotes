@@ -1130,9 +1130,10 @@
     "new": "Nouveau nom d'utilisateur",
     "update": {
       "error": "Une erreur est survenue lors de la mise à jour du nom d'utilisateur",
+      "ing": "Mise à jour du nom d'utilisateur",
       "name": "Mettre à jour mon nom d'utilisateur",
       "success": "Votre nom d'utilisateur a été mis à jour !",
-      "tips": "Vous pouvez choisir un nouveau nom d'utilisateur s'il est disponible, contient au moins 3 caractères, et contenant uniquement des caractères alphanumériques, des tirets (-) et des tirets (_)."
+      "tips": "Vous pouvez choisir un nouveau nom d'utilisateur s'il est disponible, contient au moins 3 caractères, et contenant uniquement des caractères alphanumériques, et des tirets (_)."
     }
   },
   "version": "Version",
