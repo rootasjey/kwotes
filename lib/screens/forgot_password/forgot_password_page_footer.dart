@@ -41,12 +41,12 @@ class ForgotPasswordPageFooter extends StatelessWidget {
     final Widget submitButton = ElevatedButton(
       onPressed: () => onSubmit?.call(emailController.text),
       style: ElevatedButton.styleFrom(
-        backgroundColor: isDark ? Colors.white : Colors.black,
+        backgroundColor: isDark ? Colors.white : null,
         elevation: 0.0,
         foregroundColor: randomColor,
         padding: const EdgeInsets.symmetric(
           horizontal: 16.0,
-          vertical: 23.0,
+          vertical: 18.0,
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4.0),

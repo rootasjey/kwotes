@@ -49,12 +49,12 @@ class SigninPageFooter extends StatelessWidget {
         passwordController.text,
       ),
       style: ElevatedButton.styleFrom(
-        backgroundColor: isDark ? Colors.white : Colors.black,
-        elevation: 0.0,
+        backgroundColor: isDark ? Colors.white : null,
+        elevation: 4.0,
         foregroundColor: accentColor,
         padding: const EdgeInsets.symmetric(
           horizontal: 16.0,
-          vertical: 23.0,
+          vertical: 18.0,
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4.0),

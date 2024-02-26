@@ -8,6 +8,7 @@ import "package:kwotes/globals/utils.dart";
 class UpdateEmailPageHeader extends StatelessWidget {
   const UpdateEmailPageHeader({
     super.key,
+    required this.email,
     this.isMobileSize = false,
     this.accentColor,
     this.onTapLeftPartHeader,
@@ -21,6 +22,9 @@ class UpdateEmailPageHeader extends StatelessWidget {
 
   /// Callback fired when left part header is tapped.
   final void Function()? onTapLeftPartHeader;
+
+  /// Email to display.
+  final String email;
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +96,23 @@ class UpdateEmailPageHeader extends StatelessWidget {
                   textStyle: TextStyle(
                     fontSize: 16.0,
                     color: foregroundColor?.withOpacity(0.4),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 12.0),
+              child: FractionallySizedBox(
+                widthFactor: isMobileSize ? 0.9 : 0.4,
+                child: Text(
+                  email,
+                  textAlign: isMobileSize ? TextAlign.start : TextAlign.center,
+                  style: Utils.calligraphy.body(
+                    textStyle: TextStyle(
+                      color: foregroundColor?.withOpacity(0.4),
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),

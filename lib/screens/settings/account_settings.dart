@@ -4,7 +4,7 @@ import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/globals/utils.dart";
-import "package:kwotes/types/enums/enum_accunt_displayed.dart";
+import "package:kwotes/types/enums/enum_account_displayed.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 
 class AccountSettings extends StatelessWidget {
