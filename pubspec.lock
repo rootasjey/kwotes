@@ -1314,6 +1314,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  wave_divider:
+    dependency: "direct main"
+    description:
+      name: wave_divider
+      sha256: ea8d48b56f894322c562a0d91f719bca4df2300f4a7c854ca243b6ebf7a81ede
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3"
   web:
     dependency: transitive
     description:
