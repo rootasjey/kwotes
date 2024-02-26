@@ -24,7 +24,13 @@ import "package:loggy/loggy.dart";
 
 class DashboardLastDraft extends StatefulWidget {
   /// Displays the current user's last draft quote.
-  const DashboardLastDraft({super.key});
+  const DashboardLastDraft({
+    super.key,
+    required this.userFirestore,
+  });
+
+  /// User firestore.
+  final UserFirestore userFirestore;
 
   @override
   State<DashboardLastDraft> createState() => _DashboardLastDraftState();
@@ -43,6 +49,8 @@ class _DashboardLastDraftState extends State<DashboardLastDraft> with UiLoggy {
   /// Stream subscription for draft quotes.
   QuerySnapshotStreamSubscription? _draftSub;
 
+  String _previousUserId = "";
+
   @override
   void initState() {
     super.initState();
@@ -50,7 +58,19 @@ class _DashboardLastDraftState extends State<DashboardLastDraft> with UiLoggy {
   }
 
   @override
+  void dispose() {
+    _drafts.clear();
+    _draftSub?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_previousUserId != widget.userFirestore.id) {
+      _previousUserId = widget.userFirestore.id;
+      fetch();
+    }
+
     if (_drafts.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -86,6 +106,7 @@ class _DashboardLastDraftState extends State<DashboardLastDraft> with UiLoggy {
   }
 
   void fetch() async {
+    _drafts.clear();
     final Signal<UserFirestore> signalUserFirestore =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
 
@@ -204,7 +225,13 @@ class _DashboardLastDraftState extends State<DashboardLastDraft> with UiLoggy {
             break;
         }
       }
+    }, onError: (error, stack) {
+      loggy.error(error.toString(), error, stack);
+      _drafts.clear();
+      _draftSub?.cancel();
+      _draftSub = null;
     }, onDone: () {
+      _drafts.clear();
       _draftSub?.cancel();
       _draftSub = null;
     });

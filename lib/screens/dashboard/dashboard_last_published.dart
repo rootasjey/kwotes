@@ -24,7 +24,13 @@ import "package:loggy/loggy.dart";
 
 class DashboardLastPublished extends StatefulWidget {
   /// Displays the current user's last published quote.
-  const DashboardLastPublished({super.key});
+  const DashboardLastPublished({
+    super.key,
+    required this.userFirestore,
+  });
+
+  /// User firestore.
+  final UserFirestore userFirestore;
 
   @override
   State<DashboardLastPublished> createState() => _DashboardLastPublishedState();
@@ -44,6 +50,8 @@ class _DashboardLastPublishedState extends State<DashboardLastPublished>
   /// Stream subscription for published quotes.
   QuerySnapshotStreamSubscription? _publishedSub;
 
+  String _previousUserId = "";
+
   @override
   void initState() {
     super.initState();
@@ -51,7 +59,19 @@ class _DashboardLastPublishedState extends State<DashboardLastPublished>
   }
 
   @override
+  void dispose() {
+    _published.clear();
+    _publishedSub?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_previousUserId != widget.userFirestore.id) {
+      _previousUserId = widget.userFirestore.id;
+      fetch();
+    }
+
     if (_published.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -77,13 +97,16 @@ class _DashboardLastPublishedState extends State<DashboardLastPublished>
             accentColor: Constants.colors.published,
             onPressed: onTitlePressed,
           ),
-          ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 600.0),
-            child: QuoteText(
-              magnitude: EnumQuoteTextMagnitude.small,
-              quote: lastPublished,
-              onTap: (_) => onQuotePressed(),
-              margin: const EdgeInsets.only(left: 4.0),
+          Hero(
+            tag: lastPublished.id,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 600.0),
+              child: QuoteText(
+                magnitude: EnumQuoteTextMagnitude.small,
+                quote: lastPublished,
+                onTap: (_) => onQuotePressed(),
+                margin: const EdgeInsets.only(left: 4.0),
+              ),
             ),
           ),
         ],
@@ -92,6 +115,7 @@ class _DashboardLastPublishedState extends State<DashboardLastPublished>
   }
 
   void fetch() async {
+    _published.clear();
     final Signal<UserFirestore> signalUserFirestore =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
 
@@ -210,7 +234,13 @@ class _DashboardLastPublishedState extends State<DashboardLastPublished>
             break;
         }
       }
+    }, onError: (error, stack) {
+      loggy.error(error.toString(), error, stack);
+      _published.clear();
+      _publishedSub?.cancel();
+      _publishedSub = null;
     }, onDone: () {
+      _published.clear();
       _publishedSub?.cancel();
       _publishedSub = null;
     });

@@ -69,8 +69,12 @@ class DashboardWelcomePage extends StatelessWidget {
                   isDark: isDark,
                   isMobileSize: isMobileSize,
                 ),
-                const DashboardLastDraft(),
-                const DashboardLastPublished(),
+                DashboardLastDraft(
+                  userFirestore: userFirestore,
+                ),
+                DashboardLastPublished(
+                  userFirestore: userFirestore,
+                ),
                 Align(
                   alignment: Alignment.topLeft,
                   child: ColoredTextButton(
