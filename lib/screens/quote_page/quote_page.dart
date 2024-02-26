@@ -179,17 +179,12 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
                   ),
                   Positioned(
                     top: null,
-                    // top: isMobileSize ? null : 16.0,
                     right: 0.0,
-                    // right: 16.0,
-                    // bottom: isMobileSize ? 16.0 : null,
                     bottom: 24.0,
-                    // left: isMobileSize ? 0.0 : null,
                     left: 0.0,
                     child: QuotePageActions(
                       copyIcon: copyIcon,
                       direction: Axis.horizontal,
-                      // direction: isMobileSize ? Axis.horizontal : Axis.vertical,
                       authenticated: userFirestore.id.isNotEmpty,
                       quote: _quote,
                       copyTooltip: copyTooltip,

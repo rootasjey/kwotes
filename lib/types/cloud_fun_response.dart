@@ -22,10 +22,17 @@ class CloudFunResponse {
   final UserFirestore? user;
 
   factory CloudFunResponse.fromMap(Map<dynamic, dynamic> data) {
+    final Map<Object?, Object?>? userData = data["user"];
+    final Map<Object?, Object?>? errorData = data["error"];
+
     return CloudFunResponse(
       success: data["success"] ?? true,
-      user: UserFirestore.fromMap(data["user"]),
-      error: CloudFunError.fromMap(data["error"]),
+      user: userData == null
+          ? UserFirestore.empty()
+          : UserFirestore.fromMap(userData.cast<String, dynamic>()),
+      error: errorData == null
+          ? CloudFunError.empty()
+          : CloudFunError.fromMap(errorData.cast<String, dynamic>()),
     );
   }
 
