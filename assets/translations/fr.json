@@ -126,7 +126,7 @@
     "last_updated": "Dernière mise à jour",
     "name": "Date"
   },
-  "dashboard": "Tableau de bord",
+  "dashboard": "Mon journal",
   "delete_account": "Supprimer le compte",
   "description": {
     "name": "Description",
@@ -434,7 +434,7 @@
     "color_palette": "@:kwotes_leading Palette de couleurs",
     "color_detail": "@:kwotes_leading Couleur: {}",
     "credits": "@:kwotes_leading Crédits",
-    "dashboard": "@:kwotes_leading Dashboard",
+    "dashboard": "@:kwotes_leading Mon journal",
     "delete_account": "@:kwotes_leading Suppression du compte",
     "drafts": "@:kwotes_leading Brouillons",
     "edit_author": "@:kwotes_leading Éditer l'auteur: {}",

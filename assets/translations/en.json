@@ -124,7 +124,7 @@
     "last_updated": "Last updated",
     "name": "Date"
   },
-  "dashboard": "Dashboard",
+  "dashboard": "My diary",
   "description": {
     "name": "Description",
     "optional": "Description (optional)"
@@ -432,7 +432,7 @@
     "color_palette": "@:kwotes_leading Color palette",
     "color_detail": "@:kwotes_leading Color: {}",
     "credits": "@:kwotes_leading Credits",
-    "dashboard": "@:kwotes_leading Dashboard",
+    "dashboard": "@:kwotes_leading My diary",
     "delete_account": "@:kwotes_leading Delete account",
     "drafts": "@:kwotes_leading Drafts",
     "edit_author": "@:kwotes_leading Edit author: {}",
