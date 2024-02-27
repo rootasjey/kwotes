@@ -228,6 +228,7 @@ class EmptyView extends StatelessWidget {
   /// Return a specific empty view for the search.
   static Widget searchEmptyView(
     BuildContext context, {
+    /// Foreground color.
     Color? foregroundColor,
 
     /// Accent color.
@@ -316,11 +317,18 @@ class EmptyView extends StatelessWidget {
                   textFlex: 0,
                   margin: const EdgeInsets.only(top: 24.0),
                   icon: Icon(
-                    TablerIcons.refresh,
-                    color: accentColor,
+                    TablerIcons.zoom_reset,
+                    size: 18.0,
+                    color: foregroundColor?.withOpacity(0.8),
+                  ),
+                  textStyle: Utils.calligraphy.body(
+                    textStyle: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      color: foregroundColor?.withOpacity(0.8),
+                    ),
                   ),
                   style: TextButton.styleFrom(
-                    backgroundColor: accentColor?.withOpacity(0.2),
+                    backgroundColor: foregroundColor?.withOpacity(0.1),
                     padding: const EdgeInsets.symmetric(
                       vertical: 12.0,
                       horizontal: 24.0,
