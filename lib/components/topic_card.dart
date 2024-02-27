@@ -92,7 +92,7 @@ class _TopicCardState extends State<TopicCard> {
 
   @override
   Widget build(BuildContext context) {
-    final Topic topicColor = widget.topic;
+    final Topic topic = widget.topic;
 
     return Card(
       margin: widget.margin,
@@ -104,10 +104,9 @@ class _TopicCardState extends State<TopicCard> {
       child: InkWell(
         customBorder: widget.shape,
         splashColor: _iconHoverColor?.withOpacity(0.6),
-        onTap:
-            widget.onTap != null ? () => widget.onTap?.call(topicColor) : null,
+        onTap: widget.onTap != null ? () => widget.onTap?.call(topic) : null,
         onHover: (bool isHover) {
-          widget.onHover?.call(topicColor, isHover);
+          widget.onHover?.call(topic, isHover);
 
           if (isHover) {
             setState(() {
@@ -140,7 +139,7 @@ class _TopicCardState extends State<TopicCard> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Icon(
-                Utils.graphic.getIconDataFromTopic(topicColor.name),
+                Utils.graphic.getIconDataFromTopic(topic.name),
                 color: widget.isDark ? _iconColor : null,
                 size: widget.iconSize,
               ).animate(target: _shakeAnimationTarget).shake(),
@@ -148,16 +147,33 @@ class _TopicCardState extends State<TopicCard> {
                 Padding(
                   padding: const EdgeInsets.only(top: 4.0),
                   child: Hero(
-                    tag: widget.heroTag ?? topicColor.name,
+                    tag: widget.heroTag ?? topic.name,
                     child: Text(
-                      topicColor.name,
+                      topic.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: Utils.calligraphy.body(
                         textStyle: TextStyle(
                           fontSize: 12.0,
-                          color: _iconHoverColor,
+                          color: widget.isDark
+                              ? topic.color
+                              : Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.color
+                                  ?.withOpacity(0.6),
                           fontWeight: FontWeight.w500,
+                          shadows: [
+                            Shadow(
+                              color: widget.isDark
+                                  ? Colors.black
+                                  : topic.color.withOpacity(0.8),
+                              offset: widget.isDark
+                                  ? const Offset(1, 1)
+                                  : const Offset(2, 2),
+                              blurRadius: widget.isDark ? 1.0 : 4.0,
+                            ),
+                          ],
                         ),
                       ),
                     ),

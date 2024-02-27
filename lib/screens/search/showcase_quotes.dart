@@ -8,11 +8,15 @@ import "package:kwotes/types/topic.dart";
 class ShowcaseQuotes extends StatelessWidget {
   const ShowcaseQuotes({
     super.key,
+    this.isDark = false,
     this.isMobileSize = false,
     this.margin = EdgeInsets.zero,
     this.topicColors = const [],
     this.onTapTopicColor,
   });
+
+  /// Whether dark theme is active.
+  final bool isDark;
 
   /// Adapt UI to mobile size.
   final bool isMobileSize;
@@ -66,6 +70,7 @@ class ShowcaseQuotes extends StatelessWidget {
                   (Topic topicColor) {
                     return TopicCard(
                       topic: topicColor,
+                      isDark: isDark,
                       backgroundColor: backgroundColor,
                       foregroundColor: foregroundColor,
                       onTap: onTapTopicColor,
