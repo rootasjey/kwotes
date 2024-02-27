@@ -972,9 +972,9 @@
     "clear": "Clear",
     "empty_quotes": "No quote found for your search.",
     "empty": {
-      "author": "No author found for your search.",
-      "quote": "No quote found for your search.",
-      "reference": "No reference found for your search.",
+      "authors": "No author found for your search.",
+      "quotes": "No quote found for your search.",
+      "references": "No reference found for your search.",
       "results": "No results"
     },
     "ing": "Searching",

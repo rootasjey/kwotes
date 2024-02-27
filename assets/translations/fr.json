@@ -985,9 +985,9 @@
     "clear": "Effacer",
     "empty_quotes": "Aucune citation trouvée pour votre recherche.",
     "empty": {
-      "author": "Aucun auteur trouvé pour votre recherche.",
-      "quote": "Aucune citation trouvée pour votre recherche.",
-      "reference": "Aucune référence trouvée pour votre recherche.",
+      "authors": "Aucun auteur trouvé pour votre recherche.",
+      "quotes": "Aucune citation trouvée pour votre recherche.",
+      "references": "Aucune référence trouvée pour votre recherche.",
       "results": "Aucun résultat"
     },
     "ing": "En recherche",
