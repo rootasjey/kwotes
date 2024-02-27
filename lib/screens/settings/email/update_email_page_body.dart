@@ -70,7 +70,7 @@ class UpdateEmailPageBody extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   OutlinedTextField(
-                    autofocus: true,
+                    autofocus: Utils.graphic.isMobile() ? false : true,
                     controller: emailController,
                     label: "email.new".tr(),
                     keyboardType: TextInputType.text,
@@ -115,7 +115,7 @@ class UpdateEmailPageBody extends StatelessWidget {
                     label: "password.name".tr(),
                     keyboardType: TextInputType.text,
                     onChanged: onPasswordChanged,
-                    textInputAction: TextInputAction.go,
+                    textInputAction: TextInputAction.done,
                   ),
                   Opacity(
                     opacity: passwordErrorMessage.isEmpty ? 0.0 : 1.0,

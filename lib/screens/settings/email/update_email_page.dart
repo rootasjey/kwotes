@@ -98,8 +98,9 @@ class _UpdateEmailPageState extends State<UpdateEmailPage> with UiLoggy {
                   return UpdateEmailPageHeader(
                     accentColor: _accentColor,
                     isMobileSize: isMobileSize,
-                    onTapLeftPartHeader: onTapLeftPartHeader,
                     email: user.email,
+                    margin: const EdgeInsets.only(top: 12.0),
+                    onTapLeftPartHeader: onTapLeftPartHeader,
                   );
                 },
               ),

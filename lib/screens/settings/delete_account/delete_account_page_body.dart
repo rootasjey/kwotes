@@ -17,6 +17,7 @@ class DeleteAccountPageBody extends StatelessWidget {
     this.onHidePasswordChanged,
     this.onValidateDeletion,
     this.errorMessage = "",
+    this.margin = const EdgeInsets.all(0.0),
   });
 
   /// Hide password input text if true.
@@ -24,6 +25,9 @@ class DeleteAccountPageBody extends StatelessWidget {
 
   /// True if the screen's size is narrow.
   final bool isMobileSize;
+
+  /// Margin for the body.
+  final EdgeInsets margin;
 
   /// Page's state (e.g. loading, idle, ...).
   final EnumPageState pageState;
@@ -44,70 +48,46 @@ class DeleteAccountPageBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color secondaryHeaderColor = Theme.of(context).secondaryHeaderColor;
 
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: EdgeInsets.all(isMobileSize ? 24.0 : 40.0),
-        child: Column(
-          children: [
-            Container(
-              margin: const EdgeInsets.only(bottom: 12.0),
-              width: isMobileSize ? null : 352.0,
-              child: Column(
-                children: <Widget>[
-                  OutlinedTextField(
-                    autofocus: true,
-                    obscureText: hidePassword,
-                    controller: passwordController,
-                    label: "password.confirm".tr(),
-                    keyboardType: TextInputType.visiblePassword,
-                    textInputAction: TextInputAction.go,
-                    onSubmitted: (_) => onValidateDeletion?.call(),
-                    suffixIcon: SuffixButton(
-                      icon: Icon(
-                          hidePassword ? TablerIcons.eye : TablerIcons.eye_off),
-                      tooltipString: hidePassword
-                          ? "password.show".tr()
-                          : "password.hide".tr(),
-                      onPressed: () =>
-                          onHidePasswordChanged?.call(!hidePassword),
-                    ),
-                  ),
-                  Opacity(
-                    opacity: errorMessage.isEmpty ? 0.0 : 1.0,
-                    child: Text(
-                      errorMessage,
-                      style: Utils.calligraphy.body(
-                        textStyle: TextStyle(
-                          color: secondaryHeaderColor,
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w600,
-                        ),
+    return SliverPadding(
+      padding: margin,
+      sliver: SliverToBoxAdapter(
+        child: Padding(
+          padding: EdgeInsets.all(isMobileSize ? 24.0 : 40.0),
+          child: Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.only(bottom: 12.0),
+                width: isMobileSize ? null : 352.0,
+                child: Column(
+                  children: <Widget>[
+                    OutlinedTextField(
+                      autofocus: Utils.graphic.isMobile() ? false : true,
+                      obscureText: hidePassword,
+                      controller: passwordController,
+                      label: "password.confirm".tr(),
+                      keyboardType: TextInputType.visiblePassword,
+                      textInputAction: TextInputAction.done,
+                      onSubmitted: (_) => onValidateDeletion?.call(),
+                      suffixIcon: SuffixButton(
+                        icon: Icon(hidePassword
+                            ? TablerIcons.eye
+                            : TablerIcons.eye_off),
+                        tooltipString: hidePassword
+                            ? "password.show".tr()
+                            : "password.hide".tr(),
+                        onPressed: () =>
+                            onHidePasswordChanged?.call(!hidePassword),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            ElevatedButton(
-              onPressed: onValidateDeletion,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black87,
-                surfaceTintColor: Colors.pink,
-              ),
-              child: SizedBox(
-                width: 320.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(14.0),
+                    Opacity(
+                      opacity: errorMessage.isEmpty ? 0.0 : 1.0,
                       child: Text(
-                        "account.delete.name".tr().toUpperCase(),
+                        errorMessage,
                         style: Utils.calligraphy.body(
-                          textStyle: const TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                          textStyle: TextStyle(
+                            color: secondaryHeaderColor,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
@@ -115,11 +95,39 @@ class DeleteAccountPageBody extends StatelessWidget {
                   ],
                 ),
               ),
-            ),
-          ]
-              .animate(delay: 250.ms, interval: 50.ms)
-              .fadeIn(duration: 200.ms, curve: Curves.decelerate)
-              .slideY(begin: 0.6, end: 0.0),
+              ElevatedButton(
+                onPressed: onValidateDeletion,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black87,
+                  surfaceTintColor: Colors.pink,
+                ),
+                child: SizedBox(
+                  width: 320.0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(14.0),
+                        child: Text(
+                          "account.delete.name".tr().toUpperCase(),
+                          style: Utils.calligraphy.body(
+                            textStyle: const TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ]
+                .animate(delay: 250.ms, interval: 50.ms)
+                .fadeIn(duration: 200.ms, curve: Curves.decelerate)
+                .slideY(begin: 0.6, end: 0.0),
+          ),
         ),
       ),
     );

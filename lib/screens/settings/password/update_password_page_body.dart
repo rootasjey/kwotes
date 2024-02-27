@@ -64,7 +64,7 @@ class UpdatePasswordPageBody extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   OutlinedTextField(
-                    autofocus: true,
+                    autofocus: Utils.graphic.isMobile() ? false : true,
                     controller: currentPasswordController,
                     label: "password.current".tr(),
                     keyboardType: TextInputType.text,
@@ -104,7 +104,7 @@ class UpdatePasswordPageBody extends StatelessWidget {
                     label: "password.new".tr(),
                     keyboardType: TextInputType.text,
                     onChanged: onNewPasswordChanged,
-                    textInputAction: TextInputAction.go,
+                    textInputAction: TextInputAction.done,
                   ),
                   Opacity(
                     opacity: newPasswordErrorMessage.isEmpty ? 0.0 : 1.0,

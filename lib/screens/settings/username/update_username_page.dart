@@ -63,6 +63,7 @@ class _UpdateUsernamePageState extends State<UpdateUsernamePage> with UiLoggy {
               UpdateUsernamePageHeader(
                 isMobileSize: isMobileSize,
                 onTapLeftPartHeader: onTapLeftPartHeader,
+                margin: const EdgeInsets.only(top: 24.0),
               ),
               UpdateUsernamePageBody(
                 isMobileSize: isMobileSize,

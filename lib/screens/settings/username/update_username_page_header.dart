@@ -11,6 +11,7 @@ class UpdateUsernamePageHeader extends StatelessWidget {
     this.isMobileSize = false,
     this.accentColor = Colors.amber,
     this.onTapLeftPartHeader,
+    this.margin = EdgeInsets.zero,
   });
 
   /// Adapt the user interface to narrow screen's size if true.
@@ -18,6 +19,9 @@ class UpdateUsernamePageHeader extends StatelessWidget {
 
   /// Accent color.
   final Color accentColor;
+
+  /// Margin around this widget.
+  final EdgeInsets margin;
 
   /// Callback fired when left part header is tapped.
   final void Function()? onTapLeftPartHeader;
@@ -28,87 +32,91 @@ class UpdateUsernamePageHeader extends StatelessWidget {
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
 
-    return SliverToBoxAdapter(
-      child: Container(
-        width: isMobileSize ? null : 360.0,
-        padding: isMobileSize
-            ? const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0)
-            : const EdgeInsets.only(top: 72.0),
-        child: Column(
-          crossAxisAlignment: isMobileSize
-              ? CrossAxisAlignment.start
-              : CrossAxisAlignment.center,
-          children: [
-            ActionChip(
-              onPressed: context.beamBack,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24.0),
+    return SliverPadding(
+      padding: margin,
+      sliver: SliverToBoxAdapter(
+        child: Container(
+          width: isMobileSize ? null : 360.0,
+          padding: isMobileSize
+              ? const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0)
+              : const EdgeInsets.only(top: 72.0),
+          child: Column(
+            crossAxisAlignment: isMobileSize
+                ? CrossAxisAlignment.start
+                : CrossAxisAlignment.center,
+            children: [
+              ActionChip(
+                onPressed: context.beamBack,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24.0),
+                ),
+                label: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(TablerIcons.arrow_left),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text("back".tr()),
+                    ),
+                  ],
+                ),
               ),
-              label: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(TablerIcons.arrow_left),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Text("back".tr()),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 32.0),
-              child: MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: GestureDetector(
-                  onTap: onTapLeftPartHeader,
-                  child: Text(
-                    "settings.name".tr(),
-                    textAlign: isMobileSize ? TextAlign.left : TextAlign.center,
-                    style: Utils.calligraphy.body(
-                      textStyle: TextStyle(
-                        fontSize: 24.0,
-                        fontWeight: fontWeight,
-                        height: 1.0,
-                        color: foregroundColor?.withOpacity(0.6),
+              Padding(
+                padding: const EdgeInsets.only(top: 32.0),
+                child: MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: onTapLeftPartHeader,
+                    child: Text(
+                      "settings.name".tr(),
+                      textAlign:
+                          isMobileSize ? TextAlign.left : TextAlign.center,
+                      style: Utils.calligraphy.body(
+                        textStyle: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: fontWeight,
+                          height: 1.0,
+                          color: foregroundColor?.withOpacity(0.6),
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Text(
-              "username.name".tr(),
-              textAlign: isMobileSize ? TextAlign.left : TextAlign.center,
-              style: Utils.calligraphy.body(
-                textStyle: TextStyle(
-                  color: accentColor,
-                  fontWeight: fontWeight,
-                  fontSize: 54.0,
+              Text(
+                "username.name".tr(),
+                textAlign: isMobileSize ? TextAlign.left : TextAlign.center,
+                style: Utils.calligraphy.body(
+                  textStyle: TextStyle(
+                    color: accentColor,
+                    fontWeight: fontWeight,
+                    fontSize: 54.0,
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: isMobileSize
-                  ? const EdgeInsets.only(top: 8.0)
-                  : EdgeInsets.zero,
-              child: FractionallySizedBox(
-                widthFactor: isMobileSize ? 0.9 : 0.4,
-                child: Text(
-                  "username.update.tips".tr(),
-                  textAlign: isMobileSize ? TextAlign.left : TextAlign.center,
-                  style: Utils.calligraphy.body(
-                    textStyle: TextStyle(
-                      fontSize: 16.0,
-                      color: foregroundColor?.withOpacity(0.4),
+              Padding(
+                padding: isMobileSize
+                    ? const EdgeInsets.only(top: 8.0)
+                    : EdgeInsets.zero,
+                child: FractionallySizedBox(
+                  widthFactor: isMobileSize ? 0.9 : 0.4,
+                  child: Text(
+                    "username.update.tips".tr(),
+                    textAlign: isMobileSize ? TextAlign.left : TextAlign.center,
+                    style: Utils.calligraphy.body(
+                      textStyle: TextStyle(
+                        fontSize: 16.0,
+                        color: foregroundColor?.withOpacity(0.4),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ]
-              .animate(interval: 50.ms)
-              .fadeIn(duration: 200.ms, curve: Curves.decelerate)
-              .slideY(begin: 0.4, end: 0.0, duration: 250.ms),
+            ]
+                .animate(interval: 50.ms)
+                .fadeIn(duration: 200.ms, curve: Curves.decelerate)
+                .slideY(begin: 0.4, end: 0.0, duration: 250.ms),
+          ),
         ),
       ),
     );

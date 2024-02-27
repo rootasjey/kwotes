@@ -57,11 +57,13 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> with UiLoggy {
               isMobileSize: isMobileSize,
               onTapLeftPartHeader: onTapLeftPartHeader,
               accentColor: accentColor,
+              margin: const EdgeInsets.only(top: 16.0),
             ),
             DeleteAccountPageBody(
               errorMessage: _errorMessage,
               hidePassword: _hidePassword,
               isMobileSize: isMobileSize,
+              margin: const EdgeInsets.only(top: 16.0),
               passwordController: _passwordTextController,
               pageState: _pageState,
               onHidePasswordChanged: onHidePasswordChanged,

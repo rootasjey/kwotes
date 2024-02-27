@@ -67,12 +67,12 @@ class UpdateUsernamePageBody extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   OutlinedTextField(
-                    autofocus: true,
+                    autofocus: Utils.graphic.isMobile() ? false : true,
                     controller: usernameController,
                     label: "username.new".tr(),
                     keyboardType: TextInputType.text,
                     onChanged: onUsernameChanged,
-                    textInputAction: TextInputAction.go,
+                    textInputAction: TextInputAction.done,
                   ),
                   Opacity(
                     opacity:

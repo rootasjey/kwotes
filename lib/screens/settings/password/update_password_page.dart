@@ -11,6 +11,7 @@ import "package:kwotes/screens/settings/password/update_password_page_body.dart"
 import "package:kwotes/screens/settings/password/update_password_page_header.dart";
 import "package:kwotes/types/action_return_value.dart";
 import "package:kwotes/types/cloud_fun_error.dart";
+import "package:kwotes/types/credentials.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/password_checks.dart";
 import "package:loggy/loggy.dart";
@@ -86,7 +87,9 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> with UiLoggy {
                 accentColor: accentColor,
                 isMobileSize: isMobileSize,
                 onTapLeftPartHeader: onTapLeftPartHeader,
+                onTapRemindMe: onTapRemindMe,
                 passwordChecks: _passwordChecks,
+                margin: const EdgeInsets.only(top: 24.0),
               ),
               UpdatePasswordPageBody(
                 currentPasswordController: _currentPasswordController,
@@ -260,5 +263,16 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> with UiLoggy {
         message: "password.update.error".tr(),
       );
     }
+  }
+
+  /// Remin the user their password.
+  void onTapRemindMe() async {
+    final Credentials credentials = await Utils.vault.getCredentials();
+
+    if (!mounted) return;
+    Utils.graphic.showSnackbar(
+      context,
+      message: credentials.password,
+    );
   }
 }
