@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/better_avatar.dart";
 import "package:kwotes/components/buttons/colored_text_button.dart";
+import "package:kwotes/components/icons/app_icon.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/quote.dart";
@@ -97,60 +98,71 @@ class ShareQuoteTemplate extends StatelessWidget {
                 ),
                 child: ClipRRect(
                   borderRadius: borderRadius,
-                  child: Padding(
-                    padding: const EdgeInsets.all(42.0),
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        minHeight: 300.0,
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            quote.name,
-                            style: textWrapSolution.style,
+                  child: Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(42.0),
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            minHeight: 300.0,
                           ),
-                          if (quote.author.urls.image.isNotEmpty)
-                            BetterAvatar(
-                              radius: 24.0,
-                              imageProvider: NetworkImage(
-                                quote.author.urls.image,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                quote.name,
+                                style: textWrapSolution.style,
                               ),
-                              colorFilter: const ColorFilter.mode(
-                                Colors.grey,
-                                BlendMode.saturation,
-                              ),
-                              margin: const EdgeInsets.only(top: 24.0),
-                            ),
-                          Center(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Text(
-                                quote.author.name,
-                                textAlign: TextAlign.center,
-                                style: Utils.calligraphy.body(),
-                              ),
-                            ),
-                          ),
-                          if (quote.reference.id.isNotEmpty)
-                            Center(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8.0,
-                                  vertical: 2.0,
+                              if (quote.author.urls.image.isNotEmpty)
+                                BetterAvatar(
+                                  radius: 24.0,
+                                  imageProvider: NetworkImage(
+                                    quote.author.urls.image,
+                                  ),
+                                  colorFilter: const ColorFilter.mode(
+                                    Colors.grey,
+                                    BlendMode.saturation,
+                                  ),
+                                  margin: const EdgeInsets.only(top: 24.0),
                                 ),
-                                child: Text(
-                                  quote.reference.name,
-                                  textAlign: TextAlign.center,
-                                  style: Utils.calligraphy.body(),
+                              Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Text(
+                                    quote.author.name,
+                                    textAlign: TextAlign.center,
+                                    style: Utils.calligraphy.body(),
+                                  ),
                                 ),
                               ),
-                            ),
-                        ],
+                              if (quote.reference.id.isNotEmpty)
+                                Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0,
+                                      vertical: 2.0,
+                                    ),
+                                    child: Text(
+                                      quote.reference.name,
+                                      textAlign: TextAlign.center,
+                                      style: Utils.calligraphy.body(),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
+                      const Positioned(
+                        bottom: 16.0,
+                        right: 16.0,
+                        child: AppIcon(
+                          size: 36.0,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
