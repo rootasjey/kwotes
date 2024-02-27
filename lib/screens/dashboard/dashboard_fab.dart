@@ -37,7 +37,7 @@ class DashboardFab extends StatelessWidget {
         foregroundColor: backgroundColor.computeLuminance() > 0.4
             ? Colors.black
             : Colors.white,
-        child: const Icon(TablerIcons.quote),
+        child: const Icon(TablerIcons.message_2_plus),
       );
     }
 
@@ -48,7 +48,7 @@ class DashboardFab extends StatelessWidget {
       splashColor: splashColor,
       onPressed: () => onGoToAddQuotePage?.call(context),
       backgroundColor: backgroundColor,
-      icon: const Icon(TablerIcons.quote),
+      icon: const Icon(TablerIcons.message_2_plus),
       foregroundColor: backgroundColor.computeLuminance() > 0.4
           ? Colors.black
           : Colors.white,
