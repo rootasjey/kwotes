@@ -282,6 +282,7 @@ class _SettingsPageState extends State<SettingsPage> {
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: Constants.colors.lightBackground,
+        statusBarBrightness: Brightness.light,
         systemNavigationBarColor: Colors.white,
         systemNavigationBarDividerColor: Colors.transparent,
       ),
@@ -300,8 +301,9 @@ class _SettingsPageState extends State<SettingsPage> {
           Colors.black26,
           Constants.colors.dark,
         ),
+        statusBarBrightness: Brightness.dark,
         systemNavigationBarDividerColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.dark,
       ),
     );
   }
