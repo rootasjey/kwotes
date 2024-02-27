@@ -88,6 +88,7 @@ class Showcase extends StatelessWidget {
     }
 
     return ShowcaseQuotes(
+      isDark: isDark,
       isMobileSize: isMobileSize,
       margin: margin,
       topicColors: topicColors,

@@ -1,8 +1,8 @@
-import "package:flex_list/flex_list.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:kwotes/components/texts/showcase_text.dart";
 import "package:kwotes/types/reference.dart";
+import "package:wave_divider/wave_divider.dart";
 
 class ShowcaseReferences extends StatelessWidget {
   const ShowcaseReferences({
@@ -31,47 +31,45 @@ class ShowcaseReferences extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int index = -1;
+    final Color? foregroundColor =
+        Theme.of(context).textTheme.bodyMedium?.color;
 
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: margin,
-        child: FlexList(
-          horizontalSpacing: 6.0,
-          verticalSpacing: 6.0,
-          children: references
-              .map(
-                (Reference reference) {
-                  index++;
+    return SliverPadding(
+      padding: margin,
+      sliver: SliverList.separated(
+        separatorBuilder: (BuildContext context, int index) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: WaveDivider(
+              waveHeight: 2.0,
+              waveWidth: 5.0,
+              color: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.color
+                  ?.withOpacity(0.2),
+            ),
+          );
+        },
+        itemBuilder: (BuildContext context, int index) {
+          final Reference reference = references[index];
 
-                  final Color? themeColor =
-                      Theme.of(context).textTheme.bodyMedium?.color;
-
-                  final Color? initialColor = index % 2 == 0
-                      ? themeColor?.withOpacity(0.4)
-                      : themeColor?.withOpacity(0.8);
-
-                  return ShowcaseText(
-                    docId: reference.id,
-                    isDark: isDark,
-                    index: index,
-                    initialForegroundColor: initialColor,
-                    isMobileSize: isMobileSize,
-                    onTap: onTapReference != null
-                        ? () => onTapReference?.call(reference)
-                        : null,
-                    textValue: reference.name,
-                  );
-                },
-              )
-              .toList()
-              .animate(interval: 7.ms)
-              .fadeIn(duration: 125.ms)
-              .scale(
+          return ShowcaseText(
+            docId: reference.id,
+            isDark: isDark,
+            index: index,
+            initialForegroundColor: foregroundColor?.withOpacity(0.8),
+            isMobileSize: isMobileSize,
+            onTap: onTapReference != null
+                ? () => onTapReference?.call(reference)
+                : null,
+            textValue: reference.name.toLowerCase(),
+          ).animate().fadeIn(duration: 125.ms).scale(
                 begin: const Offset(1.1, 1.1),
                 end: const Offset(1.0, 1.0),
-              ),
-        ),
+              );
+        },
+        itemCount: references.length,
       ),
     );
   }

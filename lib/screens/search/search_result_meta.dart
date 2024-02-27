@@ -48,39 +48,44 @@ class SearchResultMeta extends StatelessWidget {
     final String textValue = pageState == EnumPageState.searching ||
             pageState == EnumPageState.loading
         ? "search.ing".tr()
-        : "• ${"search.result_count".plural(resultCount)} •";
+        : "search.result_count".plural(resultCount);
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          textValue,
-          style: Utils.calligraphy.body(
-            textStyle: TextStyle(
-              color: foregroundColor?.withOpacity(0.6),
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, top: 6.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            textValue,
+            style: Utils.calligraphy.body(
+              textStyle: TextStyle(
+                fontSize: 14.0,
+                color: foregroundColor?.withOpacity(0.6),
+              ),
             ),
           ),
-        ),
-        JustTheTooltip(
-          tailLength: 10.0,
-          preferredDirection: AxisDirection.down,
-          content: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              "search.clear".tr(),
-              style: Utils.calligraphy.body(
-                  textStyle: const TextStyle(
-                fontWeight: FontWeight.w500,
-              )),
+          if (onClearInput != null)
+            JustTheTooltip(
+              tailLength: 10.0,
+              preferredDirection: AxisDirection.down,
+              content: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "search.clear".tr(),
+                  style: Utils.calligraphy.body(
+                      textStyle: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                  )),
+                ),
+              ),
+              child: IconButton(
+                onPressed: onClearInput,
+                color: foregroundColor?.withOpacity(0.6),
+                icon: const Icon(TablerIcons.square_rounded_x),
+              ),
             ),
-          ),
-          child: IconButton(
-            onPressed: onClearInput,
-            color: foregroundColor?.withOpacity(0.6),
-            icon: const Icon(TablerIcons.square_rounded_x),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

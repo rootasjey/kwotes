@@ -90,6 +90,7 @@ class SearchPageBody extends StatelessWidget {
       return EmptyView.searchEmptyView(
         accentColor: Theme.of(context).colorScheme.secondary,
         context,
+        foregroundColor: Theme.of(context).textTheme.bodyMedium?.color,
         description: "search.empty.${searchCategory.name}".tr(),
         margin: margin,
         onReinitializeSearch: onReinitializeSearch,
@@ -112,14 +113,16 @@ class SearchPageBody extends StatelessWidget {
       return SearchAuthorResultsPage(
         margin: margin,
         authorResults: authorResults,
+        isMobileSize: isMobileSize,
         onTapAuthor: onTapAuthor,
       );
     }
 
     return SearchReferenceResultsPage(
       margin: margin,
-      referenceResults: referenceResults,
+      isMobileSize: isMobileSize,
       onTapReference: onTapReference,
+      referenceResults: referenceResults,
     );
   }
 }

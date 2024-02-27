@@ -3,6 +3,7 @@ import "package:kwotes/components/context_menu_components.dart";
 import "package:kwotes/screens/search/search_quote_text.dart";
 import "package:kwotes/types/quote.dart";
 import "package:super_context_menu/super_context_menu.dart";
+import "package:wave_divider/wave_divider.dart";
 
 class SearchQuoteResultsPage extends StatelessWidget {
   const SearchQuoteResultsPage({
@@ -33,12 +34,26 @@ class SearchQuoteResultsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverPadding(
-      padding: margin,
+      padding: isMobileSize
+          ? const EdgeInsets.only(
+              left: 24.0,
+              right: 24.0,
+            )
+          : margin,
       sliver: SliverList.separated(
         separatorBuilder: (BuildContext context, int index) {
-          return isDark
-              ? const Divider(height: 24.0, color: Colors.white12)
-              : const Divider(height: 24.0, color: Colors.black12);
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: WaveDivider(
+              waveHeight: 2.0,
+              waveWidth: 5.0,
+              color: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.color
+                  ?.withOpacity(0.2),
+            ),
+          );
         },
         itemBuilder: (BuildContext context, int index) {
           final Quote quote = quoteResults[index];

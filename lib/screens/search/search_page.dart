@@ -61,6 +61,9 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   /// True if more results can be loaded.
   bool _hasMoreResults = true;
 
+  /// Show more button if true.
+  bool _showMoreButton = false;
+
   /// Last author document for pagination.
   DocumentSnapshot? _lastAuthorDocument;
 
@@ -127,6 +130,9 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   /// Search input controller.
   final TextEditingController _searchInputController = TextEditingController();
 
+  /// Page state timer to automatically fired page state after a delay.
+  Timer? _pageSateTimer;
+
   /// Search timer to automatically fired search after a delay.
   Timer? _searchTimer;
 
@@ -144,6 +150,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     _scrollController.dispose();
     _streamSnapshot?.cancel();
     _streamSnapshot = null;
+    _pageSateTimer?.cancel();
     super.dispose();
   }
 
@@ -184,12 +191,13 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                       onChangedTextField: onSearchInputChanged,
                       focusNode: _searchFocusNode,
                       padding: padding,
+                      onTapCancelButton: onTapCancelButton,
+                      onTapClearIconButton: onClearInput,
                       searchCategory: _searchCategory,
                       isMobileSize: isMobileSize,
                       bottom: SearchResultMeta(
                         isMobileSize: isMobileSize,
                         foregroundColor: foregroundColor,
-                        onClearInput: onClearInput,
                         padding: padding,
                         pageState: _pageState,
                         resultCount: _resultCount,
@@ -234,7 +242,8 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                     ShowMoreButton(
                       searchCategory: _searchCategory,
                       show: _searchInputController.text.isEmpty &&
-                          _searchCategory != EnumSearchCategory.quotes,
+                          _searchCategory != EnumSearchCategory.quotes &&
+                          _showMoreButton,
                       onPressed: () => fetchShowcaseData(fetchMore: true),
                     ),
                   ],
@@ -363,13 +372,14 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
 
     if (reinit) {
+      _showMoreButton = false;
       _authorList.clear();
       _hasMoreResults = true;
-      _pageState = EnumPageState.loading;
+      defferPageState(EnumPageState.loading);
     }
 
     if (fetchMore) {
-      _pageState = EnumPageState.loadingMore;
+      setImmediatePageState(EnumPageState.loadingMore);
     }
 
     try {
@@ -381,7 +391,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       final DocumentSnapshot? lastDocument = _lastAuthorDocument;
       if (!reinit && lastDocument != null) {
         query = query.startAfterDocument(lastDocument);
-        _pageState = EnumPageState.loadingMore;
+        setImmediatePageState(EnumPageState.loadingMore);
       }
 
       final QuerySnapMap snapshot = await query.get();
@@ -400,15 +410,14 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       }
 
       setState(() {
+        _showMoreButton = true;
         _lastAuthorDocument = snapshot.docs.last;
-        _pageState = EnumPageState.idle;
+        setImmediatePageState(EnumPageState.idle);
         _hasMoreResults = snapshot.size == _limitFetchAuthors;
       });
     } catch (error) {
       loggy.error(error);
-      setState(() {
-        _pageState = EnumPageState.idle;
-      });
+      setImmediatePageState(EnumPageState.idle);
     }
   }
 
@@ -422,9 +431,10 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
 
     if (reinit) {
+      _showMoreButton = false;
       _referenceList.clear();
       _hasMoreResults = true;
-      _pageState = EnumPageState.loading;
+      defferPageState(EnumPageState.loading);
     }
 
     if (fetchMore) {
@@ -448,7 +458,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
       if (snapshot.size == 0) {
         _hasMoreResults = false;
-        _pageState = EnumPageState.idle;
+        setImmediatePageState(EnumPageState.idle);
         return;
       }
 
@@ -459,15 +469,14 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       }
 
       setState(() {
+        _showMoreButton = true;
         _lastReferenceDocument = snapshot.docs.last;
-        _pageState = EnumPageState.idle;
+        setImmediatePageState(EnumPageState.idle);
         _hasMoreResults = snapshot.size == _limitFetchReferences;
       });
     } catch (error) {
       loggy.error(error);
-      setState(() {
-        _pageState = EnumPageState.idle;
-      });
+      setImmediatePageState(EnumPageState.idle);
     }
   }
 
@@ -890,6 +899,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     setState(() {
       _searchCategory = searchEntity;
       _resultCount = 0;
+      _showMoreButton = searchEntity != EnumSearchCategory.quotes;
     });
 
     updateBrowserUrl();
@@ -900,17 +910,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
     search();
     fetchShowcaseData(reinit: true);
-  }
-
-  /// Callback fired when quote is tapped.
-  void onTapQuote(Quote quote) {
-    NavigationStateHelper.quote = quote;
-    Beamer.of(context).beamToNamed(
-      SearchContentLocation.quoteRoute.replaceFirst(":quoteId", quote.id),
-      routeState: {
-        "quoteName": quote.name,
-      },
-    );
   }
 
   /// Callback fired when author is tapped.
@@ -926,6 +925,23 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
         "authorName": author.name,
       },
     );
+  }
+
+  /// Callback fired when quote is tapped.
+  void onTapQuote(Quote quote) {
+    NavigationStateHelper.quote = quote;
+    Beamer.of(context).beamToNamed(
+      SearchContentLocation.quoteRoute.replaceFirst(":quoteId", quote.id),
+      routeState: {
+        "quoteName": quote.name,
+      },
+    );
+  }
+
+  /// Callback fired to cancel search.
+  void onTapCancelButton() {
+    onClearInput();
+    _searchFocusNode.unfocus();
   }
 
   /// Callback fired when reference is tapped.
@@ -1254,5 +1270,18 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
 
     setState(() => _searchCategory = searchCategory);
+  }
+
+  void defferPageState(EnumPageState newPageState) {
+    _pageSateTimer?.cancel();
+    _pageSateTimer = Timer(const Duration(seconds: 2), () {
+      setState(() => _pageState = newPageState);
+      _pageSateTimer = null;
+    });
+  }
+
+  void setImmediatePageState(EnumPageState newPageState) {
+    _pageSateTimer?.cancel();
+    setState(() => _pageState = newPageState);
   }
 }
