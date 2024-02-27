@@ -140,6 +140,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   void initState() {
     super.initState();
     checkRouteParams();
+    _searchFocusNode.addListener(onSearchFocusChanged);
   }
 
   @override
@@ -151,6 +152,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     _streamSnapshot?.cancel();
     _streamSnapshot = null;
     _pageSateTimer?.cancel();
+    _searchFocusNode.removeListener(onSearchFocusChanged);
     super.dispose();
   }
 
@@ -360,6 +362,15 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
     await initProps();
     fetchShowcaseData(reinit: true);
+  }
+
+  /// Set the new page state with a delay of 2 seconds.
+  void defferPageState(EnumPageState newPageState) {
+    _pageSateTimer?.cancel();
+    _pageSateTimer = Timer(const Duration(seconds: 2), () {
+      setState(() => _pageState = newPageState);
+      _pageSateTimer = null;
+    });
   }
 
   /// Try to fetch authors alphabetically in Firestore.
@@ -854,6 +865,10 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     _searchFocusNode.requestFocus();
   }
 
+  void onSearchFocusChanged() {
+    setState(() {});
+  }
+
   /// Callback fired when search input has changed.
   void onSearchInputChanged(
     String value, {
@@ -1236,6 +1251,12 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
   }
 
+  /// Set the new page state without any delay.
+  void setImmediatePageState(EnumPageState newPageState) {
+    _pageSateTimer?.cancel();
+    setState(() => _pageState = newPageState);
+  }
+
   /// Update browser URL on input changes.
   void updateBrowserUrl() {
     final String queryCategory = getCategoryQueryString();
@@ -1270,18 +1291,5 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
 
     setState(() => _searchCategory = searchCategory);
-  }
-
-  void defferPageState(EnumPageState newPageState) {
-    _pageSateTimer?.cancel();
-    _pageSateTimer = Timer(const Duration(seconds: 2), () {
-      setState(() => _pageState = newPageState);
-      _pageSateTimer = null;
-    });
-  }
-
-  void setImmediatePageState(EnumPageState newPageState) {
-    _pageSateTimer?.cancel();
-    setState(() => _pageState = newPageState);
   }
 }

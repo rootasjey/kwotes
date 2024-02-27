@@ -54,8 +54,6 @@ class SearchInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String hintText = "${"search.${searchCategory.name}".tr()}...";
-    final Color backgroundColor =
-        Theme.of(context).scaffoldBackgroundColor.withOpacity(0.7);
 
     int hintMaxLines = 1;
     if (inputController == null || inputController!.text.isEmpty) {
@@ -66,6 +64,8 @@ class SearchInput extends StatelessWidget {
     final bool isInputEmpty = inputController?.text.isEmpty ?? true;
     final Color foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color ?? Colors.white;
+
+    final Color backgroundColor = isDark ? Colors.black : Colors.white;
 
     final Widget clearIcon = Padding(
       padding: const EdgeInsets.all(8.0),
