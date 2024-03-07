@@ -10,7 +10,9 @@ import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:image_downloader_web/image_downloader_web.dart";
 import "package:just_the_tooltip/just_the_tooltip.dart";
 import "package:kwotes/actions/quote_actions.dart";
+import "package:kwotes/components/buttons/circle_button.dart";
 import "package:kwotes/components/dialogs/add_to_list/add_to_list_dialog.dart";
+import "package:kwotes/components/icons/app_icon.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/screens/quote_page/share_quote_template.dart";
@@ -812,6 +814,7 @@ class Graphic with UiLoggy {
   Widget tooltip({
     required Widget child,
     required String tooltipString,
+    Color? backgroundColor,
   }) {
     if (tooltipString.isEmpty) {
       return child;
@@ -820,6 +823,7 @@ class Graphic with UiLoggy {
     return JustTheTooltip(
       tailLength: 4.0,
       tailBaseWidth: 12.0,
+      backgroundColor: backgroundColor,
       waitDuration: const Duration(seconds: 1),
       content: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -833,6 +837,54 @@ class Graphic with UiLoggy {
         ),
       ),
       child: child,
+    );
+  }
+
+  /// Add quote app bar.
+  PreferredSizeWidget addQuoteAppBar(
+    BuildContext context, {
+    bool hasHistory = false,
+    bool isMobileSize = false,
+    Color? foregroundColor,
+    void Function()? onTapAppIcon,
+  }) {
+    return AppBar(
+      automaticallyImplyLeading: false,
+      title: Padding(
+        padding: const EdgeInsets.only(top: 24.0),
+        child: Row(
+          children: [
+            if (hasHistory)
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: CircleButton.outlined(
+                  borderColor: Colors.transparent,
+                  onTap: () => Utils.passage.back(
+                    context,
+                    isMobile: isMobileSize,
+                  ),
+                  child: Icon(
+                    TablerIcons.arrow_left,
+                    color: foregroundColor?.withOpacity(0.8),
+                    size: 22.0,
+                  ),
+                ),
+              ),
+            AppIcon(
+              size: 24.0,
+              onTap: onTapAppIcon,
+            ),
+          ],
+        ),
+      ),
+      bottom: TabBar(
+        tabs: [
+          Tab(text: "content.name".tr()),
+          Tab(text: "topics.name".tr()),
+          Tab(text: "author.name".tr()),
+          Tab(text: "reference.name".tr()),
+        ],
+      ),
     );
   }
 }
