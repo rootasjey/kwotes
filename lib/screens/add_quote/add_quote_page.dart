@@ -7,24 +7,21 @@ import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_langdetect/flutter_langdetect.dart" as langdetect;
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:just_the_tooltip/just_the_tooltip.dart";
-import "package:kwotes/screens/add_quote/add_quote_fab.dart";
+import "package:kwotes/router/locations/home_location.dart";
+import "package:kwotes/screens/add_quote/save_quote_button.dart";
 import "package:kwotes/screens/add_quote/snackbar_draft.dart";
 import "package:kwotes/types/enums/enum_draft_quote_operation.dart";
 import "package:kwotes/types/intents/save_intent.dart";
 import "package:kwotes/types/intents/submit_intent.dart";
 import "package:kwotes/types/user/user_rights.dart";
 import "package:loggy/loggy.dart";
-import "package:smooth_page_indicator/smooth_page_indicator.dart";
 import "package:text_wrap_auto_size/solution.dart";
 import "package:text_wrap_auto_size/text_wrap_auto_size.dart";
 import "package:verbal_expressions/verbal_expressions.dart";
-
-import "package:kwotes/components/buttons/circle_button.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
@@ -79,9 +76,6 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
   /// Show reference metadata if true.
   bool _referenceMetadataOpened = true;
 
-  /// Show a tooltip indicating the page title if true.
-  bool _showPageTitleTooltip = true;
-
   /// Firestore quote document reference.
   DocumentReference? _docRef;
 
@@ -108,6 +102,12 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
   /// Search result count limit (algolia).
   final int _searchLimit = 10;
 
+  /// Used to request focus on the author job input.
+  final FocusNode _authorJobFocusNode = FocusNode();
+
+  /// Used to request focus on the author summary input.
+  final FocusNode _authorSummaryFocusNode = FocusNode();
+
   /// Used to request focus on the content input.
   final FocusNode _contentFocusNode = FocusNode();
 
@@ -116,6 +116,9 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
 
   /// Used to request focus on the reference name input.
   final FocusNode _referenceNameFocusNode = FocusNode();
+
+  /// Used to request focus on the author summary input.
+  final FocusNode _referenceSummaryFocusNode = FocusNode();
 
   /// Tooltip controller to confirm important action
   /// (e.g. delete quote).
@@ -220,7 +223,13 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     _pageViewController.addListener(onPageViewChanged);
     initProps();
     fetchQuoteDocument();
-    showPageTitle();
+
+    _authorNameFocusNode.addListener(onAuthorNameFocusChanged);
+    _authorJobFocusNode.addListener(onAuthorJobFocusChanged);
+    _referenceNameFocusNode.addListener(onReferenceNameFocusChanged);
+    _contentFocusNode.addListener(onContentFocusChanged);
+    _authorSummaryFocusNode.addListener(onAuthorSummaryFocusChanged);
+    _referenceSummaryFocusNode.addListener(onReferenceSummaryFocusChanged);
   }
 
   @override
@@ -236,10 +245,13 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     _authorNameFocusNode.dispose();
     _authorNameController.dispose();
     _authorJobController.dispose();
+    _authorJobFocusNode.dispose();
     _referenceNameFocusNode.dispose();
     _referenceNameController.dispose();
     _referenceSummaryController.dispose();
     _authorSummaryController.dispose();
+    _authorSummaryFocusNode.dispose();
+    _referenceSummaryFocusNode.dispose();
     super.dispose();
   }
 
@@ -261,16 +273,18 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
         style: Utils.calligraphy.body(
           textStyle: const TextStyle(
             fontSize: 52.0,
+            fontWeight: FontWeight.w400,
           ),
         ),
       ),
       minFontSize: 12.0,
+      maxFontSize: isMobileSize ? 16.0 : null,
     );
 
     final Quote quote = NavigationStateHelper.quote;
     final bool isQuoteValid = quote.name.length > 3 && quote.topics.isNotEmpty;
-    final Color? fabBackgroundColor = getFabBackgroundColor(isQuoteValid);
-    final Color? fabForegroundColor = getFabForegroundColor(isQuoteValid);
+    // final Color? fabBackgroundColor = getFabBackgroundColor(isQuoteValid);
+    // final Color? fabForegroundColor = getFabForegroundColor(isQuoteValid);
 
     if (_pageState == EnumPageState.submittingQuote) {
       return LoadingView.scaffold(
@@ -288,10 +302,44 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
       );
     }
 
-    final Color firstColorPalette = Constants.colors.foregroundPalette.first;
+    final Brightness brightness = Theme.of(context).brightness;
+    final bool isDark = brightness == Brightness.dark;
+
+    final Color? foregroundColor =
+        Theme.of(context).textTheme.bodyMedium?.color;
+
+    final String location = Beamer.of(context)
+        .beamingHistory
+        .last
+        .history
+        .last
+        .routeInformation
+        .uri
+        .toString();
+
+    final bool hasHistory = location != HomeLocation.route;
 
     final Signal<UserFirestore> userSignalFirestore =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+
+    final SignalBuilder<UserFirestore> saveButton = SignalBuilder(
+      signal: userSignalFirestore,
+      builder: (
+        BuildContext context,
+        UserFirestore userFirestore,
+        Widget? child,
+      ) {
+        return SaveQuoteButton(
+          onPressed: onSaveDraft,
+          quote: quote,
+          isDark: isDark,
+          isQuoteValid: isQuoteValid,
+          isMobileSize: isMobileSize,
+          canManageQuotes: userFirestore.rights.canManageQuotes,
+          useIcon: true,
+        );
+      },
+    );
 
     return Shortcuts(
       shortcuts: _shortcuts,
@@ -322,177 +370,21 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
             onInvoke: onFourthIndexShortcut,
           ),
         },
-        child: Scaffold(
-          floatingActionButton: SignalBuilder(
-            signal: userSignalFirestore,
-            builder: (
-              BuildContext context,
-              UserFirestore userFirestore,
-              Widget? child,
-            ) {
-              return AddQuoteFab(
-                fabForegroundColor: fabForegroundColor,
-                fabBackgroundColor: fabBackgroundColor,
-                isQuoteValid: isQuoteValid,
+        child: SafeArea(
+          child: DefaultTabController(
+            length: 4,
+            child: Scaffold(
+              appBar: Utils.graphic.addQuoteAppBar(
+                context,
+                hasHistory: hasHistory,
                 isMobileSize: isMobileSize,
-                quote: quote,
-                onPressed: onSaveDraft,
-                onLongPress: onSubmitQuote,
-                canManageQuotes: userFirestore.rights.canManageQuotes,
-              );
-            },
-          ),
-          body: Stack(
-            children: [
-              PageView(
-                controller: _pageViewController,
+                foregroundColor: foregroundColor,
+                onTapAppIcon: () => context.beamToNamed(HomeLocation.route),
+              ),
+              body: TabBarView(
                 children: [
                   AddQuoteContent(
-                    appBarRightChildren: AddQuoteAppBarChildren.getChildren(
-                      context,
-                      clearAllTooltip: "quote.clear.content".tr(),
-                      onClearAll: onClearQuoteContent,
-                      onDeleteQuote: onDeleteDraft,
-                      tooltipController: _tooltipController,
-                    ),
-                    tooltipController: _tooltipController,
-                    contentController: _contentController,
-                    contentFocusNode: _contentFocusNode,
-                    onContentChanged: onQuoteContentChanged,
-                    isMobileSize: isMobileSize,
-                    onDeleteQuote: onDeleteDraft,
-                    solution: solution,
-                  ),
-                  AddQuoteTopicPage(
-                    appBarRightChildren: AddQuoteAppBarChildren.getChildren(
-                      context,
-                      clearAllTooltip: "quote.clear.topics".tr(),
-                      onClearAll: onClearTopic,
-                      onDeleteQuote: onDeleteDraft,
-                      tooltipController: _tooltipController,
-                    ),
-                    isMobileSize: isMobileSize,
-                    topics: Constants.colors.topics,
-                    onSelected: onTopicSelected,
-                    onClearTopic: onClearTopic,
-                  ),
-                  AddQuoteAuthorPage(
-                    appBarRightChildren: AddQuoteAppBarChildren.getChildren(
-                      context,
-                      clearAllTooltip: "quote.clear.author".tr(),
-                      onClearAll: onClearAuthorData,
-                      onDeleteQuote: onDeleteDraft,
-                      tooltipController: _tooltipController,
-                    ),
-                    metadataOpened: _authorMetadataOpened,
-                    author: NavigationStateHelper.quote.author,
-                    authorSuggestions: _authorSearchResults,
-                    isMobileSize: isMobileSize,
-                    lastUsedUrls: _lastUsedAuthorUrls,
-                    nameFocusNode: _authorNameFocusNode,
-                    onNameChanged: onAuthorNameChanged,
-                    onJobChanged: onAuthorJobChanged,
-                    onProfilePictureChanged: onAuthorPictureUrlChanged,
-                    onSummaryChanged: onAuthorSummaryChanged,
-                    onTapAuthorSuggestion: onTapAuthorSuggestion,
-                    onTapBirthDate: onTapBirthDate,
-                    onTapDeathDate: onTapDeathDate,
-                    onTapShowSuggestionsAsList: openAuthorListSuggestions,
-                    onToggleMetadata: onToggleAuthorMetadata,
-                    onToggleIsFictional: onToggleIsFictional,
-                    onToggleNagativeBirthDate: onToggleNagativeBirthDate,
-                    onToggleNagativeDeathDate: onToggleNagativeDeathDate,
-                    onUrlChanged: onAuthorUrlChanged,
-                    randomAuthorInt: _randomAuthorIndex,
-                    nameController: _authorNameController,
-                    jobController: _authorJobController,
-                    summaryController: _authorSummaryController,
-                  ),
-                  AddQuoteReferencePage(
-                    appBarRightChildren: AddQuoteAppBarChildren.getChildren(
-                      context,
-                      clearAllTooltip: "quote.clear.reference".tr(),
-                      onClearAll: onClearReferenceData,
-                      onDeleteQuote: onDeleteDraft,
-                      tooltipController: _tooltipController,
-                    ),
-                    isMobileSize: isMobileSize,
-                    lastUsedUrls: _lastUsedAuthorUrls,
-                    metadataOpened: _referenceMetadataOpened,
-                    nameController: _referenceNameController,
-                    nameFocusNode: _referenceNameFocusNode,
-                    onNameChanged: onReferenceNameChanged,
-                    onPictureUrlChanged: onReferencePictureUrlChanged,
-                    onPrimaryGenreChanged: onPrimaryGenreChanged,
-                    onSecondaryGenreChanged: onSecondaryGenreChanged,
-                    onSummaryChanged: onReferenceSummaryChanged,
-                    onTapSuggestion: onTapReferenceSuggestion,
-                    onTapReleaseDate: onTapReleaseDate,
-                    onTapShowSuggestionsAsList: openReferenceListSuggestions,
-                    onToggleMetadata: onToggleReferenceMetadata,
-                    onToggleNagativeReleaseDate: onToggleNagativeReleaseDate,
-                    onUrlChanged: onReferenceUrlChanged,
-                    randomReferenceInt: _randomReferenceIndex,
-                    reference: NavigationStateHelper.quote.reference,
-                    referenceSuggestions: _referenceSearchResults,
-                    summaryController: _referenceSummaryController,
-                  ),
-                ],
-              ),
-              Positioned(
-                bottom: isMobileSize ? 0.0 : 0.0,
-                left: 0.0,
-                right: 0.0,
-                child: MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  onEnter: onMouseEnterPageIndicator,
-                  onExit: onMouseExitPageIndicator,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      borderRadius: BorderRadius.circular(4.0),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      vertical: isMobileSize ? 4.0 : 12.0,
-                      horizontal: 8.0,
-                    ),
-                    child: Center(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          CircleButton(
-                            onTap: onPreviousPage,
-                            icon: const Icon(TablerIcons.arrow_left),
-                            radius: 14.0,
-                            margin: const EdgeInsets.only(right: 8.0),
-                          ),
-                          SmoothPageIndicator(
-                            controller: _pageViewController,
-                            count: _pageViewCount,
-                            effect: ExpandingDotsEffect(
-                              activeDotColor: getActiveDotColor(),
-                            ),
-                            onDotClicked: onDotIndicatorTapped,
-                          ),
-                          CircleButton(
-                            onTap: onNextPage,
-                            icon: const Icon(TablerIcons.arrow_right),
-                            radius: 14.0,
-                            margin: const EdgeInsets.only(left: 8.0),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              if (_prevPageIndex == 0)
-                Positioned(
-                  bottom: 70.0,
-                  left: 0.0,
-                  right: 0.0,
-                  child: Center(
-                    child: MenuAnchor(
+                    languageSelector: MenuAnchor(
                       menuChildren: [
                         MenuItemButton(
                           trailingIcon:
@@ -532,11 +424,9 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                                 : controller.open();
                           },
                           style: TextButton.styleFrom(
-                            foregroundColor: firstColorPalette,
+                            foregroundColor: foregroundColor,
                             backgroundColor:
-                                firstColorPalette.computeLuminance() > 0.6
-                                    ? Colors.black
-                                    : Colors.white,
+                                isDark ? Colors.black : Colors.white,
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -553,48 +443,106 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                         );
                       },
                     ),
+                    tooltipController: _tooltipController,
+                    contentController: _contentController,
+                    contentFocusNode: _contentFocusNode,
+                    onContentChanged: onQuoteContentChanged,
+                    isDark: isDark,
+                    isMobileSize: isMobileSize,
+                    onTapCancelButton: onTapCancelButtonContent,
+                    onDeleteQuote: onDeleteDraft,
+                    saveButton: saveButton,
+                    solution: solution,
                   ),
-                ),
-              if (_showPageTitleTooltip)
-                Positioned(
-                  bottom: 56.0,
-                  left: 0.0,
-                  right: 0.0,
-                  child: Center(
-                    child: Material(
-                      elevation: 2.0,
-                      borderRadius: BorderRadius.circular(4.0),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12.0,
-                          vertical: 8.0,
-                        ),
-                        child: Text(
-                          getPageTitleTooltip(),
-                          style: Utils.calligraphy.body(
-                            textStyle: TextStyle(
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w600,
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.color
-                                  ?.withOpacity(0.8),
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                        .animate()
-                        .slideY(
-                          begin: 0.2,
-                          end: 0.0,
-                          duration: const Duration(milliseconds: 100),
-                        )
-                        .fadeIn(),
+                  AddQuoteTopicPage(
+                    appBarRightChildren: AddQuoteAppBarChildren.getChildren(
+                      context,
+                      clearAllTooltip: "quote.clear.topics".tr(),
+                      onClearAll: onClearTopic,
+                      onDeleteQuote: onDeleteDraft,
+                      tooltipController: _tooltipController,
+                    ),
+                    isDark: isDark,
+                    isMobileSize: isMobileSize,
+                    topics: Constants.colors.topics,
+                    onSelected: onTopicSelected,
+                    onClearTopic: onClearTopic,
+                    saveButton: saveButton,
                   ),
-                ),
-            ],
+                  AddQuoteAuthorPage(
+                    appBarRightChildren: AddQuoteAppBarChildren.getChildren(
+                      context,
+                      clearAllTooltip: "quote.clear.author".tr(),
+                      onClearAll: onClearAuthorData,
+                      onDeleteQuote: onDeleteDraft,
+                      tooltipController: _tooltipController,
+                    ),
+                    author: NavigationStateHelper.quote.author,
+                    authorSuggestions: _authorSearchResults,
+                    isDark: isDark,
+                    isMobileSize: isMobileSize,
+                    jobFocusNode: _authorJobFocusNode,
+                    lastUsedUrls: _lastUsedAuthorUrls,
+                    summaryFocusNode: _authorSummaryFocusNode,
+                    metadataOpened: _authorMetadataOpened,
+                    nameFocusNode: _authorNameFocusNode,
+                    onTapCancelButtonSummary: onTapCancelButtonAuthorSummary,
+                    onNameChanged: onAuthorNameChanged,
+                    onJobChanged: onAuthorJobChanged,
+                    onProfilePictureChanged: onAuthorPictureUrlChanged,
+                    onSummaryChanged: onAuthorSummaryChanged,
+                    onTapAuthorSuggestion: onTapAuthorSuggestion,
+                    onTapBirthDate: onTapBirthDate,
+                    onTapCancelButtonName: onTapCancelButtonAuthorName,
+                    onTapCancelButtonJob: onTapCancelButtonAuthorJob,
+                    onTapDeathDate: onTapDeathDate,
+                    onTapShowSuggestionsAsList: openAuthorListSuggestions,
+                    onToggleMetadata: onToggleAuthorMetadata,
+                    onToggleIsFictional: onToggleIsFictional,
+                    onToggleNagativeBirthDate: onToggleNagativeBirthDate,
+                    onToggleNagativeDeathDate: onToggleNagativeDeathDate,
+                    onUrlChanged: onAuthorUrlChanged,
+                    randomAuthorInt: _randomAuthorIndex,
+                    nameController: _authorNameController,
+                    jobController: _authorJobController,
+                    summaryController: _authorSummaryController,
+                  ),
+                  AddQuoteReferencePage(
+                    appBarRightChildren: AddQuoteAppBarChildren.getChildren(
+                      context,
+                      clearAllTooltip: "quote.clear.reference".tr(),
+                      onClearAll: onClearReferenceData,
+                      onDeleteQuote: onDeleteDraft,
+                      tooltipController: _tooltipController,
+                    ),
+                    isDark: isDark,
+                    isMobileSize: isMobileSize,
+                    lastUsedUrls: _lastUsedAuthorUrls,
+                    metadataOpened: _referenceMetadataOpened,
+                    nameController: _referenceNameController,
+                    nameFocusNode: _referenceNameFocusNode,
+                    onNameChanged: onReferenceNameChanged,
+                    onPictureUrlChanged: onReferencePictureUrlChanged,
+                    onPrimaryGenreChanged: onPrimaryGenreChanged,
+                    onSecondaryGenreChanged: onSecondaryGenreChanged,
+                    onSummaryChanged: onReferenceSummaryChanged,
+                    onTapCancelButtonName: onTapCancelButtonReferenceName,
+                    onTapCancelButtonSummary: onTapCancelButtonReferenceSummary,
+                    onTapSuggestion: onTapReferenceSuggestion,
+                    onTapReleaseDate: onTapReleaseDate,
+                    onTapShowSuggestionsAsList: openReferenceListSuggestions,
+                    onToggleMetadata: onToggleReferenceMetadata,
+                    onToggleNagativeReleaseDate: onToggleNagativeReleaseDate,
+                    onUrlChanged: onReferenceUrlChanged,
+                    randomReferenceInt: _randomReferenceIndex,
+                    reference: NavigationStateHelper.quote.reference,
+                    referenceSuggestions: _referenceSearchResults,
+                    summaryFocusNode: _referenceSummaryFocusNode,
+                    summaryController: _referenceSummaryController,
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -986,20 +934,6 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     );
   }
 
-  /// Callback fired when mouse enters page indicator region.
-  void onMouseEnterPageIndicator(PointerEnterEvent event) {
-    setState(() {
-      _showPageTitleTooltip = true;
-    });
-  }
-
-  /// Callback fired when mouse exits page indicator region.
-  void onMouseExitPageIndicator(PointerExitEvent event) {
-    setState(() {
-      _showPageTitleTooltip = false;
-    });
-  }
-
   /// Navigate to the next page view when shortcut pressed.
   Object? onNextShortcut(NextIntent intent) {
     final double page = _pageViewController.page ?? 0.0;
@@ -1121,7 +1055,6 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
 
     setState(() {
       _prevPageIndex = currentPageIndex ?? -1;
-      showPageTitle();
     });
 
     final bool isMobilePlatform = Utils.graphic.isMobile();
@@ -1799,14 +1732,6 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     }
   }
 
-  /// Show tooltip when page indicator is hovered.
-  void showPageTitle() {
-    _timerPageTitle?.cancel();
-    _timerPageTitle = Timer(const Duration(seconds: 1), () {
-      setState(() => _showPageTitleTooltip = false);
-    });
-  }
-
   /// Try creating a draft if we're not editing a quote.
   void tryCreateDraft() async {
     final Signal<UserFirestore> userFirestoreSignal =
@@ -2148,5 +2073,67 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
         message: "quote.validate.failed".tr(),
       );
     }
+  }
+
+  /// Focus change callback.
+  void onAuthorNameFocusChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  /// Focus change callback.
+  void onReferenceNameFocusChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  void onContentFocusChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  void onAuthorJobFocusChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  void onTapCancelButtonReferenceName() {
+    _referenceNameFocusNode.unfocus();
+  }
+
+  void onTapCancelButtonAuthorName() {
+    _authorNameFocusNode.unfocus();
+  }
+
+  void onTapCancelButtonContent() {
+    _contentFocusNode.unfocus();
+  }
+
+  void onTapCancelButtonAuthorJob() {
+    _authorJobFocusNode.unfocus();
+  }
+
+  void onAuthorSummaryFocusChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  void onTapCancelButtonAuthorSummary() {
+    _authorSummaryFocusNode.unfocus();
+  }
+
+  void onReferenceSummaryFocusChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  void onTapCancelButtonReferenceSummary() {
+    _referenceSummaryFocusNode.unfocus();
   }
 }

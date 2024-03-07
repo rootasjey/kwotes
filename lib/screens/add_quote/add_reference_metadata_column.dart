@@ -175,6 +175,8 @@ class AddReferenceMetadaColumn extends StatelessWidget {
         children: [
           if (!isOpen)
             ColoredTextButton(
+              backgroundColor:
+                  Theme.of(context).buttonTheme.colorScheme?.onPrimary,
               icon: const Icon(TablerIcons.eye, size: 16.0),
               onPressed: onToggleOpen,
               textValue: "see_metadata".tr(),
@@ -186,8 +188,10 @@ class AddReferenceMetadaColumn extends StatelessWidget {
             ),
           if (isOpen)
             ColoredTextButton(
-              icon: const Icon(TablerIcons.x, size: 16.0),
+              backgroundColor:
+                  Theme.of(context).buttonTheme.colorScheme?.onPrimary,
               onPressed: onToggleOpen,
+              icon: const Icon(TablerIcons.x, size: 16.0),
               textValue: "close".tr(),
               textStyle: Utils.calligraphy.body(
                 textStyle: const TextStyle(

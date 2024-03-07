@@ -63,7 +63,13 @@ class _EditAuthorPageState extends State<EditAuthorPage> with UiLoggy {
   EnumPageState _pageState = EnumPageState.idle;
 
   /// Author name focus node.
-  final _authorNameFocusNode = FocusNode();
+  final FocusNode _authorNameFocusNode = FocusNode();
+
+  /// Used to request focus on the author job input.
+  final FocusNode _authorJobFocusNode = FocusNode();
+
+  /// Author summary focus node.
+  final FocusNode _authorSummaryFocusNode = FocusNode();
 
   /// Last used urls (from cloud).
   final List<String> _lastUsedAuthorUrls = ["website", "wikipedia", "youtube"];
@@ -99,6 +105,7 @@ class _EditAuthorPageState extends State<EditAuthorPage> with UiLoggy {
 
   @override
   void dispose() {
+    _authorJobFocusNode.dispose();
     _authorNameController.dispose();
     _authorSubscription?.cancel();
     _authorSummaryController.dispose();
@@ -139,6 +146,7 @@ class _EditAuthorPageState extends State<EditAuthorPage> with UiLoggy {
         tooltipController: _tooltipController,
         onResetAuthor: onResetAuthor,
       ),
+      summaryFocusNode: _authorSummaryFocusNode,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: onDone,
         backgroundColor: fabBackgroundColor,
@@ -157,6 +165,7 @@ class _EditAuthorPageState extends State<EditAuthorPage> with UiLoggy {
       authorNameErrorText:
           isAuthorValid ? null : "author.save.name_required".tr(),
       metadataOpened: _metadataOpened,
+      jobFocusNode: _authorJobFocusNode,
       isMobileSize: isMobileSize,
       lastUsedUrls: _lastUsedAuthorUrls,
       nameFocusNode: _authorNameFocusNode,

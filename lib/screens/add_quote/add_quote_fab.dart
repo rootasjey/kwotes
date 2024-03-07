@@ -46,7 +46,7 @@ class AddQuoteFab extends StatelessWidget {
   Widget build(BuildContext context) {
     if (isMobileSize) {
       return Padding(
-        padding: const EdgeInsets.only(bottom: 32.0),
+        padding: const EdgeInsets.only(bottom: 12.0),
         child: GestureDetector(
           onLongPress: onLongPress,
           child: FloatingActionButton(

@@ -198,6 +198,8 @@ class AddAuthorMetadaColumn extends StatelessWidget {
         children: [
           if (!isOpen)
             ColoredTextButton(
+              backgroundColor:
+                  Theme.of(context).buttonTheme.colorScheme?.onPrimary,
               icon: const Icon(TablerIcons.eye, size: 16.0),
               onPressed: onToggleOpen,
               textValue: "see_metadata".tr(),
@@ -209,6 +211,8 @@ class AddAuthorMetadaColumn extends StatelessWidget {
             ),
           if (isOpen)
             ColoredTextButton(
+              backgroundColor:
+                  Theme.of(context).buttonTheme.colorScheme?.onPrimary,
               icon: const Icon(TablerIcons.x, size: 16.0),
               onPressed: onToggleOpen,
               textValue: "close".tr(),

@@ -101,7 +101,8 @@ class _UrlWrapState extends State<UrlWrap> {
           tooltip: "quote.add.links.$key".tr(),
           avatar: CircleAvatar(
             radius: 14.0,
-            foregroundColor: Theme.of(context).textTheme.bodyMedium?.color,
+            foregroundColor:
+                Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6),
             backgroundColor: Colors.transparent,
             child: Icon(getIconFromKey(key)),
           ),
@@ -127,7 +128,8 @@ class _UrlWrapState extends State<UrlWrap> {
           tooltip: "quote.add.links.$key".tr(),
           avatar: CircleAvatar(
             radius: 14.0,
-            foregroundColor: Theme.of(context).textTheme.bodyMedium?.color,
+            foregroundColor:
+                Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6),
             backgroundColor: Colors.transparent,
             child: Icon(getIconFromKey(key)),
           ),

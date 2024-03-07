@@ -55,7 +55,10 @@ class _EditReferencePageState extends State<EditReferencePage> with UiLoggy {
   EnumPageState _pageState = EnumPageState.idle;
 
   /// Author name focus node.
-  final _referenceNameFocusNode = FocusNode();
+  final FocusNode _referenceNameFocusNode = FocusNode();
+
+  /// Author name focus node.
+  final FocusNode _referenceSummaryFocusNode = FocusNode();
 
   /// Last used urls (from cloud).
   final List<String> _lastUsedReferenceUrls = [
@@ -107,6 +110,7 @@ class _EditReferencePageState extends State<EditReferencePage> with UiLoggy {
     _referenceSubscription?.cancel();
     _referenceSummaryController.dispose();
     _referenceNameFocusNode.dispose();
+    _referenceSummaryFocusNode.dispose();
     _timerUpdateReference?.cancel();
     _tooltipController.dispose();
     _reference = Reference.empty();
@@ -175,6 +179,7 @@ class _EditReferencePageState extends State<EditReferencePage> with UiLoggy {
       onUrlChanged: onReferenceUrlChanged,
       reference: _reference,
       summaryController: _referenceSummaryController,
+      summaryFocusNode: _referenceSummaryFocusNode,
     );
   }
 
