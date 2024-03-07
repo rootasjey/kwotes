@@ -42,7 +42,7 @@ class DashboardWelcomePage extends StatelessWidget {
         floatingActionButton: DashboardFab(
           isMobileSize: isMobileSize,
           onGoToAddQuotePage: onGoToAddQuotePage,
-          backgroundColor: Colors.white,
+          backgroundColor: isDark ? Colors.black : Colors.white,
           splashColor: randomColor,
         ),
         body: CustomScrollView(

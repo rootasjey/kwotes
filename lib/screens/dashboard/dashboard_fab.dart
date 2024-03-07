@@ -9,8 +9,8 @@ class DashboardFab extends StatelessWidget {
     super.key,
     required this.backgroundColor,
     this.isMobileSize = false,
-    this.onGoToAddQuotePage,
     this.splashColor = Colors.white,
+    this.onGoToAddQuotePage,
   });
 
   /// If true, this Floating Action Button will only display an icon.

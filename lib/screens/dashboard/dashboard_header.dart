@@ -48,7 +48,7 @@ class DashboardHeader extends StatelessWidget {
         TextSpan(
           children: [
             TextSpan(
-              text: "${"welcome_back".tr()},",
+              text: "${"welcome_back".tr()},\n",
               style: TextStyle(
                 color: foregroundColor?.withOpacity(0.4),
                 fontWeight: FontWeight.w100,
@@ -56,10 +56,10 @@ class DashboardHeader extends StatelessWidget {
               ),
             ),
             TextSpan(
-              text: "\n${userFirestore.name}",
+              text: userFirestore.name,
               style: TextStyle(
                 color: foregroundColor?.withOpacity(0.7),
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w800,
               ),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
@@ -76,10 +76,10 @@ class DashboardHeader extends StatelessWidget {
             ),
           ],
         ),
-        style: Utils.calligraphy.title(
+        style: Utils.calligraphy.body(
           textStyle: TextStyle(
             fontSize: isMobileSize ? 42.0 : 74.0,
-            height: 1.0,
+            height: 0.8,
           ),
         ),
       ),
