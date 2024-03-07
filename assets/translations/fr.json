@@ -104,6 +104,9 @@
   "connection_check_try": "Vérifiez votre connexion et réeesayez ultérieurement.",
   "confirm": "Confirmer",
   "contact": "Contact",
+  "content": {
+    "name": "Contenu"
+  },
   "cookies": "Cookies",
   "cookies_content": "Cette application utilise des cookies strictement nécessaires et anonymes pour des statistiques d'usage. Aucun cookie n'est volontairement partagé par des tiers. Nous n'utilisation de traceur publicitaire non plus.",
   "copy_link": "Copier le lien",
@@ -640,6 +643,9 @@
           "9": "Stephen King est un écrivain américain célèbre du 1940. Il est connu pour son style unique de narration, ses romans populaires et ses livres d'horreur. Ses livres sont souvent adaptés au cinéma ou à la télévision. Stephen King a écrit de nombreux romans à succès, tels que \"Ça\", \"Shining\" et \"Simetierre\"."
         }
       },
+      "content": {
+        "name": "Ajouter le contenu"
+      },
       "draft": {
         "failed": "Un problème est survenu lors de la création du brouillon."
       },
@@ -785,6 +791,9 @@
           "8": "Les Aventures de Huckleberry Finn est un roman picaresque de l'Américain Mark Twain, paru à Londres le 4 décembre 1884 sous le titre The Adventures of Huckleberry Finn, puis à New York en février de l'année suivante sous le titre Adventures of Huckleberry Finn. Le début et la fin du livre sont trompeurs : reprenant le ton léger des Aventures de Tom Sawyer, mettant en scène des personnages de ce roman, ils donnent à penser que l'on est en présence d'une « suite » et de « littérature pour enfants ». Mais le corps du récit n'a rien d'inoffensif. C'est une terrifiante plongée au plus sombre de la nature humaine, une violente remise en cause des normes sociales et de la religion.",
           "9": "Ulysse (titre original Ulysses en anglais) est un roman de James Joyce, sorti dans un premier temps sous forme de feuilleton dans le magazine américain The Little Review entre mars 1918 et décembre 1920, avant d'être publié dans son intégralité le 2 février 1922 à Paris par la librairie Shakespeare and Company fondée par Sylvia Beach (cela restera l'unique parution de la librairie). Dès sa parution aux États-Unis, Ulysse a suscité la controverse notamment avec la plainte posée par la New York Society for the Suppression of Vice jugeant le livre obscène. Le livre fut interdit aux États-Unis jusqu'en 1934. Il ne cessera par la suite d'être commenté et sera l'objet de très nombreuses études."
         }
+      },
+      "topics": {
+        "name": "Ajouter des thèmes"
       }
     },
     "add_topics": "Ajouter des thèmes.",
@@ -800,6 +809,9 @@
     },
     "clear_all": "Effacer tout",
     "clear_topics": "Effacer les thèmes",
+    "content": {
+      "hint_text": "Les roses sont rouges. Les violettes sont bleues. Je veux me perdre dans tes yeux."
+    },
     "copy": {
       "link": "Copier le lien",
       "name": "Copier la citation",
@@ -918,7 +930,7 @@
       "ing": "Envoi de la citation en cours",
       "name": "Envoyer",
       "ok": "Cette citation sera envoyée pour validation",
-      "required": "Vous devez saisir une citation et sélectionner au moins un sujet de catégorisation.",
+      "required": "Vous devez saisir une citation et sélectionner au moins un sujet de catégorisation si vous souhaitez l'envoyer pour validation.",
       "success": "Votre citation a été envoyée!",
       "tooltip": "Tapotez pour sauvegarder. Maintenez pour soumettre pour validation."
     },
@@ -1060,6 +1072,10 @@
   },
   "signout": "Se déconnecter",
   "signup": "S'inscrire",
+  "step": {
+    "name": "Étape",
+    "progress": "Étape {current}/{total}"
+  },
   "suggestions": {
     "name": "Suggestions",
     "show_as_list": "Afficher en liste"

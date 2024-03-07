@@ -104,6 +104,9 @@
   "connection_check_try": "Check your connection and try again.",
   "confirm": "Confirm",
   "contact": "Contact",
+  "content": {
+    "name": "Content"
+  },
   "cookies": "Cookies",
   "cookies_content": "The application uses only necessaries cookies for usage statistiques. It's anonymized and don't track specific users. We don't volontary share cookies with third-party. We don't have id advertising.",
   "create": "Create",
@@ -628,6 +631,9 @@
           "9": "Stephen King is a famous American writer who has written many scary and thrilling books. He was born in 1947 and has been writing for over 40 years. Some of his most popular books include \"Carrie,\" \"The Shining,\" and \"It.\" His stories often have supernatural elements and are known for keeping readers on the edge of their seats. Many of his books have also been turned into movies or TV shows."
         }
       },
+      "content": {
+        "name": "Add content"
+      },
       "draft": {
         "failed": "Failed to create draft"
       },
@@ -771,6 +777,9 @@
           "8": "Adventures of Huckleberry Finn is a novel by American author Mark Twain, which was first published in the United Kingdom in December 1884 and in the United States in February 1885. The book is noted for \"changing the course of children's literature\" in the United States for the \"deeply felt portrayal of boyhood\". It is also known for its colorful description of people and places along the Mississippi River.",
           "9": "Ulysses is a modernist novel by Irish writer James Joyce. Parts of it were first serialized in the American journal The Little Review from March 1918 to December 1920, and the entire work was published in Paris by Sylvia Beach on 2 February 1922, Joyce's fortieth birthday. Ulysses chronicles the appointments and encounters of the itinerant Leopold Bloom in Dublin in the course of an ordinary day, 16 June 1904. Ulysses is the Latinised name of Odysseus, the hero of Homer's epic poem the Odyssey, and the novel establishes a series of parallels between the poem and the novel, with structural correspondences between the characters and experiences of Bloom and Odysseus."
         }
+      },
+      "topics": {
+        "name": "Add topics"
       }
     },
     "add_topics": "Select some of the available topics to categorize the quote.",
@@ -786,6 +795,9 @@
     },
     "clear_all": "Clear all",
     "clear_topics": "Clear topics",
+    "content": {
+      "hint_text": "Roses are red. Violets are blue. I want to be lost in you."
+    },
     "copy": {
       "link": "Copy link",
       "name": "Copy quote",
@@ -905,7 +917,7 @@
       "ing": "Submitting the quote for validation",
       "name": "Submit",
       "ok": "This quote will be sent for validation",
-      "required": "You must enter a quote and select at least one topic",
+      "required": "You must enter a quote and select at least one topic if you want to submit it for validation.",
       "success": "Quote successfully submitted!",
       "tooltip": "Tap to save. Long press to send for validation."
     },
@@ -1047,6 +1059,10 @@
   "signout": "Sign out",
   "signup": "Sign up",
   "skip": "Skip",
+  "step": {
+    "name": "Step",
+    "progress": "Step {current}/{total}"
+  },
   "suggestions": {
     "name": "Suggestions",
     "show_as_list": "Show as list"
