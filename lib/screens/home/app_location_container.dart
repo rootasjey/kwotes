@@ -131,7 +131,7 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
                       selectedColor: Constants.colors.search,
                     ),
                     SalomonBottomBarItem(
-                      icon: const Icon(TablerIcons.user),
+                      icon: const Icon(TablerIcons.notebook),
                       title: Text("dashboard".tr()),
                       selectedColor: Constants.colors.delete,
                     ),
