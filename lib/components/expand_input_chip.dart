@@ -134,6 +134,9 @@ class _ExpandInputChipState extends State<ExpandInputChip> {
 
   @override
   Widget build(BuildContext context) {
+    final Color foregroundColor =
+        Theme.of(context).textTheme.bodyMedium?.color ?? Colors.black54;
+
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: onMouseEnter,
@@ -164,6 +167,12 @@ class _ExpandInputChipState extends State<ExpandInputChip> {
               labelPadding: EdgeInsets.zero,
               side: widget.borderSide,
               backgroundColor: getBackgroundColor(),
+              shape: StadiumBorder(
+                side: BorderSide(
+                  width: 1.4,
+                  color: foregroundColor.withOpacity(0.1),
+                ),
+              ),
             ),
           ),
         ),
