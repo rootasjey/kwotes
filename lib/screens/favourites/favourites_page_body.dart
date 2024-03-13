@@ -9,6 +9,7 @@ import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_quote_text_magnitude.dart";
 import "package:kwotes/types/quote.dart";
 import "package:super_context_menu/super_context_menu.dart";
+import "package:wave_divider/wave_divider.dart";
 
 class FavouritesPageBody extends StatelessWidget {
   /// Body part of favourites page.
@@ -97,8 +98,14 @@ class FavouritesPageBody extends StatelessWidget {
       sliver: SliverList.separated(
         separatorBuilder: (BuildContext context, int index) {
           return isDark
-              ? const Divider(height: 54.0, color: Colors.white12)
-              : const Divider(height: 54.0, color: Colors.black12);
+              ? const WaveDivider(
+                  padding: EdgeInsets.symmetric(vertical: 24.0),
+                  color: Colors.white38,
+                )
+              : const WaveDivider(
+                  padding: EdgeInsets.symmetric(vertical: 24.0),
+                  color: Colors.black38,
+                );
         },
         itemBuilder: (BuildContext context, int index) {
           final Quote quote = quotes[index];
