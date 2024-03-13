@@ -48,7 +48,7 @@ class DashboardCardSection extends StatelessWidget {
           ),
           DashboardCard(
             compact: isMobileSize,
-            hoverColor: Constants.colors.lists,
+            hoverColor: Constants.colors.authors,
             iconData: TablerIcons.list,
             isDark: isDark,
             textSubtitle: "lists.description".tr(),

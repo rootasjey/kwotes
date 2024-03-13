@@ -29,15 +29,17 @@ class DashboardFab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isMobileSize) {
-      return FloatingActionButton(
-        onPressed: () => onGoToAddQuotePage?.call(context),
-        tooltip: "quote.add.a".tr(),
-        splashColor: splashColor,
-        backgroundColor: backgroundColor,
-        foregroundColor: backgroundColor.computeLuminance() > 0.4
-            ? Colors.black
-            : Colors.white,
-        child: const Icon(TablerIcons.message_2_plus),
+      return Utils.graphic.tooltip(
+        tooltipString: "quote.add.a".tr(),
+        child: FloatingActionButton(
+          onPressed: () => onGoToAddQuotePage?.call(context),
+          splashColor: splashColor,
+          backgroundColor: backgroundColor,
+          foregroundColor: backgroundColor.computeLuminance() > 0.4
+              ? Colors.black
+              : Colors.white,
+          child: const Icon(TablerIcons.message_2_plus),
+        ),
       );
     }
 

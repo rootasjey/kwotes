@@ -33,6 +33,7 @@ import "package:kwotes/screens/settings/settings_page.dart";
 import "package:kwotes/screens/settings/username/update_username_page.dart";
 import "package:kwotes/screens/signin/signin_page.dart";
 import "package:kwotes/screens/signup/signup_page.dart";
+import "package:kwotes/screens/user_profile/user_profile_page.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 
@@ -113,6 +114,7 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
   static const String listsRoute = "$route/lists";
   static const String listRoute = "$listsRoute/:listId";
   static const String listQuoteRoute = "$listRoute/quotes/:quoteId";
+  static const String profileRoute = "$route/profile";
   static const String publishedRoute = "$route/published";
   static const String publishedQuoteRoute = "$publishedRoute/:quoteId";
 
@@ -159,6 +161,7 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
         listQuoteRoute,
         listRoute,
         listsRoute,
+        profileRoute,
         publishedRoute,
         inValidationRoute,
         referenceRoute,
@@ -475,6 +478,13 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
           type: BeamPageType.fadeTransition,
           fullScreenDialog: false,
           opaque: false,
+        ),
+      if (state.pathPatternSegments.contains(profileRoute.split("/").last))
+        BeamPage(
+          child: const UserProfilePage(),
+          key: const ValueKey(profileRoute),
+          title: "page_title.user_profile".tr(),
+          type: BeamPageType.fadeTransition,
         ),
     ];
   }
