@@ -219,11 +219,13 @@ class QuoteActions {
     required Quote quote,
     required String userId,
   }) async {
+    // NOTE: We now allow user to create quotes without topics.
+    // Validators will add the appropriate topics.
+    // -------------------------------------------------------
     if (userId.isEmpty ||
         quote.id.isEmpty ||
         quote.name.isEmpty ||
-        quote.name.length < 3 ||
-        quote.topics.isEmpty) {
+        quote.name.length < 3) {
       return false;
     }
 
