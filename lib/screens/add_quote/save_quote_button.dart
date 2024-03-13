@@ -30,7 +30,7 @@ class SaveQuoteButton extends StatelessWidget {
   /// Check if the quote's required properties are valid (name & topics).
   final bool isQuoteValid;
 
-  /// Adapt user interface to moile size if true.
+  /// Adapt user interface to mobile size if true.
   final bool isMobileSize;
 
   /// Use icon if true.
@@ -56,15 +56,12 @@ class SaveQuoteButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isMobileSize) {
-      return Padding(
-        padding: margin,
-        child: Utils.graphic.tooltip(
-          backgroundColor: isDark ? Colors.black : null,
-          tooltipString: isQuoteValid
-              ? "quote.submit.tooltip".tr()
-              : "quote.submit.required".tr(),
-          child: TextButton(
+    return Padding(
+      padding: margin,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          TextButton(
             onPressed: onPressed,
             onLongPress: onLongPress,
             style: TextButton.styleFrom(
@@ -93,30 +90,7 @@ class SaveQuoteButton extends StatelessWidget {
               ],
             ),
           ),
-        ),
-      );
-    }
-    return Utils.graphic.tooltip(
-      backgroundColor: Colors.black,
-      tooltipString: isQuoteValid ? "" : "quote.submit.required".tr(),
-      child: TextButton(
-        onLongPress: onLongPress,
-        onPressed: isQuoteValid ? onPressed : null,
-        style: TextButton.styleFrom(
-          backgroundColor: fabBackgroundColor,
-          foregroundColor: fabForegroundColor,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8.0)),
-          ),
-        ),
-        child: Text(
-          getLabel(),
-          style: Utils.calligraphy.body(
-            textStyle: const TextStyle(
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
+        ],
       ),
     );
   }
@@ -137,15 +111,15 @@ class SaveQuoteButton extends StatelessWidget {
 
   String getLabel() {
     if (quote is! DraftQuote) {
-      return "quote.update.name".tr();
+      return "update.name".tr().toUpperCase();
     }
 
     final DraftQuote draft = quote as DraftQuote;
 
     if (!draft.inValidation) {
-      return "quote.save.name".tr();
+      return "save".tr().toUpperCase();
     }
 
-    return "quote.save.name".tr();
+    return "save".tr().toUpperCase();
   }
 }

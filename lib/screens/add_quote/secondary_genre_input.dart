@@ -35,6 +35,8 @@ class SecondaryGenreInput extends StatelessWidget {
           top: 12.0,
           bottom: 12.0,
         ),
+        iconColor:
+            Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5),
         icon: const Padding(
           padding: EdgeInsets.only(left: 4.0),
           child: Icon(TablerIcons.hexagon),

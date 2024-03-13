@@ -19,6 +19,7 @@ class AddQuoteAuthorPage extends StatelessWidget {
     required this.nameFocusNode,
     required this.jobFocusNode,
     required this.summaryFocusNode,
+    this.canManageQuote = false,
     this.isDark = false,
     this.isMobileSize = false,
     this.metadataOpened = true,
@@ -53,10 +54,13 @@ class AddQuoteAuthorPage extends StatelessWidget {
   /// Main page data.
   final Author author;
 
+  /// Show metadata card if true.
+  final bool canManageQuote;
+
   /// Adapt user interface to dark mode if true.
   final bool isDark;
 
-  /// Adapt user interface to moile size if true.
+  /// Adapt user interface to mobile size if true.
   final bool isMobileSize;
 
   /// Expand metadata widget if true.
@@ -167,6 +171,12 @@ class AddQuoteAuthorPage extends StatelessWidget {
     final Color nameBorderColor =
         Theme.of(context).dividerColor.withOpacity(0.1);
 
+    final ButtonStyle cancelButtonStyle = TextButton.styleFrom(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4.0),
+      ),
+    );
+
     return Scaffold(
       floatingActionButton: floatingActionButton,
       body: CustomScrollView(
@@ -190,7 +200,8 @@ class AddQuoteAuthorPage extends StatelessWidget {
                 Align(
                   alignment: Alignment.topRight,
                   child: StepChip(
-                    currentStep: 3,
+                    currentStep: 1,
+                    isBonusStep: true,
                     isDark: isDark,
                   ),
                 ),
@@ -218,6 +229,7 @@ class AddQuoteAuthorPage extends StatelessWidget {
                         show: nameFocusNode.hasFocus,
                         textStyle: const TextStyle(fontSize: 14.0),
                         onTapCancelButton: onTapCancelButtonName,
+                        buttonStyle: cancelButtonStyle,
                       ),
                       contentPadding: const EdgeInsets.all(12.0),
                       errorText: authorNameErrorText,
@@ -271,6 +283,7 @@ class AddQuoteAuthorPage extends StatelessWidget {
                         show: jobFocusNode.hasFocus,
                         onTapCancelButton: onTapCancelButtonJob,
                         textStyle: const TextStyle(fontSize: 14.0),
+                        buttonStyle: cancelButtonStyle,
                       ),
                       errorText: authorNameErrorText,
                       hintMaxLines: null,
@@ -316,7 +329,7 @@ class AddQuoteAuthorPage extends StatelessWidget {
                   onToggleNagativeDeathDate: onToggleNagativeDeathDate,
                   onToggleIsFictional: onToggleIsFictional,
                   onToggleOpen: onToggleMetadata,
-                  show: isMobileSize,
+                  show: isMobileSize && canManageQuote,
                 ),
                 AddAuthorMetadaWrap(
                   author: author,
@@ -326,7 +339,7 @@ class AddQuoteAuthorPage extends StatelessWidget {
                   onToggleNagativeBirthDate: onToggleNagativeBirthDate,
                   onToggleNagativeDeathDate: onToggleNagativeDeathDate,
                   onToggleIsFictional: onToggleIsFictional,
-                  show: !isMobileSize,
+                  show: !isMobileSize && canManageQuote,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 24.0),

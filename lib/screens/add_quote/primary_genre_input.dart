@@ -73,7 +73,7 @@ class _PrimaryGenreInputState extends State<PrimaryGenreInput> {
     return Padding(
       padding: widget.margin,
       child: Wrap(
-        spacing: 8.0,
+        spacing: 12.0,
         runSpacing: 0.0,
         children: [
           TextFormField(
@@ -82,6 +82,11 @@ class _PrimaryGenreInputState extends State<PrimaryGenreInput> {
             onFieldSubmitted: onPrimaryGenreSubmitted,
             focusNode: _inputFocusNode,
             decoration: InputDecoration(
+              iconColor: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.color
+                  ?.withOpacity(0.5),
               icon: Padding(
                 padding: const EdgeInsets.only(left: 4.0),
                 child: Icon(

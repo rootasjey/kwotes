@@ -7,16 +7,24 @@ class CancelButton extends StatelessWidget {
   const CancelButton({
     super.key,
     this.show = true,
+    this.buttonStyle,
     this.onTapCancelButton,
     this.backgroundColor = Colors.transparent,
+    this.focusNode,
     this.textStyle,
   });
 
   /// Show cancel button if true.
   final bool show;
 
+  /// Button style.
+  final ButtonStyle? buttonStyle;
+
   /// Button background color.
   final Color backgroundColor;
+
+  /// Focus node for this button.
+  final FocusNode? focusNode;
 
   /// Callback fired when this button is tapped.
   final void Function()? onTapCancelButton;
@@ -31,6 +39,7 @@ class CancelButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(6.0),
       child: TextButton(
+        focusNode: focusNode,
         onPressed: onTapCancelButton,
         style: TextButton.styleFrom(
           padding: const EdgeInsets.symmetric(
@@ -38,11 +47,7 @@ class CancelButton extends StatelessWidget {
             horizontal: 8.0,
           ),
           backgroundColor: backgroundColor,
-          // backgroundColor: accentColor.withOpacity(0.1),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4.0),
-          ),
-        ),
+        ).merge(buttonStyle),
         child: Text(
           "cancel".tr(),
           style: Utils.calligraphy

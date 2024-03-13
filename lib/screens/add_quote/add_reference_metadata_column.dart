@@ -2,12 +2,12 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/better_action_chip.dart";
-import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/screens/add_quote/primary_genre_input.dart";
 import "package:kwotes/screens/add_quote/secondary_genre_input.dart";
 import "package:kwotes/components/buttons/colored_text_button.dart";
 import "package:kwotes/types/reference.dart";
+import "package:wave_divider/wave_divider.dart";
 
 class AddReferenceMetadaColumn extends StatelessWidget {
   /// A component showing reference's metadata
@@ -18,6 +18,7 @@ class AddReferenceMetadaColumn extends StatelessWidget {
     required this.reference,
     this.isOpen = true,
     this.show = true,
+    this.borderSide = BorderSide.none,
     this.margin = EdgeInsets.zero,
     this.randomReferenceInt = 0,
     this.onPrimaryGenreChanged,
@@ -37,6 +38,9 @@ class AddReferenceMetadaColumn extends StatelessWidget {
 
   /// Show this widget if true.
   final bool show;
+
+  /// Card border side.
+  final BorderSide borderSide;
 
   /// Space around this widget.
   final EdgeInsets margin;
@@ -71,23 +75,26 @@ class AddReferenceMetadaColumn extends StatelessWidget {
       return Container();
     }
 
-    const EdgeInsets itemPadding = EdgeInsets.only(bottom: 6.0);
-
+    const EdgeInsets itemPadding = EdgeInsets.only(left: 2.0, bottom: 6.0);
     final Color? iconColor =
-        Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5);
+        Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6);
 
     List<Widget> children = [
       Padding(
-        padding: itemPadding,
+        padding: itemPadding.add(const EdgeInsets.only(left: 2.0, top: 6.0)),
         child: Row(
           children: [
-            CircleAvatar(
-              radius: 14.0,
-              backgroundImage:
-                  const AssetImage("assets/images/reference-picture-0.png"),
-              foregroundImage: reference.urls.image.isNotEmpty
-                  ? NetworkImage(reference.urls.image)
-                  : null,
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: CircleAvatar(
+                radius: 12.0,
+                backgroundColor: Colors.transparent,
+                foregroundColor: iconColor,
+                foregroundImage: reference.urls.image.isNotEmpty
+                    ? NetworkImage(reference.urls.image)
+                    : null,
+                child: const Icon(TablerIcons.user_circle, size: 18.0),
+              ),
             ),
             Expanded(
               child: TextFormField(
@@ -103,9 +110,6 @@ class AddReferenceMetadaColumn extends StatelessWidget {
                   isDense: true,
                   contentPadding: const EdgeInsets.only(
                     left: 6.0,
-                    top: 0.0,
-                    right: 0.0,
-                    bottom: 0.0,
                   ),
                   hintText: "quote.add.links.example.web".tr(),
                   border: const OutlineInputBorder(
@@ -117,35 +121,42 @@ class AddReferenceMetadaColumn extends StatelessWidget {
           ],
         ),
       ),
-      Padding(
-        padding: itemPadding,
-        child: Row(
-          children: [
-            Expanded(
-              child: ColoredTextButton(
-                icon: Icon(TablerIcons.rocket, color: iconColor),
-                margin: const EdgeInsets.only(right: 8.0),
-                onPressed: onTapReleaseDate,
-                textValue: releaseText,
-                tooltip: "quote.add.reference.dates.release".tr(),
+      Row(
+        children: [
+          Expanded(
+            child: ColoredTextButton(
+              iconPadding: const EdgeInsets.only(right: 14.0),
+              icon: Icon(TablerIcons.rocket, color: iconColor, size: 18.0),
+              margin: const EdgeInsets.only(right: 8.0),
+              onPressed: onTapReleaseDate,
+              textValue: releaseText,
+              tooltip: "quote.add.reference.dates.release".tr(),
+              textStyle: Utils.calligraphy.body(
+                textStyle: const TextStyle(
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              style: TextButton.styleFrom(
+                foregroundColor: iconColor,
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
               ),
             ),
-            BetterActionChip(
-              avatar: reference.release.beforeCommonEra
-                  ? const Icon(TablerIcons.arrow_back)
-                  : const Icon(TablerIcons.arrow_forward),
-              tooltip: "quote.add.reference.dates.negative.release"
-                      ".explanation.${reference.release.beforeCommonEra}"
+          ),
+          BetterActionChip(
+            avatar: reference.release.beforeCommonEra
+                ? const Icon(TablerIcons.arrow_back)
+                : const Icon(TablerIcons.arrow_forward),
+            tooltip: "quote.add.reference.dates.negative.release"
+                    ".explanation.${reference.release.beforeCommonEra}"
+                .tr(),
+            label: Text(
+              "quote.add.reference.dates.negative.release"
+                      ".${reference.release.beforeCommonEra}"
                   .tr(),
-              label: Text(
-                "quote.add.reference.dates.negative.release"
-                        ".${reference.release.beforeCommonEra}"
-                    .tr(),
-              ),
-              onPressed: onToggleNagativeReleaseDate,
             ),
-          ],
-        ),
+            onPressed: onToggleNagativeReleaseDate,
+          ),
+        ],
       ),
       Padding(
         padding: itemPadding,
@@ -202,28 +213,30 @@ class AddReferenceMetadaColumn extends StatelessWidget {
           AnimatedSize(
             curve: Curves.decelerate,
             duration: const Duration(milliseconds: 150),
-            child: SizedBox(
+            child: Container(
               height: isOpen ? null : 0.0,
+              padding: const EdgeInsets.only(top: 8.0),
               child: Card(
                 elevation: 8.0,
                 margin: EdgeInsets.zero,
+                surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
                 color: Theme.of(context).scaffoldBackgroundColor,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4.0),
-                  side: BorderSide(
-                    color: Constants.colors.getRandomFromPalette(),
-                  ),
+                  borderRadius: BorderRadius.circular(12.0),
+                  side: borderSide,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
+                    separatorBuilder: (BuildContext context, int index) {
+                      return WaveDivider(
+                        color: Theme.of(context).dividerColor,
+                      );
+                    },
                     itemBuilder: (BuildContext context, int index) {
                       return children[index];
-                    },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return const Divider();
                     },
                     itemCount: children.length,
                   ),

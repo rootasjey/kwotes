@@ -20,9 +20,11 @@ class AddQuoteReferencePage extends StatelessWidget {
     required this.reference,
     required this.nameFocusNode,
     required this.summaryFocusNode,
+    this.canManageQuote = false,
     this.isDark = false,
     this.isMobileSize = false,
     this.metadataOpened = true,
+    this.metadataBorderSide = BorderSide.none,
     this.randomReferenceInt = 0,
     this.lastUsedUrls = const [],
     this.appBarRightChildren = const [],
@@ -47,14 +49,19 @@ class AddQuoteReferencePage extends StatelessWidget {
     this.onTapCancelButtonSummary,
   });
 
+  /// Show metadata card if true.
+  final bool canManageQuote;
+
   /// Adapt user interface to dark mode if true.
   final bool isDark;
 
-  /// Adapt user interface to moile size if true.
+  /// Adapt user interface to mobile size if true.
   final bool isMobileSize;
 
   /// Expand metadata widget if true.
   final bool metadataOpened;
+
+  final BorderSide metadataBorderSide;
 
   /// Random int for displaying hint texts.
   final int randomReferenceInt;
@@ -150,6 +157,12 @@ class AddQuoteReferencePage extends StatelessWidget {
     final Color nameBorderColor =
         Theme.of(context).dividerColor.withOpacity(0.1);
 
+    final ButtonStyle cancelButtonStyle = TextButton.styleFrom(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4.0),
+      ),
+    );
+
     return Scaffold(
       floatingActionButton: floatingActionButton,
       body: CustomScrollView(
@@ -173,7 +186,8 @@ class AddQuoteReferencePage extends StatelessWidget {
                 Align(
                   alignment: Alignment.topRight,
                   child: StepChip(
-                    currentStep: 4,
+                    currentStep: 2,
+                    isBonusStep: true,
                     isDark: isDark,
                   ),
                 ),
@@ -200,6 +214,7 @@ class AddQuoteReferencePage extends StatelessWidget {
                         onTapCancelButton: onTapCancelButtonName,
                         show: nameFocusNode.hasFocus,
                         textStyle: const TextStyle(fontSize: 14.0),
+                        buttonStyle: cancelButtonStyle,
                       ),
                       contentPadding: const EdgeInsets.all(12.0),
                       errorText: referenceNameErrorText,
@@ -253,6 +268,7 @@ class AddQuoteReferencePage extends StatelessWidget {
                 ),
                 AddReferenceMetadaColumn(
                   isOpen: metadataOpened,
+                  borderSide: metadataBorderSide,
                   onPrimaryGenreChanged: onPrimaryGenreChanged,
                   onSecondaryGenreChanged: onSecondaryGenreChanged,
                   onProfilePictureChanged: onPictureUrlChanged,

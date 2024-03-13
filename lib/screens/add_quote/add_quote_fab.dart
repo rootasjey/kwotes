@@ -24,7 +24,7 @@ class AddQuoteFab extends StatelessWidget {
   /// Check if the quote's required properties are valid (name & topics).
   final bool isQuoteValid;
 
-  /// Adapt user interface to moile size if true.
+  /// Adapt user interface to mobile size if true.
   final bool isMobileSize;
 
   /// Foreground color of the fab.

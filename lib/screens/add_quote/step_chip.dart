@@ -6,8 +6,12 @@ class StepChip extends StatelessWidget {
   const StepChip({
     super.key,
     required this.currentStep,
+    this.isBonusStep = false,
     this.isDark = false,
   });
+
+  /// Is this step a bonus step?
+  final bool isBonusStep;
 
   /// Use dark mode if true.
   final bool isDark;
@@ -24,18 +28,24 @@ class StepChip extends StatelessWidget {
       backgroundColor: isDark ? Colors.black : Colors.white,
       padding: const EdgeInsets.all(6.0),
       labelStyle: Utils.calligraphy.body(
-        textStyle: const TextStyle(
+        textStyle: TextStyle(
           fontSize: 12.0,
           fontWeight: FontWeight.w500,
+          color:
+              Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6),
         ),
       ),
       label: Text(
-        "step.progress".tr(
-          namedArgs: {
-            "current": currentStep.toString(),
-            "total": "2",
-          },
-        ),
+        isBonusStep
+            ? "step.bonus.current".tr(
+                args: [currentStep.toString()],
+              )
+            : "step.progress".tr(
+                namedArgs: {
+                  "current": currentStep.toString(),
+                  "total": "2",
+                },
+              ),
       ),
       // label: const Text("Step 1/2"),
     );

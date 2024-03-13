@@ -25,7 +25,7 @@ class AddQuoteTopicPage extends StatelessWidget {
   /// Use dark mode if true.
   final bool isDark;
 
-  /// Adapt user interface to moile size if true.
+  /// Adapt user interface to mobile size if true.
   final bool isMobileSize;
 
   /// Callback fired when a topic is tapped.

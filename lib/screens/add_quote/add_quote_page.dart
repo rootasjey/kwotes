@@ -9,10 +9,11 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_langdetect/flutter_langdetect.dart" as langdetect;
 import "package:flutter_solidart/flutter_solidart.dart";
-import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:just_the_tooltip/just_the_tooltip.dart";
 import "package:kwotes/router/locations/home_location.dart";
+import "package:kwotes/screens/add_quote/quote_language_selector.dart";
 import "package:kwotes/screens/add_quote/save_quote_button.dart";
+import "package:kwotes/screens/add_quote/simple_add_quote_page.dart";
 import "package:kwotes/screens/add_quote/snackbar_draft.dart";
 import "package:kwotes/types/enums/enum_draft_quote_operation.dart";
 import "package:kwotes/types/intents/save_intent.dart";
@@ -76,6 +77,10 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
   /// Show reference metadata if true.
   bool _referenceMetadataOpened = true;
 
+  /// Show minimal builder if true (for users).
+  /// Otherwise show complex add quote page (for creators).
+  bool _showMinimalBuilder = true;
+
   /// Firestore quote document reference.
   DocumentReference? _docRef;
 
@@ -113,6 +118,22 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
 
   /// Used to request focus on the author name input.
   final FocusNode _authorNameFocusNode = FocusNode();
+
+  /// Used to deactivate focus on author name cancel button.
+  final FocusNode _cancelAuthorNameFocusNode = FocusNode(
+    canRequestFocus: false,
+    skipTraversal: true,
+    descendantsAreFocusable: false,
+    descendantsAreTraversable: false,
+  );
+
+  /// Used to deactivate focus on reference name cancel button.
+  final FocusNode _cancelReferenceNameFocusNode = FocusNode(
+    canRequestFocus: false,
+    skipTraversal: true,
+    descendantsAreFocusable: false,
+    descendantsAreTraversable: false,
+  );
 
   /// Used to request focus on the reference name input.
   final FocusNode _referenceNameFocusNode = FocusNode();
@@ -240,11 +261,14 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     _contentFocusNode.dispose();
     _timerUpdateQuote?.cancel();
     _timerPageTitle?.cancel();
+    _timerUpdateSuggestions?.cancel();
     _contentController.dispose();
     _tooltipController.dispose();
     _authorNameFocusNode.dispose();
     _authorNameController.dispose();
     _authorJobController.dispose();
+    _cancelAuthorNameFocusNode.dispose();
+    _cancelReferenceNameFocusNode.dispose();
     _authorJobFocusNode.dispose();
     _referenceNameFocusNode.dispose();
     _referenceNameController.dispose();
@@ -252,6 +276,8 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     _authorSummaryController.dispose();
     _authorSummaryFocusNode.dispose();
     _referenceSummaryFocusNode.dispose();
+    _authorSearchResults.clear();
+    _referenceSearchResults.clear();
     super.dispose();
   }
 
@@ -260,7 +286,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     final Size windowSize = MediaQuery.of(context).size;
     final bool isMobileSize =
         windowSize.width < Utils.measurements.mobileWidthTreshold ||
-            windowSize.height < Utils.measurements.mobileWidthTreshold;
+            windowSize.height < Utils.measurements.mobileHeightTreshold;
 
     final String textValue = _contentController.text.isNotEmpty
         ? _contentController.text
@@ -283,8 +309,6 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
 
     final Quote quote = NavigationStateHelper.quote;
     final bool isQuoteValid = quote.name.length > 3 && quote.topics.isNotEmpty;
-    // final Color? fabBackgroundColor = getFabBackgroundColor(isQuoteValid);
-    // final Color? fabForegroundColor = getFabForegroundColor(isQuoteValid);
 
     if (_pageState == EnumPageState.submittingQuote) {
       return LoadingView.scaffold(
@@ -322,6 +346,9 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     final Signal<UserFirestore> userSignalFirestore =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
 
+    final bool canManageQuotes =
+        userSignalFirestore.value.rights.canManageQuotes;
+
     final SignalBuilder<UserFirestore> saveButton = SignalBuilder(
       signal: userSignalFirestore,
       builder: (
@@ -330,16 +357,56 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
         Widget? child,
       ) {
         return SaveQuoteButton(
-          onPressed: onSaveDraft,
-          quote: quote,
+          canManageQuotes: userFirestore.rights.canManageQuotes,
           isDark: isDark,
           isQuoteValid: isQuoteValid,
           isMobileSize: isMobileSize,
-          canManageQuotes: userFirestore.rights.canManageQuotes,
-          useIcon: true,
+          onPressed: onSaveDraft,
+          onLongPress: proposeQuote,
+          quote: quote,
         );
       },
     );
+
+    if (_showMinimalBuilder) {
+      return SimpleAddQuotePage(
+        authorNameController: _authorNameController,
+        authorNameFocusNode: _authorNameFocusNode,
+        cancelAuthorNameFocusNode: _cancelAuthorNameFocusNode,
+        cancelReferenceNameFocusNode: _cancelReferenceNameFocusNode,
+        canManageQuotes: canManageQuotes,
+        contentFocusNode: _contentFocusNode,
+        contentController: _contentController,
+        isDark: isDark,
+        isMobileSize: isMobileSize,
+        languageSelector: QuoteLanguageSelector(
+          languageSelection: _languageSelection,
+          autoDetectedLanguage: _autoDetectedLanguage,
+          isDark: isDark,
+          foregroundColor: foregroundColor,
+          onSelectLanguage: onSelectLanguage,
+        ),
+        foregroundColor: foregroundColor,
+        hasHistory: hasHistory,
+        onSelectLanguage: onSelectLanguage,
+        onQuoteContentChanged: onQuoteContentChanged,
+        onSaveShortcut: onSaveShortcut,
+        onSubmitShortcut: onSubmitShortcut,
+        shortcuts: _shortcuts,
+        onAuthorNameChanged: onAuthorNameChanged,
+        onReferenceNameChanged: onReferenceNameChanged,
+        onShowComplexBuilder: onShowComplexBuilder,
+        onSubmittedReferenceName: onSubmittedReferenceName,
+        onTapCancelButtonAuthorName: onTapCancelButtonAuthorName,
+        onTapCancelButtonContentName: onTapCancelButtonContent,
+        onTapCancelButtonReferenceName: onTapCancelButtonReferenceName,
+        randomAuthorInt: _randomAuthorIndex,
+        randomReferenceInt: _randomReferenceIndex,
+        referenceNameController: _referenceNameController,
+        referenceNameFocusNode: _referenceNameFocusNode,
+        saveButton: saveButton,
+      );
+    }
 
     return Shortcuts(
       shortcuts: _shortcuts,
@@ -384,64 +451,12 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
               body: TabBarView(
                 children: [
                   AddQuoteContent(
-                    languageSelector: MenuAnchor(
-                      menuChildren: [
-                        MenuItemButton(
-                          trailingIcon:
-                              const Icon(TablerIcons.bolt, size: 14.0),
-                          onPressed: () {
-                            onSelectLanguage(EnumLanguageSelection.autoDetect);
-                          },
-                          child: Text("language.locale.autoDetect".tr()),
-                        ),
-                        MenuItemButton(
-                          child: Text("language.locale.en".tr()),
-                          onPressed: () {
-                            onSelectLanguage(EnumLanguageSelection.en);
-                          },
-                        ),
-                        MenuItemButton(
-                          child: Text("language.locale.fr".tr()),
-                          onPressed: () {
-                            onSelectLanguage(EnumLanguageSelection.fr);
-                          },
-                        ),
-                      ],
-                      builder: (
-                        BuildContext context,
-                        MenuController controller,
-                        Widget? child,
-                      ) {
-                        final String languageSelected =
-                            _autoDetectedLanguage.isEmpty
-                                ? _languageSelection.name
-                                : _autoDetectedLanguage;
-
-                        return TextButton(
-                          onPressed: () {
-                            controller.isOpen
-                                ? controller.close()
-                                : controller.open();
-                          },
-                          style: TextButton.styleFrom(
-                            foregroundColor: foregroundColor,
-                            backgroundColor:
-                                isDark ? Colors.black : Colors.white,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                "${"language.name".tr()}: "
-                                "${"language.locale.$languageSelected".tr()}",
-                              ),
-                              if (_languageSelection ==
-                                  EnumLanguageSelection.autoDetect)
-                                const Icon(TablerIcons.bolt, size: 14.0),
-                            ],
-                          ),
-                        );
-                      },
+                    languageSelector: QuoteLanguageSelector(
+                      languageSelection: _languageSelection,
+                      autoDetectedLanguage: _autoDetectedLanguage,
+                      isDark: isDark,
+                      foregroundColor: foregroundColor,
+                      onSelectLanguage: onSelectLanguage,
                     ),
                     tooltipController: _tooltipController,
                     contentController: _contentController,
@@ -451,6 +466,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                     isMobileSize: isMobileSize,
                     onTapCancelButton: onTapCancelButtonContent,
                     onDeleteQuote: onDeleteDraft,
+                    onShowMinimalBuilder: onShowMinimalBuilder,
                     saveButton: saveButton,
                     solution: solution,
                   ),
@@ -479,6 +495,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                     ),
                     author: NavigationStateHelper.quote.author,
                     authorSuggestions: _authorSearchResults,
+                    canManageQuote: canManageQuotes,
                     isDark: isDark,
                     isMobileSize: isMobileSize,
                     jobFocusNode: _authorJobFocusNode,
@@ -515,6 +532,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                       onDeleteQuote: onDeleteDraft,
                       tooltipController: _tooltipController,
                     ),
+                    canManageQuote: canManageQuotes,
                     isDark: isDark,
                     isMobileSize: isMobileSize,
                     lastUsedUrls: _lastUsedAuthorUrls,
@@ -713,24 +731,6 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     }
   }
 
-  /// Return the background color of the fab.
-  Color? getFabBackgroundColor(bool isQuoteValid) {
-    if (isQuoteValid) {
-      return Theme.of(context).textTheme.bodyMedium?.color;
-    }
-
-    return Colors.grey.shade300;
-  }
-
-  /// Return the foreground color of the fab.
-  Color? getFabForegroundColor(bool isQuoteValid) {
-    if (isQuoteValid) {
-      return Theme.of(context).scaffoldBackgroundColor;
-    }
-
-    return Theme.of(context).textTheme.bodyMedium?.color;
-  }
-
   String getPageTitleTooltip() {
     if (_pageViewController.positions.isEmpty) {
       return "";
@@ -759,14 +759,17 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
       return false;
     }
 
-    if (quote.topics.isEmpty) {
-      Utils.graphic.showSnackbar(
-        context,
-        message: "quote.error.topic.empty".tr(),
-      );
+    // NOTE: We now allow user to create quotes without topics.
+    // Validators will add the appropriate topics.
+    // -------------------------------------------------------
+    // if (quote.topics.isEmpty) {
+    //   Utils.graphic.showSnackbar(
+    //     context,
+    //     message: "quote.error.topic.empty".tr(),
+    //   );
 
-      return false;
-    }
+    //   return false;
+    // }
 
     return true;
   }
@@ -1544,6 +1547,78 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     );
   }
 
+  /// Author job input focus change callback.
+  void onAuthorJobFocusChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  /// Focus change callback.
+  void onAuthorNameFocusChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  /// Author summary input focus change callback.
+  void onAuthorSummaryFocusChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  /// Quote's content input focus change callback.
+  void onContentFocusChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  /// Focus change callback.
+  void onReferenceNameFocusChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  /// Reference summary input focus change callback.
+  void onReferenceSummaryFocusChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  /// Callback fired when cancel button is tapped on author's name input.
+  void onTapCancelButtonAuthorName() {
+    _authorNameFocusNode.unfocus();
+  }
+
+  /// Callback fired when cancel button is tapped on author's job input.
+  void onTapCancelButtonAuthorJob() {
+    _authorJobFocusNode.unfocus();
+  }
+
+  /// Callback fired when cancel button is tapped on author's summary input.
+  void onTapCancelButtonAuthorSummary() {
+    _authorSummaryFocusNode.unfocus();
+  }
+
+  /// Callback fired when cancel button is tapped on quote's content input.
+  void onTapCancelButtonContent() {
+    _contentFocusNode.unfocus();
+  }
+
+  /// Callback fired when cancel button is tapped on reference name input.
+  void onTapCancelButtonReferenceName() {
+    _referenceNameFocusNode.unfocus();
+  }
+
+  /// Callback fired when cancel button is tapped on referece summary input.
+  void onTapCancelButtonReferenceSummary() {
+    _referenceSummaryFocusNode.unfocus();
+  }
+
   /// Callback fired to toggle author metadata widget size.
   void onToggleAuthorMetadata() {
     Utils.vault.setAddAuthorMetadataOpened(!_authorMetadataOpened);
@@ -2075,65 +2150,16 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     }
   }
 
-  /// Focus change callback.
-  void onAuthorNameFocusChanged() {
-    if (mounted) {
-      setState(() {});
-    }
+  void onShowComplexBuilder() {
+    setState(() => _showMinimalBuilder = false);
   }
 
-  /// Focus change callback.
-  void onReferenceNameFocusChanged() {
-    if (mounted) {
-      setState(() {});
-    }
+  void onShowMinimalBuilder() {
+    setState(() => _showMinimalBuilder = true);
   }
 
-  void onContentFocusChanged() {
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-  void onAuthorJobFocusChanged() {
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-  void onTapCancelButtonReferenceName() {
-    _referenceNameFocusNode.unfocus();
-  }
-
-  void onTapCancelButtonAuthorName() {
-    _authorNameFocusNode.unfocus();
-  }
-
-  void onTapCancelButtonContent() {
-    _contentFocusNode.unfocus();
-  }
-
-  void onTapCancelButtonAuthorJob() {
-    _authorJobFocusNode.unfocus();
-  }
-
-  void onAuthorSummaryFocusChanged() {
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-  void onTapCancelButtonAuthorSummary() {
-    _authorSummaryFocusNode.unfocus();
-  }
-
-  void onReferenceSummaryFocusChanged() {
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-  void onTapCancelButtonReferenceSummary() {
-    _referenceSummaryFocusNode.unfocus();
+  void onSubmittedReferenceName(String value) {
+    loggy.info("submit reference name: $value");
+    onSaveDraft();
   }
 }

@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:just_the_tooltip/just_the_tooltip.dart";
 import "package:kwotes/components/buttons/circle_button.dart";
+import "package:kwotes/globals/utils.dart";
 import "package:kwotes/screens/add_quote/step_chip.dart";
 import "package:text_wrap_auto_size/solution.dart";
 
@@ -20,13 +21,14 @@ class AddQuoteContent extends StatelessWidget {
     this.onDeleteQuote,
     this.onTapCancelButton,
     this.tooltipController,
+    this.onShowMinimalBuilder,
     this.appBarRightChildren = const [],
   });
 
   /// Use dark mode if true.
   final bool isDark;
 
-  /// Adapt user interface to moile size if true.
+  /// Adapt user interface to mobile size if true.
   final bool isMobileSize;
 
   /// Used to request focus on the content input.
@@ -41,20 +43,23 @@ class AddQuoteContent extends StatelessWidget {
   /// Callback fired when cancel button is tapped.
   final void Function()? onTapCancelButton;
 
+  /// Callback fired when minimal builder button is tapped.
+  final void Function()? onShowMinimalBuilder;
+
   /// Tooltip controller.
   final JustTheController? tooltipController;
 
   /// Right children of the application bar.
   final List<Widget> appBarRightChildren;
 
-  /// Language selector.
-  final Widget languageSelector;
-
   /// Text solution to apply a style that fits the screen size.
   final Solution solution;
 
   /// Content text controller.
   final TextEditingController contentController;
+
+  /// Language selector.
+  final Widget languageSelector;
 
   /// Save quote/draft button.
   final Widget saveButton;
@@ -83,6 +88,19 @@ class AddQuoteContent extends StatelessWidget {
                 runSpacing: 12.0,
                 alignment: WrapAlignment.end,
                 children: [
+                  Utils.graphic.tooltip(
+                    tooltipString: "quote.add.builder.minimal".tr(),
+                    child: ActionChip(
+                      label: const Icon(TablerIcons.pencil, size: 20.0),
+                      onPressed: onShowMinimalBuilder,
+                      elevation: 8.0,
+                      side: BorderSide.none,
+                      surfaceTintColor:
+                          Theme.of(context).scaffoldBackgroundColor,
+                      backgroundColor: isDark ? Colors.black : Colors.white,
+                      shape: const StadiumBorder(),
+                    ),
+                  ),
                   languageSelector,
                   StepChip(
                     currentStep: 1,

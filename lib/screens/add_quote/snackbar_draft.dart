@@ -26,7 +26,7 @@ class SnackbarDraft extends StatelessWidget {
   /// Don't display the "submit" button if true.
   final bool isInValidation;
 
-  /// Adapt user interface to moile size if true.
+  /// Adapt user interface to mobile size if true.
   final bool isMobileSize;
 
   /// The quote to propose for validation (if the action is taken).
