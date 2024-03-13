@@ -11,6 +11,7 @@ class UpdateUsernamePageBody extends StatelessWidget {
     super.key,
     required this.usernameController,
     required this.passwordFocusNode,
+    required this.username,
     this.accentColor = Colors.amber,
     this.isMobileSize = false,
     this.pageState = EnumPageState.idle,
@@ -39,6 +40,9 @@ class UpdateUsernamePageBody extends StatelessWidget {
 
   /// Error message.
   final String errorMessage;
+
+  /// Curernt username.
+  final String username;
 
   /// Username text controller.
   final TextEditingController usernameController;
@@ -70,6 +74,7 @@ class UpdateUsernamePageBody extends StatelessWidget {
                     autofocus: Utils.graphic.isMobile() ? false : true,
                     controller: usernameController,
                     label: "username.new".tr(),
+                    hintText: username,
                     keyboardType: TextInputType.text,
                     onChanged: onUsernameChanged,
                     textInputAction: TextInputAction.done,
@@ -106,7 +111,10 @@ class UpdateUsernamePageBody extends StatelessWidget {
                 backgroundColor: Colors.black87,
               ),
               child: Container(
-                padding: const EdgeInsets.all(14.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14.0,
+                  vertical: 12.0,
+                ),
                 width: 320.0,
                 child: Text(
                   "update.name".tr().toUpperCase(),

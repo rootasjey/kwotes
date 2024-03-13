@@ -3,6 +3,7 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/buttons/circle_button.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/password_checks.dart";
@@ -54,146 +55,121 @@ class UpdatePasswordPageHeader extends StatelessWidget {
                 ? CrossAxisAlignment.start
                 : CrossAxisAlignment.center,
             children: [
-              ActionChip(
-                onPressed: context.beamBack,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24.0),
-                ),
-                label: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(TablerIcons.arrow_left),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text("back".tr()),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 32.0),
-                child: MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: onTapLeftPartHeader,
-                    child: Text(
-                      "settings.name".tr(),
-                      textAlign:
-                          isMobileSize ? TextAlign.left : TextAlign.center,
-                      style: Utils.calligraphy.body(
-                        textStyle: TextStyle(
-                          fontSize: 24.0,
-                          fontWeight: fontWeight,
-                          height: 1.0,
-                          color: foregroundColor?.withOpacity(0.6),
-                        ),
-                      ),
+              Row(
+                children: [
+                  CircleButton(
+                    onTap: context.beamBack,
+                    radius: 16.0,
+                    margin: const EdgeInsets.only(right: 8.0),
+                    icon: Icon(
+                      TablerIcons.arrow_left,
+                      size: 18.0,
+                      color: foregroundColor?.withOpacity(0.6),
                     ),
                   ),
-                ),
-              ),
-              Text(
-                "password.name".tr(),
-                textAlign: isMobileSize ? TextAlign.left : TextAlign.center,
-                style: Utils.calligraphy.body(
-                  textStyle: TextStyle(
-                    color: accentColor,
-                    fontWeight: fontWeight,
-                    fontSize: 54.0,
-                  ),
-                ),
-              ),
-              FractionallySizedBox(
-                widthFactor: isMobileSize ? 0.9 : 0.4,
-                child: Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "password.update.tips.minimum_length"
-                            .tr(args: ["6"]),
-                        style: TextStyle(
-                          color: passwordChecks.hasMinimumLength
-                              ? Constants.colors.foregroundPalette.first
-                              : null,
-                          fontWeight: passwordChecks.hasMinimumLength
-                              ? FontWeight.w800
-                              : null,
-                        ),
-                      ),
-                      const TextSpan(text: ", "),
-                      TextSpan(
-                        text: "password.update.tips.lower_case".tr(),
-                        children: const [TextSpan(text: ", ")],
-                        style: TextStyle(
-                          color: passwordChecks.hasLowercase
-                              ? Constants.colors.foregroundPalette.elementAt(1)
-                              : null,
-                          fontWeight: passwordChecks.hasLowercase
-                              ? FontWeight.w800
-                              : null,
-                        ),
-                      ),
-                      TextSpan(
-                        text: "password.update.tips.upper_case".tr(),
-                        children: const [TextSpan(text: ", ")],
-                        style: TextStyle(
-                          color: passwordChecks.hasUppercase
-                              ? Constants.colors.foregroundPalette.elementAt(2)
-                              : null,
-                          fontWeight: passwordChecks.hasUppercase
-                              ? FontWeight.w800
-                              : null,
-                        ),
-                      ),
-                      TextSpan(
-                        text: "password.update.tips.and".tr(),
-                        children: const [TextSpan(text: " ")],
-                      ),
-                      TextSpan(
-                        text: "password.update.tips.number".tr(),
-                        children: const [TextSpan(text: ".")],
-                        style: TextStyle(
-                          color: passwordChecks.hasDigit
-                              ? Constants.colors.foregroundPalette.elementAt(3)
-                              : null,
-                          fontWeight:
-                              passwordChecks.hasDigit ? FontWeight.w600 : null,
-                        ),
-                      ),
-                    ],
-                  ),
-                  style: Utils.calligraphy.body(
-                    textStyle: TextStyle(
-                      fontSize: 16.0,
-                      color: foregroundColor?.withOpacity(0.4),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: TextButton(
-                  onPressed: onTapRemindMe,
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.black,
-                    backgroundColor: Colors.pink.shade100,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(right: 8.0),
-                        child: Icon(TablerIcons.eye),
-                      ),
-                      Text(
-                        "Remind me",
+                  MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: onTapLeftPartHeader,
+                      child: Text(
+                        "${"settings.name".tr()} > ",
+                        textAlign:
+                            isMobileSize ? TextAlign.left : TextAlign.center,
                         style: Utils.calligraphy.body(
-                          textStyle: const TextStyle(
-                            fontSize: 14.0,
+                          textStyle: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: fontWeight,
+                            height: 1.0,
+                            color: foregroundColor?.withOpacity(0.6),
                           ),
                         ),
                       ),
-                    ],
+                    ),
+                  ),
+                  Text(
+                    "password.name".tr(),
+                    textAlign: isMobileSize ? TextAlign.left : TextAlign.center,
+                    style: Utils.calligraphy.body(
+                      textStyle: TextStyle(
+                        color: accentColor,
+                        fontWeight: fontWeight,
+                        fontSize: 18.0,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 12.0),
+                child: FractionallySizedBox(
+                  widthFactor: isMobileSize ? 0.9 : 0.4,
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "password.update.tips.minimum_length"
+                              .tr(args: ["6"]),
+                          style: TextStyle(
+                            color: passwordChecks.hasMinimumLength
+                                ? Constants.colors.foregroundPalette.first
+                                : null,
+                            fontWeight: passwordChecks.hasMinimumLength
+                                ? FontWeight.w800
+                                : null,
+                          ),
+                        ),
+                        const TextSpan(text: ", "),
+                        TextSpan(
+                          text: "password.update.tips.lower_case".tr(),
+                          children: const [TextSpan(text: ", ")],
+                          style: TextStyle(
+                            color: passwordChecks.hasLowercase
+                                ? Constants.colors.foregroundPalette
+                                    .elementAt(1)
+                                : null,
+                            fontWeight: passwordChecks.hasLowercase
+                                ? FontWeight.w800
+                                : null,
+                          ),
+                        ),
+                        TextSpan(
+                          text: "password.update.tips.upper_case".tr(),
+                          children: const [TextSpan(text: ", ")],
+                          style: TextStyle(
+                            color: passwordChecks.hasUppercase
+                                ? Constants.colors.foregroundPalette
+                                    .elementAt(2)
+                                : null,
+                            fontWeight: passwordChecks.hasUppercase
+                                ? FontWeight.w800
+                                : null,
+                          ),
+                        ),
+                        TextSpan(
+                          text: "password.update.tips.and".tr(),
+                          children: const [TextSpan(text: " ")],
+                        ),
+                        TextSpan(
+                          text: "password.update.tips.number".tr(),
+                          children: const [TextSpan(text: ".")],
+                          style: TextStyle(
+                            color: passwordChecks.hasDigit
+                                ? Constants.colors.foregroundPalette
+                                    .elementAt(3)
+                                : null,
+                            fontWeight: passwordChecks.hasDigit
+                                ? FontWeight.w600
+                                : null,
+                          ),
+                        ),
+                      ],
+                    ),
+                    style: Utils.calligraphy.body(
+                      textStyle: TextStyle(
+                        fontSize: 14.0,
+                        color: foregroundColor?.withOpacity(0.4),
+                      ),
+                    ),
                   ),
                 ),
               ),

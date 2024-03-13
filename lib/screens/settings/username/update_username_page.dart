@@ -3,6 +3,7 @@ import "dart:async";
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:flutter_solidart/flutter_solidart.dart";
 import "package:kwotes/actions/user_actions.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
 import "package:kwotes/globals/utils.dart";
@@ -12,6 +13,8 @@ import "package:kwotes/screens/settings/username/update_username_page_header.dar
 import "package:kwotes/types/cloud_fun_error.dart";
 import "package:kwotes/types/cloud_fun_response.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
+import "package:kwotes/types/enums/enum_signal_id.dart";
+import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
 
 /// Update username page.
@@ -52,6 +55,8 @@ class _UpdateUsernamePageState extends State<UpdateUsernamePage> with UiLoggy {
   @override
   Widget build(BuildContext context) {
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    final UserFirestore userFirestore =
+        context.observe<UserFirestore>(EnumSignalId.userFirestore);
 
     return BasicShortcuts(
       autofocus: false,
@@ -73,6 +78,7 @@ class _UpdateUsernamePageState extends State<UpdateUsernamePage> with UiLoggy {
                 errorMessage: _errorMessage,
                 onUsernameChanged: onUsernameChanged,
                 onTapUpdateButton: tryUpdateUsername,
+                username: userFirestore.name,
               ),
             ],
           ),

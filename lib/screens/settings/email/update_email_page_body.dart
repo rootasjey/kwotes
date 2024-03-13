@@ -19,6 +19,7 @@ class UpdateEmailPageBody extends StatelessWidget {
     this.onTapUpdateButton,
     this.onPasswordChanged,
     this.passwordErrorMessage = "",
+    this.hintEmail = "",
   });
 
   /// True if the screen's size is narrow.
@@ -54,6 +55,9 @@ class UpdateEmailPageBody extends StatelessWidget {
   /// Password rror message.
   final String passwordErrorMessage;
 
+  /// Hint text for email input.
+  final String hintEmail;
+
   @override
   Widget build(BuildContext context) {
     final Color secondaryHeaderColor = Theme.of(context).secondaryHeaderColor;
@@ -73,6 +77,7 @@ class UpdateEmailPageBody extends StatelessWidget {
                     autofocus: Utils.graphic.isMobile() ? false : true,
                     controller: emailController,
                     label: "email.new".tr(),
+                    hintText: hintEmail,
                     keyboardType: TextInputType.text,
                     onChanged: onEmailChanged,
                     textInputAction: TextInputAction.next,
@@ -141,7 +146,10 @@ class UpdateEmailPageBody extends StatelessWidget {
               child: SizedBox(
                 width: 320.0,
                 child: Padding(
-                  padding: const EdgeInsets.all(14.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14.0,
+                    vertical: 12.0,
+                  ),
                   child: Text(
                     "email.update".tr().toUpperCase(),
                     softWrap: true,

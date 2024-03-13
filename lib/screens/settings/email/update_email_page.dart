@@ -78,7 +78,7 @@ class _UpdateEmailPageState extends State<UpdateEmailPage> with UiLoggy {
         ? const EdgeInsets.only(left: 24.0)
         : const EdgeInsets.only(left: 48.0);
 
-    final Signal<UserFirestore> signalUser =
+    final Signal<UserFirestore> signalUserFirestore =
         context.get(EnumSignalId.userFirestore);
 
     return BasicShortcuts(
@@ -88,34 +88,34 @@ class _UpdateEmailPageState extends State<UpdateEmailPage> with UiLoggy {
         child: Scaffold(
           body: CustomScrollView(
             slivers: [
+              UpdateEmailPageHeader(
+                accentColor: _accentColor,
+                isMobileSize: isMobileSize,
+                margin: const EdgeInsets.only(top: 12.0),
+                onTapLeftPartHeader: onTapLeftPartHeader,
+              ),
               SignalBuilder(
-                signal: signalUser,
+                signal: signalUserFirestore,
                 builder: (
-                  BuildContext tcontext,
-                  UserFirestore user,
+                  BuildContext context,
+                  UserFirestore userFirestore,
                   Widget? child,
                 ) {
-                  return UpdateEmailPageHeader(
-                    accentColor: _accentColor,
+                  return UpdateEmailPageBody(
+                    margin: margin,
                     isMobileSize: isMobileSize,
-                    email: user.email,
-                    margin: const EdgeInsets.only(top: 12.0),
-                    onTapLeftPartHeader: onTapLeftPartHeader,
+                    emailController: _emailTextController,
+                    passwordFocusNode: _passwordFocusNode,
+                    pageState: _pageState,
+                    hintEmail: userFirestore.email,
+                    errorMessage: _errorMessage,
+                    onEmailChanged: onEmailChanged,
+                    onTapUpdateButton: tryUpdateEmail,
+                    passwordController: _passwordTextController,
+                    passwordErrorMessage: _passwordErrorMessage,
+                    onPasswordChanged: onPasswordChanged,
                   );
                 },
-              ),
-              UpdateEmailPageBody(
-                margin: margin,
-                isMobileSize: isMobileSize,
-                emailController: _emailTextController,
-                passwordFocusNode: _passwordFocusNode,
-                pageState: _pageState,
-                errorMessage: _errorMessage,
-                onEmailChanged: onEmailChanged,
-                onTapUpdateButton: tryUpdateEmail,
-                passwordController: _passwordTextController,
-                passwordErrorMessage: _passwordErrorMessage,
-                onPasswordChanged: onPasswordChanged,
               ),
             ],
           ),

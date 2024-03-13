@@ -3,12 +3,12 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/buttons/circle_button.dart";
 import "package:kwotes/globals/utils.dart";
 
 class UpdateEmailPageHeader extends StatelessWidget {
   const UpdateEmailPageHeader({
     super.key,
-    required this.email,
     this.isMobileSize = false,
     this.accentColor,
     this.onTapLeftPartHeader,
@@ -26,9 +26,6 @@ class UpdateEmailPageHeader extends StatelessWidget {
 
   /// Callback fired when left part header is tapped.
   final void Function()? onTapLeftPartHeader;
-
-  /// Email to display.
-  final String email;
 
   @override
   Widget build(BuildContext context) {
@@ -48,78 +45,63 @@ class UpdateEmailPageHeader extends StatelessWidget {
                 ? CrossAxisAlignment.start
                 : CrossAxisAlignment.center,
             children: [
-              ActionChip(
-                onPressed: context.beamBack,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24.0),
-                ),
-                label: Row(mainAxisSize: MainAxisSize.min, children: [
-                  const Icon(TablerIcons.arrow_left),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Text("back".tr()),
+              Row(
+                children: [
+                  CircleButton(
+                    onTap: context.beamBack,
+                    radius: 16.0,
+                    margin: const EdgeInsets.only(right: 8.0),
+                    icon: Icon(
+                      TablerIcons.arrow_left,
+                      size: 18.0,
+                      color: foregroundColor?.withOpacity(0.6),
+                    ),
                   ),
-                ]),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 32.0),
-                child: MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: onTapLeftPartHeader,
-                    child: Text(
-                      "settings.name".tr(),
-                      textAlign:
-                          isMobileSize ? TextAlign.left : TextAlign.center,
-                      style: Utils.calligraphy.body(
-                        textStyle: TextStyle(
-                          fontSize: 24.0,
-                          fontWeight: fontWeight,
-                          height: 1.0,
-                          color: foregroundColor?.withOpacity(0.6),
+                  MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: onTapLeftPartHeader,
+                      child: Text(
+                        "${"settings.name".tr()} > ",
+                        textAlign:
+                            isMobileSize ? TextAlign.left : TextAlign.center,
+                        style: Utils.calligraphy.body(
+                          textStyle: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: fontWeight,
+                            height: 1.0,
+                            color: foregroundColor?.withOpacity(0.4),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ),
-              Text(
-                "email.name".tr(),
-                textAlign: isMobileSize ? TextAlign.left : TextAlign.center,
-                style: Utils.calligraphy.body(
-                  textStyle: TextStyle(
-                    color: accentColor,
-                    fontWeight: fontWeight,
-                    fontSize: 54.0,
-                  ),
-                ),
-              ),
-              FractionallySizedBox(
-                widthFactor: isMobileSize ? 0.9 : 0.4,
-                child: Text(
-                  "email.update_tips".tr(),
-                  textAlign: isMobileSize ? TextAlign.start : TextAlign.center,
-                  style: Utils.calligraphy.body(
-                    textStyle: TextStyle(
-                      fontSize: 16.0,
-                      color: foregroundColor?.withOpacity(0.4),
+                  Text(
+                    "email.name".tr(),
+                    textAlign: isMobileSize ? TextAlign.left : TextAlign.center,
+                    style: Utils.calligraphy.body(
+                      textStyle: TextStyle(
+                        color: accentColor,
+                        fontWeight: fontWeight,
+                        fontSize: 18.0,
+                        height: 1.0,
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 12.0),
+                padding: const EdgeInsets.only(top: 8.0),
                 child: FractionallySizedBox(
                   widthFactor: isMobileSize ? 0.9 : 0.4,
                   child: Text(
-                    email,
+                    "email.update_tips".tr(),
                     textAlign:
                         isMobileSize ? TextAlign.start : TextAlign.center,
                     style: Utils.calligraphy.body(
                       textStyle: TextStyle(
+                        fontSize: 14.0,
                         color: foregroundColor?.withOpacity(0.4),
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),

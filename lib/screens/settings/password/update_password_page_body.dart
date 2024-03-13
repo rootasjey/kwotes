@@ -129,7 +129,10 @@ class UpdatePasswordPageBody extends StatelessWidget {
               ),
               child: Container(
                 width: 320.0,
-                padding: const EdgeInsets.all(14.0),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12.0,
+                  horizontal: 14.0,
+                ),
                 child: Text(
                   "password.update.name".tr().toUpperCase(),
                   textAlign: TextAlign.center,

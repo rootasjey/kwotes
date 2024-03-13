@@ -107,9 +107,12 @@ class DeleteAccountPageBody extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.all(14.0),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14.0,
+                          vertical: 12.0,
+                        ),
                         child: Text(
-                          "account.delete.name".tr().toUpperCase(),
+                          "delete.name".tr().toUpperCase(),
                           style: Utils.calligraphy.body(
                             textStyle: const TextStyle(
                               fontSize: 15.0,

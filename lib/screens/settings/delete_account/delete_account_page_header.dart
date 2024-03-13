@@ -3,6 +3,7 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/buttons/circle_button.dart";
 import "package:kwotes/globals/utils.dart";
 
 class DeleteAccountPageHeader extends StatelessWidget {
@@ -48,55 +49,52 @@ class DeleteAccountPageHeader extends StatelessWidget {
                     ? CrossAxisAlignment.start
                     : CrossAxisAlignment.center,
                 children: [
-                  ActionChip(
-                    onPressed: context.beamBack,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24.0),
-                    ),
-                    label: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(TablerIcons.arrow_left),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Text("back".tr()),
+                  Row(
+                    children: [
+                      CircleButton(
+                        onTap: context.beamBack,
+                        radius: 16.0,
+                        margin: const EdgeInsets.only(right: 8.0),
+                        icon: Icon(
+                          TablerIcons.arrow_left,
+                          size: 18.0,
+                          color: foregroundColor?.withOpacity(0.6),
                         ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 32.0, bottom: 6.0),
-                    child: MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: onTapLeftPartHeader,
-                        child: Text(
-                          "settings.name".tr(),
-                          textAlign:
-                              isMobileSize ? TextAlign.left : TextAlign.center,
-                          style: Utils.calligraphy.body(
-                            textStyle: TextStyle(
-                              fontSize: 24.0,
-                              fontWeight: fontWeight,
-                              height: 1.0,
-                              color: foregroundColor?.withOpacity(0.6),
+                      ),
+                      MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: GestureDetector(
+                          onTap: onTapLeftPartHeader,
+                          child: Text(
+                            "${"settings.name".tr()} > ",
+                            textAlign: isMobileSize
+                                ? TextAlign.left
+                                : TextAlign.center,
+                            style: Utils.calligraphy.body(
+                              textStyle: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: fontWeight,
+                                height: 1.0,
+                                color: foregroundColor?.withOpacity(0.6),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                  Text(
-                    "account.delete.name".tr(),
-                    textAlign: isMobileSize ? TextAlign.left : TextAlign.center,
-                    style: Utils.calligraphy.body(
-                      textStyle: TextStyle(
-                        color: accentColor.withOpacity(0.8),
-                        height: 1.0,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 54.0,
+                      Text(
+                        "account.delete.name".tr(),
+                        textAlign:
+                            isMobileSize ? TextAlign.left : TextAlign.center,
+                        style: Utils.calligraphy.body(
+                          textStyle: TextStyle(
+                            color: accentColor.withOpacity(0.8),
+                            height: 1.0,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 18.0,
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
@@ -110,7 +108,7 @@ class DeleteAccountPageHeader extends StatelessWidget {
                             isMobileSize ? TextAlign.start : TextAlign.center,
                         style: Utils.calligraphy.body(
                           textStyle: TextStyle(
-                            fontSize: 16.0,
+                            fontSize: 14.0,
                             color: foregroundColor?.withOpacity(0.4),
                           ),
                         ),
