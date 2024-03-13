@@ -1,5 +1,4 @@
 import "dart:io";
-import "dart:math";
 
 import "package:bottom_sheet/bottom_sheet.dart";
 import "package:easy_localization/easy_localization.dart";
@@ -560,65 +559,33 @@ class Graphic with UiLoggy {
     );
   }
 
-  /// Get text height based on window size.
-  double _getTextHeight(Quote quote, Size windowSize) {
-    double heightPadding = _getTextHeightPadding(quote);
-    if (windowSize.height > 700.0) {
-      heightPadding += 100.0;
-    }
-
-    return max(windowSize.height - heightPadding, 200.0);
-  }
-
-  /// Returns the height padding for this widget according to available data
-  /// (e.g. author, reference).
-  double _getTextHeightPadding(Quote quote) {
-    double heightPadding = 240.0;
-
-    if (quote.author.name.isNotEmpty) {
-      heightPadding += 42.0;
-    }
-
-    if (quote.author.urls.image.isNotEmpty) {
-      heightPadding += 54.0;
-    }
-
-    if (quote.reference.name.isNotEmpty) {
-      heightPadding += 24.0;
-    }
-
-    return heightPadding;
-  }
-
-  /// Get text height based on window size.
-  double _getTextWidth(Size windowSize) {
-    double widthPadding = 200.0;
-    if (windowSize.width > 1200.0) {
-      widthPadding = 600.0;
-    } else if (windowSize.width > 900.0) {
-      widthPadding = 400.0;
-    }
-
-    return max(windowSize.width - widthPadding, 200.0);
-  }
-
   /// Get text solution (style) based on window size.
-  Solution getTextSolution({required Quote quote, required Size windowSize}) {
-    final double height = _getTextHeight(quote, windowSize);
-    final double width = _getTextWidth(windowSize);
+  Solution getTextSolution({
+    required Quote quote,
+    required Size windowSize,
+    double? minFontSize,
+    double? maxFontSize,
+    TextStyle? style,
+  }) {
+    final double width = windowSize.width;
+    final double height = windowSize.height;
 
     try {
       return TextWrapAutoSize.solution(
         Size(width, height),
-        Text(quote.name, style: Utils.calligraphy.body()),
+        Text(quote.name, style: style),
+        minFontSize: minFontSize,
+        maxFontSize: maxFontSize,
       );
     } catch (e) {
       loggy.error(e);
+      double manualFontSize = 18.0;
+
       return Solution(
         Text(quote.name),
         Utils.calligraphy.body(
-          textStyle: const TextStyle(
-            fontSize: 18.0,
+          textStyle: TextStyle(
+            fontSize: manualFontSize,
           ),
         ),
         Size(width, height),
