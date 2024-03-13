@@ -13,6 +13,7 @@ class ColoredTextButton extends StatefulWidget {
     this.backgroundColor,
     this.margin = EdgeInsets.zero,
     this.padding = EdgeInsets.zero,
+    this.iconPadding = const EdgeInsets.only(right: 12.0),
     this.textFlex = 1,
     this.style,
     this.onPressed,
@@ -41,6 +42,9 @@ class ColoredTextButton extends StatefulWidget {
 
   /// Spacing around the text.
   final EdgeInsets padding;
+
+  /// Spacing around the icon.
+  final EdgeInsets iconPadding;
 
   /// Callback fired when user taps this button.
   final void Function()? onPressed;
@@ -73,23 +77,8 @@ class _ColoredTextButtonState extends State<ColoredTextButton> {
   /// True if the button is hovered by a cursor.
   bool _isHover = false;
 
-  /// Button's text color on hover.
-  // Color _hoverForegroundColor = Colors.transparent;
-
-  @override
-  void initState() {
-    super.initState();
-    // _hoverForegroundColor = widget.accentColor ??
-    //     Constants.colors.getRandomFromPalette(
-    //       withGoodContrast: true,
-    //     );
-  }
-
   @override
   Widget build(BuildContext context) {
-    // final Color? foregroundColor =
-    //     Theme.of(context).textTheme.bodyMedium?.color;
-
     return Tooltip(
       message: widget.tooltip,
       child: Padding(
@@ -99,20 +88,17 @@ class _ColoredTextButtonState extends State<ColoredTextButton> {
           onHover: (bool isHover) => setState(() => _isHover = isHover),
           style: TextButton.styleFrom(
             backgroundColor: _isHover ? null : widget.backgroundColor,
-            // foregroundColor: _isHover
-            //     ? _hoverForegroundColor
-            //     : foregroundColor?.withOpacity(0.6),
           ).merge(widget.style),
           child: Padding(
             padding: widget.padding,
             child: Row(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 if (widget.icon != null && !widget.iconOnRight)
                   Padding(
-                    padding: widget.iconOnly
-                        ? EdgeInsets.zero
-                        : const EdgeInsets.only(right: 8.0),
+                    padding:
+                        widget.iconOnly ? EdgeInsets.zero : widget.iconPadding,
                     child: widget.icon,
                   ),
                 if (!widget.iconOnly)

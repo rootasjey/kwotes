@@ -74,27 +74,13 @@ class OutlinedTextField extends StatelessWidget {
     final Color fillColor =
         brightness == Brightness.light ? Colors.white70 : Colors.black38;
 
+    final Color? foregroundColor =
+        Theme.of(context).textTheme.bodyMedium?.color;
     final BorderRadius borderRadius = BorderRadius.circular(4.0);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (label != null)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 4.0),
-            child: Opacity(
-              opacity: 0.6,
-              child: Text(
-                label ?? "",
-                style: Utils.calligraphy.body(
-                  textStyle: const TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-          ),
         ConstrainedBox(
           constraints: constraints,
           child: TextField(
@@ -118,6 +104,14 @@ class OutlinedTextField extends StatelessWidget {
               fillColor: fillColor,
               hintText: hintText,
               suffixIcon: suffixIcon,
+              labelText: label,
+              labelStyle: Utils.calligraphy.body(
+                textStyle: TextStyle(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w600,
+                  color: foregroundColor?.withOpacity(0.6),
+                ),
+              ),
               contentPadding: EdgeInsets.symmetric(
                 horizontal: 8.0,
                 vertical: maxLines == null ? 8.0 : 0.0,

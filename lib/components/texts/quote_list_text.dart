@@ -157,8 +157,8 @@ class _QuoteListTextState extends State<QuoteListText> {
                       ),
                       backgroundColor: _nameController.text.isEmpty
                           ? null
-                          : Constants.colors.lists.withOpacity(0.1),
-                      foregroundColor: Constants.colors.lists,
+                          : Constants.colors.authors.withOpacity(0.1),
+                      foregroundColor: Constants.colors.authors,
                       textStyle: Utils.calligraphy.body4(
                         textStyle: const TextStyle(
                           fontWeight: FontWeight.w600,
@@ -187,7 +187,7 @@ class _QuoteListTextState extends State<QuoteListText> {
         onHover: (bool isHover) {
           if (isHover) {
             setState(() {
-              _textShadowColor = Constants.colors.lists;
+              _textShadowColor = Constants.colors.authors;
             });
 
             return;

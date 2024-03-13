@@ -28,6 +28,7 @@ class ApplicationBar extends StatelessWidget {
     this.bottom,
     this.backgroundColor,
     this.toolbarHeight = 90.0,
+    this.iconSize = 36.0,
     this.padding = const EdgeInsets.only(left: 24.0, top: 16.0, right: 24.0),
     this.isMobileSize = false,
     this.mode = EnumAppBarMode.home,
@@ -38,6 +39,7 @@ class ApplicationBar extends StatelessWidget {
     this.elevation,
     this.title,
     this.rightChildren = const [],
+    this.mainAxisAlignment = MainAxisAlignment.start,
   }) : super(key: key);
 
   /// Hide the app bar icon if true.
@@ -57,6 +59,9 @@ class ApplicationBar extends StatelessWidget {
 
   /// The height of the app bar.
   final double toolbarHeight;
+
+  /// App icon size.
+  final double iconSize;
 
   /// The padding of the app bar.
   final EdgeInsets padding;
@@ -79,6 +84,9 @@ class ApplicationBar extends StatelessWidget {
 
   /// Callback fired when app bar title is tapped.
   final void Function()? onTapTitle;
+
+  /// App bar main axis alignment.
+  final MainAxisAlignment mainAxisAlignment;
 
   /// App bar title.
   final Widget? title;
@@ -125,7 +133,7 @@ class ApplicationBar extends StatelessWidget {
         child: Padding(
           padding: localPadding,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: mainAxisAlignment,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               Row(
@@ -148,7 +156,7 @@ class ApplicationBar extends StatelessWidget {
                     ),
                   if (!hideIcon)
                     AppIcon(
-                      size: 36.0,
+                      size: iconSize,
                       onTap: onTapIcon,
                     ),
                   appBarTitle(context),

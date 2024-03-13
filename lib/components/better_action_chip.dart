@@ -8,6 +8,7 @@ class BetterActionChip extends StatefulWidget {
     this.backgroundColor,
     this.margin = EdgeInsets.zero,
     this.onPressed,
+    this.shape,
     this.tooltip,
     this.avatar,
     this.elevation,
@@ -26,6 +27,9 @@ class BetterActionChip extends StatefulWidget {
 
   /// Callback fired when the chip is tapped.
   final void Function()? onPressed;
+
+  /// The shape of the chip's border.
+  final OutlinedBorder? shape;
 
   /// Tooltip string to be used for the body area
   /// (where the label and avatar are) of the chip.
@@ -68,14 +72,10 @@ class _BetterActionChipState extends State<BetterActionChip> {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: (_) {
-        setState(() {
-          _elevation = 4.0;
-        });
+        setState(() => _elevation = 4.0);
       },
       onExit: (_) {
-        setState(() {
-          _elevation = _startElevation;
-        });
+        setState(() => _elevation = _startElevation);
       },
       child: Padding(
         padding: widget.margin,
@@ -87,6 +87,10 @@ class _BetterActionChipState extends State<BetterActionChip> {
           avatar: widget.avatar,
           label: widget.label,
           backgroundColor: backgroundColor,
+          shape: widget.shape ??
+              const StadiumBorder(
+                side: BorderSide(color: Colors.transparent),
+              ),
         ),
       ),
     );
