@@ -89,7 +89,7 @@ class SimpleAddQuoteAuthor extends StatelessWidget {
               ),
               decoration: InputDecoration(
                 isDense: true,
-                labelText: "author.name".tr(),
+                labelText: "author.optional".tr(),
                 labelStyle: Utils.calligraphy.body(
                   textStyle: TextStyle(
                     fontSize: 14.0,

@@ -90,7 +90,7 @@ class SimpleAddQuoteReference extends StatelessWidget {
               ),
               decoration: InputDecoration(
                 isDense: true,
-                labelText: "reference.name".tr(),
+                labelText: "reference.optional".tr(),
                 labelStyle: Utils.calligraphy.body(
                   textStyle: TextStyle(
                     fontSize: 14.0,
