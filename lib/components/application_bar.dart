@@ -24,6 +24,7 @@ class ApplicationBar extends StatelessWidget {
   const ApplicationBar({
     Key? key,
     this.hideIcon = false,
+    this.hideBackIcon = false,
     this.pinned = true,
     this.bottom,
     this.backgroundColor,
@@ -44,6 +45,9 @@ class ApplicationBar extends StatelessWidget {
 
   /// Hide the app bar icon if true.
   final bool hideIcon;
+
+  /// Hide the back icon if true.
+  final bool hideBackIcon;
 
   /// Whether the app bar should remain visible at the start of the scroll view.
   final bool pinned;
@@ -139,7 +143,7 @@ class ApplicationBar extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  if (hasHistory)
+                  if (hasHistory && !hideBackIcon)
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: CircleButton.outlined(

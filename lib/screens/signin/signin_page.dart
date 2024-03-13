@@ -85,6 +85,7 @@ class _SigninPageState extends State<SigninPage> with UiLoggy {
       body: CustomScrollView(
         slivers: <Widget>[
           ApplicationBar(
+            hideBackIcon: true,
             mode: EnumAppBarMode.signin,
             isMobileSize: isMobileSize,
             title: const SizedBox.shrink(),

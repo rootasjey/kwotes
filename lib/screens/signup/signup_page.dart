@@ -141,6 +141,7 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
           body: CustomScrollView(
             slivers: [
               ApplicationBar(
+                hideBackIcon: true,
                 isMobileSize: isMobileSize,
                 title: const SizedBox.shrink(),
               ),
