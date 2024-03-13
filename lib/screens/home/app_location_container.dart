@@ -215,7 +215,7 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
                             tooltip: "search.name".tr(),
                           ),
                           MenuNavigationItem(
-                            icon: const Icon(TablerIcons.user_circle),
+                            icon: const Icon(TablerIcons.notebook),
                             index: 2,
                             label: "dashboard".tr(),
                             onTap: onTapBottomBarItem,
