@@ -102,7 +102,7 @@ class _ShowcaseTextState extends State<ShowcaseText> {
               widget.textValue,
               style: Utils.calligraphy.body4(
                 textStyle: TextStyle(
-                  fontSize: widget.isMobileSize ? 32.0 : 24.0,
+                  fontSize: 24.0,
                   fontWeight: FontWeight.w200,
                   color: _foregroundColor,
                 ),

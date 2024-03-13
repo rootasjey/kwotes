@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/reference.dart";
 import "package:wave_divider/wave_divider.dart";
@@ -29,8 +28,6 @@ class SearchReferenceResultsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final contrastPalette = Constants.colors.darkerForegroundPalette;
-
     return SliverPadding(
       padding: margin.subtract(const EdgeInsets.only(left: 12.0)),
       sliver: SliverList.separated(
@@ -63,9 +60,13 @@ class SearchReferenceResultsPage extends StatelessWidget {
                 reference.name,
                 style: Utils.calligraphy.body(
                   textStyle: TextStyle(
-                    fontSize: isMobileSize ? 36.0 : 54.0,
+                    fontSize: isMobileSize ? 24.0 : 54.0,
                     fontWeight: FontWeight.w300,
-                    color: contrastPalette[index % contrastPalette.length],
+                    color: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.color
+                        ?.withOpacity(0.8),
                   ),
                 ),
               ),

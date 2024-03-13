@@ -79,7 +79,7 @@ class SearchInput extends StatelessWidget {
       ),
     );
 
-    final double toolbarHeight = isMobileSize ? 120.0 : 190.0;
+    final double toolbarHeight = isMobileSize ? 180.0 : 190.0;
 
     return SliverAppBar(
       primary: false,
@@ -111,79 +111,97 @@ class SearchInput extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Expanded(
-                    child: TextField(
-                      maxLines: null,
-                      autofocus: false,
-                      cursorColor: Constants.colors.primary,
-                      focusNode: focusNode,
-                      controller: inputController,
-                      keyboardType: TextInputType.multiline,
-                      textCapitalization: TextCapitalization.sentences,
-                      textInputAction: TextInputAction.search,
-                      onChanged: onChangedTextField,
-                      textAlign: TextAlign.center,
-                      style: Utils.calligraphy.body(
-                        textStyle: TextStyle(
-                          fontSize: isMobileSize ? 14.0 : 24.0,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      decoration: InputDecoration(
-                        hintText: hintText,
-                        isDense: true,
-                        suffixIcon: isInputEmpty ? null : clearIcon,
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: foregroundColor,
+                    child: AnimatedSize(
+                      duration: const Duration(milliseconds: 125),
+                      child: TextField(
+                        maxLines: null,
+                        autofocus: false,
+                        cursorColor: Constants.colors.primary,
+                        focusNode: focusNode,
+                        controller: inputController,
+                        keyboardType: TextInputType.multiline,
+                        textCapitalization: TextCapitalization.sentences,
+                        textInputAction: TextInputAction.search,
+                        onChanged: onChangedTextField,
+                        textAlign: TextAlign.center,
+                        style: Utils.calligraphy.body(
+                          textStyle: TextStyle(
+                            fontSize: isMobileSize ? 14.0 : 24.0,
+                            fontWeight: FontWeight.w400,
                           ),
-                          borderRadius: BorderRadius.circular(12.0),
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.deepPurple.shade400,
-                            width: 1.6,
+                        decoration: InputDecoration(
+                          hintText: hintText,
+                          isDense: true,
+                          suffixIcon: isInputEmpty ? null : clearIcon,
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: foregroundColor,
+                            ),
+                            borderRadius: BorderRadius.circular(12.0),
                           ),
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: foregroundColor,
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.deepPurple.shade400,
+                              width: 1.6,
+                            ),
+                            borderRadius: BorderRadius.circular(12.0),
                           ),
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        hintMaxLines: hintMaxLines,
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 12.0,
-                          horizontal: 12.0,
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: foregroundColor,
+                            ),
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          hintMaxLines: hintMaxLines,
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 12.0,
+                            horizontal: 12.0,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                  if (focusNode?.hasFocus ?? false)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: TextButton(
-                        onPressed: onTapCancelButton,
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 16.0,
-                            horizontal: 12.0,
+                  AnimatedOpacity(
+                    duration: const Duration(milliseconds: 15),
+                    curve: Curves.easeOutExpo,
+                    opacity: focusNode?.hasFocus ?? false ? 1.0 : 0.0,
+                    child: AnimatedSize(
+                      duration: const Duration(milliseconds: 125),
+                      child: Container(
+                        width: focusNode?.hasFocus ?? false ? null : 0.0,
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            minWidth: 100.0,
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
-                          ),
-                        ),
-                        child: Text(
-                          "cancel".tr(),
-                          style: Utils.calligraphy.body(
-                            textStyle: TextStyle(
-                              fontSize: isMobileSize ? 14.0 : 18.0,
-                              fontWeight: FontWeight.w400,
+                          child: TextButton(
+                            onPressed: onTapCancelButton,
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 16.0,
+                                horizontal: 12.0,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                            child: Text(
+                              "cancel".tr(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Utils.calligraphy.body(
+                                textStyle: TextStyle(
+                                  fontSize: isMobileSize ? 14.0 : 18.0,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
+                  ),
                 ],
               ),
               bottom ?? const SizedBox.shrink(),

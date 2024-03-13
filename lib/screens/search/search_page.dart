@@ -6,7 +6,6 @@ import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/globals/constants.dart";
@@ -14,7 +13,7 @@ import "package:kwotes/globals/utils.dart";
 import "package:kwotes/globals/utils/linguistic.dart";
 import "package:kwotes/router/locations/search_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
-import "package:kwotes/screens/search/search_category_selector.dart";
+import "package:kwotes/screens/search/chip_category_selector.dart";
 import "package:kwotes/screens/search/search_input.dart";
 import "package:kwotes/screens/search/search_page_body.dart";
 import "package:kwotes/screens/search/search_result_meta.dart";
@@ -66,12 +65,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   /// Last author document for pagination.
   DocumentSnapshot? _lastAuthorDocument;
-
-  /// [Mobile] Show entity selector if true.
-  bool _showCategorySelector = true;
-
-  /// [Mobile] Save previous offset on scroll to show/hide entity selector.
-  double _prevOffset = 0.0;
 
   /// Page's state.
   EnumPageState _pageState = EnumPageState.idle;
@@ -197,13 +190,27 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                       onTapClearIconButton: onClearInput,
                       searchCategory: _searchCategory,
                       isMobileSize: isMobileSize,
-                      bottom: SearchResultMeta(
-                        isMobileSize: isMobileSize,
-                        foregroundColor: foregroundColor,
-                        padding: padding,
-                        pageState: _pageState,
-                        resultCount: _resultCount,
-                        show: showResultCount,
+                      bottom: Padding(
+                        padding: const EdgeInsets.only(top: 12.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            ChipCategorySelector(
+                              isDark: isDark,
+                              categorySelected: _searchCategory,
+                              onSelectCategory: onSelectSearchCategory,
+                            ),
+                            SearchResultMeta(
+                              isMobileSize: isMobileSize,
+                              foregroundColor: foregroundColor,
+                              padding: padding,
+                              pageState: _pageState,
+                              resultCount: _resultCount,
+                              show: showResultCount,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     SearchPageBody(
@@ -252,59 +259,10 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                 ),
               ),
             ),
-            if (_showCategorySelector)
-              Positioned(
-                bottom: 12.0,
-                left: 0.0,
-                right: 0.0,
-                child: Center(
-                  child: SearchCategorySelector(
-                    categorySelected: _searchCategory,
-                    isDark: isDark,
-                    onSelectCategory: onSelectSearchCategory,
-                  ),
-                )
-                    .animate()
-                    .slideY(
-                      begin: 0.4,
-                      end: 0.0,
-                      duration: 150.ms,
-                      curve: Curves.decelerate,
-                    )
-                    .fadeIn(),
-              ),
           ],
         ),
       ),
     );
-  }
-
-  /// Automatically hide/show category (e.g. authors) selector when scrolling.
-  void autoHideCategorySelector(double offset) {
-    if (_scrollController.position.atEdge && offset == 0.0 || offset < 0.0) {
-      _showCategorySelector
-          ? null
-          : setState(() => _showCategorySelector = true);
-      return;
-    }
-
-    if (_scrollController.position.atEdge && offset > 0.0) {
-      _showCategorySelector
-          ? setState(() => _showCategorySelector = false)
-          : null;
-      return;
-    }
-
-    if (_prevOffset < offset) {
-      _prevOffset = offset;
-      _showCategorySelector
-          ? setState(() => _showCategorySelector = false)
-          : null;
-      return;
-    }
-
-    _prevOffset = offset;
-    _showCategorySelector ? null : setState(() => _showCategorySelector = true);
   }
 
   /// Check text input to automatically adjust search settings.
@@ -826,8 +784,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   /// Callback event when scrolling.
   void onScroll(double offset) {
-    autoHideCategorySelector(offset);
-
     if (!_hasMoreResults) {
       return;
     }

@@ -53,7 +53,6 @@ class ShowcaseAuthors extends StatelessWidget {
         },
         itemBuilder: (BuildContext context, int index) {
           final Author author = authors[index];
-
           return ShowcaseText(
             docId: author.id,
             isDark: isDark,

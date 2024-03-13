@@ -62,6 +62,8 @@ class SearchQuoteResultsPage extends StatelessWidget {
             onTapQuote: onTapQuote,
             tiny: isMobileSize,
             margin: const EdgeInsets.only(bottom: 16.0),
+            textColor:
+                Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.8),
             quoteMenuProvider: (MenuRequest menuRequest) {
               return ContextMenuComponents.quoteMenuProvider(
                 context,

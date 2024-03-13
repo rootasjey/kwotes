@@ -6,9 +6,9 @@ import "package:kwotes/screens/search/category_item_button.dart";
 import "package:kwotes/types/enums/enum_indicator_type.dart";
 import "package:kwotes/types/enums/enum_search_category.dart";
 
-class SearchCategorySelector extends StatelessWidget {
+class IconCategorySelector extends StatelessWidget {
   /// A widget to select a search type (e.g. quote, author, reference).
-  const SearchCategorySelector({
+  const IconCategorySelector({
     super.key,
     required this.categorySelected,
     required this.onSelectCategory,
