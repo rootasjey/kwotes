@@ -539,6 +539,7 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
     _textWrapSolution = Utils.graphic.getTextSolution(
       quote: quote,
       windowSize: windowSize,
+      style: Utils.calligraphy.body(),
     );
 
     Utils.graphic.onOpenShareImage(

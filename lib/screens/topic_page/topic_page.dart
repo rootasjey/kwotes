@@ -485,6 +485,7 @@ class _TopicPageState extends State<TopicPage> with UiLoggy {
     _textWrapSolution = Utils.graphic.getTextSolution(
       quote: quote,
       windowSize: windowSize,
+      style: Utils.calligraphy.body(),
     );
 
     Utils.graphic.onOpenShareImage(

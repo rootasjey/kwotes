@@ -110,6 +110,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
     _textWrapSolution = Utils.graphic.getTextSolution(
       quote: _quote,
       windowSize: windowSize,
+      style: Utils.calligraphy.body(),
     );
 
     final bool isMobileSize =

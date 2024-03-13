@@ -552,6 +552,7 @@ class _ListPageState extends State<ListPage> with UiLoggy {
     final Solution textWrapSolution = Utils.graphic.getTextSolution(
       quote: quote,
       windowSize: windowSize,
+      style: Utils.calligraphy.body(),
     );
 
     Utils.graphic.onOpenShareImage(

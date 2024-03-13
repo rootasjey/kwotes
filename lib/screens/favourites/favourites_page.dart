@@ -345,6 +345,7 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
     final Solution textWrapSolution = Utils.graphic.getTextSolution(
       quote: quote,
       windowSize: windowSize,
+      style: Utils.calligraphy.body(),
     );
 
     Utils.graphic.onOpenShareImage(
