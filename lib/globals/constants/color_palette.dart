@@ -173,14 +173,16 @@ class ColorPalette {
   final Color activity = Colors.red;
 
   final Color clairPink = const Color(0xFFf5eaf9);
+  final Color references = Colors.orange.shade300;
+  final Color topicColor = Colors.deepPurple.shade300;
 
   final Color error = Colors.pink.shade200;
 
   /// Color for books.
-  final Color lists = Colors.blue.shade700;
+  final Color authors = Colors.blue.shade700;
 
   /// Color for challenges.
-  final Color challenges = Colors.amber;
+  final Color quotes = Colors.amber;
 
   /// Color for contests.
   final Color inValidation = Colors.indigo;
