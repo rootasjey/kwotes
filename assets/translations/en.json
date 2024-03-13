@@ -64,6 +64,7 @@
     "name": "Author",
     "names": "Authors",
     "no": "No author",
+    "optional": "Author (optional)",
     "reset": "Reset author",
     "save": {
       "done": "All edits are done",
@@ -887,6 +888,7 @@
       "name": "Like"
     },
     "name": "Quote",
+    "names": "Quotes",
     "new": "New quote",
     "not_found": "The quote was not found in the list.",
     "open_card": "Tap on a card to open a quote.",
@@ -978,6 +980,7 @@
     "loading": "Loading reference",
     "name": "Reference",
     "names": "References",
+    "optional": "Reference (optional)",
     "reset": "Reset reference",
     "show_more": "Show more references",
     "update": {

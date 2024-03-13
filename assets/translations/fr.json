@@ -63,6 +63,7 @@
     "loading": "Chargement de l'auteur",
     "name": "Auteur",
     "names": "Authors",
+    "optional": "Auteur (optionnel)",
     "no": "Pas d'auteur",
     "reset": "Reinitialiser l'auteur",
     "save": {
@@ -900,6 +901,7 @@
       "name": "J'aime"
     },
     "name": "Citation",
+    "names": "Citations",
     "new": "Nouvelle citation",
     "not_found": "The quote was not found in the list.",
     "open_card": "Appuyez sur une carte pour ouvrir la citation.",
@@ -990,6 +992,7 @@
     "loading":"Chargement de la référence",
     "name": "Référence",
     "names": "Références",
+    "optional": "Référence (optionnelle)",
     "reset": "Reinitialiser la référence",
     "show_more": "Afficher plus de reférences",
     "update": {
