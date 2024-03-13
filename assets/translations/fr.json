@@ -130,7 +130,9 @@
     "name": "Date"
   },
   "dashboard": "Mon journal",
-  "delete_account": "Supprimer le compte",
+  "delete": {
+    "name": "Supprimer"
+  },
   "description": {
     "name": "Description",
     "optional": "Description (optionnelle)"
@@ -467,7 +469,8 @@
     "tos": "@:kwotes_leading Conditions Générales d'Utilisation",
     "update_email": "@:kwotes_leading Mise à jour de l'email",
     "update_password": "@:kwotes_leading Mise à jour du mot de passe",
-    "update_username": "@:kwotes_leading Mise à jour du nom d'utilisateur"
+    "update_username": "@:kwotes_leading Mise à jour du nom d'utilisateur",
+    "user_profile": "@:kwotes_leading Profile"
   },
   "password": {
     "confirm": "Confirmer le mot de passe",
@@ -491,7 +494,8 @@
     "not_valid": "Le mot de passe n'est pas valide",
     "show": "Montrer le mot de passe",
     "update": {
-      "error": "Une erreur est survenue lors de la mise à jour de votre mot de passe",
+    "description": "Veuillez entrer votre mot de passe actuel.",
+    "error": "Une erreur est survenue lors de la mise à jour de votre mot de passe",
       "name": "Mettre à jour mon mot de passe",
       "success": "Votre mot de passe a été mis à jour",
       "tips": {
@@ -504,6 +508,7 @@
       }
     }
   },
+  "previous": "Précédent",
   "published": {
     "description": "Votre contribution au monde",
     "empty": {
@@ -642,6 +647,10 @@
           "8": "Oscar Wilde était un écrivain irlandais célèbre du 19e siècle. Il est connu pour ses histoires fantastiques et son esprit vif. Wilde a écrit des pièces de théâtre, des poèmes et des romans qui sont toujours appréciés aujourd'hui. Son style d'écriture était souvent humoristique et plein de sarcasme. Il aimait aussi jouer avec les mots et les idées, ce qui rendait ses œuvres très originales.",
           "9": "Stephen King est un écrivain américain célèbre du 1940. Il est connu pour son style unique de narration, ses romans populaires et ses livres d'horreur. Ses livres sont souvent adaptés au cinéma ou à la télévision. Stephen King a écrit de nombreux romans à succès, tels que \"Ça\", \"Shining\" et \"Simetierre\"."
         }
+      },
+      "builder": {
+        "complex": "Afficher le constructeur complexe",
+        "minimal": "Afficher le constructeur simplfié"
       },
       "content": {
         "name": "Ajouter le contenu"
@@ -927,6 +936,7 @@
     "start_typing": "Écrivez votre citation",
     "submit": {
       "failed": "Une erreur est survenue lors de l'envoi de la citation. Veuillez essayer de nouveau.",
+      "hint_long_press": "Vous pouvez faire un appui long pour soumettre la citation pour validation.",
       "ing": "Envoi de la citation en cours",
       "name": "Envoyer",
       "ok": "Cette citation sera envoyée pour validation",
@@ -992,6 +1002,7 @@
   "report_bug": "Signaler a bug",
   "resources": "Ressources",
   "rollback": "Annuler",
+  "save": "Save",
   "search": {
     "authors": "Recherche d'auteurs",
     "clear": "Effacer",
@@ -1073,6 +1084,11 @@
   "signout": "Se déconnecter",
   "signup": "S'inscrire",
   "step": {
+    "bonus": {
+      "current": "Étape bonus {}",
+      "name": "Bonus",
+      "progress": "Étape bonus {current}/{total}"
+    },
     "name": "Étape",
     "progress": "Étape {current}/{total}"
   },

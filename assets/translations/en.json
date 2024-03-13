@@ -128,6 +128,9 @@
     "name": "Date"
   },
   "dashboard": "My diary",
+  "delete": {
+    "name": "Delete"
+  },
   "description": {
     "name": "Description",
     "optional": "Description (optional)"
@@ -465,7 +468,8 @@
     "tos": "@:kwotes_leading Term of Services",
     "update_email": "@:kwotes_leading Update email",
     "update_password": "@:kwotes_leading Update password",
-    "update_username": "@:kwotes_leading Update username"
+    "update_username": "@:kwotes_leading Update username",
+    "user_profile": "@:kwotes_leading Profile"
   },
   "password": {
     "confirm": "Confirm password",
@@ -489,7 +493,8 @@
     "not_valid": "The value entered is not a valid password",
     "show": "Show password",
     "update": {
-      "error": "Error updating password",
+    "description": "Enter your current and new password.",
+    "error": "Error updating password",
       "name": "Update password",
       "success": "Password successfully updated!",
       "tips": {
@@ -502,6 +507,7 @@
       }
     }
   },
+  "previous": "Previous",
   "published": {
     "description": "Your contribution to the world.",
     "empty": {
@@ -636,6 +642,10 @@
       },
       "draft": {
         "failed": "Failed to create draft"
+      },
+      "builder": {
+        "complex": "Show complex builder",
+        "minimal": "Show minimal builder"
       },
       "links": {
         "example": {
@@ -914,6 +924,7 @@
     "start_typing": "Type your quote",
     "submit": {
       "failed": "Failed to submit quote. Please try again.",
+      "hint_long_press": "You can long press this button to submit the quote for validation.",
       "ing": "Submitting the quote for validation",
       "name": "Submit",
       "ok": "This quote will be sent for validation",
@@ -979,6 +990,7 @@
   "report_bug": "Report a bug",
   "resources": "Resources",
   "rollback": "Rollback",
+  "save": "Save",
   "search": {
     "authors": "Search authors",
     "clear": "Clear",
@@ -1060,6 +1072,11 @@
   "signup": "Sign up",
   "skip": "Skip",
   "step": {
+    "bonus": {
+      "current": "Bonus step {}",
+      "name": "Bonus",
+      "progress": "Bonus step {current}/{total}"
+    },
     "name": "Step",
     "progress": "Step {current}/{total}"
   },
