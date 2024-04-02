@@ -96,7 +96,6 @@ class DraftsPageHeader extends StatelessWidget {
                   chipBorderColor: chipBorderColor,
                   chipSelectedColor: selectedColor,
                   iconColor: iconColor,
-                  showOwnershipSelector: false,
                   onSelectLanguage: onSelectLanguage,
                   selectedLanguage: selectedLanguage,
                   show: show,

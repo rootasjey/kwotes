@@ -18,6 +18,7 @@ import "package:kwotes/screens/forgot_password/forgot_password_page.dart";
 import "package:kwotes/screens/in_validation/in_validation_page.dart";
 import "package:kwotes/screens/list/list_page.dart";
 import "package:kwotes/screens/lists/lists_page.dart";
+import "package:kwotes/screens/my_quotes/my_quotes_page.dart";
 import "package:kwotes/screens/published/published_page.dart";
 import "package:kwotes/screens/quote_page/quote_page.dart";
 import "package:kwotes/screens/reference/edit_reference_page.dart";
@@ -114,6 +115,7 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
   static const String listsRoute = "$route/lists";
   static const String listRoute = "$listsRoute/:listId";
   static const String listQuoteRoute = "$listRoute/quotes/:quoteId";
+  static const String myQuotesRoute = "$route/my-quotes";
   static const String profileRoute = "$route/profile";
   static const String publishedRoute = "$route/published";
   static const String publishedQuoteRoute = "$publishedRoute/:quoteId";
@@ -161,6 +163,7 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
         listQuoteRoute,
         listRoute,
         listsRoute,
+        myQuotesRoute,
         profileRoute,
         publishedRoute,
         inValidationRoute,
@@ -277,6 +280,13 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
           title: "page_title.list".tr(args: [
             extractListName(state.routeState),
           ]),
+          type: BeamPageType.fadeTransition,
+        ),
+      if (state.pathPatternSegments.contains(myQuotesRoute.split("/").last))
+        BeamPage(
+          child: const MyQuotesPage(),
+          key: const ValueKey(myQuotesRoute),
+          title: "page_title.my_quotes".tr(),
           type: BeamPageType.fadeTransition,
         ),
       if (state.pathPatternSegments.contains(settingsRoute.split("/").last))

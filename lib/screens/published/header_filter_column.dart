@@ -15,8 +15,6 @@ class HeaderFilterColumn extends StatelessWidget {
     this.show = true,
     this.showAllLanguage = true,
     this.showAllOwnership = false,
-    this.showLanguageSelector = true,
-    this.showOwnershipSelector = true,
     this.chipBackgroundColor = Colors.white,
     this.chipBorderColor = Colors.transparent,
     this.chipSelectedColor = Colors.amber,
@@ -37,14 +35,6 @@ class HeaderFilterColumn extends StatelessWidget {
   /// Show "all ownership" chip selector if true.
   /// Default to false.
   final bool showAllOwnership;
-
-  /// Show language selector if true.
-  /// Default to true.
-  final bool showLanguageSelector;
-
-  /// Show ownership selector if true.
-  /// Default to true.
-  final bool showOwnershipSelector;
 
   /// Background color of the filter chips.
   final Color chipBackgroundColor;
@@ -78,7 +68,22 @@ class HeaderFilterColumn extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (showOwnershipSelector)
+        if (onSelectedOwnership != null)
+          Text(
+            "ownership.name".tr().toUpperCase(),
+            style: Utils.calligraphy.body(
+              textStyle: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.color
+                    ?.withOpacity(0.4),
+              ),
+            ),
+          ),
+        if (onSelectedOwnership != null)
           SizedBox(
             height: boxHeight,
             child: ListView(
@@ -119,7 +124,24 @@ class HeaderFilterColumn extends StatelessWidget {
                   .toList(),
             ),
           ),
-        if (showLanguageSelector)
+        if (onSelectedOwnership != null && onSelectedOwnership != null)
+          const SizedBox(height: 16.0),
+        if (onSelectLanguage != null)
+          Text(
+            "language.name".tr().toUpperCase(),
+            style: Utils.calligraphy.body(
+              textStyle: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.color
+                    ?.withOpacity(0.4),
+              ),
+            ),
+          ),
+        if (onSelectLanguage != null)
           SizedBox(
             height: boxHeight,
             child: ListView(

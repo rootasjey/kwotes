@@ -12,8 +12,10 @@ import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
+import "package:kwotes/screens/published/header_filter.dart";
 import "package:kwotes/screens/published/published_page_body.dart";
 import "package:kwotes/screens/published/published_page_header.dart";
+import "package:kwotes/screens/published/simple_published_page_header.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/enums/enum_data_ownership.dart";
 import "package:kwotes/types/enums/enum_draft_quote_operation.dart";
@@ -34,7 +36,13 @@ import "package:screenshot/screenshot.dart";
 import "package:text_wrap_auto_size/solution.dart";
 
 class PublishedPage extends StatefulWidget {
-  const PublishedPage({super.key});
+  const PublishedPage({
+    super.key,
+    this.isInTab = false,
+  });
+
+  /// True if this page is in a tab.
+  final bool isInTab;
 
   @override
   State<PublishedPage> createState() => _PublishedPageState();
@@ -109,6 +117,11 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
+    double toolbarHeight = 92.0;
+    if (!widget.isInTab) {
+      toolbarHeight = isMobileSize ? 200.0 : 282.0;
+    }
+
     return Scaffold(
       body: ImprovedScrolling(
         scrollController: _pageScrollController,
@@ -119,20 +132,26 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
             controller: _pageScrollController,
             slivers: [
               PageAppBar(
+                hideBackButton: widget.isInTab,
                 isMobileSize: isMobileSize,
-                toolbarHeight: isMobileSize ? 200.0 : 282.0,
+                toolbarHeight: toolbarHeight,
                 children: [
-                  PublishedPageHeader(
-                    isMobileSize: isMobileSize,
-                    onSelectedOwnership: onSelectedOnwership,
-                    onSelectLanguage: onSelectedLanguage,
-                    onTapTitle: onTapTitle,
-                    selectedColor: chipSelectedColor,
-                    selectedLanguage: _selectedLanguage,
-                    selectedOwnership: _selectedOwnership,
-                    show: NavigationStateHelper.showHeaderPageOptions,
-                    showAllOwnership: true,
-                  ),
+                  widget.isInTab
+                      ? SimplePublishedPageHeader(
+                          onTapFilter: onTapFilter,
+                          canSeeOtherQuotes: true,
+                        )
+                      : PublishedPageHeader(
+                          isMobileSize: isMobileSize,
+                          onSelectedOwnership: onSelectedOnwership,
+                          onSelectLanguage: onSelectedLanguage,
+                          onTapTitle: onTapTitle,
+                          selectedColor: chipSelectedColor,
+                          selectedLanguage: _selectedLanguage,
+                          selectedOwnership: _selectedOwnership,
+                          show: NavigationStateHelper.showHeaderPageOptions,
+                          showAllOwnership: true,
+                        ),
                 ],
               ),
               SignalBuilder(
@@ -591,5 +610,37 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
     setState(() {
       NavigationStateHelper.showHeaderPageOptions = newShowPageOptions;
     });
+  }
+
+  void onTapFilter(bool canManageQuotes) {
+    Utils.graphic.showAdaptiveDialog(
+      context,
+      isMobileSize: true,
+      builder: (BuildContext context) {
+        return Align(
+          heightFactor: 0.5,
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 16.0,
+              right: 16.0,
+              bottom: 24.0,
+              top: 142.0,
+            ),
+            child: HeaderFilter(
+              direction: Axis.vertical,
+              showAllOwnership: canManageQuotes,
+              selectedOwnership: _selectedOwnership,
+              onSelectedOwnership: canManageQuotes ? onSelectedOnwership : null,
+              selectedLanguage: _selectedLanguage,
+              onSelectLanguage: (language) {
+                onSelectedLanguage(language);
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        );
+      },
+    );
   }
 }

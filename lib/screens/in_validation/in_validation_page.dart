@@ -13,6 +13,8 @@ import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/in_validation/in_validation_page_body.dart";
 import "package:kwotes/screens/in_validation/in_validation_page_header.dart";
+import "package:kwotes/screens/in_validation/simple_in_validation_page_header.dart";
+import "package:kwotes/screens/published/header_filter.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/draft_quote.dart";
 import "package:kwotes/types/enums/enum_data_ownership.dart";
@@ -34,7 +36,13 @@ import "package:kwotes/types/user/user_rights.dart";
 import "package:loggy/loggy.dart";
 
 class InValidationPage extends StatefulWidget {
-  const InValidationPage({super.key});
+  const InValidationPage({
+    super.key,
+    this.isInTab = false,
+  });
+
+  /// True if this page is in a tab.
+  final bool isInTab;
 
   @override
   State<InValidationPage> createState() => _InValidationPageState();
@@ -102,6 +110,11 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
+    double toolbarHeight = 92.0;
+    if (!widget.isInTab) {
+      toolbarHeight = isMobileSize ? 200.0 : 282.0;
+    }
+
     return Scaffold(
       body: ImprovedScrolling(
         scrollController: _pageScrollController,
@@ -124,21 +137,27 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
                       canManage ? onSelectedOnwership : null;
 
                   return PageAppBar(
+                    hideBackButton: widget.isInTab,
                     isMobileSize: isMobileSize,
-                    toolbarHeight: isMobileSize ? 200.0 : 282.0,
+                    toolbarHeight: toolbarHeight,
                     children: [
-                      InValidationPageHeader(
-                        onSelectedOwnership: onSelectOwnership,
-                        onSelectLanguage: onSelectedLanguage,
-                        onTapTitle: onTapTitle,
-                        selectedColor: _selectedColor,
-                        selectedLanguage: _selectedLanguage,
-                        selectedOwnership: _selectedOwnership,
-                        show: NavigationStateHelper.showHeaderPageOptions,
-                        showAllOwnership: canManage,
-                        showAllLanguagesChip: true,
-                        isMobileSize: isMobileSize,
-                      ),
+                      widget.isInTab
+                          ? SimpleInValidationPageHeader(
+                              onTapFilter: onTapFilter,
+                              canManageQuotes: canManage,
+                            )
+                          : InValidationPageHeader(
+                              onSelectedOwnership: onSelectOwnership,
+                              onSelectLanguage: onSelectedLanguage,
+                              onTapTitle: onTapTitle,
+                              selectedColor: _selectedColor,
+                              selectedLanguage: _selectedLanguage,
+                              selectedOwnership: _selectedOwnership,
+                              show: NavigationStateHelper.showHeaderPageOptions,
+                              showAllOwnership: canManage,
+                              showAllLanguagesChip: true,
+                              isMobileSize: isMobileSize,
+                            ),
                     ],
                   );
                 },
@@ -468,5 +487,37 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
 
       setState(() => _drafts.insert(index, draft));
     }
+  }
+
+  void onTapFilter(bool canManageQuotes) {
+    Utils.graphic.showAdaptiveDialog(
+      context,
+      isMobileSize: true,
+      builder: (BuildContext context) {
+        return Align(
+          heightFactor: 0.5,
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 16.0,
+              right: 16.0,
+              bottom: 24.0,
+              top: 142.0,
+            ),
+            child: HeaderFilter(
+              direction: Axis.vertical,
+              showAllOwnership: canManageQuotes,
+              selectedOwnership: _selectedOwnership,
+              onSelectedOwnership: canManageQuotes ? onSelectedOnwership : null,
+              selectedLanguage: _selectedLanguage,
+              onSelectLanguage: (language) {
+                onSelectedLanguage(language);
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        );
+      },
+    );
   }
 }

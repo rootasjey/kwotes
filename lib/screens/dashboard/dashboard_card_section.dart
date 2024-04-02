@@ -63,42 +63,14 @@ class DashboardCardSection extends StatelessWidget {
           DashboardCard(
             compact: isMobileSize,
             hoverColor: Constants.colors.inValidation,
-            iconData: TablerIcons.clock,
-            isDark: isDark,
-            textSubtitle: "in_validation.description".tr(),
-            textTitle: "in_validation.name".tr(),
-            heroKey: "in_validation",
-            onTap: () {
-              context.beamToNamed(
-                DashboardContentLocation.inValidationRoute,
-              );
-            },
-          ),
-          DashboardCard(
-            compact: isMobileSize,
-            hoverColor: Constants.colors.published,
-            iconData: TablerIcons.send,
-            isDark: isDark,
-            textSubtitle: "published.description".tr(),
-            textTitle: "published.name".tr(),
-            heroKey: "published",
-            onTap: () {
-              context.beamToNamed(
-                DashboardContentLocation.publishedRoute,
-              );
-            },
-          ),
-          DashboardCard(
-            compact: isMobileSize,
-            hoverColor: Constants.colors.drafts,
             iconData: TablerIcons.note,
             isDark: isDark,
-            textSubtitle: "drafts.description".tr(),
-            textTitle: "drafts.name".tr(),
-            heroKey: "drafts",
+            textSubtitle: "my_quotes.description".tr(),
+            textTitle: "my_quotes.name".tr(),
+            heroKey: "my_quotes",
             onTap: () {
               context.beamToNamed(
-                DashboardContentLocation.draftsRoute,
+                DashboardContentLocation.myQuotesRoute,
               );
             },
           ),

@@ -13,6 +13,8 @@ import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/drafts/drafts_page_body.dart";
 import "package:kwotes/screens/drafts/drafts_page_header.dart";
+import "package:kwotes/screens/drafts/simple_drafts_page_header.dart";
+import "package:kwotes/screens/published/header_filter.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/draft_quote.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
@@ -28,7 +30,13 @@ import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
 
 class DraftsPage extends StatefulWidget {
-  const DraftsPage({super.key});
+  const DraftsPage({
+    super.key,
+    this.isInTab = false,
+  });
+
+  /// True if this page is in a tab.
+  final bool isInTab;
 
   @override
   State<DraftsPage> createState() => _DraftsPageState();
@@ -87,6 +95,10 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
   Widget build(BuildContext context) {
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
+    double toolbarHeight = 92.0;
+    if (!widget.isInTab) {
+      toolbarHeight = isMobileSize ? 200.0 : 282.0;
+    }
 
     return Scaffold(
       body: ImprovedScrolling(
@@ -98,17 +110,22 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
             controller: _pageScrollController,
             slivers: [
               PageAppBar(
+                hideBackButton: widget.isInTab,
                 isMobileSize: isMobileSize,
-                toolbarHeight: isMobileSize ? 200.0 : 282.0,
+                toolbarHeight: toolbarHeight,
                 children: [
-                  DraftsPageHeader(
-                    isMobileSize: isMobileSize,
-                    onSelectLanguage: onSelectedLanguage,
-                    onTapTitle: onTapTitle,
-                    selectedColor: _selectedColor,
-                    selectedLanguage: _selectedLanguage,
-                    show: NavigationStateHelper.showHeaderPageOptions,
-                  ),
+                  widget.isInTab
+                      ? SimpleDraftsPageHeader(
+                          onTapFilter: onTapFilter,
+                        )
+                      : DraftsPageHeader(
+                          isMobileSize: isMobileSize,
+                          onSelectLanguage: onSelectedLanguage,
+                          onTapTitle: onTapTitle,
+                          selectedColor: _selectedColor,
+                          selectedLanguage: _selectedLanguage,
+                          show: NavigationStateHelper.showHeaderPageOptions,
+                        ),
                 ],
               ),
               DraftsPageBody(
@@ -406,5 +423,35 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
     setState(() {
       NavigationStateHelper.showHeaderPageOptions = newShowPageOptions;
     });
+  }
+
+  /// Callback fired when the drafts filter is tapped.
+  void onTapFilter() {
+    Utils.graphic.showAdaptiveDialog(
+      context,
+      isMobileSize: true,
+      builder: (BuildContext context) {
+        return Align(
+          heightFactor: 0.5,
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 16.0,
+              right: 16.0,
+              bottom: 24.0,
+              top: 64.0,
+            ),
+            child: HeaderFilter(
+              direction: Axis.vertical,
+              selectedLanguage: _selectedLanguage,
+              onSelectLanguage: (language) {
+                onSelectedLanguage(language);
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        );
+      },
+    );
   }
 }

@@ -14,8 +14,6 @@ class HeaderFilterWrap extends StatelessWidget {
     this.show = true,
     this.showAllLanguage = true,
     this.showAllOwnership = false,
-    this.showLanguageSelector = true,
-    this.showOwnershipSelector = true,
     this.useSliver = false,
     this.margin = EdgeInsets.zero,
     this.chipBackgroundColor = Colors.white,
@@ -39,17 +37,9 @@ class HeaderFilterWrap extends StatelessWidget {
   /// Default to false.
   final bool showAllOwnership;
 
-  /// Show language selector if true.
-  /// Default to true.
-  final bool showLanguageSelector;
-
   /// Wrap this widget in a [SliverToBoxAdapter] if true.
   /// Default to false.
   final bool useSliver;
-
-  /// Show ownership selector if true.
-  /// Default to true.
-  final bool showOwnershipSelector;
 
   /// Background color of the filter chips.
   final Color chipBackgroundColor;
@@ -81,7 +71,7 @@ class HeaderFilterWrap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Widget> ownershipChips = [];
-    if (showOwnershipSelector) {
+    if (onSelectedOwnership != null) {
       ownershipChips.addAll([
         Utils.graphic.tooltip(
           tooltipString: "quote.owned.description".tr(),
@@ -116,7 +106,7 @@ class HeaderFilterWrap extends StatelessWidget {
               selected: selectedOwnership == EnumDataOwnership.all,
             ),
           ),
-        if (showLanguageSelector)
+        if (onSelectLanguage != null)
           const SizedBox(
             height: 28.0,
             child: VerticalDivider(thickness: 2.0),
@@ -125,7 +115,7 @@ class HeaderFilterWrap extends StatelessWidget {
     }
 
     final List<Widget> languageChips = [];
-    if (showLanguageSelector) {
+    if (onSelectLanguage != null) {
       languageChips.addAll(
         [
           if (showAllLanguage)
