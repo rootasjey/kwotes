@@ -415,6 +415,14 @@
   },
   "loading": "Loading...",
   "loading_error": "There was an error while loading",
+  "my_quotes": {
+    "description": "Your created quotes",
+    "empty": {
+      "description": "You have no quotes yet.",
+      "name": "No quotes here"
+    },
+    "name": "My quotes"
+  },
   "name": "Name",
   "next": "Next",
   "new_quote": "New quote",
@@ -431,6 +439,9 @@
   "off": "Off",
   "on": "On",
   "on_boarding_come": "Come on board if it's your first time.",
+  "ownership": {
+    "name": "Ownership"
+  },
   "page_title": {
     "about": "@:kwotes_leading About",
     "add_quote": "@:kwotes_leading Add quote",
@@ -451,6 +462,7 @@
     "in_validation": "@:kwotes_leading In validation",
     "list": "@:kwotes_leading {}",
     "lists": "@:kwotes_leading Lists",
+    "my_quotes": "@:kwotes_leading My quotes",
     "not_found": "@:kwotes_leading 404",
     "post": "@:kwotes_leading Post",
     "posts": "@:kwotes_leading Posts",

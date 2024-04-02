@@ -416,6 +416,14 @@
   },
   "loading": "Chargement...",
   "loading_error": "Il y a eu une erreur durant le chargement",
+  "my_quotes": {
+    "description": "Les citations que vous avez créées",
+    "empty": {
+      "description": "Vous n'avez créé aucune citation pour le moment.",
+      "name": "Pas de citations ici"
+    },
+    "name": "Mes citations"
+  },
   "name": "Nom",
   "next": "Suivant",
   "new_quote": "Nouvelle citation",
@@ -432,6 +440,9 @@
   "off": "Off",
   "on": "On",
   "on_boarding_come": "Venez suivre les instructions basiques si ceci est votre première fois.",
+  "ownership": {
+    "name": "Appartenance"
+  },
   "page_title": {
     "about": "@:kwotes_leading About",
     "add_quote": "@:kwotes_leading Ajouter une citation",
@@ -452,6 +463,7 @@
     "in_validation": "@:kwotes_leading En Validation",
     "list": "@:kwotes_leading {}",
     "lists": "@:kwotes_leading Listes",
+    "my_quotes": "@:kwotes_leading Mes citations",
     "not_found": "@:kwotes_leading 404",
     "post": "@:kwotes_leading Post",
     "posts": "@:kwotes_leading Posts",
