@@ -78,22 +78,26 @@ class CircleButton extends StatelessWidget {
     required final Widget child,
     Color borderColor = const Color(0xFF000000),
     final EdgeInsets margin = EdgeInsets.zero,
+    final String tooltip = "",
   }) {
-    return Padding(
-      padding: margin,
-      child: Container(
-        height: 28.0,
-        width: 28.0,
-        decoration: BoxDecoration(
-          border: Border.all(width: 2.0, color: borderColor),
-          borderRadius: BorderRadius.circular(24.0),
-        ),
-        clipBehavior: Clip.hardEdge,
-        child: InkWell(
-          canRequestFocus: false,
-          borderRadius: BorderRadius.circular(24.0),
-          onTap: onTap,
-          child: child,
+    return Utils.graphic.tooltip(
+      tooltipString: tooltip,
+      child: Padding(
+        padding: margin,
+        child: Container(
+          height: 28.0,
+          width: 28.0,
+          decoration: BoxDecoration(
+            border: Border.all(width: 2.0, color: borderColor),
+            borderRadius: BorderRadius.circular(24.0),
+          ),
+          clipBehavior: Clip.hardEdge,
+          child: InkWell(
+            canRequestFocus: false,
+            borderRadius: BorderRadius.circular(24.0),
+            onTap: onTap,
+            child: child,
+          ),
         ),
       ),
     );
