@@ -14,15 +14,23 @@ class PageAppBar extends StatelessWidget {
     this.isMobileSize = false,
     this.toolbarHeight = 200.0,
     this.children = const [],
+    this.hideBackButton = false,
+    this.backgroundColor,
   });
 
   /// Page's axis.
   final Axis axis;
 
+  /// Hide back button if true.
+  final bool hideBackButton;
+
   /// Adapt the user interface to small screens if true.
   final bool isMobileSize;
 
-  /// Page's toolbar height.
+  /// App bar's background color.
+  final Color? backgroundColor;
+
+  /// App bar's toolbar height.
   final double toolbarHeight;
 
   // /// Page's title children.
@@ -46,7 +54,7 @@ class PageAppBar extends StatelessWidget {
             Colors.black;
 
     final List<Widget> childrenLayout = [
-      if (hasHistory)
+      if (hasHistory && !hideBackButton)
         CircleButton.outlined(
           borderColor: Colors.transparent,
           onTap: () => Utils.passage.back(
@@ -67,9 +75,6 @@ class PageAppBar extends StatelessWidget {
             children: childrenLayout,
           )
         : Row(children: childrenLayout);
-
-    final Color backgroundColor =
-        Theme.of(context).scaffoldBackgroundColor.withOpacity(0.6);
 
     return SliverAppBar(
       floating: true,
