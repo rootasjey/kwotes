@@ -63,6 +63,17 @@ class HeaderFilterColumn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const double boxHeight = 42.0;
+    final Color foregroundSelectedColor =
+        chipSelectedColor.computeLuminance() < 0.5
+            ? Colors.white
+            : Colors.black;
+
+    final TextStyle labelStyle = Utils.calligraphy.body(
+        textStyle: TextStyle(
+      fontSize: 12.0,
+      fontWeight: FontWeight.w500,
+      color: foregroundSelectedColor,
+    ));
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -101,27 +112,29 @@ class HeaderFilterColumn extends StatelessWidget {
                   labelString: "quote.owned.name".tr(),
                   tooltipString: "quote.owned.description".tr(),
                 ),
-              ]
-                  .map(
-                    (OwnershipData data) => Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: FilterChip(
-                        checkmarkColor: iconColor,
-                        label: Text(data.labelString),
-                        tooltip: data.tooltipString,
-                        backgroundColor: chipBackgroundColor,
-                        selectedColor: chipSelectedColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16.0),
-                          side: BorderSide(color: chipBorderColor),
-                        ),
-                        onSelected: (bool _) =>
-                            onSelectedOwnership?.call(data.ownership),
-                        selected: selectedOwnership == data.ownership,
+              ].map(
+                (OwnershipData data) {
+                  final bool selected = selectedOwnership == data.ownership;
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: FilterChip(
+                      checkmarkColor: foregroundSelectedColor,
+                      label: Text(data.labelString,
+                          style: selected ? labelStyle : null),
+                      tooltip: data.tooltipString,
+                      backgroundColor: chipBackgroundColor,
+                      selectedColor: chipSelectedColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16.0),
+                        side: BorderSide(color: chipBorderColor),
                       ),
+                      onSelected: (bool _) =>
+                          onSelectedOwnership?.call(data.ownership),
+                      selected: selected,
                     ),
-                  )
-                  .toList(),
+                  );
+                },
+              ).toList(),
             ),
           ),
         if (onSelectedOwnership != null && onSelectedOwnership != null)
@@ -162,29 +175,36 @@ class HeaderFilterColumn extends StatelessWidget {
                         language: locale,
                       ),
                     ),
-              ]
-                  .map(
-                    (LanguageFilterData data) => Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: FilterChip(
-                        checkmarkColor: iconColor,
-                        label: data.labelString.isEmpty
-                            ? Icon(data.iconData, color: iconColor, size: 20.0)
-                            : Text(data.labelString),
-                        tooltip: data.tooltipString,
-                        backgroundColor: chipBackgroundColor,
-                        selectedColor: chipSelectedColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16.0),
-                          side: BorderSide(color: chipBorderColor),
-                        ),
-                        onSelected: (bool _) =>
-                            onSelectLanguage?.call(data.language),
-                        selected: selectedLanguage == data.language,
+              ].map(
+                (LanguageFilterData data) {
+                  final bool selected = selectedLanguage == data.language;
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: FilterChip(
+                      checkmarkColor: foregroundSelectedColor,
+                      label: data.labelString.isEmpty
+                          ? Icon(
+                              data.iconData,
+                              color: selected
+                                  ? foregroundSelectedColor
+                                  : iconColor,
+                              size: 20.0,
+                            )
+                          : Text(data.labelString),
+                      tooltip: data.tooltipString,
+                      backgroundColor: chipBackgroundColor,
+                      selectedColor: chipSelectedColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16.0),
+                        side: BorderSide(color: chipBorderColor),
                       ),
+                      onSelected: (bool _) =>
+                          onSelectLanguage?.call(data.language),
+                      selected: selected,
                     ),
-                  )
-                  .toList(),
+                  );
+                },
+              ).toList(),
             ),
           ),
       ],

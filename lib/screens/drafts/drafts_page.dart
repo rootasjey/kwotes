@@ -13,8 +13,6 @@ import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/drafts/drafts_page_body.dart";
 import "package:kwotes/screens/drafts/drafts_page_header.dart";
-import "package:kwotes/screens/drafts/simple_drafts_page_header.dart";
-import "package:kwotes/screens/published/header_filter.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/draft_quote.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
@@ -33,10 +31,18 @@ class DraftsPage extends StatefulWidget {
   const DraftsPage({
     super.key,
     this.isInTab = false,
+    this.pageScrollController,
+    this.selectedLanguage = EnumLanguageSelection.en,
   });
 
   /// True if this page is in a tab.
   final bool isInTab;
+
+  /// Current selected language to fetch draft quotes.
+  final EnumLanguageSelection selectedLanguage;
+
+  /// Page's scroll controller from parent widget.
+  final ScrollController? pageScrollController;
 
   @override
   State<DraftsPage> createState() => _DraftsPageState();
@@ -54,9 +60,6 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
 
   /// Color of selected widgets (e.g. for filter chips).
   Color _selectedColor = Colors.amber.shade200;
-
-  /// Current selected language to fetch draft quotes.
-  EnumLanguageSelection _selectedLanguage = EnumLanguageSelection.all;
 
   /// Page's state.
   EnumPageState _pageState = EnumPageState.idle;
@@ -84,7 +87,18 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
   }
 
   @override
+  void didUpdateWidget(covariant DraftsPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selectedLanguage != widget.selectedLanguage) {
+      _lastDocument = null;
+      _drafts.clear();
+      fetch();
+    }
+  }
+
+  @override
   void dispose() {
+    widget.pageScrollController?.removeListener(onPageScroll);
     _pageScrollController.dispose();
     _draftSub?.cancel();
     _draftSub = null;
@@ -95,7 +109,23 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
   Widget build(BuildContext context) {
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    double toolbarHeight = 92.0;
+
+    if (widget.isInTab) {
+      return DraftsPageBody(
+        animateList: _animateList,
+        draftQuotes: _drafts,
+        isDark: isDark,
+        isMobileSize: isMobileSize,
+        onCopyFrom: onCopyFromDraftQuote,
+        onDelete: onDeleteDraftQuote,
+        onEdit: onEditDraftQuote,
+        onSubmit: onSubmitDraftQuote,
+        onTap: onTapDraftQuote,
+        pageState: _pageState,
+      );
+    }
+
+    double toolbarHeight = 160.0;
     if (!widget.isInTab) {
       toolbarHeight = isMobileSize ? 200.0 : 282.0;
     }
@@ -114,18 +144,14 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
                 isMobileSize: isMobileSize,
                 toolbarHeight: toolbarHeight,
                 children: [
-                  widget.isInTab
-                      ? SimpleDraftsPageHeader(
-                          onTapFilter: onTapFilter,
-                        )
-                      : DraftsPageHeader(
-                          isMobileSize: isMobileSize,
-                          onSelectLanguage: onSelectedLanguage,
-                          onTapTitle: onTapTitle,
-                          selectedColor: _selectedColor,
-                          selectedLanguage: _selectedLanguage,
-                          show: NavigationStateHelper.showHeaderPageOptions,
-                        ),
+                  DraftsPageHeader(
+                    isMobileSize: isMobileSize,
+                    onSelectLanguage: onSelectedLanguage,
+                    onTapTitle: onTapTitle,
+                    selectedColor: _selectedColor,
+                    selectedLanguage: widget.selectedLanguage,
+                    show: NavigationStateHelper.showHeaderPageOptions,
+                  ),
                 ],
               ),
               DraftsPageBody(
@@ -158,6 +184,12 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
     if (userFirestore.id.isEmpty) {
       return;
     }
+
+    setState(() {
+      _pageState = _lastDocument == null
+          ? EnumPageState.loading
+          : EnumPageState.loadingMore;
+    });
 
     try {
       final QueryMap query = getQuery(userFirestore.id);
@@ -203,10 +235,10 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
         .orderBy("created_at", descending: _descending)
         .limit(_limit);
 
-    if (_selectedLanguage != EnumLanguageSelection.all) {
+    if (widget.selectedLanguage != EnumLanguageSelection.all) {
       baseQuery = baseQuery.where(
         "language",
-        isEqualTo: _selectedLanguage.name,
+        isEqualTo: widget.selectedLanguage.name,
       );
     }
 
@@ -273,7 +305,7 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
 
   /// Initialize page properties.
   void initProps() async {
-    _selectedLanguage = await Utils.vault.getPageLanguage();
+    widget.pageScrollController?.addListener(onPageScroll);
     _selectedColor = Constants.colors.getRandomFromPalette().withOpacity(0.6);
     setState(() {});
 
@@ -308,13 +340,26 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
     });
   }
 
+  /// Scrolls the page based on the current scroll position.
+  ///
+  /// This function retrieves the current scroll position from the provided
+  /// `pageScrollController`. If the scroll position is at or beyond the maximum
+  /// scroll extent, it calls the `fetch` function.
+  void onPageScroll() {
+    final ScrollController? controller = widget.pageScrollController;
+    if (controller == null) return;
+    if (controller.position.pixels >= controller.position.maxScrollExtent) {
+      fetch();
+    }
+  }
+
   void onScroll(double offset) {
     if (!_hasNextPage) {
       return;
     }
 
-    if (_pageState == EnumPageState.searching ||
-        _pageState == EnumPageState.searchingMore) {
+    if (_pageState == EnumPageState.loading ||
+        _pageState == EnumPageState.loadingMore) {
       return;
     }
 
@@ -376,12 +421,12 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
 
   /// Callback to select a language.
   void onSelectedLanguage(EnumLanguageSelection language) {
-    if (_selectedLanguage == language) {
+    if (widget.selectedLanguage == language) {
       return;
     }
 
     setState(() {
-      _selectedLanguage = language;
+      // _selectedLanguage = language;
       _drafts.clear();
       _lastDocument = null;
     });
@@ -423,35 +468,5 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
     setState(() {
       NavigationStateHelper.showHeaderPageOptions = newShowPageOptions;
     });
-  }
-
-  /// Callback fired when the drafts filter is tapped.
-  void onTapFilter() {
-    Utils.graphic.showAdaptiveDialog(
-      context,
-      isMobileSize: true,
-      builder: (BuildContext context) {
-        return Align(
-          heightFactor: 0.5,
-          alignment: Alignment.bottomCenter,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              left: 16.0,
-              right: 16.0,
-              bottom: 24.0,
-              top: 64.0,
-            ),
-            child: HeaderFilter(
-              direction: Axis.vertical,
-              selectedLanguage: _selectedLanguage,
-              onSelectLanguage: (language) {
-                onSelectedLanguage(language);
-                Navigator.pop(context);
-              },
-            ),
-          ),
-        );
-      },
-    );
   }
 }

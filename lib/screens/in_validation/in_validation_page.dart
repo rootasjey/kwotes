@@ -39,10 +39,22 @@ class InValidationPage extends StatefulWidget {
   const InValidationPage({
     super.key,
     this.isInTab = false,
+    this.pageScrollController,
+    this.selectedLanguage = EnumLanguageSelection.en,
+    this.selectedOwnership = EnumDataOwnership.owned,
   });
 
   /// True if this page is in a tab.
   final bool isInTab;
+
+  /// The selected ownership for quotes in validation.
+  final EnumDataOwnership selectedOwnership;
+
+  /// The selected language for quotes in validation.
+  final EnumLanguageSelection selectedLanguage;
+
+  /// Page's scroll controller from parent widget.
+  final ScrollController? pageScrollController;
 
   @override
   State<InValidationPage> createState() => _InValidationPageState();
@@ -62,10 +74,10 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
   Color _selectedColor = Colors.amber.shade200;
 
   /// Selected tab index (owned | all).
-  EnumDataOwnership _selectedOwnership = EnumDataOwnership.owned;
+  // EnumDataOwnership _selectedOwnership = EnumDataOwnership.owned;
 
   /// Current selected language to fetch quotes in validation.
-  EnumLanguageSelection _selectedLanguage = EnumLanguageSelection.all;
+  // EnumLanguageSelection _selectedLanguage = EnumLanguageSelection.all;
 
   /// Page's state.
   EnumPageState _pageState = EnumPageState.idle;
@@ -96,7 +108,18 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
   }
 
   @override
+  void didUpdateWidget(covariant InValidationPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selectedLanguage != widget.selectedLanguage) {
+      _lastDocument = null;
+      _drafts.clear();
+      fetch();
+    }
+  }
+
+  @override
   void dispose() {
+    widget.pageScrollController?.removeListener(onPageScroll);
     _pageScrollController.dispose();
     _draftSub?.cancel();
     _draftSub = null;
@@ -109,6 +132,31 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
     final Signal<UserFirestore> signalUserFirestore =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
+    if (widget.isInTab) {
+      return SignalBuilder(
+        signal: signalUserFirestore,
+        builder: (
+          BuildContext context,
+          UserFirestore userFirestore,
+          Widget? child,
+        ) {
+          final UserRights userRights = userFirestore.rights;
+          final bool canManage = userRights.canManageQuotes;
+
+          return InValidationPageBody(
+            animateList: _animateList,
+            isDark: isDark,
+            isMobileSize: isMobileSize,
+            pageState: _pageState,
+            quotes: _drafts,
+            onTap: onTapDraftQuote,
+            onDelete: onDeleteDraftQuote,
+            onValidate: canManage ? onValidateDraftQuote : null,
+          );
+        },
+      );
+    }
 
     double toolbarHeight = 92.0;
     if (!widget.isInTab) {
@@ -151,8 +199,8 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
                               onSelectLanguage: onSelectedLanguage,
                               onTapTitle: onTapTitle,
                               selectedColor: _selectedColor,
-                              selectedLanguage: _selectedLanguage,
-                              selectedOwnership: _selectedOwnership,
+                              selectedLanguage: widget.selectedLanguage,
+                              selectedOwnership: widget.selectedOwnership,
                               show: NavigationStateHelper.showHeaderPageOptions,
                               showAllOwnership: canManage,
                               showAllLanguagesChip: true,
@@ -242,13 +290,13 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
         .limit(_limit)
         .orderBy("created_at", descending: _descending);
 
-    if (_selectedOwnership == EnumDataOwnership.owned) {
+    if (widget.selectedOwnership == EnumDataOwnership.owned) {
       baseQuery = baseQuery.where("user.id", isEqualTo: userId);
     }
 
-    if (_selectedLanguage != EnumLanguageSelection.all) {
+    if (widget.selectedLanguage != EnumLanguageSelection.all) {
       baseQuery =
-          baseQuery.where("language", isEqualTo: _selectedLanguage.name);
+          baseQuery.where("language", isEqualTo: widget.selectedLanguage.name);
     }
 
     if (lastDocument == null) {
@@ -298,7 +346,7 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
 
   /// Initialize page properties.
   void initProps() async {
-    _selectedLanguage = await Utils.vault.getPageLanguage();
+    widget.pageScrollController?.addListener(onPageScroll);
     _selectedColor = Constants.colors.getRandomFromPalette().withOpacity(0.6);
     setState(() {});
 
@@ -331,6 +379,19 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
       _draftSub?.cancel();
       _draftSub = null;
     });
+  }
+
+  /// Scrolls the page based on the current scroll position.
+  ///
+  /// This function retrieves the current scroll position from the provided
+  /// `pageScrollController`. If the scroll position is at or beyond the maximum
+  /// scroll extent, it calls the `fetch` function.
+  void onPageScroll() {
+    final ScrollController? controller = widget.pageScrollController;
+    if (controller == null) return;
+    if (controller.position.pixels >= controller.position.maxScrollExtent) {
+      fetch();
+    }
   }
 
   /// Callback fired when the page is scrolled.
@@ -380,12 +441,11 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
 
   /// Callback to select a language.
   void onSelectedLanguage(EnumLanguageSelection language) {
-    if (_selectedLanguage == language) {
+    if (widget.selectedLanguage == language) {
       return;
     }
 
     setState(() {
-      _selectedLanguage = language;
       _drafts.clear();
       _lastDocument = null;
     });
@@ -396,12 +456,11 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
 
   /// Callback to filter published quotes (owned | all).
   void onSelectedOnwership(EnumDataOwnership ownership) {
-    if (_selectedOwnership == ownership) {
+    if (widget.selectedOwnership == ownership) {
       return;
     }
 
     setState(() {
-      _selectedOwnership = ownership;
       _drafts.clear();
       _lastDocument = null;
     });
@@ -507,10 +566,10 @@ class _InValidationPageState extends State<InValidationPage> with UiLoggy {
             child: HeaderFilter(
               direction: Axis.vertical,
               showAllOwnership: canManageQuotes,
-              selectedOwnership: _selectedOwnership,
+              selectedOwnership: widget.selectedOwnership,
               onSelectedOwnership: canManageQuotes ? onSelectedOnwership : null,
-              selectedLanguage: _selectedLanguage,
-              onSelectLanguage: (language) {
+              selectedLanguage: widget.selectedLanguage,
+              onSelectLanguage: (EnumLanguageSelection language) {
                 onSelectedLanguage(language);
                 Navigator.pop(context);
               },

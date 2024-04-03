@@ -65,25 +65,28 @@ class DashboardHeader extends StatelessWidget {
               "assets/images/profile-picture-avocado.png",
             ),
           ),
-          TextButton.icon(
-            onPressed: () {
-              onTapNewQuoteButton?.call(context);
-            },
-            style: TextButton.styleFrom(
-              backgroundColor: isDark ? Colors.black : Colors.white,
-              foregroundColor: foregroundColor,
-              padding: const EdgeInsets.symmetric(
-                vertical: 12.0,
-                horizontal: 24.0,
+          Utils.graphic.tooltip(
+            tooltipString: "quote.new".tr(),
+            child: TextButton.icon(
+              onPressed: () {
+                onTapNewQuoteButton?.call(context);
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: isDark ? Colors.black : Colors.white,
+                foregroundColor: foregroundColor,
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12.0,
+                  horizontal: 24.0,
+                ),
+                shape: const StadiumBorder(),
               ),
-              shape: const StadiumBorder(),
-            ),
-            icon: const Icon(TablerIcons.plus, size: 16.0),
-            label: Text(
-              "quote.name".tr(),
-              style: Utils.calligraphy.body(
-                textStyle: const TextStyle(
-                  fontWeight: FontWeight.w500,
+              icon: const Icon(TablerIcons.plus, size: 16.0),
+              label: Text(
+                "quote.name".tr(),
+                style: Utils.calligraphy.body(
+                  textStyle: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ),
