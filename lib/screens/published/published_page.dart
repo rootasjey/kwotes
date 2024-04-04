@@ -157,6 +157,7 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
             onDelete: isAdmin ? onDeleteQuote : null,
             onEdit: isAdmin ? onEditQuote : null,
             onChangeLanguage: isAdmin ? onChangeQuoteLanguage : null,
+            onOpenAddToList: onOpenAddToList,
             onShareImage: onShareImage,
             onShareLink: onShareLink,
             onShareText: onShareText,
@@ -218,6 +219,7 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
                     pageState: _pageState,
                     isMobileSize: isMobileSize,
                     quotes: _quotes,
+                    onOpenAddToList: onOpenAddToList,
                     onTap: onTapQuote,
                     onCopy: onCopyQuote,
                     onCopyQuoteUrl: onCopyQuoteUrl,
@@ -537,6 +539,19 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
       loggy.error(error);
       setState(() => _quotes.insert(index, quote));
     }
+  }
+
+  /// Open add to list dialog.
+  void onOpenAddToList(Quote quote) {
+    final String userId =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value.id;
+
+    Utils.graphic.showAddToListDialog(
+      context,
+      isMobileSize: Utils.measurements.isMobileSize(context),
+      quotes: [quote],
+      userId: userId,
+    );
   }
 
   /// Callback to edit a published quote.

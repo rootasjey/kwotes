@@ -1,6 +1,7 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/context_menu_components.dart";
 import "package:kwotes/components/empty_view.dart";
 import "package:kwotes/components/loading_view.dart";
@@ -11,6 +12,8 @@ import "package:kwotes/types/enums/enum_quote_text_magnitude.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/topic.dart";
 import "package:super_context_menu/super_context_menu.dart";
+import "package:swipeable_tile/swipeable_tile.dart";
+import "package:vibration/vibration.dart";
 
 /// Body component page displaying a user quote list content.
 class ListPageBody extends StatelessWidget {
@@ -25,6 +28,7 @@ class ListPageBody extends StatelessWidget {
     this.onCopyQuote,
     this.onCopyQuoteUrl,
     this.onDoubleTap,
+    this.onOpenAddToList,
     this.onRemoveFromList,
     this.onShareImage,
     this.onShareText,
@@ -55,6 +59,9 @@ class ListPageBody extends StatelessWidget {
 
   /// Callback fired to double tap a quote.
   final void Function(Quote quote)? onDoubleTap;
+
+  /// Callback fired to add a quote to list.
+  final void Function(Quote quote)? onOpenAddToList;
 
   /// Callback fired to remove a quote from the list.
   final void Function(Quote quote)? onRemoveFromList;
@@ -107,22 +114,122 @@ class ListPageBody extends StatelessWidget {
           final Quote quote = quotes[index];
 
           return ContextMenuWidget(
-            child: QuoteText(
-              quote: quote,
-              onDoubleTap: onDoubleTap,
-              onTap: onTap,
-              magnitude: isMobileSize
-                  ? EnumQuoteTextMagnitude.medium
-                  : EnumQuoteTextMagnitude.big,
-            )
-                .animate()
-                .slideY(
-                  begin: 0.8,
-                  end: 0.0,
-                  duration: animateList ? 150.ms : 0.ms,
-                  curve: Curves.decelerate,
-                )
-                .fadeIn(),
+            child: SwipeableTile(
+              isElevated: false,
+              swipeThreshold: 0.3,
+              direction: SwipeDirection.horizontal,
+              color: Theme.of(context).scaffoldBackgroundColor,
+              key: ValueKey(quote.id),
+              confirmSwipe: (SwipeDirection direction) {
+                if (direction == SwipeDirection.endToStart) {
+                  return Future.value(true);
+                } else if (direction == SwipeDirection.startToEnd) {
+                  onOpenAddToList?.call(quote);
+                  return Future.value(false);
+                }
+
+                return Future.value(false);
+              },
+              onSwiped: (SwipeDirection direction) {
+                if (direction == SwipeDirection.endToStart) {
+                  onRemoveFromList?.call(quote);
+                } else if (direction == SwipeDirection.startToEnd) {
+                  onOpenAddToList?.call(quote);
+                }
+              },
+              backgroundBuilder: (
+                BuildContext context,
+                SwipeDirection direction,
+                AnimationController progress,
+              ) {
+                bool vibrated = false;
+
+                return AnimatedBuilder(
+                  animation: progress,
+                  builder: (BuildContext context, Widget? child) {
+                    final bool triggered = progress.value >= 0.3;
+
+                    if (triggered && !vibrated) {
+                      Vibration.hasVibrator().then((bool? hasVibrator) {
+                        if (hasVibrator ?? false) {
+                          Vibration.vibrate(amplitude: 12);
+                        }
+                      });
+
+                      vibrated = true;
+                    } else if (!triggered) {
+                      vibrated = false;
+                    }
+
+                    if (direction == SwipeDirection.endToStart) {
+                      final Color color = triggered
+                          ? Constants.colors.delete
+                          : Constants.colors.delete.withOpacity(
+                              Constants.colors.swipeStartOpacity,
+                            );
+
+                      return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          color: color,
+                        ),
+                        child: const Align(
+                          alignment: Alignment.centerRight,
+                          child: Padding(
+                            padding: EdgeInsets.only(right: 24.0),
+                            child: Icon(
+                              TablerIcons.trash,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      );
+                    } else if (direction == SwipeDirection.startToEnd) {
+                      final Color color = triggered
+                          ? Constants.colors.lists
+                          : Constants.colors.lists.withOpacity(
+                              Constants.colors.swipeStartOpacity,
+                            );
+
+                      return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          color: color,
+                        ),
+                        child: const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 24.0),
+                            child: Icon(
+                              TablerIcons.plus,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+
+                    return Container();
+                  },
+                );
+              },
+              child: QuoteText(
+                quote: quote,
+                onDoubleTap: onDoubleTap,
+                onTap: onTap,
+                magnitude: isMobileSize
+                    ? EnumQuoteTextMagnitude.medium
+                    : EnumQuoteTextMagnitude.big,
+              )
+                  .animate()
+                  .slideY(
+                    begin: 0.8,
+                    end: 0.0,
+                    duration: animateList ? 150.ms : 0.ms,
+                    curve: Curves.decelerate,
+                  )
+                  .fadeIn(),
+            ),
             menuProvider: (MenuRequest menuRequest) {
               final Topic topic = Constants.colors.topics.firstWhere(
                 (Topic x) => x.name == quote.topics.first,

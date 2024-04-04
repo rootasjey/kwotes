@@ -169,20 +169,23 @@ class ColorPalette {
     }
   }
 
+  /// Opacity for start swipe actions.
+  final double swipeStartOpacity = 0.4;
+
   /// Color for statistics.
   final Color activity = Colors.red;
 
   final Color clairPink = const Color(0xFFf5eaf9);
-  final Color references = Colors.orange.shade300;
+  final Color references = Colors.green.shade300;
   final Color topicColor = Colors.deepPurple.shade300;
 
   final Color error = Colors.pink.shade200;
 
   /// Color for books.
-  final Color authors = Colors.blue.shade700;
+  final Color lists = Colors.blue.shade700;
 
   /// Color for challenges.
-  final Color quotes = Colors.amber;
+  final Color quotes = Colors.amber.shade300;
 
   /// Color for contests.
   final Color inValidation = Colors.indigo;
@@ -198,8 +201,11 @@ class ColorPalette {
 
   /// Color for galleries.
   final Color published = Colors.green;
+  final Color edit = Colors.green;
 
   final Color home = Colors.blue.shade300;
+
+  final Color authors = Colors.blue.shade300;
 
   final Color lightBackground = const Color.fromRGBO(239, 241, 253, 1);
   final Color likes = Colors.pink;

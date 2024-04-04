@@ -5,9 +5,12 @@ import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/empty_view.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/components/texts/quote_list_text.dart";
+import "package:kwotes/globals/constants.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/quote_list.dart";
 import "package:super_context_menu/super_context_menu.dart";
+import "package:swipeable_tile/swipeable_tile.dart";
+import "package:vibration/vibration.dart";
 
 class ListsPageBody extends StatelessWidget {
   const ListsPageBody({
@@ -110,25 +113,125 @@ class ListsPageBody extends StatelessWidget {
               (editingListId == quoteList.id) && editingListId.isNotEmpty;
 
           return ContextMenuWidget(
-            child: QuoteListText(
-              quoteList: quoteList,
-              tiny: isMobileSize,
-              isEditing: isEditing,
-              isDeleting: isDeleting,
-              margin: const EdgeInsets.only(bottom: 0.0),
-              onCancelEditMode: onCancelEditListMode,
-              onTap: quoteList.id.isEmpty ? null : onTap,
-              onSaveChanges: onSaveListChanges,
-              onConfirmDelete: onConfirmDeleteList,
-              onCancelDelete: onCancelDeleteList,
-            )
-                .animate()
-                .slideY(
-                  begin: 0.8,
-                  duration: animateList ? 150.ms : 0.ms,
-                  curve: Curves.decelerate,
-                )
-                .fadeIn(),
+            child: SwipeableTile(
+              isElevated: false,
+              swipeThreshold: 0.3,
+              direction: SwipeDirection.horizontal,
+              color: Theme.of(context).scaffoldBackgroundColor,
+              key: ValueKey(quoteList.id),
+              confirmSwipe: (SwipeDirection direction) {
+                if (direction == SwipeDirection.endToStart) {
+                  return Future.value(true);
+                } else if (direction == SwipeDirection.startToEnd) {
+                  onEditList?.call(quoteList);
+                  return Future.value(false);
+                }
+
+                return Future.value(false);
+              },
+              onSwiped: (SwipeDirection direction) {
+                if (direction == SwipeDirection.endToStart) {
+                  onDeleteList?.call(quoteList);
+                } else if (direction == SwipeDirection.startToEnd) {
+                  onEditList?.call(quoteList);
+                }
+              },
+              backgroundBuilder: (
+                BuildContext context,
+                SwipeDirection direction,
+                AnimationController progress,
+              ) {
+                bool vibrated = false;
+
+                return AnimatedBuilder(
+                  animation: progress,
+                  builder: (BuildContext context, Widget? child) {
+                    final bool triggered = progress.value >= 0.3;
+
+                    if (triggered && !vibrated) {
+                      Vibration.hasVibrator().then((bool? hasVibrator) {
+                        if (hasVibrator ?? false) {
+                          Vibration.vibrate(amplitude: 12);
+                        }
+                      });
+
+                      vibrated = true;
+                    } else if (!triggered) {
+                      vibrated = false;
+                    }
+
+                    if (direction == SwipeDirection.endToStart) {
+                      final Color color = triggered
+                          ? Constants.colors.delete
+                          : Constants.colors.delete.withOpacity(
+                              Constants.colors.swipeStartOpacity,
+                            );
+
+                      return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          color: color,
+                        ),
+                        child: const Align(
+                          alignment: Alignment.centerRight,
+                          child: Padding(
+                            padding: EdgeInsets.only(right: 24.0),
+                            child: Icon(
+                              TablerIcons.trash,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      );
+                    } else if (direction == SwipeDirection.startToEnd) {
+                      final Color color = triggered
+                          ? Constants.colors.edit
+                          : Constants.colors.edit.withOpacity(
+                              Constants.colors.swipeStartOpacity,
+                            );
+
+                      return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          color: color,
+                        ),
+                        child: const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 24.0),
+                            child: Icon(
+                              TablerIcons.edit,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+
+                    return Container();
+                  },
+                );
+              },
+              child: QuoteListText(
+                quoteList: quoteList,
+                tiny: isMobileSize,
+                isEditing: isEditing,
+                isDeleting: isDeleting,
+                margin: const EdgeInsets.only(bottom: 0.0),
+                onCancelEditMode: onCancelEditListMode,
+                onTap: quoteList.id.isEmpty ? null : onTap,
+                onSaveChanges: onSaveListChanges,
+                onConfirmDelete: onConfirmDeleteList,
+                onCancelDelete: onCancelDeleteList,
+              )
+                  .animate()
+                  .slideY(
+                    begin: 0.8,
+                    duration: animateList ? 150.ms : 0.ms,
+                    curve: Curves.decelerate,
+                  )
+                  .fadeIn(),
+            ),
             contextMenuIsAllowed: (_) =>
                 quoteList.id.isNotEmpty && editingListId != quoteList.id,
             menuProvider: (MenuRequest menuRequest) {

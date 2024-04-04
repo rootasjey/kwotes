@@ -34,18 +34,21 @@ class ChipCategorySelector extends StatelessWidget {
     final bool referenceSelected =
         categorySelected == EnumSearchCategory.references;
 
+    const FontWeight selectedWeight = FontWeight.w500;
+
     return Padding(
         padding: margin,
         child: Wrap(
-          spacing: 8.0,
-          runSpacing: 8.0,
+          spacing: 12.0,
+          runSpacing: 12.0,
           alignment: WrapAlignment.start,
           children: [
-            ActionChip(
-              color: quoteSelected
-                  ? MaterialStateProperty.all(Constants.colors.quotes)
-                  : null,
-              onPressed: () => onSelectCategory?.call(
+            FilterChip(
+              showCheckmark: false,
+              selected: quoteSelected,
+              elevation: quoteSelected ? 2.0 : 0.0,
+              selectedColor: Constants.colors.quotes,
+              onSelected: (bool _) => onSelectCategory?.call(
                 EnumSearchCategory.quotes,
               ),
               shape: const StadiumBorder(
@@ -55,18 +58,24 @@ class ChipCategorySelector extends StatelessWidget {
               ),
               labelStyle: Utils.calligraphy.body(
                 textStyle: TextStyle(
-                  color: quoteSelected ? Colors.black : defaultColor,
-                  fontWeight: quoteSelected ? FontWeight.w600 : null,
+                  color: getForegroundColor(
+                    selected: quoteSelected,
+                    defaultColor: defaultColor,
+                    selectedColor: Constants.colors.quotes,
+                  ),
+                  fontWeight: quoteSelected ? selectedWeight : null,
                 ),
               ),
               label: Text("quote.names".tr()),
             ),
-            ActionChip(
-              color: authorSelected
-                  ? MaterialStateProperty.all(Constants.colors.authors)
-                  : null,
-              onPressed: () =>
-                  onSelectCategory?.call(EnumSearchCategory.authors),
+            FilterChip(
+              showCheckmark: false,
+              selected: authorSelected,
+              elevation: authorSelected ? 2.0 : 0.0,
+              selectedColor: Constants.colors.secondary,
+              onSelected: (bool _) => onSelectCategory?.call(
+                EnumSearchCategory.authors,
+              ),
               shape: const StadiumBorder(
                 side: BorderSide(
                   color: Colors.transparent,
@@ -75,15 +84,21 @@ class ChipCategorySelector extends StatelessWidget {
               label: Text("author.names".tr()),
               labelStyle: Utils.calligraphy.body(
                 textStyle: TextStyle(
-                  fontWeight: authorSelected ? FontWeight.w600 : null,
+                  color: getForegroundColor(
+                    selected: authorSelected,
+                    defaultColor: defaultColor,
+                    selectedColor: Constants.colors.authors,
+                  ),
+                  fontWeight: authorSelected ? selectedWeight : null,
                 ),
               ),
             ),
-            ActionChip(
-              color: referenceSelected
-                  ? MaterialStateProperty.all(Constants.colors.references)
-                  : null,
-              onPressed: () =>
+            FilterChip(
+              showCheckmark: false,
+              selected: referenceSelected,
+              elevation: referenceSelected ? 2.0 : 0.0,
+              selectedColor: Constants.colors.references,
+              onSelected: (bool _) =>
                   onSelectCategory?.call(EnumSearchCategory.references),
               shape: const StadiumBorder(
                 side: BorderSide(
@@ -93,12 +108,29 @@ class ChipCategorySelector extends StatelessWidget {
               label: Text("reference.names".tr()),
               labelStyle: Utils.calligraphy.body(
                 textStyle: TextStyle(
-                  color: referenceSelected ? Colors.black : defaultColor,
-                  fontWeight: referenceSelected ? FontWeight.w600 : null,
+                  color: getForegroundColor(
+                    selected: referenceSelected,
+                    defaultColor: defaultColor,
+                    selectedColor: Constants.colors.references,
+                  ),
+                  fontWeight: referenceSelected ? selectedWeight : null,
                 ),
               ),
             ),
           ],
         ));
+  }
+
+  /// Get the foreground color based on the selected state.
+  Color? getForegroundColor({
+    bool selected = false,
+    Color? defaultColor,
+    Color selectedColor = Colors.black,
+  }) {
+    if (!selected) {
+      return defaultColor;
+    }
+
+    return selectedColor.computeLuminance() < 0.5 ? Colors.white : Colors.black;
   }
 }

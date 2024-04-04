@@ -5,11 +5,14 @@ import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/empty_view.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/components/texts/draft_quote_text.dart";
+import "package:kwotes/globals/constants.dart";
 import "package:kwotes/types/draft_quote.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_quote_text_magnitude.dart";
 import "package:kwotes/types/quote.dart";
 import "package:super_context_menu/super_context_menu.dart";
+import "package:swipeable_tile/swipeable_tile.dart";
+import "package:vibration/vibration.dart";
 
 /// Body component page displaying quotes in validation.
 class InValidationPageBody extends StatelessWidget {
@@ -28,6 +31,7 @@ class InValidationPageBody extends StatelessWidget {
   /// Animate list's items if true.
   final bool animateList;
 
+  /// Adapt UI for dark mode if true.
   final bool isDark;
 
   /// Adapt UI for mobile size if true.
@@ -80,21 +84,127 @@ class InValidationPageBody extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           final DraftQuote quote = quotes[index];
           return ContextMenuWidget(
-            child: DraftQuoteText(
-              draftQuote: quote,
-              magnitude: isMobileSize
-                  ? EnumQuoteTextMagnitude.medium
-                  : EnumQuoteTextMagnitude.big,
-              onTap: onTap,
-            )
-                .animate()
-                .slideY(
-                  begin: 0.8,
-                  end: 0.0,
-                  curve: Curves.decelerate,
-                  duration: animateList ? 150.ms : 0.ms,
-                )
-                .fadeIn(),
+            child: SwipeableTile(
+              isElevated: false,
+              swipeThreshold: 0.3,
+              direction: onValidate != null
+                  ? SwipeDirection.horizontal
+                  : SwipeDirection.endToStart,
+              color: Theme.of(context).scaffoldBackgroundColor,
+              key: ValueKey(quote.id),
+              confirmSwipe: (SwipeDirection direction) {
+                if (direction == SwipeDirection.endToStart) {
+                  return Future.value(true);
+                } else if (direction == SwipeDirection.startToEnd &&
+                    onValidate != null) {
+                  onValidate?.call(quote);
+                  return Future.value(false);
+                }
+
+                return Future.value(false);
+              },
+              onSwiped: (SwipeDirection direction) {
+                if (direction == SwipeDirection.endToStart) {
+                  onDelete?.call(quote);
+                } else if (direction == SwipeDirection.startToEnd) {
+                  onValidate?.call(quote);
+                }
+              },
+              backgroundBuilder: (
+                BuildContext context,
+                SwipeDirection direction,
+                AnimationController progress,
+              ) {
+                bool vibrated = false;
+
+                return AnimatedBuilder(
+                  animation: progress,
+                  builder: (
+                    BuildContext context,
+                    Widget? child,
+                  ) {
+                    final bool triggered = progress.value >= 0.3;
+
+                    if (triggered && !vibrated) {
+                      Vibration.hasVibrator().then((bool? hasVibrator) {
+                        if (hasVibrator ?? false) {
+                          Vibration.vibrate(amplitude: 12);
+                        }
+                      });
+
+                      vibrated = true;
+                    } else if (!triggered) {
+                      vibrated = false;
+                    }
+
+                    if (direction == SwipeDirection.endToStart) {
+                      final Color color = triggered
+                          ? Constants.colors.delete
+                          : Constants.colors.delete.withOpacity(
+                              Constants.colors.swipeStartOpacity,
+                            );
+
+                      return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          color: color,
+                        ),
+                        child: const Align(
+                          alignment: Alignment.centerRight,
+                          child: Padding(
+                            padding: EdgeInsets.only(right: 24.0),
+                            child: Icon(
+                              TablerIcons.trash,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      );
+                    } else if (direction == SwipeDirection.startToEnd) {
+                      final Color color = triggered
+                          ? Constants.colors.edit
+                          : Constants.colors.edit.withOpacity(
+                              Constants.colors.swipeStartOpacity,
+                            );
+
+                      return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          color: color,
+                        ),
+                        child: const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 24.0),
+                            child: Icon(
+                              TablerIcons.check,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+
+                    return Container();
+                  },
+                );
+              },
+              child: DraftQuoteText(
+                draftQuote: quote,
+                magnitude: isMobileSize
+                    ? EnumQuoteTextMagnitude.medium
+                    : EnumQuoteTextMagnitude.big,
+                onTap: onTap,
+              )
+                  .animate()
+                  .slideY(
+                    begin: 0.8,
+                    end: 0.0,
+                    curve: Curves.decelerate,
+                    duration: animateList ? 150.ms : 0.ms,
+                  )
+                  .fadeIn(),
+            ),
             menuProvider: (MenuRequest menuRequest) {
               return Menu(
                 children: [

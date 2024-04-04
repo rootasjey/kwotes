@@ -116,6 +116,7 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
                     quotes: _quotes,
                     onCopy: onCopyQuote,
                     onCopyUrl: onCopyQuoteUrl,
+                    onOpenAddToList: onOpenAddToList,
                     onRemove: onRemove,
                     onTap: onTap,
                     onDoubleTap: onDoubleTap,
@@ -273,6 +274,19 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
     Utils.graphic.showSnackbar(
       context,
       message: "quote.copy.success.name".tr(),
+    );
+  }
+
+  /// Open add to list dialog.
+  void onOpenAddToList(Quote quote) {
+    final String userId =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value.id;
+
+    Utils.graphic.showAddToListDialog(
+      context,
+      isMobileSize: Utils.measurements.isMobileSize(context),
+      quotes: [quote],
+      userId: userId,
     );
   }
 

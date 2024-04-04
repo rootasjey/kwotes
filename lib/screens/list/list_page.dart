@@ -188,6 +188,7 @@ class _ListPageState extends State<ListPage> with UiLoggy {
                     onCopyQuote: onCopyQuote,
                     onCopyQuoteUrl: onCopyQuoteUrl,
                     onDoubleTap: onDoubleTap,
+                    onOpenAddToList: onOpenAddToList,
                     onRemoveFromList: onRemoveFromList,
                     onShareImage: onShareImage,
                     onShareLink: onShareLink,
@@ -490,6 +491,19 @@ class _ListPageState extends State<ListPage> with UiLoggy {
     }
 
     _prevName = name;
+  }
+
+  /// Open add to list dialog.
+  void onOpenAddToList(Quote quote) {
+    final String userId =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value.id;
+
+    Utils.graphic.showAddToListDialog(
+      context,
+      isMobileSize: Utils.measurements.isMobileSize(context),
+      quotes: [quote],
+      userId: userId,
+    );
   }
 
   /// Remove a quote from a list.

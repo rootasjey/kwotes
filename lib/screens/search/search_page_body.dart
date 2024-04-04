@@ -22,12 +22,15 @@ class SearchPageBody extends StatelessWidget {
     this.margin = EdgeInsets.zero,
     this.searchCategory = EnumSearchCategory.quotes,
     this.authorResults = const [],
+    this.onOpenAddQuoteToList,
     this.onRefreshSearch,
     this.onReinitializeSearch,
     this.onTapAuthor,
     this.onTapReference,
     this.onTapQuote,
+    this.onToggleLike,
     this.referenceResults = const [],
+    this.userId = "",
   });
 
   /// Adapt UI for dark mode if true.
@@ -59,6 +62,9 @@ class SearchPageBody extends StatelessWidget {
   /// The specific category we are searching.
   final EnumSearchCategory searchCategory;
 
+  /// Callback fired to add a quote to a list.
+  final void Function(Quote quote)? onOpenAddQuoteToList;
+
   /// Callback fired to refresh the search.
   final void Function()? onRefreshSearch;
 
@@ -73,6 +79,15 @@ class SearchPageBody extends StatelessWidget {
 
   /// Callback fired when quote name is tapped.
   final void Function(Quote quote)? onTapQuote;
+
+  /// Callback fired to like or unlike a quote.
+  final void Function(Quote quote)? onToggleLike;
+
+  /// User ID.
+  /// Used to check if user can add a quote to a list or like a quote.
+  /// If user is not logged in, this will be empty.
+  /// Filled otherwise.
+  final String userId;
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +120,10 @@ class SearchPageBody extends StatelessWidget {
         isMobileSize: isMobileSize,
         margin: margin,
         quoteResults: quoteResults,
+        onOpenAddToList: onOpenAddQuoteToList,
         onTapQuote: onTapQuote,
+        onToggleLike: onToggleLike,
+        userId: userId,
       );
     }
 

@@ -7,6 +7,7 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
+import "package:flutter_solidart/flutter_solidart.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
@@ -23,6 +24,7 @@ import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_search_category.dart";
+import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/firestore/document_change_map.dart";
 import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/firestore/query_doc_snap_map.dart";
@@ -32,6 +34,7 @@ import "package:kwotes/types/firestore/query_snapshot_stream_subscription.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/reference.dart";
 import "package:kwotes/types/topic.dart";
+import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
 
 class SearchPage extends StatefulWidget {
@@ -169,6 +172,9 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
+    final Signal<UserFirestore> signalUserFirestore =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+
     return SafeArea(
       child: Scaffold(
         body: Stack(
@@ -213,21 +219,33 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                         ),
                       ),
                     ),
-                    SearchPageBody(
-                      authorResults: _authorResults,
-                      isDark: isDark,
-                      isMobileSize: isMobileSize,
-                      isQueryEmpty: _searchInputController.text.isEmpty,
-                      margin: marginBoddy,
-                      onRefreshSearch: search,
-                      onReinitializeSearch: onClearInput,
-                      onTapQuote: onTapQuote,
-                      onTapAuthor: onTapAuthor,
-                      onTapReference: onTapReference,
-                      pageState: _pageState,
-                      quoteResults: _quoteResults,
-                      referenceResults: _referenceResults,
-                      searchCategory: _searchCategory,
+                    SignalBuilder(
+                      signal: signalUserFirestore,
+                      builder: (
+                        BuildContext context,
+                        UserFirestore userFirestore,
+                        Widget? child,
+                      ) {
+                        return SearchPageBody(
+                          authorResults: _authorResults,
+                          isDark: isDark,
+                          isMobileSize: isMobileSize,
+                          isQueryEmpty: _searchInputController.text.isEmpty,
+                          margin: marginBoddy,
+                          onOpenAddQuoteToList: onOpenAddQuoteToList,
+                          onRefreshSearch: search,
+                          onReinitializeSearch: onClearInput,
+                          onTapQuote: onTapQuote,
+                          onTapAuthor: onTapAuthor,
+                          onTapReference: onTapReference,
+                          onToggleLike: onToggleLike,
+                          pageState: _pageState,
+                          quoteResults: _quoteResults,
+                          referenceResults: _referenceResults,
+                          searchCategory: _searchCategory,
+                          userId: userFirestore.id,
+                        );
+                      },
                     ),
                     Showcase(
                       authors: _authorList,
@@ -390,6 +408,25 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
   }
 
+  Future<bool> fetchLikeForUser(String quoteId) async {
+    try {
+      final Signal<UserFirestore> currentUser =
+          context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+
+      final DocumentSnapshotMap doc = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(currentUser.value.id)
+          .collection("favourites")
+          .doc(quoteId)
+          .get();
+
+      return doc.exists;
+    } catch (error) {
+      loggy.error(error.toString());
+      return Future.value(false);
+    }
+  }
+
   /// Try to fetch references alphabetically in Firestore.
   void fetchReferences({
     bool reinit = false,
@@ -494,6 +531,8 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
         if (data == null) continue;
 
         data["id"] = doc.id;
+        final bool starred = await fetchLikeForUser(data["id"]);
+        data["starred"] = starred;
         final Quote quote = Quote.fromMap(data);
         _quoteResults.add(quote);
       }
@@ -782,6 +821,19 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     fetchShowcaseData();
   }
 
+  /// Callback fired to open add quote to list dialog.
+  void onOpenAddQuoteToList(Quote quote) {
+    final String userId =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value.id;
+
+    Utils.graphic.showAddToListDialog(
+      context,
+      isMobileSize: Utils.measurements.isMobileSize(context),
+      quotes: [quote],
+      userId: userId,
+    );
+  }
+
   /// Callback event when scrolling.
   void onScroll(double offset) {
     if (!_hasMoreResults) {
@@ -957,6 +1009,52 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
         ),
       ),
     );
+  }
+
+  /// Callback fired when a quote is liked or unliked.
+  void onToggleLike(Quote quote) async {
+    final int index = _quoteResults.indexWhere((x) => x.id == quote.id);
+    if (index != -1) {
+      setState(() {
+        _quoteResults[index] = quote.copyWith(starred: !quote.starred);
+      });
+    }
+
+    try {
+      final Signal<UserFirestore> currentUser =
+          context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+
+      final DocumentSnapshotMap doc = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(currentUser.value.id)
+          .collection("favourites")
+          .doc(quote.id)
+          .get();
+
+      if (doc.exists) {
+        await FirebaseFirestore.instance
+            .collection("users")
+            .doc(currentUser.value.id)
+            .collection("favourites")
+            .doc(quote.id)
+            .delete();
+        return;
+      }
+
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(currentUser.value.id)
+          .collection("favourites")
+          .doc(quote.id)
+          .set(quote.toMapFavourite());
+    } catch (error) {
+      loggy.error(error.toString());
+      if (index != -1) {
+        setState(() {
+          _quoteResults[index] = quote.copyWith(starred: quote.starred);
+        });
+      }
+    }
   }
 
   /// Build the query to search authors.
@@ -1155,6 +1253,8 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
         final Json data = hit.data;
         data["id"] = hit.objectID;
 
+        final bool starred = await fetchLikeForUser(data["id"]);
+        data["starred"] = starred;
         final Quote quote = Quote.fromMap(data);
         _quoteResults.add(quote);
       }
