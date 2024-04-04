@@ -1178,6 +1178,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.4"
+  swipeable_tile:
+    dependency: "direct main"
+    description:
+      name: swipeable_tile
+      sha256: "6312b59b14c5ff22bf91aafa64d7e74df5f2322cb206db4c34d9d9946e3e44d4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   term_glyph:
     dependency: transitive
     description:
@@ -1314,6 +1322,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  vibration:
+    dependency: "direct main"
+    description:
+      name: vibration
+      sha256: "778ace40e84852e6cf6017cdbaf6790a837d73ff3dd50b27da9ac232a19de8fc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.8.4"
   vm_service:
     dependency: transitive
     description:
