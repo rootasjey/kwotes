@@ -111,6 +111,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
       quote: _quote,
       windowSize: windowSize,
       style: Utils.calligraphy.body(),
+      maxFontSize: windowSize.width < 500 ? 18.0 : null,
     );
 
     final bool isMobileSize =

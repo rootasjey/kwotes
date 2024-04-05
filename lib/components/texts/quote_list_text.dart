@@ -88,7 +88,7 @@ class _QuoteListTextState extends State<QuoteListText> {
       return Padding(
         padding: widget.margin,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TextField(
               autofocus: true,
@@ -157,8 +157,8 @@ class _QuoteListTextState extends State<QuoteListText> {
                       ),
                       backgroundColor: _nameController.text.isEmpty
                           ? null
-                          : Constants.colors.authors.withOpacity(0.1),
-                      foregroundColor: Constants.colors.authors,
+                          : Constants.colors.lists.withOpacity(0.1),
+                      foregroundColor: Constants.colors.lists,
                       textStyle: Utils.calligraphy.body4(
                         textStyle: const TextStyle(
                           fontWeight: FontWeight.w600,
@@ -187,7 +187,7 @@ class _QuoteListTextState extends State<QuoteListText> {
         onHover: (bool isHover) {
           if (isHover) {
             setState(() {
-              _textShadowColor = Constants.colors.authors;
+              _textShadowColor = Constants.colors.lists;
             });
 
             return;
@@ -198,7 +198,7 @@ class _QuoteListTextState extends State<QuoteListText> {
           });
         },
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Hero(
               tag: quoteList.id,

@@ -84,8 +84,8 @@ class MyQuotesPageHeader extends StatelessWidget {
           ),
         ),
         Wrap(
-          spacing: 8.0,
-          runSpacing: 8.0,
+          spacing: 12.0,
+          runSpacing: 12.0,
           children: [
             MyQuotesTabData(
               textLabel: "drafts.name".tr(),

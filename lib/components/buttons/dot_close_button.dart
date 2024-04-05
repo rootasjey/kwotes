@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/globals/utils.dart";
 
 /// A close button in the shape of a little pink dot.
 class DotCloseButton extends StatefulWidget {
@@ -7,7 +8,11 @@ class DotCloseButton extends StatefulWidget {
     Key? key,
     this.onTap,
     this.tooltip = "cancel",
+    this.backgroundColor = Colors.pink,
   }) : super(key: key);
+
+  /// Background color of the button.
+  final Color? backgroundColor;
 
   /// Fire when the user tap on this button.
   final Function()? onTap;
@@ -25,8 +30,8 @@ class _DotCloseButtonState extends State<DotCloseButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Tooltip(
-      message: widget.tooltip,
+    return Utils.graphic.tooltip(
+      tooltipString: widget.tooltip,
       child: InkWell(
         onTap: widget.onTap,
         onHover: onHover,
@@ -34,7 +39,7 @@ class _DotCloseButtonState extends State<DotCloseButton> {
           width: 16.0,
           height: 16.0,
           decoration: BoxDecoration(
-            color: Theme.of(context).secondaryHeaderColor,
+            color: widget.backgroundColor,
             shape: BoxShape.circle,
           ),
           child: Opacity(

@@ -60,7 +60,7 @@ class ShowcaseAuthors extends StatelessWidget {
             initialForegroundColor: foregroundColor?.withOpacity(0.8),
             isMobileSize: isMobileSize,
             onTap: onTapAuthor != null ? () => onTapAuthor?.call(author) : null,
-            textValue: author.name.toLowerCase(),
+            textValue: author.name,
           ).animate().fadeIn(duration: 125.ms).scale(
                 begin: const Offset(1.1, 1.1),
                 end: const Offset(1.0, 1.0),

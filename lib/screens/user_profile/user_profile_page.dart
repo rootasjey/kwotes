@@ -46,18 +46,28 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       heroTag: "user-avatar",
                       onTap: onTapUserAvatar,
                       radius: 24.0,
+                      margin: const EdgeInsets.only(bottom: 6.0),
                       imageProvider: const AssetImage(
                         "assets/images/profile-picture-avocado.png",
                       ),
                     ),
-                    Text(
-                      userFirestore.name,
-                      style: Utils.calligraphy.body(
-                        textStyle: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w500,
-                          color: foregroundColor?.withOpacity(0.8),
-                          backgroundColor: Constants.colors.getRandomPastel(),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Constants.colors.getRandomPastel(),
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6.0,
+                        vertical: 0.0,
+                      ),
+                      child: Text(
+                        userFirestore.name,
+                        style: Utils.calligraphy.body(
+                          textStyle: const TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                     ),
@@ -110,7 +120,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 children: [
                                   Icon(
                                     TablerIcons.logout,
-                                    color: foregroundColor?.withOpacity(0.6),
+                                    color: Colors.black.withOpacity(0.8),
                                     size: 18.0,
                                   ),
                                   Padding(
@@ -122,7 +132,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                               labelStyle: Utils.calligraphy.body(
                                 textStyle: TextStyle(
                                   fontWeight: FontWeight.w500,
-                                  color: foregroundColor?.withOpacity(0.6),
+                                  color: Colors.black.withOpacity(0.8),
                                 ),
                               ),
                             ),

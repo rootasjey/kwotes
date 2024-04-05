@@ -34,6 +34,20 @@ class DashboardCardSection extends StatelessWidget {
         children: [
           DashboardCard(
             compact: isMobileSize,
+            hoverColor: Constants.colors.inValidation,
+            iconData: TablerIcons.note,
+            isDark: isDark,
+            textSubtitle: "my_quotes.description".tr(),
+            textTitle: "my_quotes.name".tr(),
+            heroKey: "my_quotes",
+            onTap: () {
+              context.beamToNamed(
+                DashboardContentLocation.myQuotesRoute,
+              );
+            },
+          ),
+          DashboardCard(
+            compact: isMobileSize,
             iconData: TablerIcons.heart,
             isDark: isDark,
             hoverColor: Constants.colors.likes,
@@ -57,20 +71,6 @@ class DashboardCardSection extends StatelessWidget {
             onTap: () {
               context.beamToNamed(
                 DashboardContentLocation.listsRoute,
-              );
-            },
-          ),
-          DashboardCard(
-            compact: isMobileSize,
-            hoverColor: Constants.colors.inValidation,
-            iconData: TablerIcons.note,
-            isDark: isDark,
-            textSubtitle: "my_quotes.description".tr(),
-            textTitle: "my_quotes.name".tr(),
-            heroKey: "my_quotes",
-            onTap: () {
-              context.beamToNamed(
-                DashboardContentLocation.myQuotesRoute,
               );
             },
           ),

@@ -63,7 +63,7 @@ class ShowcaseReferences extends StatelessWidget {
             onTap: onTapReference != null
                 ? () => onTapReference?.call(reference)
                 : null,
-            textValue: reference.name.toLowerCase(),
+            textValue: reference.name,
           ).animate().fadeIn(duration: 125.ms).scale(
                 begin: const Offset(1.1, 1.1),
                 end: const Offset(1.0, 1.0),
