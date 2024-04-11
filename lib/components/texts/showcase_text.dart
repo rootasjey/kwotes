@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:kwotes/components/better_avatar.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 
@@ -14,6 +15,7 @@ class ShowcaseText extends StatefulWidget {
     this.docId = "",
     this.index = 0,
     this.initialForegroundColor,
+    this.imageProvider,
   });
 
   /// Whether to adapt UI to dark theme.
@@ -36,6 +38,9 @@ class ShowcaseText extends StatefulWidget {
 
   // Callback fired when text is tapped.
   final void Function()? onTap;
+
+  /// Image provider for avatar if any.
+  final ImageProvider? imageProvider;
 
   /// Document ID for hero animation transition.
   final String docId;
@@ -82,6 +87,8 @@ class _ShowcaseTextState extends State<ShowcaseText> {
       initProps();
     }
 
+    final ImageProvider? imageProvider = widget.imageProvider;
+
     return Padding(
       padding: widget.margin,
       child: InkWell(
@@ -96,18 +103,34 @@ class _ShowcaseTextState extends State<ShowcaseText> {
         },
         child: Padding(
           padding: widget.padding,
-          child: Hero(
-            tag: widget.docId,
-            child: Text(
-              widget.textValue,
-              style: Utils.calligraphy.body4(
-                textStyle: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w200,
-                  color: _foregroundColor,
+          child: Row(
+            children: [
+              Expanded(
+                child: Hero(
+                  tag: widget.docId,
+                  child: Text(
+                    widget.textValue,
+                    style: Utils.calligraphy.body(
+                      textStyle: TextStyle(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.w200,
+                        color: _foregroundColor,
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
+              if (imageProvider != null)
+                BetterAvatar(
+                  imageProvider: imageProvider,
+                  radius: 16.0,
+                  colorFilter: const ColorFilter.mode(
+                    Colors.grey,
+                    BlendMode.saturation,
+                  ),
+                  margin: const EdgeInsets.only(right: 8.0),
+                ),
+            ],
           ),
         ),
       ),

@@ -13,6 +13,7 @@ import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/globals/utils/linguistic.dart";
 import "package:kwotes/router/locations/search_location.dart";
+import "package:kwotes/router/locations/settings_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/search/chip_category_selector.dart";
 import "package:kwotes/screens/search/search_input.dart";
@@ -36,6 +37,7 @@ import "package:kwotes/types/reference.dart";
 import "package:kwotes/types/topic.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
+import "package:wave_divider/wave_divider.dart";
 
 class SearchPage extends StatefulWidget {
   const SearchPage({
@@ -194,6 +196,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                       padding: padding,
                       onTapCancelButton: onTapCancelButton,
                       onTapClearIconButton: onClearInput,
+                      onTapUserAvatar: onTapUserAvatar,
                       searchCategory: _searchCategory,
                       isMobileSize: isMobileSize,
                       bottom: Padding(
@@ -218,6 +221,9 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                           ],
                         ),
                       ),
+                    ),
+                    const SliverToBoxAdapter(
+                      child: WaveDivider(),
                     ),
                     SignalBuilder(
                       signal: signalUserFirestore,
@@ -1347,5 +1353,11 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
 
     setState(() => _searchCategory = searchCategory);
+  }
+
+  void onTapUserAvatar() {
+    Beamer.of(context, root: true).beamToNamed(
+      SettingsLocation.route,
+    );
   }
 }

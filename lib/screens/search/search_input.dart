@@ -3,6 +3,7 @@ import "dart:ui";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/better_avatar.dart";
 import "package:kwotes/components/buttons/circle_button.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
@@ -18,6 +19,7 @@ class SearchInput extends StatelessWidget {
     this.onChangedTextField,
     this.onTapClearIconButton,
     this.onTapCancelButton,
+    this.onTapUserAvatar,
     this.inputController,
     this.focusNode,
     this.bottom,
@@ -45,6 +47,9 @@ class SearchInput extends StatelessWidget {
   /// Callback fired when cancel button is tapped.
   final void Function()? onTapCancelButton;
 
+  /// Callback fired when user avatar is tapped.
+  final void Function()? onTapUserAvatar;
+
   /// Search input controller.
   final TextEditingController? inputController;
 
@@ -54,6 +59,7 @@ class SearchInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String hintText = "${"search.${searchCategory.name}".tr()}...";
+    final BorderRadius borderRadius = BorderRadius.circular(24.0);
 
     int hintMaxLines = 1;
     if (inputController == null || inputController!.text.isEmpty) {
@@ -62,10 +68,10 @@ class SearchInput extends StatelessWidget {
 
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final bool isInputEmpty = inputController?.text.isEmpty ?? true;
-    final Color foregroundColor =
-        Theme.of(context).textTheme.bodyMedium?.color ?? Colors.white;
 
-    final Color backgroundColor = isDark ? Colors.black : Colors.white;
+    final Color backgroundColor =
+        isDark ? Colors.black : Theme.of(context).scaffoldBackgroundColor;
+    // final Color backgroundColor = isDark ? Colors.black : Colors.white;
 
     final Widget clearIcon = Padding(
       padding: const EdgeInsets.all(8.0),
@@ -110,6 +116,15 @@ class SearchInput extends StatelessWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  BetterAvatar(
+                    heroTag: "user-avatar",
+                    onTap: onTapUserAvatar,
+                    radius: 18.0,
+                    margin: const EdgeInsets.only(right: 8.0),
+                    imageProvider: const AssetImage(
+                      "assets/images/profile-picture-avocado.jpg",
+                    ),
+                  ),
                   Expanded(
                     child: AnimatedSize(
                       duration: const Duration(milliseconds: 125),
@@ -133,25 +148,27 @@ class SearchInput extends StatelessWidget {
                         decoration: InputDecoration(
                           hintText: hintText,
                           isDense: true,
+                          filled: true,
+                          fillColor: Constants.colors.primary.withOpacity(0.1),
                           suffixIcon: isInputEmpty ? null : clearIcon,
                           border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: foregroundColor,
+                            borderSide: const BorderSide(
+                              color: Colors.transparent,
                             ),
-                            borderRadius: BorderRadius.circular(12.0),
+                            borderRadius: borderRadius,
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.deepPurple.shade400,
+                            borderSide: const BorderSide(
+                              color: Colors.transparent,
                               width: 1.6,
                             ),
-                            borderRadius: BorderRadius.circular(12.0),
+                            borderRadius: borderRadius,
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: foregroundColor,
+                            borderSide: const BorderSide(
+                              color: Colors.transparent,
                             ),
-                            borderRadius: BorderRadius.circular(12.0),
+                            borderRadius: borderRadius,
                           ),
                           hintMaxLines: hintMaxLines,
                           contentPadding: const EdgeInsets.symmetric(
