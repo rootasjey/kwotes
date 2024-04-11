@@ -149,7 +149,7 @@ class MyQuotesPageHeader extends StatelessWidget {
     );
   }
 
-  getChipSelectedColor(EnumMyQuotesTab tab) {
+  Color getChipSelectedColor(EnumMyQuotesTab tab) {
     switch (tab) {
       case EnumMyQuotesTab.drafts:
         return Constants.colors.drafts;

@@ -15,6 +15,7 @@ class StorageKeys {
   static const String fullscreenQuotePage = "fullscreen_quote_page";
   static const String heroImageControlVivisible = "hero_image_control_visible";
   static const String homePageTabIndex = "home_page_tab_index";
+  static const String myQuotesPageTabIndex = "my_quotes_page_tab_index";
   static const String frameBorderStyle = "frame_border_style";
   static const String imageShareColor = "image_share_color";
   static const String imageShareTextColor = "image_share_text_color";

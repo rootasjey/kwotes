@@ -1,6 +1,7 @@
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
@@ -19,6 +20,7 @@ import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_my_quotes_tab.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/user/user_firestore.dart";
+import "package:wave_divider/wave_divider.dart";
 
 class MyQuotesPage extends StatefulWidget {
   const MyQuotesPage({super.key});
@@ -69,47 +71,60 @@ class _MyQuotesPageState extends State<MyQuotesPage> {
       ),
     ];
 
-    return Scaffold(
-      floatingActionButton: Utils.graphic.tooltip(
-        tooltipString: "quote.new".tr(),
-        child: FloatingActionButton(
-          onPressed: onPressedFab,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          foregroundColor: Theme.of(context).textTheme.bodyMedium?.color,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
-            side: BorderSide(
-              color: Theme.of(context)
-                      .textTheme
-                      .bodyMedium
-                      ?.color
-                      ?.withOpacity(0.2) ??
-                  Colors.black12,
-            ),
-          ),
-          child: const Icon(TablerIcons.message_2_plus),
-        ),
-      ),
-      body: ImprovedScrolling(
-        scrollController: _pageScrollController,
-        child: ScrollConfiguration(
-          behavior: const CustomScrollBehavior(),
-          child: CustomScrollView(
-            controller: _pageScrollController,
-            slivers: [
-              PageAppBar(
-                isMobileSize: isMobileSize,
-                toolbarHeight: isMobileSize ? 200.0 : 282.0,
-                children: [
-                  MyQuotesPageHeader(
-                    onTapTitle: onTapTitle,
-                    selectedTab: _selectedTab,
-                    onSelectTab: onSelectTab,
-                  ),
-                ],
+    return SafeArea(
+      child: Scaffold(
+        floatingActionButton: Utils.graphic.tooltip(
+          tooltipString: "quote.new".tr(),
+          child: FloatingActionButton(
+            onPressed: onPressedFab,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            foregroundColor: Theme.of(context).textTheme.bodyMedium?.color,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+              side: BorderSide(
+                color: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.color
+                        ?.withOpacity(0.1) ??
+                    Colors.black12,
               ),
-              bodyChildren[getSelectedTabIndex(_selectedTab)],
-            ],
+            ),
+            child: const Icon(TablerIcons.message_2_plus),
+          ),
+        ),
+        body: ImprovedScrolling(
+          scrollController: _pageScrollController,
+          child: ScrollConfiguration(
+            behavior: const CustomScrollBehavior(),
+            child: CustomScrollView(
+              controller: _pageScrollController,
+              slivers: [
+                PageAppBar(
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                  isMobileSize: isMobileSize,
+                  toolbarHeight: isMobileSize ? 200.0 : 282.0,
+                  children: [
+                    MyQuotesPageHeader(
+                      onTapTitle: onTapTitle,
+                      selectedTab: _selectedTab,
+                      onSelectTab: onSelectTab,
+                    ),
+                  ],
+                ),
+                SliverToBoxAdapter(
+                  child: const WaveDivider(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 24.0,
+                    ),
+                  ).animate().fadeIn(
+                        duration: const Duration(milliseconds: 1500),
+                        begin: 0.0,
+                      ),
+                ),
+                bodyChildren[getSelectedTabIndex(_selectedTab)],
+              ],
+            ),
           ),
         ),
       ),
@@ -119,7 +134,13 @@ class _MyQuotesPageState extends State<MyQuotesPage> {
   void initProps() async {
     _selectedLanguage = await Utils.vault.getPageLanguage();
     _selectedOwnership = await Utils.vault.getDataOwnership();
-    setState(() {});
+    final int savedTabIndex = await Utils.vault.getMyQuotesPageTabIndex();
+
+    setState(() {
+      if (savedTabIndex != -1) {
+        _selectedTab = EnumMyQuotesTab.values[savedTabIndex];
+      }
+    });
   }
 
   void onTapTitle() {
@@ -147,6 +168,7 @@ class _MyQuotesPageState extends State<MyQuotesPage> {
       return;
     }
 
+    Utils.vault.setMyQuotesPageTabIndex(getSelectedTabIndex(newTab));
     setState(() => _selectedTab = newTab);
   }
 
@@ -231,7 +253,7 @@ class _MyQuotesPageState extends State<MyQuotesPage> {
     );
   }
 
-  getChipSelectedColor(EnumMyQuotesTab newTab) {
+  Color getChipSelectedColor(EnumMyQuotesTab newTab) {
     switch (newTab) {
       case EnumMyQuotesTab.drafts:
         return Constants.colors.drafts;

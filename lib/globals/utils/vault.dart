@@ -142,6 +142,16 @@ class Vault {
     return await Glutton.vomit(StorageKeys.homePageTabIndex, 0);
   }
 
+  /// Return the last saved value for my quotes page tab index.
+  Future<int> getMyQuotesPageTabIndex() async {
+    return await Glutton.vomit(StorageKeys.myQuotesPageTabIndex, 0);
+  }
+
+  /// Saves my quotes page tab index.
+  void setMyQuotesPageTabIndex(int index) {
+    Glutton.eat(StorageKeys.myQuotesPageTabIndex, index);
+  }
+
   void setAuthorMetadataOpened(bool isOpen) {
     Glutton.eat(StorageKeys.authorMetadataOpened, isOpen);
   }
