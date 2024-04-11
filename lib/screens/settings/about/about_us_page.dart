@@ -1,12 +1,15 @@
+import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/buttons/colored_text_button.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/screens/settings/settings_page_header.dart";
+import "package:wave_divider/wave_divider.dart";
 
-class ThePurposePage extends StatelessWidget {
-  const ThePurposePage({super.key});
+class AboutUsPage extends StatelessWidget {
+  const AboutUsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +26,15 @@ class ThePurposePage extends StatelessWidget {
       child: Scaffold(
         body: CustomScrollView(
           slivers: [
+            SettingsPageHeader(
+              isMobileSize: isMobileSize,
+              onTapBackButton: context.beamBack,
+              title: "about.us".tr(),
+            ),
             SliverPadding(
               padding: isMobileSize
                   ? const EdgeInsets.only(
-                      top: 24.0,
+                      top: 0.0,
                       left: 24.0,
                       right: 24.0,
                       bottom: 200.0,
@@ -37,28 +45,33 @@ class ThePurposePage extends StatelessWidget {
                     ),
               sliver: SliverToBoxAdapter(
                 child: FractionallySizedBox(
-                  widthFactor: isMobileSize ? 1.0 : 0.80,
+                  widthFactor: isMobileSize ? 0.90 : 0.80,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      IconButton(
-                        onPressed: () => Utils.passage.deepBack(context),
-                        icon: const Icon(TablerIcons.arrow_left),
-                        style: IconButton.styleFrom(
-                          backgroundColor: accentColor.withOpacity(0.1),
+                      if (!isMobileSize)
+                        IconButton(
+                          onPressed: () => Utils.passage.deepBack(context),
+                          icon: const Icon(TablerIcons.arrow_left),
+                          style: IconButton.styleFrom(
+                            backgroundColor: accentColor.withOpacity(0.1),
+                          ),
                         ),
-                      ),
-                      Text(
-                        "purpose.name".tr(),
-                        style: Utils.calligraphy.body(
-                          textStyle: TextStyle(
-                            fontSize: 84.0,
-                            fontWeight: FontWeight.w700,
-                            color: Constants.colors.getRandomFromPalette(
-                              onlyDarkerColors: true,
+                      if (!isMobileSize)
+                        Text(
+                          "purpose.name".tr(),
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 84.0,
+                              fontWeight: FontWeight.w700,
+                              color: Constants.colors.getRandomFromPalette(
+                                onlyDarkerColors: true,
+                              ),
                             ),
                           ),
                         ),
+                      const WaveDivider(
+                        padding: EdgeInsets.symmetric(vertical: 24.0),
                       ),
                       Text.rich(
                         TextSpan(
@@ -98,7 +111,7 @@ class ThePurposePage extends StatelessWidget {
                         ),
                         style: Utils.calligraphy.body(
                           textStyle: TextStyle(
-                            fontSize: 24.0,
+                            fontSize: isMobileSize ? 16.0 : 24.0,
                             fontWeight: FontWeight.w300,
                             color: foregroundColor?.withOpacity(0.6),
                           ),

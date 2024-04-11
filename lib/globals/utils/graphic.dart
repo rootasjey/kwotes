@@ -252,9 +252,36 @@ class Graphic with UiLoggy {
     BuildContext context, {
     required Widget Function(BuildContext) builder,
     bool isMobileSize = false,
-    Color backgroundColor = Colors.white,
+    Color? backgroundColor,
   }) {
     if (isMobileSize) {
+      // showFlexibleBottomSheet(
+      //   context: context,
+      //   minHeight: 0.0,
+      //   initHeight: 0.5,
+      //   maxHeight: 0.9,
+      //   anchors: [0.0, 0.9],
+      //   bottomSheetBorderRadius: const BorderRadius.only(
+      //     topLeft: Radius.circular(12.0),
+      //     topRight: Radius.circular(12.0),
+      //   ),
+      //   builder: (
+      //     BuildContext context,
+      //     scrollController,
+      //     bottomSheetOffset,
+      //   ) {
+      //     return builder;
+      //     // return AddToListDialog(
+      //     //   asBottomSheet: isMobileSize,
+      //     //   autofocus: autofocus,
+      //     //   startInCreate: startInCreate,
+      //     //   userId: userId,
+      //     //   quotes: quotes,
+      //     //   scrollController: scrollController,
+      //     //   selectedColor: selectedColor,
+      //     // );
+      //   },
+      // );
       return showModalBottomSheet(
         context: context,
         builder: builder,
@@ -262,9 +289,10 @@ class Graphic with UiLoggy {
         isScrollControlled: true,
         useSafeArea: true,
         showDragHandle: true,
+        backgroundColor: backgroundColor,
         clipBehavior: Clip.hardEdge,
         constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height - 100.0,
+          maxHeight: MediaQuery.of(context).size.height - 24.0,
         ),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(

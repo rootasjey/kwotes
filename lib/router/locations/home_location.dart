@@ -1,5 +1,6 @@
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
+import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
 import "package:kwotes/screens/add_quote/add_quote_page.dart";
 import "package:kwotes/screens/author/author_page.dart";
@@ -9,6 +10,7 @@ import "package:kwotes/screens/home/home_page.dart";
 import "package:kwotes/screens/home/app_location_container.dart";
 import "package:kwotes/screens/quote_page/quote_page.dart";
 import "package:kwotes/screens/reference/edit_reference_page.dart";
+import "package:kwotes/screens/settings_dialog_page.dart";
 import "package:kwotes/screens/topic_page/topic_page.dart";
 import "package:kwotes/screens/reference/reference_page.dart";
 import "package:kwotes/screens/reference/reference_quotes_page.dart";
@@ -26,12 +28,16 @@ class HomeLocation extends BeamLocation<BeamState> {
   /// Search location for deep navigation.
   static const String searchRoute = "/s/*";
 
+  /// Settings location for deep navigation.
+  static const String settingsRoute = "/settings/*";
+
   @override
   List<Pattern> get pathPatterns => [
         dashboardRoute,
         homeRoute,
         route,
         searchRoute,
+        settingsRoute,
       ];
 
   @override
@@ -43,6 +49,14 @@ class HomeLocation extends BeamLocation<BeamState> {
         title: "page_title.home".tr(),
         type: BeamPageType.fadeTransition,
       ),
+      if (state.pathPatternSegments.contains("settings"))
+        BeamPage(
+          child: const SettingsDialogPage(),
+          key: const ValueKey(settingsRoute),
+          title: "page_title.settings".tr(),
+          type: BeamPageType.fadeTransition,
+          opaque: false,
+        ),
     ];
   }
 }

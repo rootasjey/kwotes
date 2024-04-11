@@ -219,6 +219,8 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
       });
     } catch (error) {
       loggy.error(error);
+
+      if (!mounted) return;
       setState(() {
         _pageState = EnumPageState.idle;
       });

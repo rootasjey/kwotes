@@ -5,6 +5,7 @@ import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
@@ -30,6 +31,7 @@ import "package:kwotes/types/intents/escape_intent.dart";
 import "package:kwotes/types/quote_list.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
+import "package:wave_divider/wave_divider.dart";
 
 class ListsPage extends StatefulWidget {
   const ListsPage({super.key});
@@ -153,8 +155,9 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
               child: CustomScrollView(
                 slivers: [
                   PageAppBar(
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                     isMobileSize: isMobileSize,
-                    toolbarHeight: isMobileSize ? 200.0 : 242.0,
+                    toolbarHeight: isMobileSize ? 180.0 : 242.0,
                     children: [
                       ListsPageHeader(
                         isMobileSize: isMobileSize,
@@ -171,6 +174,17 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
                     onCreate: onCreateActive ? tryCreateList : null,
                     onDescriptionChanged: onListDescriptionChanged,
                     onNameChanged: onListNameChanged,
+                  ),
+                  SliverToBoxAdapter(
+                    child: const WaveDivider(
+                      padding: EdgeInsets.only(
+                        bottom: 32.0,
+                        top: 12.0,
+                      ),
+                    ).animate().fadeIn(
+                          duration: const Duration(milliseconds: 1500),
+                          begin: 0.0,
+                        ),
                   ),
                   ListsPageBody(
                     animateList: _animateList,

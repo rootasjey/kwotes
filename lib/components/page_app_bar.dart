@@ -13,6 +13,10 @@ class PageAppBar extends StatelessWidget {
     this.axis = Axis.vertical,
     this.isMobileSize = false,
     this.toolbarHeight = 200.0,
+    this.elevation,
+    this.scrolledUnderElevation,
+    this.surfaceTint,
+    this.shadowColor,
     this.children = const [],
     this.hideBackButton = false,
     this.backgroundColor,
@@ -30,8 +34,21 @@ class PageAppBar extends StatelessWidget {
   /// App bar's background color.
   final Color? backgroundColor;
 
+  /// App bar's surface tint color.
+  /// The color of the surface tint overlay applied to the app bar's background color to indicate elevation.
+  final Color? surfaceTint;
+
+  /// App bar's shadow color.
+  final Color? shadowColor;
+
   /// App bar's toolbar height.
   final double toolbarHeight;
+
+  /// App bar's elevation when there's something behind.
+  final double? scrolledUnderElevation;
+
+  /// App bar elevation.
+  final double? elevation;
 
   // /// Page's title children.
   final List<Widget> children;
@@ -80,9 +97,12 @@ class PageAppBar extends StatelessWidget {
       floating: true,
       snap: true,
       pinned: false,
-      elevation: 6.0,
+      elevation: elevation,
+      scrolledUnderElevation: scrolledUnderElevation,
       toolbarHeight: toolbarHeight,
       centerTitle: false,
+      surfaceTintColor: surfaceTint,
+      shadowColor: shadowColor,
       backgroundColor: backgroundColor,
       automaticallyImplyLeading: false,
       title: BackdropFilter(

@@ -80,7 +80,7 @@ class ColorDetailPageBody extends StatelessWidget {
                 ),
                 child: Text(
                   topic.name,
-                  style: Utils.calligraphy.body2(
+                  style: Utils.calligraphy.body(
                     textStyle: TextStyle(
                       fontSize: 36.0,
                       fontWeight: FontWeight.w400,

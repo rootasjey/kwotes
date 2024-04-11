@@ -5,6 +5,7 @@ import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:kwotes/actions/quote_actions.dart";
@@ -33,6 +34,7 @@ import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
 import "package:screenshot/screenshot.dart";
 import "package:text_wrap_auto_size/solution.dart";
+import "package:wave_divider/wave_divider.dart";
 
 class ListPage extends StatefulWidget {
   const ListPage({
@@ -159,6 +161,7 @@ class _ListPageState extends State<ListPage> with UiLoggy {
                 slivers: [
                   PageAppBar(
                     isMobileSize: isMobileSize,
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                     toolbarHeight: isMobileSize ? 216.0 : 282.0,
                     children: [
                       ListPageHeader(
@@ -178,6 +181,16 @@ class _ListPageState extends State<ListPage> with UiLoggy {
                         title: _quoteList.name,
                       ),
                     ],
+                  ),
+                  SliverToBoxAdapter(
+                    child: const WaveDivider(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 12.0,
+                      ),
+                    ).animate().fadeIn(
+                          duration: const Duration(milliseconds: 1500),
+                          begin: 0.0,
+                        ),
                   ),
                   ListPageBody(
                     animateList: _animateList,

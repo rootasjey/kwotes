@@ -48,7 +48,7 @@ class _CardColorPaletteState extends State<CardColorPalette> {
         ),
         child: Text(
           widget.name,
-          style: Utils.calligraphy.body2(
+          style: Utils.calligraphy.body(
             textStyle: const TextStyle(
               fontSize: 14.0,
               fontWeight: FontWeight.w500,

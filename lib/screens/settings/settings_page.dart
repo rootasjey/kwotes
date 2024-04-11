@@ -1,27 +1,21 @@
-import "package:adaptive_theme/adaptive_theme.dart";
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:flutter/services.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
+import "package:kwotes/router/locations/settings_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
-import "package:kwotes/screens/settings/about_settings.dart";
 import "package:kwotes/screens/settings/account_settings.dart";
-import "package:kwotes/screens/settings/app_behaviour_settings.dart";
-import "package:kwotes/screens/settings/app_language_selection.dart";
+import "package:kwotes/screens/settings/settings_page_body.dart";
 import "package:kwotes/screens/settings/settings_page_header.dart";
-import "package:kwotes/screens/settings/theme_switcher.dart";
 import "package:kwotes/types/enums/enum_account_displayed.dart";
-import "package:kwotes/types/enums/enum_frame_border_style.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/user/user_firestore.dart";
-import "package:url_launcher/url_launcher.dart";
 
 /// Settings page.
 class SettingsPage extends StatefulWidget {
@@ -49,7 +43,8 @@ class _SettingsPageState extends State<SettingsPage> {
   /// For styling purpose.
   final List<Color> _accentColors = [];
 
-  final _pageScrollController = ScrollController();
+  /// Page scroll controller.
+  ScrollController? _pageScrollController;
 
   @override
   void initState() {
@@ -58,16 +53,8 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   @override
-  void dispose() {
-    _pageScrollController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
-    final String? currentLanguageCode =
-        EasyLocalization.of(context)?.currentLocale?.languageCode;
 
     final Signal<UserFirestore> signalUserFirestore =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
@@ -86,18 +73,8 @@ class _SettingsPageState extends State<SettingsPage> {
             SettingsPageHeader(
               isMobileSize: isMobileSize,
               onScrollToTop: scrollToTop,
-            ),
-            ThemeSwitcher(
-              accentColor: _accentColors.elementAt(0),
-              animateElements: _animateElements,
-              dividerColor: dividerColor,
-              foregroundColor: foregroundColor,
-              isDark: isDark,
-              isMobileSize: isMobileSize,
-              onTapLightTheme: onTapLightTheme,
-              onTapDarkTheme: onTapDarkTheme,
-              onTapSystemTheme: onTapSystemTheme,
-              onToggleThemeMode: onToggleThemeMode,
+              onTapCloseIcon: onTapCloseIcon,
+              title: "settings.name".tr(),
             ),
             SignalBuilder(
               signal: signalUserFirestore,
@@ -115,6 +92,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   animateElements: _animateElements,
                   isDark: isDark,
                   dividerColor: dividerColor,
+                  onTap: onTapAccount,
                   enumAccountDisplayed: _enumAccountDisplayed,
                   foregroundColor: foregroundColor,
                   isMobileSize: isMobileSize,
@@ -128,37 +106,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 );
               },
             ),
-            AppLanguageSelection(
-              accentColor: _accentColors.elementAt(2),
-              animateElements: _animateElements,
-              currentLanguageCode: currentLanguageCode,
-              dividerColor: dividerColor,
-              foregroundColor: foregroundColor,
-              isMobileSize: isMobileSize,
-              onSelectLanguage: onSelectLanguage,
-            ),
-            AppBehaviourSettings(
-              accentColor: _accentColors.elementAt(3),
-              animateElements: _animateElements,
-              appBorderStyle: NavigationStateHelper.frameBorderStyle,
-              dividerColor: dividerColor,
-              foregroundColor: foregroundColor,
-              isMobileSize: isMobileSize,
-              isFullscreenQuotePage: NavigationStateHelper.fullscreenQuotePage,
-              isMinimalQuoteActions: NavigationStateHelper.minimalQuoteActions,
-              onToggleFrameBorderColor: onToggleFrameBorderColor,
-              onToggleFullscreen: onToggleFullscreen,
-              onToggleMinimalQuoteActions: onToggleMinimalQuoteActions,
-            ),
-            AboutSettings(
-              animateElements: _animateElements,
-              foregroundColor: foregroundColor,
-              isMobileSize: isMobileSize,
-              onTapColorPalette: onTapColorPalette,
-              onTapTermsOfService: onTapTermsOfService,
-              onTapGitHub: onTapGitHub,
-              onTapThePurpose: onTapThePurpose,
-              onTapCredits: onTapCredits,
+            const SettingsPageBody(
+              margin: EdgeInsets.symmetric(
+                vertical: 12.0,
+                horizontal: 18.0,
+              ),
             ),
             const SliverPadding(padding: EdgeInsets.only(bottom: 200.0)),
           ],
@@ -177,6 +129,13 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void initProps() async {
+    final ScrollController? bottomSheetController =
+        NavigationStateHelper.bottomSheetScrollController;
+
+    if (bottomSheetController != null) {
+      _pageScrollController = bottomSheetController;
+    }
+
     _accentColors
       ..add(Constants.colors.getRandomFromPalette(onlyDarkerColors: true))
       ..add(Constants.colors.getRandomFromPalette(onlyDarkerColors: true))
@@ -255,142 +214,23 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  /// Navigate to the terms of service page.
-  void onTapTermsOfService() {
-    Beamer.of(context).beamToNamed(
-      "terms-of-service/",
-    );
-  }
-
-  /// Open the project's GitHub page.
-  void onTapGitHub() {
-    launchUrl(Uri.parse(Constants.githubUrl));
-  }
-
-  /// Navigate to the purpose page.
-  void onTapThePurpose() {
-    Beamer.of(context).beamToNamed(
-      "the-purpose/",
-    );
-  }
-
-  /// Apply light theme.
-  void onTapLightTheme() {
-    AdaptiveTheme.of(context).setLight();
-    Utils.vault.setBrightness(Brightness.light);
-
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: Constants.colors.lightBackground,
-        statusBarBrightness: Brightness.light,
-        systemNavigationBarColor: Colors.white,
-        systemNavigationBarDividerColor: Colors.transparent,
-      ),
-    );
-  }
-
-  /// Apply dark theme.
-  void onTapDarkTheme() {
-    AdaptiveTheme.of(context).setDark();
-    Utils.vault.setBrightness(Brightness.dark);
-
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: Constants.colors.dark,
-        systemNavigationBarColor: Color.alphaBlend(
-          Colors.black26,
-          Constants.colors.dark,
-        ),
-        statusBarBrightness: Brightness.dark,
-        systemNavigationBarDividerColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-      ),
-    );
-  }
-
-  /// Apply system theme.
-  void onTapSystemTheme() {
-    AdaptiveTheme.of(context).setSystem();
-    updateUiBrightness();
-  }
-
-  void onToggleFrameBorderColor() {
-    final int nextIndex = (NavigationStateHelper.frameBorderStyle.index + 1) %
-        EnumFrameBorderStyle.values.length;
-
-    final EnumFrameBorderStyle nextStyle =
-        EnumFrameBorderStyle.values[nextIndex];
-
-    Utils.vault.setFrameBorderStyle(nextStyle);
-    setState(() {
-      NavigationStateHelper.frameBorderStyle = nextStyle;
-    });
-
-    final Color borderColor = Constants.colors.getBorderColorFromStyle(
-      context,
-      nextStyle,
-    );
-    final Signal<Color> frameColorSignal = context.get<Signal<Color>>(
-      EnumSignalId.frameBorderColor,
-    );
-
-    frameColorSignal.update((Color previousColor) => borderColor);
-  }
-
-  /// Turn on/off fullscreen mode on quote page.
-  void onToggleFullscreen() {
-    final bool newValue = !NavigationStateHelper.fullscreenQuotePage;
-    Utils.vault.setFullscreenQuotePage(newValue);
-
-    setState(() {
-      NavigationStateHelper.fullscreenQuotePage = newValue;
-    });
-  }
-
-  void onToggleMinimalQuoteActions() {
-    final bool newValue = !NavigationStateHelper.minimalQuoteActions;
-    Utils.vault.setMinimalQuoteActions(newValue);
-
-    setState(() {
-      NavigationStateHelper.minimalQuoteActions = newValue;
-    });
-  }
-
-  /// Circle through light, dark and system theme.
-  void onToggleThemeMode() {
-    AdaptiveTheme.of(context).toggleThemeMode();
-    updateUiBrightness();
-  }
-
-  /// Save the current brightness to the vault and
-  /// update the system UI overlay style.
-  void updateUiBrightness() {
-    final Brightness brightness =
-        AdaptiveTheme.of(context).brightness ?? Brightness.light;
-    Utils.vault.setBrightness(brightness);
-
-    final bool isDark = brightness == Brightness.dark;
-
-    final SystemUiOverlayStyle overlayStyle = isDark
-        ? SystemUiOverlayStyle(
-            statusBarColor: Constants.colors.dark,
-            systemNavigationBarColor: Colors.black26,
-            systemNavigationBarDividerColor: Colors.transparent,
-          )
-        : SystemUiOverlayStyle(
-            statusBarColor: Constants.colors.lightBackground,
-            systemNavigationBarColor: Colors.white,
-            systemNavigationBarDividerColor: Colors.transparent,
-          );
-
-    SystemChrome.setSystemUIOverlayStyle(overlayStyle);
-  }
-
+  /// Scroll to the top of the page.
   void scrollToTop() {
-    _pageScrollController.animateTo(
+    _pageScrollController?.animateTo(
       0,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeIn,
+    );
+  }
+
+  /// Close the settings bottom sheet.
+  void onTapCloseIcon() {
+    Navigator.pop(NavigationStateHelper.rootContext ?? context);
+  }
+
+  void onTapAccount() {
+    Beamer.of(context).beamToNamed(
+      SettingsContentLocation.accountRoute,
     );
   }
 }

@@ -62,7 +62,7 @@ class DashboardHeader extends StatelessWidget {
             onTap: onTapUserAvatar,
             radius: 16.0,
             imageProvider: const AssetImage(
-              "assets/images/profile-picture-avocado.png",
+              "assets/images/profile-picture-avocado.jpg",
             ),
           ),
           Utils.graphic.tooltip(

@@ -309,6 +309,7 @@ class _PublishedPageState extends State<PublishedPage> with UiLoggy {
       });
     } catch (error) {
       loggy.error(error);
+      if (!mounted) return;
       setState(() {
         _pageState = EnumPageState.idle;
       });

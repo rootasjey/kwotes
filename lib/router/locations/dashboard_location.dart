@@ -26,7 +26,7 @@ import "package:kwotes/screens/reference/reference_page.dart";
 import "package:kwotes/screens/reference/reference_quotes_page.dart";
 import "package:kwotes/screens/settings/about/credits_page.dart";
 import "package:kwotes/screens/settings/about/terms_of_service_page.dart";
-import "package:kwotes/screens/settings/about/the_purpose_page.dart";
+import "package:kwotes/screens/settings/about/about_us_page.dart";
 import "package:kwotes/screens/settings/delete_account/delete_account_page.dart";
 import "package:kwotes/screens/settings/email/update_email_page.dart";
 import "package:kwotes/screens/settings/password/update_password_page.dart";
@@ -343,7 +343,7 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
           state.pathPatternSegments
               .contains(settingsThePurposeRoute.split("/").last))
         BeamPage(
-          child: const ThePurposePage(),
+          child: const AboutUsPage(),
           key: const ValueKey(settingsThePurposeRoute),
           title: "page_title.the_purpose".tr(),
           type: BeamPageType.fadeTransition,

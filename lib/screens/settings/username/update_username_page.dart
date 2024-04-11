@@ -5,11 +5,10 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:kwotes/actions/user_actions.dart";
-import "package:kwotes/components/basic_shortcuts.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/home_location.dart";
+import "package:kwotes/screens/settings/settings_page_header.dart";
 import "package:kwotes/screens/settings/username/update_username_page_body.dart";
-import "package:kwotes/screens/settings/username/update_username_page_header.dart";
 import "package:kwotes/types/cloud_fun_error.dart";
 import "package:kwotes/types/cloud_fun_response.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
@@ -55,33 +54,51 @@ class _UpdateUsernamePageState extends State<UpdateUsernamePage> with UiLoggy {
   @override
   Widget build(BuildContext context) {
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    final Color? foregroundColor =
+        Theme.of(context).textTheme.bodyMedium?.color;
     final UserFirestore userFirestore =
         context.observe<UserFirestore>(EnumSignalId.userFirestore);
 
-    return BasicShortcuts(
-      autofocus: false,
-      onCancel: context.beamBack,
-      child: SafeArea(
-        child: Scaffold(
-          body: CustomScrollView(
-            slivers: [
-              UpdateUsernamePageHeader(
-                isMobileSize: isMobileSize,
-                onTapLeftPartHeader: onTapLeftPartHeader,
-                margin: const EdgeInsets.only(top: 24.0),
+    return SafeArea(
+      child: Scaffold(
+        body: CustomScrollView(
+          slivers: [
+            SettingsPageHeader(
+              isMobileSize: isMobileSize,
+              onTapBackButton: context.beamBack,
+              title: "username.update.name".tr(),
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: isMobileSize
+                    ? const EdgeInsets.only(top: 8.0, left: 28.0, right: 28.0)
+                    : EdgeInsets.zero,
+                child: FractionallySizedBox(
+                  widthFactor: isMobileSize ? 1.0 : 0.4,
+                  child: Text(
+                    "username.update.tips".tr(),
+                    textAlign: isMobileSize ? TextAlign.left : TextAlign.center,
+                    style: Utils.calligraphy.body(
+                      textStyle: TextStyle(
+                        fontSize: 14.0,
+                        color: foregroundColor?.withOpacity(0.4),
+                      ),
+                    ),
+                  ),
+                ),
               ),
-              UpdateUsernamePageBody(
-                isMobileSize: isMobileSize,
-                usernameController: _usernameTextController,
-                passwordFocusNode: _passwordFocusNode,
-                pageState: _pageState,
-                errorMessage: _errorMessage,
-                onUsernameChanged: onUsernameChanged,
-                onTapUpdateButton: tryUpdateUsername,
-                username: userFirestore.name,
-              ),
-            ],
-          ),
+            ),
+            UpdateUsernamePageBody(
+              isMobileSize: isMobileSize,
+              usernameController: _usernameTextController,
+              passwordFocusNode: _passwordFocusNode,
+              pageState: _pageState,
+              errorMessage: _errorMessage,
+              onUsernameChanged: onUsernameChanged,
+              onTapUpdateButton: tryUpdateUsername,
+              username: userFirestore.name,
+            ),
+          ],
         ),
       ),
     );

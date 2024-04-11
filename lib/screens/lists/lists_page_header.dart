@@ -16,9 +16,7 @@ class ListsPageHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: isMobileSize
-          ? const EdgeInsets.only(left: 6.0, bottom: 24.0)
-          : const EdgeInsets.only(left: 6.0),
+      padding: const EdgeInsets.only(left: 6.0),
       child: Hero(
         tag: "lists",
         child: Material(

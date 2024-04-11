@@ -7,6 +7,7 @@ import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
+import "package:kwotes/router/locations/settings_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/dashboard/dashboard_card_section.dart";
 import "package:kwotes/screens/dashboard/dashboard_header.dart";
@@ -46,7 +47,9 @@ class DashboardWelcomePage extends StatelessWidget {
                   onTapUsername: showSignoutBottomSheet,
                   onTapNewQuoteButton: onGoToAddQuotePage,
                   onTapUserAvatar: () {
-                    context.beamToNamed(DashboardContentLocation.profileRoute);
+                    Beamer.of(context, root: true).beamToNamed(
+                      SettingsLocation.route,
+                    );
                   },
                   userFirestore: userFirestore,
                 ),

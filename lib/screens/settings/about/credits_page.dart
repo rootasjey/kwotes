@@ -1,3 +1,4 @@
+import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
@@ -5,7 +6,9 @@ import "package:kwotes/components/buttons/colored_text_button.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/screens/settings/about/credit_item_data.dart";
+import "package:kwotes/screens/settings/settings_page_header.dart";
 import "package:url_launcher/url_launcher_string.dart";
+import "package:wave_divider/wave_divider.dart";
 
 class CreditsPage extends StatelessWidget {
   const CreditsPage({super.key});
@@ -24,10 +27,16 @@ class CreditsPage extends StatelessWidget {
       child: Scaffold(
         body: CustomScrollView(
           slivers: [
+            SettingsPageHeader(
+              isMobileSize: isMobileSize,
+              onTapBackButton: context.beamBack,
+              title: "credits.name".tr(),
+              subtitle: "credits.description".tr(),
+            ),
             SliverPadding(
               padding: isMobileSize
                   ? const EdgeInsets.only(
-                      top: 24.0,
+                      top: 0.0,
                       left: 24.0,
                       right: 24.0,
                       bottom: 200.0,
@@ -38,48 +47,46 @@ class CreditsPage extends StatelessWidget {
                     ),
               sliver: SliverToBoxAdapter(
                 child: FractionallySizedBox(
-                  widthFactor: isMobileSize ? 1.0 : 0.80,
+                  widthFactor: isMobileSize ? 0.90 : 0.80,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      IconButton(
-                        onPressed: () => Utils.passage.deepBack(context),
-                        icon: const Icon(TablerIcons.arrow_left),
-                        style: IconButton.styleFrom(
-                          backgroundColor: accentColor.withOpacity(0.1),
-                        ),
-                      ),
-                      Text(
-                        "credits.name".tr(),
-                        style: Utils.calligraphy.body(
-                          textStyle: TextStyle(
-                            fontSize: 84.0,
-                            fontWeight: FontWeight.w700,
-                            color: Constants.colors.getRandomFromPalette(
-                              onlyDarkerColors: true,
+                      if (!isMobileSize)
+                        Text(
+                          "credits.name".tr(),
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 84.0,
+                              fontWeight: FontWeight.w700,
+                              color: Constants.colors.getRandomFromPalette(
+                                onlyDarkerColors: true,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      Text(
-                        "credits.description".tr(),
-                        style: Utils.calligraphy.body(
-                          textStyle: TextStyle(
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.w300,
-                            color: color?.withOpacity(0.6),
+                      if (!isMobileSize)
+                        Text(
+                          "credits.description".tr(),
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.w300,
+                              color: color?.withOpacity(0.6),
+                            ),
                           ),
                         ),
+                      const WaveDivider(
+                        padding: EdgeInsets.symmetric(vertical: 24.0),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 32.0),
+                        padding: const EdgeInsets.only(top: 0.0),
                         child: Text(
                           "credits.general_purpose.name".tr(),
                           style: Utils.calligraphy.body(
                             textStyle: TextStyle(
                               fontSize: 24.0,
-                              fontWeight: FontWeight.w400,
-                              color: color?.withOpacity(0.6),
+                              fontWeight: FontWeight.w200,
+                              color: color?.withOpacity(0.8),
                             ),
                           ),
                         ),
@@ -110,8 +117,8 @@ class CreditsPage extends StatelessWidget {
                           style: Utils.calligraphy.body(
                             textStyle: TextStyle(
                               fontSize: 24.0,
-                              fontWeight: FontWeight.w400,
-                              color: color?.withOpacity(0.6),
+                              fontWeight: FontWeight.w200,
+                              color: color?.withOpacity(0.8),
                             ),
                           ),
                         ),
@@ -464,18 +471,22 @@ class CreditsPage extends StatelessWidget {
     return ListTile(
       title: Text(data.title),
       subtitle: Text(data.subtitle),
+      contentPadding: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
       leading: data.iconData != null ? Icon(data.iconData) : null,
       onTap: () => launchUrlString(data.link),
       titleTextStyle: Utils.calligraphy.body(
         textStyle: TextStyle(
-          color: color?.withOpacity(0.8),
-          fontWeight: FontWeight.w600,
-          fontSize: 18.0,
+          color: color?.withOpacity(0.6),
+          fontWeight: FontWeight.w500,
+          fontSize: 14.0,
         ),
       ),
       subtitleTextStyle: Utils.calligraphy.body(
         textStyle: TextStyle(
-          color: color?.withOpacity(0.6),
+          color: color?.withOpacity(0.4),
         ),
       ),
     );

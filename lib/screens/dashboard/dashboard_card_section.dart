@@ -74,20 +74,6 @@ class DashboardCardSection extends StatelessWidget {
               );
             },
           ),
-          DashboardCard(
-            compact: isMobileSize,
-            iconData: TablerIcons.settings,
-            isDark: isDark,
-            hoverColor: Constants.colors.settings,
-            textSubtitle: "settings.description".tr(),
-            textTitle: "settings.name".tr(),
-            heroKey: "settings",
-            onTap: () {
-              context.beamToNamed(
-                DashboardContentLocation.settingsRoute,
-              );
-            },
-          ),
         ]
             .animate(interval: 25.ms)
             .fadeIn(duration: 200.ms, curve: Curves.decelerate)

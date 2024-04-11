@@ -25,12 +25,6 @@ class Calligraphy {
   }
 
   TextStyle body3({TextStyle? textStyle}) {
-    // return GoogleFonts.breeSerif(
-    //   textStyle: textStyle,
-    // );
-    // return GoogleFonts.bebasNeue(
-    //   textStyle: textStyle,
-    // );
     return GoogleFonts.eduSaBeginner(
       textStyle: textStyle,
     );

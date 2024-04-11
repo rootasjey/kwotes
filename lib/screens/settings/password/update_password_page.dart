@@ -3,12 +3,12 @@ import "dart:async";
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:kwotes/components/basic_shortcuts.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/screens/settings/password/update_password_page_body.dart";
 import "package:kwotes/screens/settings/password/update_password_page_header.dart";
+import "package:kwotes/screens/settings/settings_page_header.dart";
 import "package:kwotes/types/action_return_value.dart";
 import "package:kwotes/types/cloud_fun_error.dart";
 import "package:kwotes/types/credentials.dart";
@@ -76,35 +76,35 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> with UiLoggy {
       onlyDarkerColors: true,
     );
 
-    return BasicShortcuts(
-      autofocus: false,
-      onCancel: context.beamBack,
-      child: SafeArea(
-        child: Scaffold(
-          body: CustomScrollView(
-            slivers: [
-              UpdatePasswordPageHeader(
-                accentColor: accentColor,
-                isMobileSize: isMobileSize,
-                onTapLeftPartHeader: onTapLeftPartHeader,
-                onTapRemindMe: onTapRemindMe,
-                passwordChecks: _passwordChecks,
-                margin: const EdgeInsets.only(top: 24.0),
-              ),
-              UpdatePasswordPageBody(
-                currentPasswordController: _currentPasswordController,
-                isMobileSize: isMobileSize,
-                newPasswordController: _newPasswordController,
-                newPasswordFocusNode: _newPasswordFocusNode,
-                pageState: _pageState,
-                currentPasswordErrorMessage: _currentPasswordErrorMessage,
-                newPasswordErrorMessage: _newPasswordErrorMessage,
-                onCurrentPasswordChanged: onCurrentPasswordChanged,
-                onNewPasswordChanged: onNewPasswordChanged,
-                onTapUpdateButton: tryUpdatePassword,
-              ),
-            ],
-          ),
+    return SafeArea(
+      child: Scaffold(
+        body: CustomScrollView(
+          slivers: [
+            SettingsPageHeader(
+              isMobileSize: isMobileSize,
+              onTapBackButton: context.beamBack,
+              title: "password.update.name".tr(),
+            ),
+            UpdatePasswordPageHeader(
+              accentColor: accentColor,
+              isMobileSize: isMobileSize,
+              onTapLeftPartHeader: onTapLeftPartHeader,
+              onTapRemindMe: onTapRemindMe,
+              passwordChecks: _passwordChecks,
+            ),
+            UpdatePasswordPageBody(
+              currentPasswordController: _currentPasswordController,
+              isMobileSize: isMobileSize,
+              newPasswordController: _newPasswordController,
+              newPasswordFocusNode: _newPasswordFocusNode,
+              pageState: _pageState,
+              currentPasswordErrorMessage: _currentPasswordErrorMessage,
+              newPasswordErrorMessage: _newPasswordErrorMessage,
+              onCurrentPasswordChanged: onCurrentPasswordChanged,
+              onNewPasswordChanged: onNewPasswordChanged,
+              onTapUpdateButton: tryUpdatePassword,
+            ),
+          ],
         ),
       ),
     );

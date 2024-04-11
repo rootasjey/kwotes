@@ -113,7 +113,7 @@ class ListPageHeader extends StatelessWidget {
                 onChanged: onDescriptionChanged,
                 textInputAction: TextInputAction.go,
                 onSubmitted: (_) => onSave?.call(),
-                style: Utils.calligraphy.body2(
+                style: Utils.calligraphy.body(
                   textStyle: TextStyle(
                     fontSize: 14.0,
                     fontWeight: FontWeight.w400,
@@ -252,7 +252,7 @@ class ListPageHeader extends StatelessWidget {
             ),
             child: Text(
               description,
-              style: Utils.calligraphy.body2(
+              style: Utils.calligraphy.body(
                 textStyle: TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.w400,

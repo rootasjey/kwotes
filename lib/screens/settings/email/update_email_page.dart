@@ -5,12 +5,10 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:kwotes/actions/user_actions.dart";
-import "package:kwotes/components/basic_shortcuts.dart";
-import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/screens/settings/email/update_email_page_body.dart";
-import "package:kwotes/screens/settings/email/update_email_page_header.dart";
+import "package:kwotes/screens/settings/settings_page_header.dart";
 import "package:kwotes/types/action_return_value.dart";
 import "package:kwotes/types/cloud_fun_error.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
@@ -29,9 +27,6 @@ class UpdateEmailPage extends StatefulWidget {
 class _UpdateEmailPageState extends State<UpdateEmailPage> with UiLoggy {
   /// True if the email entered is available.
   bool _isEmailAvailable = true;
-
-  /// Random accent color.
-  Color? _accentColor;
 
   /// Password focus node.
   final _passwordFocusNode = FocusNode();
@@ -57,9 +52,6 @@ class _UpdateEmailPageState extends State<UpdateEmailPage> with UiLoggy {
   @override
   void initState() {
     super.initState();
-    _accentColor = Constants.colors.getRandomFromPalette(
-      onlyDarkerColors: true,
-    );
   }
 
   @override
@@ -74,6 +66,8 @@ class _UpdateEmailPageState extends State<UpdateEmailPage> with UiLoggy {
   @override
   Widget build(BuildContext context) {
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    final Color? foregroundColor =
+        Theme.of(context).textTheme.bodyMedium?.color;
     final EdgeInsets margin = isMobileSize
         ? const EdgeInsets.only(left: 24.0)
         : const EdgeInsets.only(left: 48.0);
@@ -81,44 +75,62 @@ class _UpdateEmailPageState extends State<UpdateEmailPage> with UiLoggy {
     final Signal<UserFirestore> signalUserFirestore =
         context.get(EnumSignalId.userFirestore);
 
-    return BasicShortcuts(
-      autofocus: false,
-      onCancel: context.beamBack,
-      child: SafeArea(
-        child: Scaffold(
-          body: CustomScrollView(
-            slivers: [
-              UpdateEmailPageHeader(
-                accentColor: _accentColor,
-                isMobileSize: isMobileSize,
-                margin: const EdgeInsets.only(top: 12.0),
-                onTapLeftPartHeader: onTapLeftPartHeader,
+    return SafeArea(
+      child: Scaffold(
+        body: CustomScrollView(
+          slivers: [
+            SettingsPageHeader(
+              isMobileSize: isMobileSize,
+              onTapBackButton: context.beamBack,
+              title: "email.update.name".tr(),
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 8.0,
+                  left: 28.0,
+                  right: 28.0,
+                ),
+                child: FractionallySizedBox(
+                  widthFactor: isMobileSize ? 1.0 : 0.4,
+                  child: Text(
+                    "email.update_tips".tr(),
+                    textAlign:
+                        isMobileSize ? TextAlign.start : TextAlign.center,
+                    style: Utils.calligraphy.body(
+                      textStyle: TextStyle(
+                        fontSize: 14.0,
+                        color: foregroundColor?.withOpacity(0.4),
+                      ),
+                    ),
+                  ),
+                ),
               ),
-              SignalBuilder(
-                signal: signalUserFirestore,
-                builder: (
-                  BuildContext context,
-                  UserFirestore userFirestore,
-                  Widget? child,
-                ) {
-                  return UpdateEmailPageBody(
-                    margin: margin,
-                    isMobileSize: isMobileSize,
-                    emailController: _emailTextController,
-                    passwordFocusNode: _passwordFocusNode,
-                    pageState: _pageState,
-                    hintEmail: userFirestore.email,
-                    errorMessage: _errorMessage,
-                    onEmailChanged: onEmailChanged,
-                    onTapUpdateButton: tryUpdateEmail,
-                    passwordController: _passwordTextController,
-                    passwordErrorMessage: _passwordErrorMessage,
-                    onPasswordChanged: onPasswordChanged,
-                  );
-                },
-              ),
-            ],
-          ),
+            ),
+            SignalBuilder(
+              signal: signalUserFirestore,
+              builder: (
+                BuildContext context,
+                UserFirestore userFirestore,
+                Widget? child,
+              ) {
+                return UpdateEmailPageBody(
+                  margin: margin,
+                  isMobileSize: isMobileSize,
+                  emailController: _emailTextController,
+                  passwordFocusNode: _passwordFocusNode,
+                  pageState: _pageState,
+                  hintEmail: userFirestore.email,
+                  errorMessage: _errorMessage,
+                  onEmailChanged: onEmailChanged,
+                  onTapUpdateButton: tryUpdateEmail,
+                  passwordController: _passwordTextController,
+                  passwordErrorMessage: _passwordErrorMessage,
+                  onPasswordChanged: onPasswordChanged,
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

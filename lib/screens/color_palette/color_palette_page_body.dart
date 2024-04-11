@@ -82,7 +82,7 @@ class ColorPalettePageBody extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 48.0),
                 child: Text(
                   "color.palette".tr(),
-                  style: Utils.calligraphy.body3(
+                  style: Utils.calligraphy.title(
                     textStyle: TextStyle(
                       fontSize: isMobileSize ? 32 : 64.0,
                       fontWeight: FontWeight.w600,

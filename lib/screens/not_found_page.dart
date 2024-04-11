@@ -10,7 +10,10 @@ import "package:kwotes/globals/utils.dart";
 
 class NotFoundPage extends StatelessWidget {
   /// 404 page.
-  const NotFoundPage({super.key});
+  const NotFoundPage({super.key, this.pageName = ""});
+
+  /// Page name.
+  final String pageName;
 
   static const List<String> _imagePaths = [
     "assets/images/malanga.png",
@@ -19,6 +22,7 @@ class NotFoundPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final int randomImageInt = Random().nextInt(_imagePaths.length);
     final int randomQuoteInt = Random().nextInt(5);
@@ -69,15 +73,17 @@ class NotFoundPage extends StatelessWidget {
                     ),
                   ),
                 ),
+                if (pageName.isNotEmpty) Text(pageName),
                 Padding(
                   padding: const EdgeInsets.all(0.0),
                   child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 600.0),
                     child: Text(
                       "not_found.quotes.$randomQuoteInt".tr(),
+                      textAlign: TextAlign.center,
                       style: Utils.calligraphy.body(
                         textStyle: TextStyle(
-                          fontSize: 42.0,
+                          fontSize: isMobileSize ? 24.0 : 42.0,
                           fontWeight: FontWeight.w300,
                           color: foregroundTextColor?.withOpacity(0.6),
                         ),

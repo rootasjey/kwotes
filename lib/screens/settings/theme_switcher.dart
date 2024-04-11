@@ -74,7 +74,7 @@ class ThemeSwitcher extends StatelessWidget {
           : const EdgeInsets.only(top: 42.0, left: 48.0, right: 72.0),
       sliver: SliverList.list(children: [
         Text.rich(
-          TextSpan(text: "${"theme".tr()}: ", children: [
+          TextSpan(text: "${"theme.name".tr()}: ", children: [
             TextSpan(
               text: AdaptiveTheme.of(context).mode.modeName.toLowerCase().tr(),
               style: Utils.calligraphy.body(

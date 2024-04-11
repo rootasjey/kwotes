@@ -4,6 +4,7 @@ import "package:flutter/widgets.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/locations/search_location.dart";
+import "package:kwotes/router/locations/settings_location.dart";
 import "package:kwotes/screens/not_found_page.dart";
 import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_frame_border_style.dart";
@@ -143,12 +144,41 @@ class NavigationStateHelper {
       ),
     ]),
     notFoundPage: BeamPage(
-      child: const NotFoundPage(),
+      child: const NotFoundPage(pageName: "dashboard"),
       key: const ValueKey("notFoundPage-dashboard"),
       type: BeamPageType.fadeTransition,
       title: "page_title.not_found".tr(),
     ),
   );
+
+  /// Beamer key to navigate settings sub-locations.
+  static GlobalKey<BeamerState> settingsBeamerKey = GlobalKey<BeamerState>(
+    debugLabel: "settings",
+  );
+
+  /// Beamer delegate to navigate settings sub-locations.
+  /// NOTE: Create delegate outside build method in order to avoid state issues.
+  static BeamerDelegate settingsRouterDelegate = BeamerDelegate(
+    initialPath: SettingsLocation.route,
+    locationBuilder: BeamerLocationBuilder(beamLocations: [
+      SettingsContentLocation(
+        BeamState.fromUriString(SettingsContentLocation.route),
+      ),
+    ]),
+    notFoundPage: BeamPage(
+      child: const NotFoundPage(),
+      key: const ValueKey("notFoundPage-settings"),
+      type: BeamPageType.fadeTransition,
+      title: "page_title.not_found".tr(),
+    ),
+  );
+
+  /// Root navigation context.
+  /// Useful to pop settings bottom sheet.
+  static BuildContext? rootContext;
+
+  /// Bottom sheet scroll controller.
+  static ScrollController? bottomSheetScrollController;
 
   /// Initialize initial tab index.
   static Future<void> initInitialTabIndex({

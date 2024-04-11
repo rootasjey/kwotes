@@ -27,7 +27,7 @@ class LoadingView extends StatelessWidget {
           ),
           Text(
             message,
-            style: Utils.calligraphy.body2(
+            style: Utils.calligraphy.body(
               textStyle: const TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.w600,
@@ -69,7 +69,7 @@ class LoadingView extends StatelessWidget {
                 Text(
                   message,
                   textAlign: TextAlign.center,
-                  style: Utils.calligraphy.body2(
+                  style: Utils.calligraphy.body(
                     textStyle: const TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.w600,

@@ -2,6 +2,7 @@ import "package:beamer/beamer.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:kwotes/actions/quote_actions.dart";
@@ -25,6 +26,7 @@ import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
 import "package:screenshot/screenshot.dart";
 import "package:text_wrap_auto_size/solution.dart";
+import "package:wave_divider/wave_divider.dart";
 
 class FavouritesPage extends StatefulWidget {
   const FavouritesPage({super.key});
@@ -97,13 +99,24 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
             controller: _pageScrollController,
             slivers: [
               PageAppBar(
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 isMobileSize: isMobileSize,
-                toolbarHeight: isMobileSize ? 200.0 : 242.0,
+                toolbarHeight: isMobileSize ? 180.0 : 242.0,
                 children: [
                   FavouritesPageHeader(
                     isMobileSize: isMobileSize,
                   ),
                 ],
+              ),
+              SliverToBoxAdapter(
+                child: const WaveDivider(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 24.0,
+                  ),
+                ).animate().fadeIn(
+                      duration: const Duration(milliseconds: 1500),
+                      begin: 0.0,
+                    ),
               ),
               SignalBuilder(
                 signal: signalUserFirestore,

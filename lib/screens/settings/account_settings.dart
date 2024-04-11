@@ -1,8 +1,6 @@
-import "package:easy_localization/easy_localization.dart";
-import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
-import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/better_avatar.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/enums/enum_account_displayed.dart";
 import "package:kwotes/types/user/user_firestore.dart";
@@ -26,6 +24,7 @@ class AccountSettings extends StatelessWidget {
     this.onTapDeleteAccount,
     this.onTapAccountDisplayedValue,
     this.enumAccountDisplayed = EnumAccountDisplayed.name,
+    this.onTap,
   });
 
   /// Animate elements on settings page if true.
@@ -70,136 +69,73 @@ class AccountSettings extends StatelessWidget {
   /// Callback fired when the account displayed value is tapped.
   final void Function()? onTapAccountDisplayedValue;
 
+  /// Callback fired when the card is tapped.
+  final void Function()? onTap;
+
   /// User account.
   final UserFirestore userFirestore;
 
   @override
   Widget build(BuildContext context) {
-    return SliverPadding(
-      padding: isMobileSize
-          ? const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0)
-          : const EdgeInsets.only(top: 12.0, left: 48.0, right: 72.0),
-      sliver: SliverList.list(children: [
-        Text.rich(
-          TextSpan(text: "${"account.name".tr()}: ", children: [
-            TextSpan(
-              text: enumAccountDisplayed == EnumAccountDisplayed.name
-                  ? userFirestore.name
-                  : userFirestore.email,
-              recognizer: TapGestureRecognizer()
-                ..onTap = onTapAccountDisplayedValue,
-              style: Utils.calligraphy.body(
-                textStyle: TextStyle(
-                  color: accentColor,
-                ),
-              ),
-            ),
-          ]),
-          style: Utils.calligraphy.body(
-            textStyle: TextStyle(
-              fontSize: isMobileSize ? 32.0 : 32.0,
-              fontWeight: isMobileSize ? FontWeight.w100 : FontWeight.w400,
-              color: foregroundColor,
-            ),
-          ),
-        )
-            .animate(delay: animateElements ? 150.ms : 0.ms)
-            .fadeIn(duration: animateElements ? 150.ms : 0.ms)
-            .slideY(begin: 0.8, end: 0.0),
-        Align(
-          alignment: Alignment.topLeft,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 700.0),
-            child: Wrap(
-              spacing: 12.0,
-              runSpacing: 12.0,
+    return SliverToBoxAdapter(
+      child: Card(
+        elevation: 0.0,
+        margin: isMobileSize
+            ? const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0)
+            : const EdgeInsets.only(top: 12.0, left: 48.0, right: 72.0),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12.0),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Row(
               children: [
-                ActionChip(
-                  onPressed: onTapUpdateUsername,
-                  shape: const StadiumBorder(),
-                  label: Text("username.update.name".tr()),
-                  labelStyle: Utils.calligraphy.body(
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: foregroundColor?.withOpacity(0.6),
-                    ),
+                BetterAvatar(
+                  heroTag: "user-avatar",
+                  onTap: () {},
+                  radius: 18.0,
+                  imageProvider: const AssetImage(
+                    "assets/images/profile-picture-avocado.jpg",
                   ),
+                  margin: const EdgeInsets.only(right: 12.0),
                 ),
-                ActionChip(
-                  onPressed: onTapUpdateEmail,
-                  shape: const StadiumBorder(),
-                  label: Text("email.update".tr()),
-                  labelStyle: Utils.calligraphy.body(
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: foregroundColor?.withOpacity(0.6),
-                    ),
-                  ),
-                ),
-                ActionChip(
-                  onPressed: onTapUpdatePassword,
-                  shape: const StadiumBorder(),
-                  label: Text("password.update.name".tr()),
-                  labelStyle: Utils.calligraphy.body(
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: foregroundColor?.withOpacity(0.6),
-                    ),
-                  ),
-                ),
-                ActionChip(
-                  onPressed: onTapDeleteAccount,
-                  shape: const StadiumBorder(),
-                  label: Text("account.delete.name".tr()),
-                  labelStyle: Utils.calligraphy.body(
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: foregroundColor?.withOpacity(0.6),
-                    ),
-                  ),
-                ),
-                ActionChip(
-                  onPressed: onTapSignout,
-                  shape: const StadiumBorder(),
-                  label: Row(
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Text("signout".tr()),
+                      Text(
+                        userFirestore.name,
+                        style: Utils.calligraphy.body(
+                          textStyle: TextStyle(
+                            color: foregroundColor,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ),
-                      Icon(
-                        TablerIcons.logout,
-                        color: foregroundColor?.withOpacity(0.6),
-                        size: 16.0,
+                      Text(
+                        userFirestore.email,
+                        style: Utils.calligraphy.body(
+                          textStyle: TextStyle(
+                            color: foregroundColor,
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.w200,
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                  labelStyle: Utils.calligraphy.body(
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: foregroundColor?.withOpacity(0.6),
-                    ),
-                  ),
                 ),
-              ]
-                  .animate(
-                    delay: animateElements ? 250.ms : 0.ms,
-                    interval: animateElements ? 50.ms : 0.ms,
-                  )
-                  .fadeIn(duration: animateElements ? 150.ms : 0.ms)
-                  .slideY(begin: 0.8, end: 0.0),
+                IconButton(
+                  onPressed: onTapSignout,
+                  icon: const Icon(TablerIcons.arrow_right),
+                ),
+              ],
             ),
           ),
         ),
-        Divider(
-          height: dividerHeight,
-          color: dividerColor,
-        )
-            .animate(delay: animateElements ? 300.ms : 0.ms)
-            .fadeIn(duration: animateElements ? 250.ms : 0.ms)
-            .slideY(begin: 0.8, end: 0.0),
-      ]),
+      ),
     );
   }
 }
