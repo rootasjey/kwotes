@@ -1,5 +1,8 @@
 {
-  "about": "À propos",
+  "about": {
+    "name": "À propos",
+    "us": "A propos de nous"
+  },
   "about_concept": "Relines est un mini jeu où vous devez deviner l'auteur ou la référence des citations. Le but étant d'avoir le maximum de points à la fin d'une partie. Le nombre de questions est limité.",
   "about_concept_2": "Ce projet a été intialement développé pour un hackathon durant un lapse de temps réduit.",
   "about_me_1": "Bonjour, je suis Jérémie CORPINOT, un développeur freelance vivant en France.",
@@ -84,6 +87,11 @@
   "brightness": "Luminosité",
   "cancel": "Annuler",
   "caracterization": "Caractérisation",
+  "changelog": {
+    "description": "Liste des changements récents",
+    "name": "Historique des mises à jour",
+    "version": "Version"
+  },
   "close": "Fermer",
   "color": {
     "copy": {
@@ -445,9 +453,11 @@
   },
   "page_title": {
     "about": "@:kwotes_leading About",
+    "account": "@:kwotes_leading Mon compte",
     "add_quote": "@:kwotes_leading Ajouter une citation",
     "any": "@:kwotes_leading {}",
     "author_quotes": "@:kwotes_leading Citations de {}",
+    "changelog": "@:kwotes_leading Historique de versions",
     "color_palette": "@:kwotes_leading Palette de couleurs",
     "color_detail": "@:kwotes_leading Couleur: {}",
     "credits": "@:kwotes_leading Crédits",
@@ -459,8 +469,10 @@
     "edit_reference": "@:kwotes_leading Éditer la référence: {}",
     "favourites": "@:kwotes_leading Favoris",
     "forgot_password": "@:kwotes_leading Forgot Password",
+    "frame_border_style": "@:kwotes_leading Style de bordure de fenêtre",
     "home": "@:kwotes_leading Home",
     "in_validation": "@:kwotes_leading En Validation",
+    "language": "@:kwotes_leading Langage",
     "list": "@:kwotes_leading {}",
     "lists": "@:kwotes_leading Listes",
     "my_quotes": "@:kwotes_leading Mes citations",
@@ -479,10 +491,12 @@
     "signup": "@:kwotes_leading Signup",
     "terms_of_service": "@:kwotes_leading Conditions Générales d'Utilisation",
     "the_purpose": "@:kwotes_leading Le But",
+    "theme": "@:kwotes_leading Theme",
     "tos": "@:kwotes_leading Conditions Générales d'Utilisation",
     "update_email": "@:kwotes_leading Mise à jour de l'email",
     "update_password": "@:kwotes_leading Mise à jour du mot de passe",
     "update_username": "@:kwotes_leading Mise à jour du nom d'utilisateur",
+    "user_interface": "@:kwotes_leading Interface utilisateur",
     "user_profile": "@:kwotes_leading Profile"
   },
   "password": {
@@ -907,7 +921,8 @@
       "random": "Recuperer de nouvelles citations au hasard"
     },
     "language": {
-      "change": "Changer la langue"
+      "change": "Changer la langue",
+      "change_app_quotes": "Changer la langue de l'application & des citations"
     },
     "like": {
       "name": "J'aime"
@@ -1075,9 +1090,27 @@
       }
     },
     "description": "Personnalisez votre expérience",
+    "frame_border_style": {
+      "name": "Style de bordures de fenêtre",
+      "description": "Choisissez le style de bordures de fenêtre de l'application",
+      "options": {
+        "colored": {
+          "name": "Colorés",
+          "description": "Les bordures seront dans une des couleurs des thèmes de citations (e.g. fun)"
+        },
+        "highContrast": {
+          "name": "Haut contrast",
+          "description": "Les bordurs seront noires ou blanches, en fonction du thème de l'application (clair/sombre)"
+        },
+        "discrete": {
+          "name": "Discrètes",
+          "description": "Les bordures seront dans la couleur de fond de l'application"
+        }
+      }
+    },
     "fullscreen_quote_page": {
       "name": "Citation en plein écran",
-      "description": "Ouvrir la page de citation en plein écran"
+      "description": "Cache la barre de navigation à l'ouverture d'une page de citation"
     },
     "minimal_quote_actions": {
       "name": "Actions minimales de la page de citation",
@@ -1114,7 +1147,15 @@
   "summary": "Résumé",
   "system": "Système",
   "text": "Texte",
-  "theme": "Thème",
+  "theme": {
+    "name": "Thème",
+    "dark": "Sombre",
+    "dark_description": "Appliquer le thème sombre. Doux pour les yeux la nuit.",
+    "light": "Clair",
+    "light_description": "Appliquer le thème clair. Toutes les couleurs seront plus clairs.",
+    "system": "Système",
+    "system_description": "Laissez votre appareil choisir le thème."
+  },
   "title": "Titre",
   "topic": {
     "art": "Art",

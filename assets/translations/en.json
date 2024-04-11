@@ -1,5 +1,8 @@
 {
-  "about": "About",
+  "about": {
+    "name": "About",
+    "us": "About us"
+  },
   "about_concept": "Relines is a tiny quotes game where you must guess the quote's author or reference. The aim is to have the maximum score withing a limited number of questions.",
   "about_concept_2": "This project was initially created for a hackathon on a short period of time.",
   "about_me_1": "I'm Jérémie CORPINOT, a freelance developer living in France.",
@@ -84,6 +87,11 @@
   "brightness": "Brightness",
   "cancel": "Cancel",
   "caracterization": "Caracterization",
+  "changelog": {
+    "description": "List of recent changes",
+    "name": "Changelog",
+    "version": "Version"
+  },
   "close": "Close",
   "color": {
     "copy": {
@@ -444,9 +452,11 @@
   },
   "page_title": {
     "about": "@:kwotes_leading About",
+    "account": "@:kwotes_leading Account",
     "add_quote": "@:kwotes_leading Add quote",
     "any": "@:kwotes_leading {}",
     "author_quotes": "@:kwotes_leading Quotes by {}",
+    "changelog": "@:kwotes_leading Changelog",
     "color_palette": "@:kwotes_leading Color palette",
     "color_detail": "@:kwotes_leading Color: {}",
     "credits": "@:kwotes_leading Credits",
@@ -458,8 +468,10 @@
     "edit_reference": "@:kwotes_leading Edit reference: {}",
     "favourites": "@:kwotes_leading Favourites",
     "forgot_password": "@:kwotes_leading Forgot Password",
+    "frame_border_style": "@:kwotes_leading Frame border style",
     "home": "@:kwotes_leading Home",
     "in_validation": "@:kwotes_leading In validation",
+    "language": "@:kwotes_leading Language",
     "list": "@:kwotes_leading {}",
     "lists": "@:kwotes_leading Lists",
     "my_quotes": "@:kwotes_leading My quotes",
@@ -478,10 +490,12 @@
     "signup": "@:kwotes_leading Signup",
     "terms_of_service": "@:kwotes_leading Terms of service",
     "the_purpose": "@:kwotes_leading The purpose",
+    "theme": "@:kwotes_leading Theme",
     "tos": "@:kwotes_leading Term of Services",
     "update_email": "@:kwotes_leading Update email",
     "update_password": "@:kwotes_leading Update password",
     "update_username": "@:kwotes_leading Update username",
+    "user_interface": "@:kwotes_leading User interface",
     "user_profile": "@:kwotes_leading Profile"
   },
   "password": {
@@ -894,7 +908,8 @@
       "random": "Fetch new random quotes"
     },
     "language": {
-      "change": "Change language"
+      "change": "Change language",
+      "change_app_quotes": "Change app & quotes language"
     },
     "like": {
       "name": "Like"
@@ -1062,13 +1077,31 @@
         "false": "Minimal quote actions: OFF"
       }
     },
+    "frame_border_style": {
+      "name": "Frame border style",
+      "description": "Select app frame border style",
+      "options": {
+        "colored": {
+          "name": "Colored",
+          "description": "Borders will be in one of the app topic color"
+        },
+        "highContrast": {
+          "name": "High contrast",
+          "description": "Borders will be black or white depending on the application theme"
+        },
+        "discrete": {
+          "name": "Discrete",
+          "description": "Borders will be in the same color as the app background"
+        }
+      }
+    },
     "fullscreen_quote_page": {
       "name": "Fullscreen quote page",
-      "description": "Open quote page in fullscreen mode"
+      "description": "Hide navigation bar when opening quote page"
     },
     "minimal_quote_actions": {
       "name": "Minimal quote actions",
-      "description": "Hide actions non-essential in quote page"
+      "description": "Hide non-essential actions in quote page"
     },
     "description": "Customize your experience",
     "name": "Settings",
@@ -1102,7 +1135,15 @@
   "summary": "Summary",
   "system": "System",
   "text": "Text",
-  "theme": "Theme",
+  "theme": {
+    "name": "Theme",
+    "dark": "Dark",
+    "dark_description": "Apply dark theme. Easy to the eyes at night.",
+    "light": "Light",
+    "light_description": "Apply light theme. All colors will be lighter.",
+    "system": "System",
+    "system_description": "Let your device choose the theme."
+  },
   "title": "Title",
   "topic": {
     "art": "Art",
