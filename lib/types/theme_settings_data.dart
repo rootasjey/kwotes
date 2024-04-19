@@ -1,10 +1,8 @@
-import "dart:convert";
-
 import "package:flutter/widgets.dart";
 
 class ThemeSettingsData {
   /// A class for theme page.
-  ThemeSettingsData({
+  const ThemeSettingsData({
     required this.selected,
     required this.title,
     required this.subtitle,
@@ -51,20 +49,6 @@ class ThemeSettingsData {
       "iconData": iconData.codePoint,
     };
   }
-
-  factory ThemeSettingsData.fromMap(Map<String, dynamic> map) {
-    return ThemeSettingsData(
-      selected: map["selected"] as bool,
-      title: map["title"] as String,
-      subtitle: map["subtitle"] as String,
-      iconData: IconData(map["iconData"] as int, fontFamily: "MaterialIcons"),
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory ThemeSettingsData.fromJson(String source) =>
-      ThemeSettingsData.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
