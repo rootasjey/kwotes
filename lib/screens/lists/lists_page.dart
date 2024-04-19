@@ -16,7 +16,6 @@ import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/lists/lists_page_body.dart";
 import "package:kwotes/screens/lists/lists_page_create.dart";
-import "package:kwotes/screens/lists/lists_page_fab.dart";
 import "package:kwotes/screens/lists/lists_page_header.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
@@ -54,7 +53,7 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
   bool _hasNextPage = true;
 
   /// Page accent color.
-  Color _accentColor = Colors.amber;
+  final Color _accentColor = Constants.colors.lists;
 
   /// Page's state.
   EnumPageState _pageState = EnumPageState.idle;
@@ -100,9 +99,6 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
     super.initState();
     initProps();
     fetch();
-    _accentColor = Constants.colors.getRandomFromPalette(
-      onlyDarkerColors: true,
-    );
 
     final int hintIndex = Random().nextInt(9);
     _hintListName = "list.create.hints.names.$hintIndex".tr();
@@ -119,7 +115,7 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
 
   @override
   Widget build(BuildContext context) {
-    final bool fabActive = _pageState != EnumPageState.creatingList;
+    final bool isCreateButtonActive = _pageState != EnumPageState.creatingList;
     final bool onCancelActive = _pageState != EnumPageState.creatingList;
     final bool onCreateActive = _pageState != EnumPageState.creatingList &&
         _newQuoteList.name.isNotEmpty;
@@ -139,14 +135,6 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
             ),
         },
         child: Scaffold(
-          floatingActionButton: ListsPageFab(
-            isActive: fabActive,
-            isMobileSize: isMobileSize,
-            showCreate: _showCreate,
-            backgroundColor: Colors.white,
-            splashColor: _accentColor,
-            onPressed: onToggleCreate,
-          ),
           body: ImprovedScrolling(
             scrollController: _pageScrollController,
             onScroll: onScroll,
@@ -157,10 +145,14 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
                   PageAppBar(
                     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                     isMobileSize: isMobileSize,
-                    toolbarHeight: isMobileSize ? 180.0 : 242.0,
+                    toolbarHeight: isMobileSize ? 220.0 : 242.0,
                     children: [
                       ListsPageHeader(
+                        accentColor: _accentColor,
                         isMobileSize: isMobileSize,
+                        onTapNewListButton:
+                            isCreateButtonActive ? onToggleCreate : null,
+                        showCreate: _showCreate,
                       ),
                     ],
                   ),

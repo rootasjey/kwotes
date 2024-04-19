@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/buttons/circle_button.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:wave_divider/wave_divider.dart";
 
 class ListsPageCreate extends StatelessWidget {
   /// Create list component.
@@ -120,9 +121,14 @@ class ListsPageCreate extends StatelessWidget {
                           ),
                         ),
                       ),
+                      WaveDivider(
+                        color: textColor?.withOpacity(0.4),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 16.0,
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(
-                          top: 24.0,
                           left: 8.0,
                           bottom: 6.0,
                         ),
@@ -194,9 +200,11 @@ class ListsPageCreate extends StatelessWidget {
                   top: 24.0,
                   right: 16.0,
                   child: CircleButton(
+                    tooltip: "cancel".tr(),
                     backgroundColor: Colors.black12,
                     icon: Icon(
                       TablerIcons.x,
+                      size: 16.0,
                       color: textColor,
                     ),
                     onTap: onCancel,
