@@ -72,6 +72,72 @@ class ChangelogPage extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: Text(
+                          "19/04/2024",
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w200,
+                              color: foregroundColor?.withOpacity(0.3),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "• Fix avatar size & spacing issue",
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              color: foregroundColor?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "• Remove unnecessary ownership filter on published quotes tab",
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              color: foregroundColor?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "• Remove floating action buttons on \"My Quotes\" page & \"Lists\" page",
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              color: foregroundColor?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Divider(
+                        color: foregroundColor?.withOpacity(0.2),
+                        height: 42.0,
+                      ),
+                      Text(
+                        "Previously",
+                        style: Utils.calligraphy.body(
+                          textStyle: TextStyle(
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.w200,
+                            color: foregroundColor?.withOpacity(0.8),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 0.0, bottom: 8.0),
+                        child: Text(
                           "10/04/2024",
                           style: Utils.calligraphy.body(
                             textStyle: TextStyle(
@@ -160,25 +226,8 @@ class ChangelogPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Divider(
-                        color: foregroundColor?.withOpacity(0.2),
-                        height: 42.0,
-                      ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 0.0),
-                        child: Text(
-                          "Previously",
-                          style: Utils.calligraphy.body(
-                            textStyle: TextStyle(
-                              fontSize: 24.0,
-                              fontWeight: FontWeight.w200,
-                              color: foregroundColor?.withOpacity(0.8),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
+                        padding: const EdgeInsets.only(top: 36.0, bottom: 8.0),
                         child: Text(
                           "03/04/2024",
                           style: Utils.calligraphy.body(

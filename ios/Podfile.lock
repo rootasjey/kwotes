@@ -1004,7 +1004,7 @@ SPEC CHECKSUMS:
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
   cloud_firestore: ac09bcf42ed1f477cb6eeb1d5937255023862e29
   cloud_functions: 3c404e6abc226da2c7a5a3f2b67678d1c60f3e3d
-  device_info_plus: 7545d84d8d1b896cb16a4ff98c19f07ec4b298ea
+  device_info_plus: c6fb39579d0f423935b0c9ce7ee2f44b71b9fce6
   DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: 15fd9539e4eb735dc54bae8c0534a7a9511a03de
