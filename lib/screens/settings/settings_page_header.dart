@@ -9,6 +9,7 @@ class SettingsPageHeader extends StatelessWidget {
   const SettingsPageHeader({
     super.key,
     this.isMobileSize = false,
+    this.show = true,
     this.onScrollToTop,
     this.onTapBackButton,
     this.onTapCloseIcon,
@@ -18,6 +19,9 @@ class SettingsPageHeader extends StatelessWidget {
 
   /// Adapt the user interface to narrow screen's size if true.
   final bool isMobileSize;
+
+  /// If true, the page app bar will be shown.
+  final bool show;
 
   /// Callback fired when the user scrolls to the top of the page.
   final void Function()? onScrollToTop;
@@ -36,12 +40,18 @@ class SettingsPageHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!show) {
+      return const SliverToBoxAdapter(
+        child: SizedBox.shrink(),
+      );
+    }
+
     return PageAppBar(
       elevation: 0.0,
       hideBackButton: true,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       isMobileSize: isMobileSize,
-      toolbarHeight: 82.0,
+      toolbarHeight: isMobileSize ? 82.0 : 100.0,
       children: [
         Stack(
           children: [
@@ -64,7 +74,7 @@ class SettingsPageHeader extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: Utils.calligraphy.body(
                             textStyle: TextStyle(
-                              fontSize: 18.0,
+                              fontSize: isMobileSize ? 18.0 : 24.0,
                               fontWeight: FontWeight.w500,
                               color: Theme.of(context)
                                   .textTheme

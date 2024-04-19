@@ -5,6 +5,7 @@ import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/buttons/colored_text_button.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/screens/settings/about/big_text_header.dart";
 import "package:kwotes/screens/settings/settings_page_header.dart";
 import "package:wave_divider/wave_divider.dart";
 
@@ -30,6 +31,7 @@ class AboutUsPage extends StatelessWidget {
               isMobileSize: isMobileSize,
               onTapBackButton: context.beamBack,
               title: "about.us".tr(),
+              show: isMobileSize,
             ),
             SliverPadding(
               padding: isMobileSize
@@ -45,38 +47,27 @@ class AboutUsPage extends StatelessWidget {
                     ),
               sliver: SliverToBoxAdapter(
                 child: FractionallySizedBox(
-                  widthFactor: isMobileSize ? 0.90 : 0.80,
+                  widthFactor: isMobileSize ? 0.9 : 0.7,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (!isMobileSize)
-                        IconButton(
-                          onPressed: () => Utils.passage.deepBack(context),
-                          icon: const Icon(TablerIcons.arrow_left),
-                          style: IconButton.styleFrom(
-                            backgroundColor: accentColor.withOpacity(0.1),
-                          ),
+                      BigTextHeader(
+                        show: !isMobileSize,
+                        accentColor: accentColor,
+                        titleValue: "about.us".tr(),
+                      ),
+                      WaveDivider(
+                        padding: EdgeInsets.symmetric(
+                          vertical: isMobileSize ? 24.0 : 48.0,
                         ),
-                      if (!isMobileSize)
-                        Text(
-                          "purpose.name".tr(),
-                          style: Utils.calligraphy.body(
-                            textStyle: TextStyle(
-                              fontSize: 84.0,
-                              fontWeight: FontWeight.w700,
-                              color: Constants.colors.getRandomFromPalette(
-                                onlyDarkerColors: true,
-                              ),
-                            ),
-                          ),
-                        ),
-                      const WaveDivider(
-                        padding: EdgeInsets.symmetric(vertical: 24.0),
                       ),
                       Text.rich(
                         TextSpan(
-                          text: "purpose.content.0".tr(),
+                          text: "purpose.content.company".tr(),
                           children: [
+                            TextSpan(
+                              text: "\n\n${"purpose.content.0".tr()}",
+                            ),
                             TextSpan(
                               text: " ${"purpose.content.1".tr()}",
                             ),
@@ -85,21 +76,18 @@ class AboutUsPage extends StatelessWidget {
                             ),
                             TextSpan(
                               text: " ${"purpose.content.3".tr()}.",
-                              style: TextStyle(
-                                color: Constants.colors.getRandomFromPalette(
-                                  onlyDarkerColors: true,
-                                ),
+                              style: const TextStyle(
                                 fontWeight: FontWeight.w800,
                               ),
                             ),
                             TextSpan(
-                              text: "\n\n${"purpose.content.4".tr()}",
+                              text: "\n\n${"purpose.content.4".tr()} ",
                             ),
                             TextSpan(
                               text: "purpose.content.5".tr(),
                             ),
                             TextSpan(
-                              text: "purpose.content.6".tr(),
+                              text: " ${"purpose.content.6".tr()}",
                             ),
                             TextSpan(
                               text: "\n\n${"purpose.content.7".tr()}",
@@ -126,6 +114,7 @@ class AboutUsPage extends StatelessWidget {
                           top: 42.0,
                         ),
                         style: TextButton.styleFrom(
+                          foregroundColor: accentColor,
                           backgroundColor: accentColor.withOpacity(0.2),
                         ),
                       ),

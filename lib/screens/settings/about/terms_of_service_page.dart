@@ -6,6 +6,7 @@ import "package:jiffy/jiffy.dart";
 import "package:kwotes/components/buttons/colored_text_button.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/screens/settings/about/big_text_header.dart";
 import "package:kwotes/screens/settings/settings_page_header.dart";
 import "package:wave_divider/wave_divider.dart";
 
@@ -36,22 +37,35 @@ class TermsOfServicePage extends StatelessWidget {
               onTapBackButton: context.beamBack,
               title: "tos.name".tr(),
               subtitle: subtitle,
+              show: isMobileSize,
             ),
             SliverPadding(
               padding: isMobileSize
-                  ? const EdgeInsets.only(left: 24.0, right: 24.0, bottom: 48.0)
+                  ? const EdgeInsets.only(
+                      left: 24.0,
+                      right: 24.0,
+                      bottom: 48.0,
+                    )
                   : const EdgeInsets.symmetric(
                       horizontal: 48.0,
                       vertical: 48.0,
                     ),
               sliver: SliverToBoxAdapter(
                 child: FractionallySizedBox(
-                  widthFactor: isMobileSize ? 0.9 : 0.8,
+                  widthFactor: isMobileSize ? 0.9 : 0.7,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const WaveDivider(
-                        padding: EdgeInsets.symmetric(vertical: 16.0),
+                      BigTextHeader(
+                        show: !isMobileSize,
+                        accentColor: accentColor,
+                        titleValue: "tos.name".tr(),
+                        subtitleValue: subtitle,
+                      ),
+                      WaveDivider(
+                        padding: EdgeInsets.symmetric(
+                          vertical: isMobileSize ? 24.0 : 48.0,
+                        ),
                       ),
                       Text.rich(
                         TextSpan(
@@ -82,8 +96,8 @@ class TermsOfServicePage extends StatelessWidget {
                         ),
                         style: Utils.calligraphy.body(
                           textStyle: TextStyle(
-                            fontSize: isMobileSize ? 14.0 : 24.0,
-                            fontWeight: FontWeight.w400,
+                            fontSize: isMobileSize ? 16.0 : 24.0,
+                            fontWeight: FontWeight.w300,
                             color: foregroundColor?.withOpacity(0.5),
                           ),
                         ),
@@ -95,6 +109,7 @@ class TermsOfServicePage extends StatelessWidget {
                         icon: const Icon(TablerIcons.arrow_narrow_left),
                         style: TextButton.styleFrom(
                           backgroundColor: accentColor.withOpacity(0.2),
+                          foregroundColor: accentColor,
                         ),
                       ),
                     ],

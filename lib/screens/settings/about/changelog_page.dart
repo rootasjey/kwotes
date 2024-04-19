@@ -2,6 +2,7 @@ import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/screens/settings/about/big_text_header.dart";
 import "package:kwotes/screens/settings/settings_page_header.dart";
 import "package:wave_divider/wave_divider.dart";
 
@@ -24,6 +25,7 @@ class ChangelogPage extends StatelessWidget {
               onTapBackButton: context.beamBack,
               title: "changelog.name".tr(),
               subtitle: "changelog.description".tr(),
+              show: isMobileSize,
             ),
             SliverPadding(
               padding: isMobileSize
@@ -43,13 +45,21 @@ class ChangelogPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const WaveDivider(
-                        padding: EdgeInsets.symmetric(vertical: 24.0),
+                      BigTextHeader(
+                        show: !isMobileSize,
+                        accentColor: foregroundColor,
+                        titleValue: "changelog.name".tr(),
+                        subtitleValue: "changelog.description".tr(),
+                      ),
+                      WaveDivider(
+                        padding: EdgeInsets.symmetric(
+                          vertical: isMobileSize ? 24.0 : 48.0,
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 0.0),
                         child: Text(
-                          "Last updates",
+                          "update.last".tr(),
                           style: Utils.calligraphy.body(
                             textStyle: TextStyle(
                               fontSize: 24.0,

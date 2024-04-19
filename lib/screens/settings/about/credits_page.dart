@@ -5,6 +5,7 @@ import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/buttons/colored_text_button.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/screens/settings/about/big_text_header.dart";
 import "package:kwotes/screens/settings/about/credit_item_data.dart";
 import "package:kwotes/screens/settings/settings_page_header.dart";
 import "package:url_launcher/url_launcher_string.dart";
@@ -32,6 +33,7 @@ class CreditsPage extends StatelessWidget {
               onTapBackButton: context.beamBack,
               title: "credits.name".tr(),
               subtitle: "credits.description".tr(),
+              show: isMobileSize,
             ),
             SliverPadding(
               padding: isMobileSize
@@ -51,30 +53,12 @@ class CreditsPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (!isMobileSize)
-                        Text(
-                          "credits.name".tr(),
-                          style: Utils.calligraphy.body(
-                            textStyle: TextStyle(
-                              fontSize: 84.0,
-                              fontWeight: FontWeight.w700,
-                              color: Constants.colors.getRandomFromPalette(
-                                onlyDarkerColors: true,
-                              ),
-                            ),
-                          ),
-                        ),
-                      if (!isMobileSize)
-                        Text(
-                          "credits.description".tr(),
-                          style: Utils.calligraphy.body(
-                            textStyle: TextStyle(
-                              fontSize: 24.0,
-                              fontWeight: FontWeight.w300,
-                              color: color?.withOpacity(0.6),
-                            ),
-                          ),
-                        ),
+                      BigTextHeader(
+                        show: !isMobileSize,
+                        accentColor: accentColor,
+                        titleValue: "credits.name".tr(),
+                        subtitleValue: "credits.description".tr(),
+                      ),
                       const WaveDivider(
                         padding: EdgeInsets.symmetric(vertical: 24.0),
                       ),
@@ -255,6 +239,12 @@ class CreditsPage extends StatelessWidget {
         title: "cloud_functions",
         subtitle: "Cloud functions for server-side code.",
         link: "https://pub.dev/packages/cloud_functions",
+      ),
+      CreditItemData(
+        title: "device_info_plus",
+        subtitle: "Get current device information from within "
+            "the Flutter application.",
+        link: "https://pub.dev/packages/device_info_plus",
       ),
       CreditItemData(
         title: "dismissible_page",

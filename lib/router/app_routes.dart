@@ -1,6 +1,7 @@
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/foundation.dart";
+import "package:kwotes/router/locations/about_location.dart";
 import "package:kwotes/router/locations/forgot_password_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/locations/signin_location.dart";
@@ -16,6 +17,7 @@ final BeamerDelegate appBeamerDelegate = BeamerDelegate(
       SigninLocation(),
       SignupLocation(),
       ForgotPasswordLocation(),
+      AboutLocation(),
     ],
   ),
   notFoundPage: BeamPage(
