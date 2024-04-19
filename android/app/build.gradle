@@ -74,5 +74,8 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.google.android.material:material:3.0.0'
+    // implementation 'com.google.android.material:material:3.0.0'
+    // implementation group: 'com.google.android.material', name: 'material', version: '3.0.0'
+     // Add this in addition to your other dependencies
+    implementation "androidx.activity:activity:1.6.0-alpha05"
 }
