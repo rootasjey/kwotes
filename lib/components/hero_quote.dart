@@ -212,7 +212,7 @@ class HeroQuote extends StatelessWidget {
 
     return SliverToBoxAdapter(
       child: FractionallySizedBox(
-        widthFactor: quote.name.length < 150.0 ? 0.7 : 0.9,
+        widthFactor: quote.name.length < 150.0 ? 0.8 : 0.9,
         alignment: Alignment.topLeft,
         child: Container(
           padding: margin,
