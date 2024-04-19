@@ -400,6 +400,7 @@
       }
     },
     "name": "List",
+    "new": "New list",
     "remove": {
       "failed": "An error occurred while removing your list",
       "name": "Remove list",
@@ -546,15 +547,16 @@
   },
   "purpose": {
     "content": {
+      "company": "We're a small company based in France who believe in knowledge and sharing. It's been years since we thought about this project.",
       "0": "Most quotes apps & services focus on book references and old authors, but there are outstanding quotes in movies, TV series, video games, animés, comics, and so on.",
       "1": "Today's culture is richer than ever and there're no reason to limit ourselves to one medium.",
-      "2": "This is why I started building",
+      "2": "This is why we started building",
       "3": "kwotes",
       "4": "It's a quotes application, platform and service.",
       "5": "The frontend part is build with Flutter and aims to be multiplatform (iOS, Android, Web). You can find quotes in different languages (only English and French are available for now).",
       "6": "We tried to make a simple and easy to use application with a clean user interface.",
       "7": "The platform is community-driven so you can submit your own quotes or use the app as an online quotes storage.",
-      "8": "Quotes submitted are reviewed and validated by the staff. The application is free and open-source."
+      "8": "Quotes submitted are reviewed and validated by the staff. The application is free and open-source with paid features."
     },
     "name": "Purpose",
     "the": "The Purpose"
@@ -1192,6 +1194,7 @@
     "created_with": "Privacy Policy created with GetTerms."
   },
   "update": {
+    "last": "Last update",
     "name": "Update"
   },
   "username": {

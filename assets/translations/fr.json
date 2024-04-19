@@ -401,6 +401,7 @@
       }
     },
     "name": "Liste",
+    "new": "Nouvelle liste",
     "remove": {
       "failed": "Une erreur s'est produite lors de la suppression de la liste",
       "name": "Supprimer la liste",
@@ -547,9 +548,10 @@
   },
   "purpose": {
     "content": {
+      "company": "Nous sommes une petite entreprise basée en France qui croit au partage de la connaissance. Cela fait des années que nous réfléchissons à ce projet.",
       "0": "La plupart des applications de citations référencient essentiellement des livres et de vieux auteurs, mais il existe des citations merveilleuses dans les films, séries télévisées, jeux vidéo, animes, bandes dessinées et autres.",
       "1": "La culture d'aujourd'hui est riche et variées et il n'y a aucune raison de se limiter à un seul medium.",
-      "2": "C'est pour cette raison que j'ai commencé à développer",
+      "2": "C'est pour cette raison que nous avons commencé à développer",
       "3": "kwotes",
       "4": "C'est un application, plateforme et service consacrés aux citations.",
       "5": "La partie frontend est développé avec Flutter et a pour but d'être multiplatforme (iOS, Android, Web). Vous pouurrez trouver des citations dans plusieurs langues (seulement l'Anglais et le Français sont disponibles pour le moment).",
@@ -1204,6 +1206,7 @@
     "created_with": "Politique de confidentialité créée avec GetTerms."
   },
   "update": {
+    "last": "Dernière mise à jour",
     "name": "Mettre à jour"
   },
   "username": {
