@@ -1,10 +1,8 @@
 import "package:beamer/beamer.dart";
-import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
-import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/components/page_app_bar.dart";
 import "package:kwotes/globals/constants.dart";
@@ -73,26 +71,6 @@ class _MyQuotesPageState extends State<MyQuotesPage> {
 
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: Utils.graphic.tooltip(
-          tooltipString: "quote.new".tr(),
-          child: FloatingActionButton(
-            onPressed: onPressedFab,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            foregroundColor: Theme.of(context).textTheme.bodyMedium?.color,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16.0),
-              side: BorderSide(
-                color: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.color
-                        ?.withOpacity(0.1) ??
-                    Colors.black12,
-              ),
-            ),
-            child: const Icon(TablerIcons.message_2_plus),
-          ),
-        ),
         body: ImprovedScrolling(
           scrollController: _pageScrollController,
           child: ScrollConfiguration(
@@ -103,7 +81,7 @@ class _MyQuotesPageState extends State<MyQuotesPage> {
                 PageAppBar(
                   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                   isMobileSize: isMobileSize,
-                  toolbarHeight: isMobileSize ? 200.0 : 282.0,
+                  toolbarHeight: isMobileSize ? 220.0 : 282.0,
                   children: [
                     MyQuotesPageHeader(
                       onTapTitle: onTapTitle,
@@ -202,12 +180,11 @@ class _MyQuotesPageState extends State<MyQuotesPage> {
     final UserFirestore userFirestore = signalUserFirestore.value;
     final bool canManageQuotes = userFirestore.rights.canManageQuotes;
 
-    void Function(EnumDataOwnership)? onSelectOwnership = onSelectedOnwership;
-    if (newTab == EnumMyQuotesTab.drafts) {
-      onSelectOwnership = null;
-    } else if (newTab == EnumMyQuotesTab.inValidation) {
-      onSelectOwnership = canManageQuotes ? onSelectedOnwership : null;
-    } else if (newTab == EnumMyQuotesTab.published) {
+    void Function(EnumDataOwnership)? onSelectOwnership;
+
+    if (newTab == EnumMyQuotesTab.inValidation && canManageQuotes) {
+      onSelectOwnership = onSelectedOnwership;
+    } else if (newTab == EnumMyQuotesTab.published && canManageQuotes) {
       onSelectOwnership = onSelectedOnwership;
     }
 
