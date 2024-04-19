@@ -551,6 +551,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       });
     } catch (error) {
       loggy.error(error);
+      if (!mounted) return;
       setState(() => _pageState = EnumPageState.idle);
     }
   }

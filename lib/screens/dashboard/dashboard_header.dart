@@ -48,7 +48,7 @@ class DashboardHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: isMobileSize
-          ? const EdgeInsets.only(top: 24.0, left: 24.0, right: 24.0)
+          ? const EdgeInsets.only(top: 47.0, left: 16.0, right: 24.0)
           : const EdgeInsets.only(
               top: 24.0,
               left: 48.0,

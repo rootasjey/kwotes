@@ -2,9 +2,9 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:infinite_carousel/infinite_carousel.dart";
+import "package:kwotes/components/better_avatar.dart";
 import "package:kwotes/components/context_menu_components.dart";
 import "package:kwotes/components/hero_quote.dart";
-import "package:kwotes/components/icons/app_icon.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/components/texts/random_quote_text.dart";
 import "package:kwotes/globals/constants.dart";
@@ -36,6 +36,7 @@ class MobileLayout extends StatelessWidget {
     this.onTapReference,
     this.onCopyQuote,
     this.onCopyQuoteUrl,
+    this.onTapUserAvatar,
   });
 
   /// Page's state (e.g. loading, idle, ...).
@@ -64,6 +65,9 @@ class MobileLayout extends StatelessWidget {
 
   /// Callback fired when topic is tapped.
   final void Function(Topic topic)? onTapTopic;
+
+  /// Callback fired when user avatar is tapped.
+  final void Function()? onTapUserAvatar;
 
   /// Carousel scroll controller.
   final InfiniteScrollController carouselScrollController;
@@ -115,10 +119,16 @@ class MobileLayout extends StatelessWidget {
             SliverToBoxAdapter(
               child: Container(
                 color: topBackgroundColor,
-                child: const Align(
+                child: Align(
                   alignment: Alignment.topLeft,
-                  child: AppIcon(
-                    margin: EdgeInsets.only(top: 54.0, left: 32.0),
+                  child: BetterAvatar(
+                    margin: const EdgeInsets.only(top: 47.5, left: 16.0),
+                    heroTag: "user-avatar",
+                    onTap: onTapUserAvatar,
+                    radius: 16.0,
+                    imageProvider: const AssetImage(
+                      "assets/images/profile-picture-avocado.jpg",
+                    ),
                   ),
                 ),
               ),

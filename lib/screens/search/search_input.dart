@@ -119,7 +119,7 @@ class SearchInput extends StatelessWidget {
                   BetterAvatar(
                     heroTag: "user-avatar",
                     onTap: onTapUserAvatar,
-                    radius: 18.0,
+                    radius: 16.0,
                     margin: const EdgeInsets.only(right: 8.0),
                     imageProvider: const AssetImage(
                       "assets/images/profile-picture-avocado.jpg",
