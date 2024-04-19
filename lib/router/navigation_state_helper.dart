@@ -22,6 +22,11 @@ class NavigationStateHelper {
   /// in order to syncronously know where to navigate (with the router).
   static bool fullscreenQuotePage = true;
 
+  /// Is the current device an iPad.
+  /// It's an iPad if true.
+  /// This will avoid having delay when retrieving value from async API.
+  static bool isIpad = false;
+
   /// Hide duplicated actions (e.g. [close], [copy]) on quote page,
   /// if this is true.
   static bool minimalQuoteActions = false;

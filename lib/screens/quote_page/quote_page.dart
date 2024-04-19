@@ -47,9 +47,6 @@ class QuotePage extends StatefulWidget {
 }
 
 class _QuotePageState extends State<QuotePage> with UiLoggy {
-  /// Quote data.
-  Quote _quote = Quote.empty();
-
   /// Page's state (e.g. loading, idle, ...).
   EnumPageState _pageState = EnumPageState.idle;
 
@@ -62,6 +59,9 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
     LogicalKeySet(LogicalKeyboardKey.keyA): const AddToListIntent(),
     LogicalKeySet(LogicalKeyboardKey.keyL): const LikeIntent(),
   };
+
+  /// Quote data.
+  Quote _quote = Quote.empty();
 
   /// Screenshot controller (to share quote image).
   final ScreenshotController _screenshotController = ScreenshotController();
@@ -106,7 +106,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
 
   @override
   Widget build(BuildContext context) {
-    final Size windowSize = MediaQuery.of(context).size;
+    final Size windowSize = preCalculate(MediaQuery.of(context).size);
     _textWrapSolution = Utils.graphic.getTextSolution(
       quote: _quote,
       windowSize: windowSize,
@@ -702,5 +702,13 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
         _quote = _quote.copyWith(starred: false);
       });
     }
+  }
+
+  Size preCalculate(Size size) {
+    if (!NavigationStateHelper.isIpad) {
+      return size;
+    }
+
+    return Size(size.width * 0.9, size.height * 0.5);
   }
 }

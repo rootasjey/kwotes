@@ -116,6 +116,8 @@ class _AppState extends State<App> {
       browserLanguage: Utils.linguistic.extractLanguageFromUrl(browserUrl),
     );
 
+    NavigationStateHelper.isIpad = await Utils.graphic.isIpad();
+
     if (!mounted) return;
     EasyLocalization.of(context)?.setLocale(Locale(languageCode));
     setState(() => _pageState = EnumPageState.idle);
