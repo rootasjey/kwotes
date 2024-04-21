@@ -6,13 +6,15 @@ import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/actions/user_actions.dart";
-import "package:kwotes/components/application_bar.dart";
+import "package:kwotes/components/buttons/circle_button.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
+import "package:kwotes/router/locations/settings_location.dart";
 import "package:kwotes/router/locations/signin_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/signup/signup_page_body.dart";
@@ -133,48 +135,58 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
       ),
     };
 
-    return Shortcuts(
-      shortcuts: shortcuts,
-      child: Actions(
-        actions: actions,
-        child: Scaffold(
-          body: CustomScrollView(
-            slivers: [
-              ApplicationBar(
-                hideBackIcon: true,
-                isMobileSize: isMobileSize,
-                title: const SizedBox.shrink(),
-              ),
-              SignupPageHeader(
-                isMobileSize: isMobileSize,
-                onNavigateToSignin: navigateToSigninPage,
-                accentColor: _accentColor,
-              ),
-              SignupPageBody(
-                confirmPasswordController: _confirmPasswordController,
-                confirmPasswordErrorMessage: _confirmPasswordErrorMessage,
-                confirmPasswordFocusNode: _confirmPasswordFocusNode,
-                emailController: _emailController,
-                emailErrorMessage: _emailErrorMessage,
-                emailFocusNode: _emailFocusNode,
-                hidePassword: _hidePassword,
-                isMobileSize: isMobileSize,
-                pageState: _pageState,
-                passwordController: _passwordController,
-                onCancel: onCancel,
-                onEmailChanged: onEmailChanged,
-                onHidePasswordChanged: onHidePasswordChanged,
-                onPasswordChanged: onPasswordChanged,
-                onConfirmPasswordChanged: onConfirmPasswordChanged,
-                onNavigateToSignin: navigateToSigninPage,
-                onSubmit: createAccount,
-                onUsernameChanged: onUsernameChanged,
-                accentColor: _accentColor,
-                usernameController: _usernameController,
-                usernameErrorMessage: _usernameErrorMessage,
-                usernameFocusNode: _usernameFocusNode,
-              ),
-            ],
+    return SafeArea(
+      child: Shortcuts(
+        shortcuts: shortcuts,
+        child: Actions(
+          actions: actions,
+          child: Scaffold(
+            body: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Row(
+                    children: [
+                      CircleButton(
+                        onTap: onNavigateToSettings,
+                        tooltip: "settings.name".tr(),
+                        backgroundColor: Colors.transparent,
+                        icon: const Icon(TablerIcons.settings),
+                        margin: const EdgeInsets.only(left: 16.0, top: 36.0),
+                      ),
+                    ],
+                  ),
+                ),
+                SignupPageHeader(
+                  isMobileSize: isMobileSize,
+                  onNavigateToSignin: navigateToSigninPage,
+                  accentColor: _accentColor,
+                ),
+                SignupPageBody(
+                  confirmPasswordController: _confirmPasswordController,
+                  confirmPasswordErrorMessage: _confirmPasswordErrorMessage,
+                  confirmPasswordFocusNode: _confirmPasswordFocusNode,
+                  emailController: _emailController,
+                  emailErrorMessage: _emailErrorMessage,
+                  emailFocusNode: _emailFocusNode,
+                  hidePassword: _hidePassword,
+                  isMobileSize: isMobileSize,
+                  pageState: _pageState,
+                  passwordController: _passwordController,
+                  onCancel: onCancel,
+                  onEmailChanged: onEmailChanged,
+                  onHidePasswordChanged: onHidePasswordChanged,
+                  onPasswordChanged: onPasswordChanged,
+                  onConfirmPasswordChanged: onConfirmPasswordChanged,
+                  onNavigateToSignin: navigateToSigninPage,
+                  onSubmit: createAccount,
+                  onUsernameChanged: onUsernameChanged,
+                  accentColor: _accentColor,
+                  usernameController: _usernameController,
+                  usernameErrorMessage: _usernameErrorMessage,
+                  usernameFocusNode: _usernameFocusNode,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -426,5 +438,12 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
       await checkUsername(username);
       setState(() => _pageState = EnumPageState.idle);
     });
+  }
+
+  /// Navigate to the settings page.
+  void onNavigateToSettings() {
+    Beamer.of(context, root: true).beamToNamed(
+      SettingsLocation.route,
+    );
   }
 }

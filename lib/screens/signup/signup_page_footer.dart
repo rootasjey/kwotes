@@ -1,8 +1,8 @@
+import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
-import "package:kwotes/components/buttons/dark_elevated_button.dart";
 import "package:kwotes/globals/utils.dart";
 
 class SignupPageFooter extends StatelessWidget {
@@ -13,7 +13,7 @@ class SignupPageFooter extends StatelessWidget {
     required this.passwordController,
     required this.usernameController,
     this.showBackButton = true,
-    this.randomColor = Colors.amber,
+    this.accentColor = Colors.amber,
     this.onCancel,
     this.onSubmit,
   });
@@ -24,7 +24,7 @@ class SignupPageFooter extends StatelessWidget {
   final bool showBackButton;
 
   /// A random accent color.
-  final Color randomColor;
+  final Color accentColor;
 
   /// Callback fired to cancel the current action.
   final void Function()? onCancel;
@@ -61,15 +61,18 @@ class SignupPageFooter extends StatelessWidget {
         confirmPasswordController.text,
       ),
       style: ElevatedButton.styleFrom(
-        backgroundColor: isDark ? Colors.white : null,
-        elevation: 4.0,
-        foregroundColor: randomColor,
+        backgroundColor: isDark ? accentColor.withOpacity(0.1) : null,
+        elevation: 1.0,
+        foregroundColor: accentColor,
         padding: const EdgeInsets.symmetric(
           horizontal: 16.0,
-          vertical: 18.0,
+          vertical: 12.0,
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4.0),
+          side: BorderSide(
+            color: accentColor.withOpacity(0.4),
+          ),
         ),
       ),
       child: Row(
@@ -92,7 +95,7 @@ class SignupPageFooter extends StatelessWidget {
       ),
     );
 
-    if (!showBackButton) {
+    if (!showBackButton || !context.canBeamBack) {
       return Padding(
         padding: const EdgeInsets.only(top: 36.0),
         child: submitButton,
@@ -104,14 +107,30 @@ class SignupPageFooter extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          DarkElevatedButton.icon(
-            elevation: 0.0,
-            iconData: TablerIcons.x,
-            labelValue: "cancel".tr(),
-            foreground: Theme.of(context).textTheme.bodyMedium?.color,
-            background: randomColor.withOpacity(0.4),
+          TextButton(
             onPressed: onCancel,
-            minimumSize: const Size(250.0, 60.0),
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 42.0,
+                vertical: 13.0,
+              ),
+              foregroundColor: accentColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0),
+                side: BorderSide(
+                  color: accentColor.withOpacity(0.4),
+                ),
+              ),
+            ),
+            child: Text(
+              "cancel".tr(),
+              style: Utils.calligraphy.body(
+                textStyle: const TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
           ),
           Expanded(
             flex: 1,

@@ -25,51 +25,47 @@ class ForgotPasswordButton extends StatelessWidget {
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        TextButton(
-          style: TextButton.styleFrom(
-            foregroundColor: foregroundColor,
-          ),
-          onPressed: onNavigateToForgotPassword,
-          child: Opacity(
-            opacity: 0.8,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 5.0),
-                  child: Text(
-                    "password.forgot".tr(),
-                    style: Utils.calligraphy.code(
-                      textStyle: TextStyle(
-                        color: Colors.transparent,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w600,
-                        decoration: TextDecoration.underline,
-                        shadows: [
-                          Shadow(
-                            offset: const Offset(0, -5),
-                            color: foregroundColor ?? Colors.black,
-                          ),
-                        ],
+    return TextButton(
+      style: TextButton.styleFrom(
+        foregroundColor: foregroundColor,
+      ),
+      onPressed: onNavigateToForgotPassword,
+      child: Opacity(
+        opacity: 0.8,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 5.0),
+              child: Text(
+                "password.forgot".tr(),
+                style: Utils.calligraphy.code(
+                  textStyle: TextStyle(
+                    color: Colors.transparent,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w600,
+                    decoration: TextDecoration.underline,
+                    shadows: [
+                      Shadow(
+                        offset: const Offset(0, -5),
+                        color:
+                            foregroundColor?.withOpacity(0.8) ?? Colors.black,
                       ),
-                    ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
-      ]
-          .animate(delay: 75.ms, interval: 25.ms)
-          .slideY(
-            begin: 0.8,
-            end: 0.0,
-            duration: const Duration(milliseconds: 100),
-          )
-          .fadeIn(),
-    );
+      ),
+    )
+        .animate(delay: 100.ms)
+        .slideY(
+          begin: 0.2,
+          end: 0.0,
+          duration: const Duration(milliseconds: 100),
+        )
+        .fadeIn();
   }
 }

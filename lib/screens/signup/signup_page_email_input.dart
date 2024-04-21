@@ -2,7 +2,6 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:kwotes/globals/constants.dart";
-import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 
 class SignupPageEmailInput extends StatelessWidget {
@@ -36,27 +35,14 @@ class SignupPageEmailInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final foregroundColor = Theme.of(context).textTheme.bodyMedium?.color;
+    const double borderWidth = 0.0;
+    final BorderRadius borderRadius = BorderRadius.circular(36.0);
+    final Color? foregroundColor =
+        Theme.of(context).textTheme.bodyMedium?.color;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(
-            bottom: 8.0,
-            top: 16.0,
-          ),
-          child: Text(
-            "email.name".tr(),
-            style: Utils.calligraphy.body(
-              textStyle: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.w600,
-                color: foregroundColor?.withOpacity(0.6),
-              ),
-            ),
-          ),
-        ),
         TextField(
           autofocus: false,
           controller: emailController,
@@ -65,23 +51,31 @@ class SignupPageEmailInput extends StatelessWidget {
           textInputAction: TextInputAction.next,
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
+            labelText: "email.name".tr(),
             hintText: "steven@universe.galaxy",
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 8.0,
+              horizontal: 16.0,
+            ),
             border: OutlineInputBorder(
+              borderRadius: borderRadius,
               borderSide: BorderSide(
                 color: randomColor,
-                width: 4.0,
+                width: borderWidth,
               ),
             ),
             enabledBorder: OutlineInputBorder(
+              borderRadius: borderRadius,
               borderSide: BorderSide(
                 color: foregroundColor?.withOpacity(0.4) ?? Colors.white12,
-                width: 4.0,
+                width: borderWidth,
               ),
             ),
             focusedBorder: OutlineInputBorder(
+              borderRadius: borderRadius,
               borderSide: BorderSide(
                 color: randomColor,
-                width: 4.0,
+                width: borderWidth,
               ),
             ),
           ),

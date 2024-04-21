@@ -36,7 +36,7 @@ class SigninPageHeader extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 12.0, bottom: 8.0),
               child: Icon(
-                TablerIcons.air_balloon,
+                TablerIcons.key,
                 color: accentColor,
                 size: 42.0,
               ),
@@ -55,7 +55,8 @@ class SigninPageHeader extends StatelessWidget {
               child: TextButton(
                 onPressed: onNavigateToCreateAccount,
                 style: TextButton.styleFrom(
-                  backgroundColor: accentColor.withOpacity(0.1),
+                  foregroundColor: accentColor,
+                  backgroundColor: accentColor.withOpacity(0.05),
                 ),
                 child: Opacity(
                   opacity: 0.6,
@@ -71,7 +72,12 @@ class SigninPageHeader extends StatelessWidget {
                 ),
               ),
             ),
-          ].animate().slideY(begin: 0.8, end: 0.0).fadeIn(),
+          ]
+              .animate(
+                interval: const Duration(milliseconds: 25),
+              )
+              .slideY(begin: 0.2, end: 0.0)
+              .fadeIn(),
         ),
       ),
     );

@@ -1,18 +1,17 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:kwotes/globals/utils.dart";
 
 class ForgotPasswordPageEmailInput extends StatelessWidget {
   const ForgotPasswordPageEmailInput({
     super.key,
-    this.randomColor = Colors.amber,
+    this.accentColor = Colors.amber,
     this.onEmailChanged,
     this.emailErrorMessage = "",
     required this.emailController,
   });
 
   /// Random accent color.
-  final Color randomColor;
+  final Color accentColor;
 
   /// Callback fired when typed email changed.
   final void Function(String email)? onEmailChanged;
@@ -25,52 +24,47 @@ class ForgotPasswordPageEmailInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final BorderRadius borderRadius = BorderRadius.circular(12.0);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(
-            bottom: 8.0,
-            top: 16.0,
-          ),
-          child: Text(
-            "email.name".tr(),
-            style: Utils.calligraphy.body(
-              textStyle: const TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ),
         TextField(
           autofocus: true,
           controller: emailController,
           onChanged: onEmailChanged,
           textInputAction: TextInputAction.next,
           decoration: InputDecoration(
+            labelText: "email.name".tr(),
             hintText: "steven@universe.galaxy",
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 12.0,
+              horizontal: 12.0,
+            ),
             border: OutlineInputBorder(
+              borderRadius: borderRadius,
               borderSide: BorderSide(
-                color: randomColor,
-                width: 4.0,
+                color: accentColor,
+                width: 2.0,
               ),
             ),
             enabledBorder: OutlineInputBorder(
+              borderRadius: borderRadius,
               borderSide: BorderSide(
                 color: Theme.of(context)
                         .textTheme
                         .bodyMedium
                         ?.color
-                        ?.withOpacity(0.4) ??
+                        ?.withOpacity(0.2) ??
                     Colors.white12,
-                width: 4.0,
+                width: 2.0,
               ),
             ),
             focusedBorder: OutlineInputBorder(
+              borderRadius: borderRadius,
               borderSide: BorderSide(
-                color: randomColor,
-                width: 4.0,
+                color: accentColor,
+                width: 2.0,
               ),
             ),
           ),

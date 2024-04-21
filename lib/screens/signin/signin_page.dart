@@ -3,7 +3,6 @@ import "package:flutter/material.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/actions/user_actions.dart";
-import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/components/buttons/circle_button.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
@@ -13,7 +12,6 @@ import "package:kwotes/router/locations/settings_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/signin/signin_page_body.dart";
 import "package:kwotes/screens/signin/signin_page_header.dart";
-import "package:kwotes/types/enums/enum_app_bar_mode.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/user/user_auth.dart";
 import "package:loggy/loggy.dart";
@@ -81,50 +79,51 @@ class _SigninPageState extends State<SigninPage> with UiLoggy {
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          ApplicationBar(
-            hideBackIcon: true,
-            mode: EnumAppBarMode.signin,
-            isMobileSize: isMobileSize,
-            title: const SizedBox.shrink(),
-            rightChildren: [
-              CircleButton(
-                onTap: navigateToSettings,
-                tooltip: "settings.name".tr(),
-                backgroundColor: Colors.transparent,
-                icon: const Icon(TablerIcons.settings),
+    return SafeArea(
+      child: Scaffold(
+        body: CustomScrollView(
+          slivers: <Widget>[
+            SliverToBoxAdapter(
+              child: Row(
+                children: [
+                  CircleButton(
+                    onTap: onNavigateToSettings,
+                    tooltip: "settings.name".tr(),
+                    backgroundColor: Colors.transparent,
+                    icon: const Icon(TablerIcons.settings),
+                    margin: const EdgeInsets.only(left: 16.0, top: 36.0),
+                  ),
+                ],
               ),
-            ],
-          ),
-          SigninPageHeader(
-            isMobileSize: isMobileSize,
-            onNavigateToCreateAccount: navigateToSignupPage,
-            accentColor: _accentColor,
-            margin: const EdgeInsets.only(top: 42.0),
-          ),
-          SigninPageBody(
-            accentColor: _accentColor,
-            isDark: isDark,
-            emailFocusNode: _emailFocusNode,
-            emailController: _emailController,
-            hidePassword: _hidePassword,
-            isMobileSize: isMobileSize,
-            passwordController: _passwordController,
-            onEmailChanged: onEmailChanged,
-            onHidePasswordChanged: onHidePasswordChanged,
-            onPasswordChanged: onPasswordChanged,
-            onNavigateToForgotPassword: navigateToForgotPasswordPage,
-            onNavigateToCreateAccount: navigateToSignupPage,
-            onCancel: onCancel,
-            onSubmit: (String name, String password) => connectToAccount(
-              name: name,
-              password: password,
             ),
-            passwordFocusNode: _passwordFocusNode,
-          ),
-        ],
+            SigninPageHeader(
+              isMobileSize: isMobileSize,
+              onNavigateToCreateAccount: navigateToSignupPage,
+              accentColor: _accentColor,
+              margin: const EdgeInsets.only(top: 42.0),
+            ),
+            SigninPageBody(
+              accentColor: _accentColor,
+              isDark: isDark,
+              emailFocusNode: _emailFocusNode,
+              emailController: _emailController,
+              hidePassword: _hidePassword,
+              isMobileSize: isMobileSize,
+              passwordController: _passwordController,
+              onEmailChanged: onEmailChanged,
+              onHidePasswordChanged: onHidePasswordChanged,
+              onPasswordChanged: onPasswordChanged,
+              onNavigateToForgotPassword: navigateToForgotPasswordPage,
+              onNavigateToCreateAccount: navigateToSignupPage,
+              onCancel: onCancel,
+              onSubmit: (String name, String password) => connectToAccount(
+                name: name,
+                password: password,
+              ),
+              passwordFocusNode: _passwordFocusNode,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -233,18 +232,10 @@ class _SigninPageState extends State<SigninPage> with UiLoggy {
   }
 
   /// Navigate to the settings page.
-  void navigateToSettings() {
-    final BeamerDelegate beamer = Beamer.of(context);
-    final BeamState beamState = beamer.currentBeamLocation.state as BeamState;
-    final List<String> pathSegments = beamState.pathPatternSegments;
-    final String prefix = pathSegments.first;
-
-    if (prefix == "d") {
-      beamer.beamToNamed(DashboardContentLocation.settingsRoute);
-      return;
-    }
-
-    Beamer.of(context, root: true).beamToNamed(SettingsLocation.route);
+  void onNavigateToSettings() {
+    Beamer.of(context, root: true).beamToNamed(
+      SettingsLocation.route,
+    );
   }
 
   /// Navigate to the previous page.

@@ -30,7 +30,7 @@ class SignupPageHeader extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 12.0, bottom: 8.0),
             child: Icon(
-              TablerIcons.hammer,
+              TablerIcons.door,
               size: 42.0,
               color: accentColor,
             ),
@@ -49,8 +49,8 @@ class SignupPageHeader extends StatelessWidget {
             child: TextButton(
                 onPressed: onNavigateToSignin,
                 style: TextButton.styleFrom(
-                  backgroundColor: accentColor.withOpacity(0.3),
-                  // foregroundColor: Colors.black,
+                  foregroundColor: accentColor,
+                  backgroundColor: accentColor.withOpacity(0.05),
                 ),
                 child: Opacity(
                   opacity: 0.8,

@@ -11,7 +11,7 @@ class ForgotPasswordPageFooter extends StatelessWidget {
     required this.emailController,
     this.isDark = false,
     this.showBackButton = true,
-    this.randomColor = Colors.amber,
+    this.accentColor = Colors.amber,
     this.onCancel,
     this.onSubmit,
   });
@@ -25,7 +25,7 @@ class ForgotPasswordPageFooter extends StatelessWidget {
   final bool showBackButton;
 
   /// Random accent color.
-  final Color randomColor;
+  final Color accentColor;
 
   /// Callback fired to go back or exit this page.
   final void Function()? onCancel;
@@ -42,14 +42,17 @@ class ForgotPasswordPageFooter extends StatelessWidget {
       onPressed: () => onSubmit?.call(emailController.text),
       style: ElevatedButton.styleFrom(
         backgroundColor: isDark ? Colors.white : null,
-        elevation: 0.0,
-        foregroundColor: randomColor,
+        elevation: 1.0,
+        foregroundColor: accentColor,
         padding: const EdgeInsets.symmetric(
           horizontal: 16.0,
-          vertical: 18.0,
+          vertical: 12.0,
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4.0),
+          side: BorderSide(
+            color: accentColor.withOpacity(0.4),
+          ),
         ),
       ),
       child: Row(
@@ -68,7 +71,7 @@ class ForgotPasswordPageFooter extends StatelessWidget {
             padding: const EdgeInsets.only(left: 8.0),
             child: Icon(
               TablerIcons.arrow_right,
-              color: randomColor,
+              color: accentColor,
             ),
           ),
         ],
@@ -81,7 +84,7 @@ class ForgotPasswordPageFooter extends StatelessWidget {
           top: 24.0,
         ),
         child: submitButton,
-      ).animate(delay: 180.ms).slideY(begin: 0.8, end: 0.0).fadeIn();
+      ).animate(delay: 120.ms).slideY(begin: 0.2, end: 0.0).fadeIn();
     }
 
     return Padding(
@@ -98,7 +101,7 @@ class ForgotPasswordPageFooter extends StatelessWidget {
             elevation: 0.0,
             labelValue: "cancel".tr(),
             iconData: TablerIcons.x,
-            background: randomColor.withOpacity(0.4),
+            background: accentColor.withOpacity(0.4),
             foreground: Theme.of(context).textTheme.bodyMedium?.color,
             onPressed: () => onCancel?.call(),
             minimumSize: const Size(250.0, 60.0),
@@ -110,7 +113,7 @@ class ForgotPasswordPageFooter extends StatelessWidget {
               child: submitButton,
             ),
           ),
-        ].animate(delay: 180.ms).slideY(begin: 0.8, end: 0.0).fadeIn(),
+        ].animate(delay: 120.ms).slideY(begin: 0.2, end: 0.0).fadeIn(),
       ),
     );
   }

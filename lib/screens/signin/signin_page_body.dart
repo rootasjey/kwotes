@@ -89,6 +89,10 @@ class SigninPageBody extends StatelessWidget {
                 focusNode: emailFocusNode,
                 emailController: emailController,
                 onEmailChanged: onEmailChanged,
+                margin: const EdgeInsets.only(
+                  top: 36.0,
+                  bottom: 24.0,
+                ),
               ),
               SigninPagePasswordInput(
                 accentColor: accentColor,

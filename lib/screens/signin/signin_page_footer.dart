@@ -1,8 +1,8 @@
+import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
-import "package:kwotes/components/buttons/dark_elevated_button.dart";
 import "package:kwotes/globals/utils.dart";
 
 class SigninPageFooter extends StatelessWidget {
@@ -49,15 +49,19 @@ class SigninPageFooter extends StatelessWidget {
         passwordController.text,
       ),
       style: ElevatedButton.styleFrom(
-        backgroundColor: isDark ? Colors.white : null,
-        elevation: 4.0,
+        backgroundColor: isDark ? accentColor.withOpacity(0.1) : null,
+        elevation: 1.0,
+        enableFeedback: true,
         foregroundColor: accentColor,
         padding: const EdgeInsets.symmetric(
           horizontal: 16.0,
-          vertical: 18.0,
+          vertical: 12.0,
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4.0),
+          side: BorderSide(
+            color: accentColor.withOpacity(0.4),
+          ),
         ),
       ),
       child: Row(
@@ -80,16 +84,15 @@ class SigninPageFooter extends StatelessWidget {
       ),
     );
 
-    if (!showBackButton) {
+    if (!showBackButton || !context.canBeamBack) {
       return Padding(
         padding: const EdgeInsets.only(top: 36.0),
         child: submitButton,
       )
-          .animate(delay: 100.ms)
+          .animate(delay: 125.ms)
           .slideY(
-            begin: 0.8,
+            begin: 0.2,
             end: 0.0,
-            duration: const Duration(milliseconds: 100),
           )
           .fadeIn();
     }
@@ -100,14 +103,32 @@ class SigninPageFooter extends StatelessWidget {
       ),
       child: Row(
         children: [
-          DarkElevatedButton.icon(
-            elevation: 0.0,
-            iconData: TablerIcons.x,
-            labelValue: "cancel".tr(),
-            foreground: Theme.of(context).textTheme.bodyMedium?.color,
-            background: accentColor.withOpacity(0.4),
+          TextButton(
             onPressed: onCancel,
-            minimumSize: const Size(250.0, 60.0),
+            style: TextButton.styleFrom(
+              foregroundColor: accentColor,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 42.0,
+                vertical: 14.0,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0),
+                side: BorderSide(
+                  color: accentColor.withOpacity(0.4),
+                ),
+              ),
+            ),
+            child: Text(
+              "cancel".tr(),
+              style: Utils.calligraphy.body(
+                textStyle: Utils.calligraphy.body(
+                  textStyle: const TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
           ),
           Expanded(
             flex: 1,
@@ -117,11 +138,10 @@ class SigninPageFooter extends StatelessWidget {
             ),
           ),
         ]
-            .animate(delay: 100.ms, interval: 25.ms)
+            .animate(delay: 125.ms, interval: 25.ms)
             .slideY(
-              begin: 0.8,
+              begin: 0.2,
               end: 0.0,
-              duration: const Duration(milliseconds: 100),
             )
             .fadeIn(),
       ),

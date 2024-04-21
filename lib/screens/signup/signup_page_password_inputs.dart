@@ -4,7 +4,6 @@ import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/buttons/sufffix_button.dart";
 import "package:kwotes/globals/constants.dart";
-import "package:kwotes/globals/utils.dart";
 
 class SignupPagePasswordInputs extends StatelessWidget {
   const SignupPagePasswordInputs({
@@ -74,9 +73,16 @@ class SignupPagePasswordInputs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const double borderWidth = 0.0;
+    final BorderRadius borderRadius = BorderRadius.circular(36.0);
     const double inputWidth = 260.0;
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
+
+    const EdgeInsets contentPadding = EdgeInsets.symmetric(
+      vertical: 8.0,
+      horizontal: 16.0,
+    );
 
     return Padding(
       padding: const EdgeInsets.only(top: 16.0),
@@ -86,25 +92,12 @@ class SignupPagePasswordInputs extends StatelessWidget {
           SizedBox(
             width: 600.0,
             child: Wrap(
-              spacing: 12.0,
-              runSpacing: 12.0,
+              spacing: 24.0,
+              runSpacing: 24.0,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Text(
-                        "password.name".tr(),
-                        style: Utils.calligraphy.body(
-                          textStyle: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w600,
-                            color: foregroundColor?.withOpacity(0.6),
-                          ),
-                        ),
-                      ),
-                    ),
                     SizedBox(
                       width: isMobileSize ? null : inputWidth,
                       child: TextField(
@@ -116,6 +109,8 @@ class SignupPagePasswordInputs extends StatelessWidget {
                         onChanged: onPasswordChanged,
                         decoration: InputDecoration(
                           hintText: "•••••••••••",
+                          labelText: "password.name".tr(),
+                          contentPadding: contentPadding,
                           suffixIcon: SuffixButton(
                             icon: Icon(hidePassword
                                 ? TablerIcons.eye
@@ -127,16 +122,18 @@ class SignupPagePasswordInputs extends StatelessWidget {
                                 onHidePasswordChanged?.call(!hidePassword),
                           ),
                           focusedBorder: OutlineInputBorder(
+                            borderRadius: borderRadius,
                             borderSide: BorderSide(
                               color: randomColor,
-                              width: 4.0,
+                              width: borderWidth,
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
+                            borderRadius: borderRadius,
                             borderSide: BorderSide(
                               color: foregroundColor?.withOpacity(0.4) ??
                                   Colors.white12,
-                              width: 4.0,
+                              width: borderWidth,
                             ),
                           ),
                         ),
@@ -147,19 +144,6 @@ class SignupPagePasswordInputs extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Text(
-                        "password.confirm".tr(),
-                        style: Utils.calligraphy.body(
-                          textStyle: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w600,
-                            color: foregroundColor?.withOpacity(0.6),
-                          ),
-                        ),
-                      ),
-                    ),
                     SizedBox(
                       width: isMobileSize ? null : inputWidth,
                       child: TextField(
@@ -184,11 +168,17 @@ class SignupPagePasswordInputs extends StatelessWidget {
                           );
                         },
                         decoration: InputDecoration(
+                          isDense: true,
                           hintText: "•••••••••••",
+                          labelText: "password.confirm".tr(),
+                          contentPadding: contentPadding,
                           suffixIcon: SuffixButton(
-                            icon: Icon(hidePassword
-                                ? TablerIcons.eye
-                                : TablerIcons.eye_off),
+                            icon: Icon(
+                              hidePassword
+                                  ? TablerIcons.eye
+                                  : TablerIcons.eye_off,
+                              size: 24.0,
+                            ),
                             tooltipString: hidePassword
                                 ? "password.show".tr()
                                 : "password.hide".tr(),
@@ -196,20 +186,18 @@ class SignupPagePasswordInputs extends StatelessWidget {
                                 onHidePasswordChanged?.call(!hidePassword),
                           ),
                           focusedBorder: OutlineInputBorder(
+                            borderRadius: borderRadius,
                             borderSide: BorderSide(
                               color: randomColor,
-                              width: 4.0,
+                              width: borderWidth,
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
+                            borderRadius: borderRadius,
                             borderSide: BorderSide(
-                              color: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.color
-                                      ?.withOpacity(0.4) ??
+                              color: foregroundColor?.withOpacity(0.4) ??
                                   Colors.white12,
-                              width: 4.0,
+                              width: borderWidth,
                             ),
                           ),
                         ),

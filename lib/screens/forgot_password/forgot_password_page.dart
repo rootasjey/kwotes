@@ -2,9 +2,11 @@ import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
-import "package:kwotes/components/application_bar.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/buttons/circle_button.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/router/locations/settings_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/forgot_password/forgot_password_page_header.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
@@ -68,20 +70,37 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> with UiLoggy {
         windowWidth <= mobileTreshold || windowSize.height <= mobileTreshold;
 
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final Color randomColor = Constants.colors.getRandomFromPalette(
+    final Color accentColor = Constants.colors.getRandomFromPalette(
       onlyDarkerColors: true,
     );
 
     return Scaffold(
       body: CustomScrollView(slivers: [
-        ApplicationBar(
-          title: const SizedBox.shrink(),
-          isMobileSize: isMobileSize,
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16.0, top: 36.0),
+            child: Row(
+              children: [
+                CircleButton(
+                  onTap: onGoBack,
+                  backgroundColor: Colors.transparent,
+                  icon: const Icon(TablerIcons.arrow_left),
+                ),
+                CircleButton(
+                  onTap: onNavigateToSettings,
+                  tooltip: "settings.name".tr(),
+                  backgroundColor: Colors.transparent,
+                  icon: const Icon(TablerIcons.settings),
+                  // margin: const EdgeInsets.only(left: 16.0, top: 36.0),
+                ),
+              ],
+            ),
+          ),
         ),
         ForgotPasswordPageHeader(
           isMobileSize: isMobileSize,
           margin: const EdgeInsets.only(top: 42.0, left: 12.0, right: 12.0),
-          randomColor: randomColor,
+          randomColor: accentColor,
         ),
         ForgotPasswordPageBody(
           isDark: isDark,
@@ -91,7 +110,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> with UiLoggy {
           onCancel: onCancel,
           onEmailChanged: checkEmail,
           onSubmit: trySendResetLink,
-          randomColor: randomColor,
+          randomColor: accentColor,
         ),
       ]),
     );
@@ -132,6 +151,13 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> with UiLoggy {
     Beamer.of(context, root: true).beamToNamed(HomeLocation.route);
   }
 
+  /// Navigate to the settings page.
+  void onNavigateToSettings() {
+    Beamer.of(context, root: true).beamToNamed(
+      SettingsLocation.route,
+    );
+  }
+
   void trySendResetLink(String email) async {
     if (!checkEmail(email)) {
       return;
@@ -153,5 +179,25 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> with UiLoggy {
       setState(() => _pageState = EnumPageState.idle);
       Utils.graphic.showSnackbar(context, message: "email.doesnt_exist".tr());
     }
+  }
+
+  void onGoBack() {
+    final String location = Beamer.of(context)
+        .beamingHistory
+        .last
+        .history
+        .last
+        .routeInformation
+        .uri
+        .toString();
+
+    final bool hasHistory = location != HomeLocation.route;
+
+    if (hasHistory) {
+      Beamer.of(context).beamBack();
+      return;
+    }
+
+    Beamer.of(context, root: true).beamToNamed(HomeLocation.route);
   }
 }
