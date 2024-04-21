@@ -50,6 +50,10 @@ class ListsPageCreate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color? textColor = Theme.of(context).textTheme.bodyMedium?.color;
+    const buttonPadding = EdgeInsets.symmetric(
+      horizontal: 18.0,
+      vertical: 6.0,
+    );
 
     return SliverToBoxAdapter(
       child: AnimatedSize(
@@ -140,10 +144,7 @@ class ListsPageCreate extends StatelessWidget {
                             TextButton(
                               onPressed: onCancel,
                               style: TextButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 18.0,
-                                  vertical: 12.0,
-                                ),
+                                padding: buttonPadding,
                                 backgroundColor: Colors.black12,
                                 foregroundColor: Theme.of(context)
                                     .textTheme
@@ -166,10 +167,7 @@ class ListsPageCreate extends StatelessWidget {
                             TextButton(
                               onPressed: onCreate,
                               style: TextButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 18.0,
-                                  vertical: 12.0,
-                                ),
+                                padding: buttonPadding,
                                 backgroundColor:
                                     onCreate != null ? accentColor : null,
                                 foregroundColor:
@@ -200,6 +198,7 @@ class ListsPageCreate extends StatelessWidget {
                   top: 24.0,
                   right: 16.0,
                   child: CircleButton(
+                    radius: 14.0,
                     tooltip: "cancel".tr(),
                     backgroundColor: Colors.black12,
                     icon: Icon(

@@ -70,7 +70,7 @@ class ListsPageHeader extends StatelessWidget {
             style: TextButton.styleFrom(
               foregroundColor: foregroundColor,
               padding: const EdgeInsets.symmetric(
-                vertical: 12.0,
+                vertical: 0.0,
                 horizontal: 24.0,
               ),
               shape: StadiumBorder(
