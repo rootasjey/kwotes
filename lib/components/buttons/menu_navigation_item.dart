@@ -42,9 +42,10 @@ class MenuNavigationItem extends StatelessWidget {
       children: [
         JustTheTooltip(
           tailLength: 10.0,
-          preferredDirection: AxisDirection.left,
+          preferredDirection: AxisDirection.up,
           waitDuration: const Duration(seconds: 1),
-          content: Padding(
+          content: Container(
+            color: Theme.of(context).cardColor,
             padding: const EdgeInsets.all(8.0),
             child: Text(
               tooltip ?? "",

@@ -160,70 +160,73 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
               body: body,
             );
           },
-          child: Row(
+          child: Stack(
             children: [
-              Expanded(
-                child: Container(
-                  color: Colors.transparent,
-                  padding: const EdgeInsets.all(8.0),
-                  child: Material(
-                    borderRadius: const BorderRadius.all(Radius.circular(12.0)),
-                    clipBehavior: Clip.antiAlias,
-                    child: _widgetChildren[_currentIndex],
-                  ),
+              Container(
+                color: Colors.transparent,
+                padding: const EdgeInsets.all(8.0),
+                child: Material(
+                  borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+                  clipBehavior: Clip.antiAlias,
+                  child: _widgetChildren[_currentIndex],
                 ),
               ),
-              SignalBuilder(
-                signal: signalNavigationBar,
-                builder: (BuildContext context, bool show, Widget? child) {
-                  if (show) {
-                    return child ?? const SizedBox.shrink();
-                  }
+              Positioned(
+                bottom: 12.0,
+                left: 0.0,
+                right: 0.0,
+                child: SignalBuilder(
+                  signal: signalNavigationBar,
+                  builder: (BuildContext context, bool show, Widget? child) {
+                    if (show) {
+                      return child ?? const SizedBox.shrink();
+                    }
 
-                  return const SizedBox.shrink();
-                },
-                child: Container(
-                  color: Colors.transparent,
-                  padding: const EdgeInsets.all(8.0).subtract(
-                    const EdgeInsets.only(left: 8.0),
-                  ),
-                  child: Material(
-                    color: isDarkTheme ? Colors.black87 : Colors.white,
-                    elevation: isDarkTheme ? 4.0 : 0.0,
-                    borderRadius: const BorderRadius.all(Radius.circular(12.0)),
-                    child: SizedBox(
-                      width: 90.0,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          MenuNavigationItem(
-                            index: 0,
-                            label: "home".tr(),
-                            icon: const Icon(TablerIcons.home),
-                            onTap: onTapBottomBarItem,
-                            selectedColor: Constants.colors.home,
-                            selected: _currentIndex == 0,
-                            tooltip: "home".tr(),
-                          ),
-                          MenuNavigationItem(
-                            icon: const Icon(TablerIcons.search),
-                            index: 1,
-                            label: "search.name".tr(),
-                            onTap: onTapBottomBarItem,
-                            selected: _currentIndex == 1,
-                            selectedColor: Constants.colors.search,
-                            tooltip: "search.name".tr(),
-                          ),
-                          MenuNavigationItem(
-                            icon: const Icon(TablerIcons.notebook),
-                            index: 2,
-                            label: "dashboard".tr(),
-                            onTap: onTapBottomBarItem,
-                            selected: _currentIndex == 2,
-                            selectedColor: Constants.colors.delete,
-                            tooltip: "dashboard".tr(),
-                          ),
-                        ],
+                    return const SizedBox.shrink();
+                  },
+                  child: Center(
+                    child: Container(
+                      width: 320.0,
+                      height: 120.0,
+                      color: Colors.transparent,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0,
+                        vertical: 24.0,
+                      ),
+                      child: Material(
+                        color: isDarkTheme ? Colors.black87 : Colors.white,
+                        elevation: isDarkTheme ? 4.0 : 0.0,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(54.0)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            MenuNavigationItem(
+                              index: 0,
+                              icon: const Icon(TablerIcons.home),
+                              onTap: onTapBottomBarItem,
+                              selectedColor: Constants.colors.home,
+                              selected: _currentIndex == 0,
+                              tooltip: "home".tr(),
+                            ),
+                            MenuNavigationItem(
+                              icon: const Icon(TablerIcons.search),
+                              index: 1,
+                              onTap: onTapBottomBarItem,
+                              selected: _currentIndex == 1,
+                              selectedColor: Constants.colors.search,
+                              tooltip: "search.name".tr(),
+                            ),
+                            MenuNavigationItem(
+                              icon: const Icon(TablerIcons.notebook),
+                              index: 2,
+                              onTap: onTapBottomBarItem,
+                              selected: _currentIndex == 2,
+                              selectedColor: Constants.colors.delete,
+                              tooltip: "dashboard".tr(),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
