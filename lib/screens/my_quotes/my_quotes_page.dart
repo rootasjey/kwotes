@@ -8,6 +8,7 @@ import "package:kwotes/components/page_app_bar.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
+import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/drafts/drafts_page.dart";
 import "package:kwotes/screens/in_validation/in_validation_page.dart";
 import "package:kwotes/screens/my_quotes/my_quotes_page_header.dart";
@@ -197,18 +198,20 @@ class _MyQuotesPageState extends State<MyQuotesPage> {
     final bool showAllOwnership =
         newTab == EnumMyQuotesTab.published || canManageQuotes;
 
+    final bool isIpad = NavigationStateHelper.isIpad;
+
     Utils.graphic.showAdaptiveDialog(
       context,
-      isMobileSize: true,
+      isMobileSize: Utils.graphic.isMobile() || isIpad,
       builder: (BuildContext context) {
         return Align(
           heightFactor: 1.0,
           alignment: Alignment.bottomCenter,
           child: Padding(
-            padding: const EdgeInsets.only(
+            padding: EdgeInsets.only(
               left: 16.0,
               right: 16.0,
-              bottom: 24.0,
+              bottom: isIpad ? 160.0 : 24.0,
               top: 12.0,
             ),
             child: HeaderFilter(

@@ -513,7 +513,9 @@ class _ListPageState extends State<ListPage> with UiLoggy {
 
     Utils.graphic.showAddToListDialog(
       context,
-      isMobileSize: Utils.measurements.isMobileSize(context),
+      isMobileSize: Utils.measurements.isMobileSize(context) ||
+          NavigationStateHelper.isIpad,
+      isIpad: NavigationStateHelper.isIpad,
       quotes: [quote],
       userId: userId,
     );

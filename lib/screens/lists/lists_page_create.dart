@@ -50,7 +50,7 @@ class ListsPageCreate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color? textColor = Theme.of(context).textTheme.bodyMedium?.color;
-    const buttonPadding = EdgeInsets.symmetric(
+    const EdgeInsets buttonPadding = EdgeInsets.symmetric(
       horizontal: 18.0,
       vertical: 6.0,
     );
@@ -68,7 +68,7 @@ class ListsPageCreate extends StatelessWidget {
                   bottom: 24.0,
                 )
               : const EdgeInsets.only(
-                  left: 24.0,
+                  left: 54.0,
                   right: 90.0,
                   bottom: 24.0,
                 ),

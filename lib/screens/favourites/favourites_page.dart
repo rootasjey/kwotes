@@ -297,7 +297,9 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
 
     Utils.graphic.showAddToListDialog(
       context,
-      isMobileSize: Utils.measurements.isMobileSize(context),
+      isMobileSize: Utils.measurements.isMobileSize(context) ||
+          NavigationStateHelper.isIpad,
+      isIpad: NavigationStateHelper.isIpad,
       quotes: [quote],
       userId: userId,
     );

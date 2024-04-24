@@ -114,7 +114,6 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
         slivers: [
           ApplicationBar(
             pinned: false,
-            toolbarHeight: 48.0,
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             isMobileSize: isMobileSize,
             title: const SizedBox.shrink(),

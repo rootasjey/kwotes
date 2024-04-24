@@ -5,6 +5,8 @@ import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/context_menu_components.dart";
 import "package:kwotes/components/empty_view.dart";
 import "package:kwotes/components/loading_view.dart";
+import "package:kwotes/components/swipe_from_left_container.dart";
+import "package:kwotes/components/swipe_from_right_container.dart";
 import "package:kwotes/components/texts/draft_quote_text.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/types/draft_quote.dart";
@@ -134,7 +136,7 @@ class DraftsPageBody extends StatelessWidget {
                       if (triggered && !vibrated) {
                         Vibration.hasVibrator().then((bool? hasVibrator) {
                           if (hasVibrator ?? false) {
-                            Vibration.vibrate(amplitude: 12);
+                            Vibration.vibrate(amplitude: 20, duration: 25);
                           }
                         });
 
@@ -149,22 +151,9 @@ class DraftsPageBody extends StatelessWidget {
                             : Constants.colors.delete.withOpacity(
                                 Constants.colors.swipeStartOpacity,
                               );
-
-                        return Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                            color: color,
-                          ),
-                          child: const Align(
-                            alignment: Alignment.centerRight,
-                            child: Padding(
-                              padding: EdgeInsets.only(right: 24.0),
-                              child: Icon(
-                                TablerIcons.trash,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
+                        return SwipeFromRightContainer(
+                          color: color,
+                          iconData: TablerIcons.trash,
                         );
                       } else if (direction == SwipeDirection.startToEnd) {
                         final Color color = triggered
@@ -173,21 +162,9 @@ class DraftsPageBody extends StatelessWidget {
                                 Constants.colors.swipeStartOpacity,
                               );
 
-                        return Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                            color: color,
-                          ),
-                          child: const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 24.0),
-                              child: Icon(
-                                TablerIcons.send,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
+                        return SwipeFromLeftContainer(
+                          color: color,
+                          iconData: TablerIcons.send,
                         );
                       }
 
@@ -197,7 +174,8 @@ class DraftsPageBody extends StatelessWidget {
                 },
                 child: DraftQuoteText(
                   draftQuote: draftQuote,
-                  margin: const EdgeInsets.only(bottom: 0.0),
+                  margin: const EdgeInsets.symmetric(horizontal: 12.0),
+                  contraints: const BoxConstraints(minHeight: 90.0),
                   onTap: onTap,
                   magnitude: isMobileSize
                       ? EnumQuoteTextMagnitude.medium

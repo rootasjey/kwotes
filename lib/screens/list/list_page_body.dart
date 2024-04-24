@@ -5,6 +5,8 @@ import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/context_menu_components.dart";
 import "package:kwotes/components/empty_view.dart";
 import "package:kwotes/components/loading_view.dart";
+import "package:kwotes/components/swipe_from_left_container.dart";
+import "package:kwotes/components/swipe_from_right_container.dart";
 import "package:kwotes/components/texts/quote_text.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
@@ -152,7 +154,7 @@ class ListPageBody extends StatelessWidget {
                     if (triggered && !vibrated) {
                       Vibration.hasVibrator().then((bool? hasVibrator) {
                         if (hasVibrator ?? false) {
-                          Vibration.vibrate(amplitude: 12);
+                          Vibration.vibrate(amplitude: 20, duration: 25);
                         }
                       });
 
@@ -167,22 +169,9 @@ class ListPageBody extends StatelessWidget {
                           : Constants.colors.delete.withOpacity(
                               Constants.colors.swipeStartOpacity,
                             );
-
-                      return Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.0),
-                          color: color,
-                        ),
-                        child: const Align(
-                          alignment: Alignment.centerRight,
-                          child: Padding(
-                            padding: EdgeInsets.only(right: 24.0),
-                            child: Icon(
-                              TablerIcons.trash,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
+                      return SwipeFromRightContainer(
+                        color: color,
+                        iconData: TablerIcons.trash,
                       );
                     } else if (direction == SwipeDirection.startToEnd) {
                       final Color color = triggered
@@ -191,21 +180,9 @@ class ListPageBody extends StatelessWidget {
                               Constants.colors.swipeStartOpacity,
                             );
 
-                      return Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.0),
-                          color: color,
-                        ),
-                        child: const Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 24.0),
-                            child: Icon(
-                              TablerIcons.plus,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
+                      return SwipeFromLeftContainer(
+                        color: color,
+                        iconData: TablerIcons.plus,
                       );
                     }
 
@@ -214,12 +191,14 @@ class ListPageBody extends StatelessWidget {
                 );
               },
               child: QuoteText(
-                quote: quote,
-                onDoubleTap: onDoubleTap,
-                onTap: onTap,
+                contraints: const BoxConstraints(minHeight: 90.0),
+                margin: const EdgeInsets.symmetric(horizontal: 12.0),
                 magnitude: isMobileSize
                     ? EnumQuoteTextMagnitude.medium
                     : EnumQuoteTextMagnitude.big,
+                onDoubleTap: onDoubleTap,
+                onTap: onTap,
+                quote: quote,
               )
                   .animate()
                   .slideY(

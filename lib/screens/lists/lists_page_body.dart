@@ -151,7 +151,7 @@ class ListsPageBody extends StatelessWidget {
                     if (triggered && !vibrated) {
                       Vibration.hasVibrator().then((bool? hasVibrator) {
                         if (hasVibrator ?? false) {
-                          Vibration.vibrate(amplitude: 12);
+                          Vibration.vibrate(amplitude: 20, duration: 25);
                         }
                       });
 
@@ -169,16 +169,31 @@ class ListsPageBody extends StatelessWidget {
 
                       return Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.0),
-                          color: color,
+                          borderRadius: BorderRadius.circular(24.0),
+                          gradient: LinearGradient(
+                            colors: [
+                              color.withOpacity(0.0),
+                              color.withOpacity(0.0),
+                              color.withOpacity(0.0),
+                              color.withOpacity(0.0),
+                              color.withOpacity(0.1),
+                            ],
+                          ),
                         ),
-                        child: const Align(
-                          alignment: Alignment.centerRight,
-                          child: Padding(
-                            padding: EdgeInsets.only(right: 24.0),
-                            child: Icon(
-                              TablerIcons.trash,
-                              color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 6.0),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: color,
+                                borderRadius: BorderRadius.circular(24.0),
+                              ),
+                              padding: const EdgeInsets.all(24.0),
+                              child: const Icon(
+                                TablerIcons.trash,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
@@ -192,16 +207,29 @@ class ListsPageBody extends StatelessWidget {
 
                       return Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.0),
-                          color: color,
+                          borderRadius: BorderRadius.circular(24.0),
+                          gradient: LinearGradient(colors: [
+                            color.withOpacity(0.1),
+                            color.withOpacity(0.0),
+                            color.withOpacity(0.0),
+                            color.withOpacity(0.0),
+                            color.withOpacity(0.0),
+                          ]),
                         ),
-                        child: const Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 24.0),
-                            child: Icon(
-                              TablerIcons.edit,
-                              color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 6.0),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: color,
+                                borderRadius: BorderRadius.circular(24.0),
+                              ),
+                              padding: const EdgeInsets.all(24.0),
+                              child: const Icon(
+                                TablerIcons.edit,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
@@ -217,7 +245,7 @@ class ListsPageBody extends StatelessWidget {
                 tiny: isMobileSize,
                 isEditing: isEditing,
                 isDeleting: isDeleting,
-                margin: const EdgeInsets.only(bottom: 0.0),
+                margin: const EdgeInsets.symmetric(horizontal: 12.0),
                 onCancelEditMode: onCancelEditListMode,
                 onTap: quoteList.id.isEmpty ? null : onTap,
                 onSaveChanges: onSaveListChanges,
