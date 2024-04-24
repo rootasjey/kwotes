@@ -114,6 +114,8 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
         slivers: [
           ApplicationBar(
             pinned: false,
+            toolbarHeight: 48.0,
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             isMobileSize: isMobileSize,
             title: const SizedBox.shrink(),
             rightChildren: canManageReference
@@ -187,7 +189,11 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
     try {
       return TextWrapAutoSize.solution(
         Size(width, height),
-        Text(_reference.name, style: Utils.calligraphy.title()),
+        Text(
+          _reference.name,
+          maxLines: 2,
+          style: Utils.calligraphy.title(),
+        ),
       );
     } catch (e) {
       loggy.error(e);
@@ -379,6 +385,7 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
           "query": "quotes:reference:${_reference.id}",
           "subjectName": _reference.name,
         },
+        replaceRouteInformation: true,
       );
       return;
     }

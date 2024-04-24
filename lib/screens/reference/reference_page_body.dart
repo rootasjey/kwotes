@@ -100,6 +100,7 @@ class ReferencePageBody extends StatelessWidget {
                   color: Colors.transparent,
                   child: Text(
                     reference.name,
+                    softWrap: true,
                     style: referenceNameTextStyle,
                   ),
                 ),
@@ -134,9 +135,10 @@ class ReferencePageBody extends StatelessWidget {
           ),
           GestureDetector(
             onDoubleTap: onDoubleTapSummary,
-            child: FractionallySizedBox(
-              alignment: Alignment.topLeft,
-              widthFactor: isMobileSize ? 1.0 : 0.7,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: 800.0,
+              ),
               child: Padding(
                 padding: EdgeInsets.only(
                   left: leftPadding,
@@ -156,7 +158,7 @@ class ReferencePageBody extends StatelessWidget {
                     animatedTexts: [
                       TypewriterAnimatedText(
                         reference.summary,
-                        speed: const Duration(milliseconds: 10),
+                        speed: const Duration(milliseconds: 3),
                         curve: Curves.decelerate,
                       ),
                     ],
