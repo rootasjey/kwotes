@@ -213,8 +213,8 @@ class EmptyView extends StatelessWidget {
                 style: TextButton.styleFrom(
                   backgroundColor: accentColor?.withOpacity(0.2),
                   padding: const EdgeInsets.symmetric(
-                    vertical: 16.0,
-                    horizontal: 24.0,
+                    vertical: 8.0,
+                    horizontal: 18.0,
                   ),
                 ),
               ),

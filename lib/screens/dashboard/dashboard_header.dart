@@ -75,7 +75,7 @@ class DashboardHeader extends StatelessWidget {
                 backgroundColor: isDark ? Colors.black : Colors.white,
                 foregroundColor: foregroundColor,
                 padding: const EdgeInsets.symmetric(
-                  vertical: 12.0,
+                  vertical: 6.0,
                   horizontal: 24.0,
                 ),
                 shape: const StadiumBorder(),

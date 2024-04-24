@@ -47,7 +47,7 @@ class AboutUsPage extends StatelessWidget {
                     ),
               sliver: SliverToBoxAdapter(
                 child: FractionallySizedBox(
-                  widthFactor: isMobileSize ? 0.9 : 0.7,
+                  widthFactor: isMobileSize ? 0.9 : 0.80,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

@@ -67,11 +67,18 @@ class SaveQuoteButton extends StatelessWidget {
             style: TextButton.styleFrom(
               padding: const EdgeInsets.symmetric(
                 horizontal: 12.0,
-                vertical: 16.0,
+                vertical: 12.0,
+              ),
+              elevation: 2.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              side: BorderSide(
+                color: Theme.of(context).primaryColor.withOpacity(0.6),
+                width: 1.0,
               ),
               foregroundColor: fabForegroundColor,
               backgroundColor: Theme.of(context).primaryColor.withOpacity(0.2),
-              elevation: 0.0,
             ),
             child: Wrap(
               spacing: 12.0,

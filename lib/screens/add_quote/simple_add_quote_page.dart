@@ -144,7 +144,7 @@ class SimpleAddQuotePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final EdgeInsets margin = isMobileSize
         ? const EdgeInsets.only(
-            top: 6.0,
+            top: 12.0,
             left: 24.0,
             right: 24.0,
           )

@@ -23,6 +23,7 @@ class SimpleAppBar extends StatelessWidget {
       snap: true,
       floating: true,
       centerTitle: false,
+      backgroundColor: Colors.transparent,
       title: Wrap(
         spacing: 12.0,
         runSpacing: 12.0,
@@ -34,6 +35,7 @@ class SimpleAppBar extends StatelessWidget {
             onTap: context.beamBack,
             backgroundColor: Colors.transparent,
             radius: 12.0,
+            margin: const EdgeInsets.only(left: 12.0),
             icon: Icon(
               TablerIcons.arrow_left,
               size: 18.0,

@@ -201,7 +201,7 @@ class ColorPalette {
 
   /// Color for galleries.
   final Color published = Colors.green;
-  final Color edit = Colors.green;
+  final Color edit = Colors.purple.shade300;
 
   final Color home = Colors.blue.shade300;
 

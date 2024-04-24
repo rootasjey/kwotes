@@ -185,6 +185,7 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
       return;
     }
 
+    if (!mounted) return;
     setState(() {
       _pageState = _lastDocument == null
           ? EnumPageState.loading
@@ -197,6 +198,7 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
       listenToDraftChanges(query);
 
       if (snapshot.docs.isEmpty) {
+        if (!mounted) return;
         setState(() {
           _pageState = EnumPageState.idle;
           _hasNextPage = false;
@@ -212,6 +214,7 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
         _drafts.add(quote);
       }
 
+      if (!mounted) return;
       setState(() {
         _pageState = EnumPageState.idle;
         _lastDocument = snapshot.docs.last;
@@ -309,6 +312,7 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
   void initProps() async {
     widget.pageScrollController?.addListener(onPageScroll);
     _selectedColor = Constants.colors.getRandomFromPalette().withOpacity(0.6);
+    if (!mounted) return;
     setState(() {});
 
     Future.delayed(const Duration(seconds: 1), () {
@@ -393,7 +397,6 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
           .delete();
     } catch (error) {
       loggy.error(error);
-
       if (!mounted) return;
       setState(() => _drafts.insert(index, quote));
 
