@@ -92,6 +92,9 @@ class NavigationStateHelper {
   /// they want to create a new account.
   static String userPasswordInput = "";
 
+  /// Feedback message body.
+  static String feedbackMessageBody = "";
+
   /// Beamer key to navigate sub-locations.
   static GlobalKey<BeamerState> homeBeamerKey = GlobalKey<BeamerState>(
     debugLabel: "home",

@@ -72,6 +72,215 @@ class ChangelogPage extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: Text(
+                          "23/04/2024",
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w200,
+                              color: foregroundColor?.withOpacity(0.3),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "• Add user actions on author/reference quotes pages",
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              color: foregroundColor?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "• Fix search issue provoking app crashes",
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              color: foregroundColor?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "• Fix showing empty view when no search results are found",
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              color: foregroundColor?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "• Fix share issue on iPad/iOS due to missing origin position value",
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              color: foregroundColor?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "• Update app bottom navigation on large screens",
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              color: foregroundColor?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "• Update swipe gesture design",
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              color: foregroundColor?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "• Save language selection on author & reference quotes pages",
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              color: foregroundColor?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "• Update colors of the following components: search input, add quote appbar",
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              color: foregroundColor?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "• Remove application frame border on large screens",
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              color: foregroundColor?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "• Fix cancel button clearing search input",
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              color: foregroundColor?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "• Add pull & push quick gestures on dashboard page",
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              color: foregroundColor?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "• Add pull gesture on search page",
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              color: foregroundColor?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "• Update quote page font size (iPad)",
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              color: foregroundColor?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "• Update share icon & other tweaks",
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              color: foregroundColor?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Divider(
+                        color: foregroundColor?.withOpacity(0.2),
+                        height: 42.0,
+                      ),
+                      Text(
+                        "Previously",
+                        style: Utils.calligraphy.body(
+                          textStyle: TextStyle(
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.w200,
+                            color: foregroundColor?.withOpacity(0.8),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
                           "19/04/2024",
                           style: Utils.calligraphy.body(
                             textStyle: TextStyle(
@@ -121,22 +330,8 @@ class ChangelogPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Divider(
-                        color: foregroundColor?.withOpacity(0.2),
-                        height: 42.0,
-                      ),
-                      Text(
-                        "Previously",
-                        style: Utils.calligraphy.body(
-                          textStyle: TextStyle(
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.w200,
-                            color: foregroundColor?.withOpacity(0.8),
-                          ),
-                        ),
-                      ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 0.0, bottom: 8.0),
+                        padding: const EdgeInsets.only(top: 36.0, bottom: 8.0),
                         child: Text(
                           "10/04/2024",
                           style: Utils.calligraphy.body(

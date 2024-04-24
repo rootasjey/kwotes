@@ -7,6 +7,7 @@ import "package:kwotes/screens/color_palette/color_palette_page.dart";
 import "package:kwotes/screens/forgot_password/forgot_password_page.dart";
 import "package:kwotes/screens/settings/about/changelog_page.dart";
 import "package:kwotes/screens/settings/about/credits_page.dart";
+import "package:kwotes/screens/settings/about/feedback/feedback_page.dart";
 import "package:kwotes/screens/settings/about/terms_of_service_page.dart";
 import "package:kwotes/screens/settings/about/about_us_page.dart";
 import "package:kwotes/screens/settings/account/account_page.dart";
@@ -85,6 +86,9 @@ class SettingsContentLocation extends BeamLocation<BeamState> {
   /// The purpose route location.
   static const String aboutUsRoute = "$aboutRoute/the-purpose";
 
+  /// Feedback route location.
+  static const String feedbackRoute = "$aboutRoute/feedback";
+
   /// Color palette route location.
   static const String colorPaletteRoute = "$route/color-palette";
 
@@ -108,6 +112,7 @@ class SettingsContentLocation extends BeamLocation<BeamState> {
         colorPaletteRoute,
         creditsRoute,
         languageRoute,
+        feedbackRoute,
         forgotPasswordRoute,
         frameBorderStyleRoute,
         route,
@@ -247,6 +252,13 @@ class SettingsContentLocation extends BeamLocation<BeamState> {
           child: const ForgotPasswordPage(),
           key: const ValueKey(forgotPasswordRoute),
           title: "page_title.forgot_password".tr(),
+          type: BeamPageType.slideRightTransition,
+        ),
+      if (state.pathPatternSegments.contains(feedbackRoute.split("/").last))
+        BeamPage(
+          child: const FeedbackPage(),
+          key: const ValueKey(feedbackRoute),
+          title: "page_title.feedback".tr(),
           type: BeamPageType.slideRightTransition,
         ),
     ];

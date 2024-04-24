@@ -176,9 +176,11 @@
       "not_valid": "The value entered is not a valid email address"
     },
     "name": "Email",
+    "name_optional": "Email (optional)",
     "new": "New email",
     "password_reset_link": "A password reset link has been sent to your mail box",
     "response_soon": "You will receive an email response shortly",
+    "send": "Send",
     "sending": "Sending email",
     "send_me": "Send me an email",
     "send_reset_link": "Send reset link",
@@ -201,6 +203,20 @@
     },
     "name": "Favourites"
   },
+  "feedback": {
+    "bug": "Bug",
+    "description": "Want to tell us how to improve this app?",
+    "email_hint": "We will answer you at this email.",
+    "feature": "Feature",
+    "help": "Help",
+    "hint": "I wanted to say that...",
+    "name": "Feedback",
+    "send": "Send feedback",
+    "sent": "Feedback sent",
+    "sent_description": "Thank you for your feedback!",
+    "sent_description_2": "We will answer you as soon as possible.",
+    "word": "Send us a word"
+  },
   "fictional": "Fictional",
   "footer": {
     "github": "You can find this project on GitHub",
@@ -209,6 +225,9 @@
     "rights": "{}. All rights reserved.",
     "tagline": "Repetition of one expression as part of another one.",
     "thanks": "Thank you for using {}"
+  },
+  "form": {
+    "name": "Form"
   },
   "genre": {
       "name": "Genre",
@@ -468,6 +487,7 @@
     "edit_quote": "@:kwotes_leading Edit quote",
     "edit_reference": "@:kwotes_leading Edit reference: {}",
     "favourites": "@:kwotes_leading Favourites",
+    "feedback": "@:kwotes_leading Feedback",
     "forgot_password": "@:kwotes_leading Forgot Password",
     "frame_border_style": "@:kwotes_leading Frame border style",
     "home": "@:kwotes_leading Home",

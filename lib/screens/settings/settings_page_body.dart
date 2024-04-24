@@ -94,6 +94,11 @@ class SettingsPageBody extends StatelessWidget {
                     isExternalLink: false,
                   ),
                   SettingsItemData(
+                    name: "feedback.name".tr(),
+                    route: SettingsContentLocation.feedbackRoute,
+                    isExternalLink: false,
+                  ),
+                  SettingsItemData(
                     name: "changelog.name".tr(),
                     route: SettingsContentLocation.changelogRoute,
                     description:

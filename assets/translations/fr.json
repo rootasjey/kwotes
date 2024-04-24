@@ -180,7 +180,9 @@
     "password_reset_link": "Un lien pour réinitialiser votre mot de passe vous a été envoyé dans votre boîte email",
     "response_soon": "Vous allez recevoir une réponse par email bientôt",
     "name": "Email",
+    "name_optional": "Email (optionnel)",
     "new": "Nouvel email",
+    "send": "Envoyer",
     "send_me": "Envoyer un email",
     "sending": "Envoi de l'email",
     "send_reset_link": "Envoyer le lien de réinitialisation",
@@ -202,6 +204,20 @@
     },
     "name": "Favoris"
   },
+  "feedback": {
+    "bug": "Bug",
+    "description": "Vous voulez nous aider à améliorer cette application ?",
+    "email_hint": "Nous vous répondrons à cet email.",
+    "feature": "Fonctionnalité",
+    "help": "Aide",
+    "hint": "Je voulais vous dire...",
+    "name": "Votre avis",
+    "send": "Envoyer mon avis",
+    "sent": "Message envoyé",
+    "sent_description": "Merci pour votre aide !",
+    "sent_description_2": "Nous vous répondrons dès que possible.",
+    "word": "Envoyer nous un mot"
+  },
   "fictional": "Fictionnel",
   "footer": {
     "github": "Vous pouvez retrouver ce project sur GitHub",
@@ -210,6 +226,9 @@
     "rights": "{}. Tout droits réservés.",
     "tagline": "La répétition d'une partie d'une expression dans le cadre d'une autre.",
     "thanks": "Merci d'utiliser {}"
+  },
+  "form": {
+    "name": "Formulaire"
   },
   "genre": {
     "name": "Genre",
@@ -469,6 +488,7 @@
     "edit_quote": "@:kwotes_leading Éditer la citation",
     "edit_reference": "@:kwotes_leading Éditer la référence: {}",
     "favourites": "@:kwotes_leading Favoris",
+    "feedback": "@:kwotes_leading Votre avis",
     "forgot_password": "@:kwotes_leading Forgot Password",
     "frame_border_style": "@:kwotes_leading Style de bordure de fenêtre",
     "home": "@:kwotes_leading Home",

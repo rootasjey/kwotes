@@ -7,10 +7,10 @@ class Constants {
   static const appName = "kwotes";
 
   /// App version.
-  static const appVersion = "3.13.0";
+  static const appVersion = "3.16.0";
 
   /// App build number.
-  static const appBuildNumber = 33;
+  static const appBuildNumber = 36;
 
   /// Last time terms of service was updated.
   static final DateTime termsOfServiceLastUpdated = DateTime(2020, 12, 12);
@@ -20,6 +20,7 @@ class Constants {
   static const quoteUrl = "$domainUrl/h/quotes";
   static const referenceUrl = "$domainUrl/h/references";
   static const githubUrl = "https://github.com/rootasjey/kwotes";
+  static const supportEmail = "support@kwotes.fr";
 
   /// Allowed image file extension for illustrations.
   static const List<String> allowedImageExt = [

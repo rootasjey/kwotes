@@ -14,14 +14,13 @@ class AboutUsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
 
     final Color accentColor = Constants.colors.getRandomFromPalette(
       onlyDarkerColors: true,
     );
-
-    final bool isMobileSize = Utils.measurements.isMobileSize(context);
 
     return SafeArea(
       child: Scaffold(

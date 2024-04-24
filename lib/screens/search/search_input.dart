@@ -148,7 +148,7 @@ class SearchInput extends StatelessWidget {
                           filled: true,
                           fillColor: isDark
                               ? Constants.colors.primary.withOpacity(0.2)
-                              : Constants.colors.primary.withOpacity(0.1),
+                              : Colors.white54,
                           suffixIcon: isInputEmpty ? null : clearIcon,
                           border: OutlineInputBorder(
                             borderSide: const BorderSide(
