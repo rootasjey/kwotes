@@ -557,6 +557,7 @@ class Graphic with UiLoggy {
     bool autofocus = false,
     bool isMobileSize = false,
     bool startInCreate = false,
+    bool isIpad = false,
 
     /// Selected list color.
     Color? selectedColor,
@@ -580,6 +581,7 @@ class Graphic with UiLoggy {
           return AddToListDialog(
             asBottomSheet: isMobileSize,
             autofocus: autofocus,
+            isIpad: isIpad,
             startInCreate: startInCreate,
             userId: userId,
             quotes: quotes,
@@ -663,7 +665,7 @@ class Graphic with UiLoggy {
               mimeType: "image/png",
             ),
           ],
-          sharePositionOrigin: const Rect.fromLTWH(0, 0, 0, 0),
+          sharePositionOrigin: const Rect.fromLTWH(12, 12, 12, 12),
         );
         return;
       }
@@ -738,7 +740,6 @@ class Graphic with UiLoggy {
         double bottomSheetOffset,
       ) {
         return ShareQuoteTemplate(
-          isMobileSize: Utils.measurements.isMobileSize(context),
           quote: quote,
           screenshotController: screenshotController,
           textWrapSolution: textWrapSolution,
@@ -769,7 +770,12 @@ class Graphic with UiLoggy {
     }
 
     if (Utils.graphic.isMobile()) {
-      Share.shareUri(Uri.parse("${Constants.quoteUrl}/${quote.id}"));
+      final RenderBox? box = context.findRenderObject() as RenderBox?;
+      Share.share(
+        "${Constants.quoteUrl}/${quote.id}",
+        subject: "quote.name".tr(),
+        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+      );
       return;
     }
   }
