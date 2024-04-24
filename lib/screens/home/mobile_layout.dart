@@ -108,146 +108,148 @@ class MobileLayout extends StatelessWidget {
 
     final Quote firstQuote = quotes.isNotEmpty ? quotes.first : Quote.empty();
 
-    return Scaffold(
-      backgroundColor: isDark ? Colors.black26 : Colors.white,
-      body: LiquidPullToRefresh(
-        color: backgroundColor,
-        showChildOpacityTransition: false,
-        onRefresh: refetchRandomQuotes,
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Container(
-                color: topBackgroundColor,
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: BetterAvatar(
-                    margin: const EdgeInsets.only(top: 47.5, left: 16.0),
-                    heroTag: "user-avatar",
-                    onTap: onTapUserAvatar,
-                    radius: 16.0,
-                    imageProvider: const AssetImage(
-                      "assets/images/profile-picture-avocado.jpg",
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: isDark ? Colors.black26 : Colors.white,
+        body: LiquidPullToRefresh(
+          color: backgroundColor,
+          showChildOpacityTransition: false,
+          onRefresh: refetchRandomQuotes,
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Container(
+                  color: topBackgroundColor,
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: BetterAvatar(
+                      margin: const EdgeInsets.only(top: 40.5, left: 16.0),
+                      heroTag: "user-avatar",
+                      onTap: onTapUserAvatar,
+                      radius: 16.0,
+                      imageProvider: const AssetImage(
+                        "assets/images/profile-picture-avocado.jpg",
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            HeroQuote(
-              isMobileSize: true,
-              loading: pageState == EnumPageState.loadingRandomQuotes ||
-                  pageState == EnumPageState.loading,
-              backgroundColor: topBackgroundColor,
-              foregroundColor: foregroundColor,
-              quote: firstQuote,
-              onTapAuthor: onTapAuthor,
-              onTapQuote: onTapQuote,
-              authorMenuProvider: (MenuRequest menuRequest) =>
-                  ContextMenuComponents.authorMenuProvider(
-                context,
-                author: firstQuote.author,
-              ),
-              quoteMenuProvider: (MenuRequest menuRequest) =>
-                  ContextMenuComponents.quoteMenuProvider(
-                context,
+              HeroQuote(
+                isMobileSize: true,
+                loading: pageState == EnumPageState.loadingRandomQuotes ||
+                    pageState == EnumPageState.loading,
+                backgroundColor: topBackgroundColor,
+                foregroundColor: foregroundColor,
                 quote: firstQuote,
-                onCopyQuote: onCopyQuote,
-                onCopyQuoteUrl: onCopyQuoteUrl,
-              ),
-              margin: const EdgeInsets.only(
-                top: 16.0,
-                left: 26.0,
-                right: 26.0,
-                bottom: 16.0,
-              ),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.only(
-                top: 16.0,
-                left: 26.0,
-                right: 26.0,
-              ),
-              sliver: SliverList.separated(
-                separatorBuilder: (BuildContext context, int index) {
-                  return Divider(
-                    color: isDark ? Colors.white12 : Colors.black12,
-                  );
-                },
-                itemBuilder: (BuildContext context, int index) {
-                  final Quote quote = subRandomQuotes[index];
-
-                  return RandomQuoteText(
-                    quote: quote,
-                    foregroundColor: foregroundColor,
-                    onTapQuote: onTapQuote,
-                    onTapAuthor: onTapAuthor,
-                    authorMenuProvider: (MenuRequest menuRequest) =>
-                        ContextMenuComponents.authorMenuProvider(
-                      context,
-                      author: quote.author,
-                    ),
-                    quoteMenuProvider: (MenuRequest menuRequest) =>
-                        ContextMenuComponents.quoteMenuProvider(
-                      context,
-                      quote: quote,
-                      onCopyQuote: onCopyQuote,
-                      onCopyQuoteUrl: onCopyQuoteUrl,
-                    ),
-                  );
-                },
-                itemCount: subRandomQuotes.length,
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 24.0),
-                child: Row(
-                  children: [
-                    const Expanded(child: Divider()),
-                    IconButton(
-                      tooltip: "quote.fetch.random".tr(),
-                      onPressed: refetchRandomQuotes,
-                      color: iconColor,
-                      icon: const Icon(TablerIcons.arrows_shuffle),
-                    ),
-                    const Expanded(child: Divider()),
-                  ],
+                onTapAuthor: onTapAuthor,
+                onTapQuote: onTapQuote,
+                authorMenuProvider: (MenuRequest menuRequest) =>
+                    ContextMenuComponents.authorMenuProvider(
+                  context,
+                  author: firstQuote.author,
+                ),
+                quoteMenuProvider: (MenuRequest menuRequest) =>
+                    ContextMenuComponents.quoteMenuProvider(
+                  context,
+                  quote: firstQuote,
+                  onCopyQuote: onCopyQuote,
+                  onCopyQuoteUrl: onCopyQuoteUrl,
+                ),
+                margin: const EdgeInsets.only(
+                  top: 16.0,
+                  left: 26.0,
+                  right: 26.0,
+                  bottom: 16.0,
                 ),
               ),
-            ),
-            HomeTopics(
-              isDark: isDark,
-              topics: Constants.colors.topics,
-              onTapTopic: onTapTopic,
-              cardBackgroundColor: backgroundColor,
-              margin: const EdgeInsets.only(
-                top: 24.0,
-                bottom: 42.0,
+              SliverPadding(
+                padding: const EdgeInsets.only(
+                  top: 16.0,
+                  left: 26.0,
+                  right: 26.0,
+                ),
+                sliver: SliverList.separated(
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Divider(
+                      color: isDark ? Colors.white12 : Colors.black12,
+                    );
+                  },
+                  itemBuilder: (BuildContext context, int index) {
+                    final Quote quote = subRandomQuotes[index];
+
+                    return RandomQuoteText(
+                      quote: quote,
+                      foregroundColor: foregroundColor,
+                      onTapQuote: onTapQuote,
+                      onTapAuthor: onTapAuthor,
+                      authorMenuProvider: (MenuRequest menuRequest) =>
+                          ContextMenuComponents.authorMenuProvider(
+                        context,
+                        author: quote.author,
+                      ),
+                      quoteMenuProvider: (MenuRequest menuRequest) =>
+                          ContextMenuComponents.quoteMenuProvider(
+                        context,
+                        quote: quote,
+                        onCopyQuote: onCopyQuote,
+                        onCopyQuoteUrl: onCopyQuoteUrl,
+                      ),
+                    );
+                  },
+                  itemCount: subRandomQuotes.length,
+                ),
               ),
-            ),
-            ReferencePosters(
-              backgroundColor: backgroundColor,
-              isDark: isDark,
-              margin: const EdgeInsets.only(
-                top: 42.0,
-                bottom: 24.0,
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 24.0),
+                  child: Row(
+                    children: [
+                      const Expanded(child: Divider()),
+                      IconButton(
+                        tooltip: "quote.fetch.random".tr(),
+                        onPressed: refetchRandomQuotes,
+                        color: iconColor,
+                        icon: const Icon(TablerIcons.arrows_shuffle),
+                      ),
+                      const Expanded(child: Divider()),
+                    ],
+                  ),
+                ),
               ),
-              onTapReference: onTapReference,
-              references: references,
-              textColor: iconColor,
-              scrollController: carouselScrollController,
-              onIndexChanged: onReferenceIndexChanged,
-            ),
-            LatestAddedAuthors(
-              authors: authors,
-              margin: const EdgeInsets.only(
-                top: 42.0,
-                left: 26.0,
-                right: 26.0,
+              HomeTopics(
+                isDark: isDark,
+                topics: Constants.colors.topics,
+                onTapTopic: onTapTopic,
+                cardBackgroundColor: backgroundColor,
+                margin: const EdgeInsets.only(
+                  top: 24.0,
+                  bottom: 42.0,
+                ),
               ),
-              onTapAuthor: onTapAuthor,
-            ),
-          ],
+              ReferencePosters(
+                backgroundColor: backgroundColor,
+                isDark: isDark,
+                margin: const EdgeInsets.only(
+                  top: 42.0,
+                  bottom: 24.0,
+                ),
+                onTapReference: onTapReference,
+                references: references,
+                textColor: iconColor,
+                scrollController: carouselScrollController,
+                onIndexChanged: onReferenceIndexChanged,
+              ),
+              LatestAddedAuthors(
+                authors: authors,
+                margin: const EdgeInsets.only(
+                  top: 42.0,
+                  left: 26.0,
+                  right: 26.0,
+                ),
+                onTapAuthor: onTapAuthor,
+              ),
+            ],
+          ),
         ),
       ),
     );

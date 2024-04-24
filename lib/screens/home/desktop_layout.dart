@@ -1,12 +1,10 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:infinite_carousel/infinite_carousel.dart";
+import "package:kwotes/components/better_avatar.dart";
 import "package:kwotes/components/context_menu_components.dart";
 import "package:kwotes/components/hero_quote.dart";
-import "package:kwotes/components/icons/app_icon.dart";
 import "package:kwotes/components/loading_view.dart";
-import "package:kwotes/globals/constants.dart";
-import "package:kwotes/globals/utils.dart";
 import "package:kwotes/screens/home/authors_carousel.dart";
 import "package:kwotes/screens/home/home_page_footer.dart";
 import "package:kwotes/screens/home/home_welcome_greetings.dart";
@@ -60,6 +58,7 @@ class DesktopLayout extends StatelessWidget {
     this.onTapTopic,
     this.onTapTopicLeftArrow,
     this.onTapTopicRightArrow,
+    this.onTapUserAvatar,
     this.authors = const [],
     this.quotes = const [],
     this.subQuotes = const [],
@@ -126,6 +125,9 @@ class DesktopLayout extends StatelessWidget {
 
   /// Callback fired when reference is tapped.
   final void Function(Reference reference)? onTapReference;
+
+  /// Callback fired when user avatar is tapped.
+  final void Function()? onTapUserAvatar;
 
   /// Callback to copy quote's name.
   final void Function(Quote quote)? onCopyQuote;
@@ -226,29 +228,16 @@ class DesktopLayout extends StatelessWidget {
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                top: 54.0,
-                left: 42.0,
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const AppIcon(
-                    size: 20.0,
-                    margin: EdgeInsets.only(right: 6.0),
-                  ),
-                  Text(
-                    Constants.appName,
-                    style: Utils.calligraphy.body(
-                      textStyle: TextStyle(
-                        color: foregroundColor?.withOpacity(0.6),
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: BetterAvatar(
+                margin: const EdgeInsets.only(top: 53.0, left: 49.0),
+                heroTag: "user-avatar",
+                onTap: onTapUserAvatar,
+                radius: 16.0,
+                imageProvider: const AssetImage(
+                  "assets/images/profile-picture-avocado.jpg",
+                ),
               ),
             ),
           ),

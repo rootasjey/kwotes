@@ -5,18 +5,21 @@ import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:flutter_card_swiper/flutter_card_swiper.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:infinite_carousel/infinite_carousel.dart";
 import "package:kwotes/actions/quote_actions.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/home_location.dart";
+import "package:kwotes/router/locations/settings_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/home/desktop_layout.dart";
 import "package:kwotes/screens/home/mobile_layout.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_frame_border_style.dart";
+import "package:kwotes/types/enums/enum_home_category.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
@@ -58,8 +61,10 @@ class _HomePageState extends State<HomePage> with UiLoggy {
   /// Show topic right arrow if true.
   bool _enableTopicRightArrow = true;
 
+  final CardSwiperController _swiperController = CardSwiperController();
+
   /// Background color of the reference posters section.
-  Color? _posterBackgroundColor;
+  // Color? _posterBackgroundColor;
 
   /// Item size in the caroussel.
   /// Useful to jump between items.
@@ -76,14 +81,17 @@ class _HomePageState extends State<HomePage> with UiLoggy {
   /// Page's state (e.g. loading, idle, ...).
   EnumPageState _pageState = EnumPageState.idle;
 
+  /// Selected home category.
+  // EnumHomeCategory _selectedCategory = EnumHomeCategory.quotes;
+
   /// Quote amount to fetch.
   final int _maxQuoteCount = 12;
 
   /// Amount of authors to fetch.
-  final int _maxAuthorCount = 8;
+  final int _maxAuthorCount = 24;
 
   /// Amount of references to fetch.
-  final int _maxReferenceCount = 8;
+  final int _maxReferenceCount = 24;
 
   /// Quote cards scroll controller.
   final InfiniteScrollController _authorScrollController =
@@ -104,20 +112,20 @@ class _HomePageState extends State<HomePage> with UiLoggy {
   /// Sub-list of random quotes.
   final List<Quote> _subRandomQuotes = [];
 
-  /// Topic name hovered.
-  String _hoveredTopicName = "";
+  // /// Topic name hovered.
+  // String _hoveredTopicName = "";
 
-  /// Author name hovered.
-  String _hoveredAuthorName = "";
+  // /// Author name hovered.
+  // String _hoveredAuthorName = "";
 
-  /// Reference's id hovered.bui
-  String _hoveredReferenceId = "";
+  // /// Reference's id hovered.bui
+  // String _hoveredReferenceId = "";
 
   @override
   void initState() {
     super.initState();
 
-    _posterBackgroundColor = Constants.colors.getRandomPastel();
+    // _posterBackgroundColor = Constants.colors.getRandomPastel();
     fetchRandomQuotes();
 
     if (NavigationStateHelper.latestAddedReferences.isEmpty) {
@@ -135,6 +143,7 @@ class _HomePageState extends State<HomePage> with UiLoggy {
     _quoteScrollController.dispose();
     _topicScrollController.dispose();
     _referenceScrollController.dispose();
+    _swiperController.dispose();
     super.dispose();
   }
 
@@ -142,6 +151,7 @@ class _HomePageState extends State<HomePage> with UiLoggy {
   Widget build(BuildContext context) {
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
     final List<Quote> quotes = NavigationStateHelper.randomQuotes;
+    // final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     if (isMobileSize) {
       return MobileLayout(
@@ -158,10 +168,36 @@ class _HomePageState extends State<HomePage> with UiLoggy {
         onTapTopic: onTapTopic,
         pageState: _pageState,
         quotes: quotes,
+        onTapUserAvatar: onTapUserAvatar,
         refetchRandomQuotes: refetchRandomQuotes,
         references: NavigationStateHelper.latestAddedReferences,
       );
     }
+
+    // return MinimalDesktopLayout(
+    //   authors: NavigationStateHelper.latestAddedAuthors,
+    //   isDark: isDark,
+    //   isMobileSize: isMobileSize,
+    //   onCategoryChanged: onCategoryChanged,
+    //   onChangeLanguage: onChangeLanguage,
+    //   onCopyQuote: onCopyQuote,
+    //   onCopyQuoteUrl: onCopyQuoteUrl,
+    //   onDoubleTapAuthor: onCopyAuthorName,
+    //   onDoubleTapQuote: onCopyQuote,
+    //   onFetchRandomQuotes: refetchRandomQuotes,
+    //   onTapAuthor: onTapAuthor,
+    //   onTapQuote: onTapQuote,
+    //   onTapReference: onTapReference,
+    //   onTapTopic: onTapTopic,
+    //   pageState: _pageState,
+    //   quotes: quotes,
+    //   refetchRandomQuotes: refetchRandomQuotes,
+    //   references: NavigationStateHelper.latestAddedReferences,
+    //   selectedCategory: _selectedCategory,
+    //   subQuotes: _subRandomQuotes,
+    //   swiperController: _swiperController,
+    //   topics: Constants.colors.topics,
+    // );
 
     return DesktopLayout(
       authors: NavigationStateHelper.latestAddedAuthors,
@@ -173,9 +209,9 @@ class _HomePageState extends State<HomePage> with UiLoggy {
       enableQuoteRightArrow: _enableQuoteRightArrow,
       enableTopicLeftArrow: _enableTopicLeftArrow,
       enableTopicRightArrow: _enableTopicRightArrow,
-      hoveredAuthorName: _hoveredAuthorName,
-      hoveredReferenceId: _hoveredReferenceId,
-      hoveredTopicName: _hoveredTopicName,
+      // hoveredAuthorName: _hoveredAuthorName,
+      // hoveredReferenceId: _hoveredReferenceId,
+      // hoveredTopicName: _hoveredTopicName,
       onAuthorIndexChanged: onAuthorIndexChanged,
       onChangeLanguage: onChangeLanguage,
       onCopyQuote: onCopyQuote,
@@ -196,10 +232,11 @@ class _HomePageState extends State<HomePage> with UiLoggy {
       onTapTopicRightArrow: onTapTopicRightArrow,
       onTapReference: onTapReference,
       onTapTopic: onTapTopic,
+      onTapUserAvatar: onTapUserAvatar,
       onTopicIndexChanged: onTopicIndexChanged,
       pageState: _pageState,
       quoteScrollController: _quoteScrollController,
-      posterBackgroundColor: _posterBackgroundColor,
+      // posterBackgroundColor: _posterBackgroundColor,
       quotes: quotes,
       quoteCardExtent: _quoteCardExtent,
       references: NavigationStateHelper.latestAddedReferences,
@@ -209,16 +246,6 @@ class _HomePageState extends State<HomePage> with UiLoggy {
       topics: Constants.colors.topics,
       topicScrollController: _topicScrollController,
     );
-  }
-
-  /// Gets current language.
-  Future<String> getLanguage() async {
-    final EnumLanguageSelection savedLanguage = await Utils.vault.getLanguage();
-    if (Utils.linguistic.available().contains(savedLanguage)) {
-      return savedLanguage.name;
-    }
-
-    return "en";
   }
 
   /// Fetches a specific author from their id.
@@ -310,9 +337,14 @@ class _HomePageState extends State<HomePage> with UiLoggy {
     }
   }
 
-  /// Refetches random quotes.
-  Future<void> refetchRandomQuotes() {
-    return fetchRandomQuotes(forceRefresh: true);
+  /// Gets current language.
+  Future<String> getLanguage() async {
+    final EnumLanguageSelection savedLanguage = await Utils.vault.getLanguage();
+    if (Utils.linguistic.available().contains(savedLanguage)) {
+      return savedLanguage.name;
+    }
+
+    return "en";
   }
 
   /// Fetches random quotes.
@@ -422,6 +454,32 @@ class _HomePageState extends State<HomePage> with UiLoggy {
     }
   }
 
+  /// Callback fired to show/hide author arrow buttons.
+  void onAuthorIndexChanged(int index) {
+    if (index == 0 && _enableAuthorLeftArrow) {
+      setState(() => _enableAuthorLeftArrow = false);
+    } else if (index > 0 && !_enableAuthorLeftArrow) {
+      setState(() => _enableAuthorLeftArrow = true);
+    }
+
+    if (index == NavigationStateHelper.latestAddedAuthors.length - 1 &&
+        _enableAuthorRightArrow) {
+      setState(() => _enableAuthorRightArrow = false);
+    } else if (index < NavigationStateHelper.latestAddedAuthors.length - 1 &&
+        !_enableAuthorRightArrow) {
+      setState(() => _enableAuthorRightArrow = true);
+    }
+  }
+
+  void onCategoryChanged(EnumHomeCategory newCategory) {
+    // setState(() => _selectedCategory = newCategory);
+  }
+
+  /// Update application's language.
+  void onChangeLanguage(EnumLanguageSelection locale) {
+    fetchRandomQuotes();
+  }
+
   void onCopyAuthorName(Author author) {
     Clipboard.setData(ClipboardData(text: author.name));
     Utils.graphic.showSnackbar(
@@ -445,6 +503,40 @@ class _HomePageState extends State<HomePage> with UiLoggy {
       context,
       isMobileSize: isMobileSize,
     );
+  }
+
+  /// Display hovered author name.
+  void onHoverAuthor(Author author, bool isHovered) {
+    // setState(() {
+    //   _hoveredAuthorName = isHovered ? author.name : "";
+    // });
+  }
+
+  /// Display hovered author name.
+  void onHoverReference(Reference reference, bool isHovered) {
+    // setState(() => _hoveredReferenceId = isHovered ? reference.id : "");
+  }
+
+  /// Display hovered topic name.
+  void onHoverTopic(Topic topic, bool isHover) {
+    // setState(() {
+    //   _hoveredTopicName = isHover ? topic.name : "";
+    // });
+  }
+
+  /// Callback fired to show/hide quote arrow buttons.
+  void onQuoteIndexChanged(int index) {
+    if (index == 0 && _enableQuoteLeftArrow) {
+      setState(() => _enableQuoteLeftArrow = false);
+    } else if (index > 0 && !_enableQuoteLeftArrow) {
+      setState(() => _enableQuoteLeftArrow = true);
+    }
+
+    if (index == _subRandomQuotes.length - 1 && _enableQuoteRightArrow) {
+      setState(() => _enableQuoteRightArrow = false);
+    } else if (index < _subRandomQuotes.length - 1 && !_enableQuoteRightArrow) {
+      setState(() => _enableQuoteRightArrow = true);
+    }
   }
 
   /// Navigate to the quote page.
@@ -500,13 +592,6 @@ class _HomePageState extends State<HomePage> with UiLoggy {
         "topicName": topic.name,
       },
     );
-  }
-
-  /// Display hovered topic name.
-  void onHoverTopic(Topic topic, bool isHover) {
-    setState(() {
-      _hoveredTopicName = isHover ? topic.name : "";
-    });
   }
 
   /// Callback fired when topic arrow right button is pressed.
@@ -565,6 +650,12 @@ class _HomePageState extends State<HomePage> with UiLoggy {
     );
   }
 
+  void onTapUserAvatar() {
+    Beamer.of(context, root: true).beamToNamed(
+      SettingsLocation.route,
+    );
+  }
+
   /// Callback fired to show/hide topic arrow buttons.
   void onTopicIndexChanged(int index) {
     if (index == 0 && _enableTopicLeftArrow) {
@@ -579,45 +670,6 @@ class _HomePageState extends State<HomePage> with UiLoggy {
 
     if (enableRightArrow != _enableTopicRightArrow) {
       setState(() => _enableTopicRightArrow = enableRightArrow);
-    }
-  }
-
-  /// Callback fired to show/hide quote arrow buttons.
-  void onQuoteIndexChanged(int index) {
-    if (index == 0 && _enableQuoteLeftArrow) {
-      setState(() => _enableQuoteLeftArrow = false);
-    } else if (index > 0 && !_enableQuoteLeftArrow) {
-      setState(() => _enableQuoteLeftArrow = true);
-    }
-
-    if (index == _subRandomQuotes.length - 1 && _enableQuoteRightArrow) {
-      setState(() => _enableQuoteRightArrow = false);
-    } else if (index < _subRandomQuotes.length - 1 && !_enableQuoteRightArrow) {
-      setState(() => _enableQuoteRightArrow = true);
-    }
-  }
-
-  /// Display hovered author name.
-  void onHoverAuthor(Author author, bool isHovered) {
-    setState(() {
-      _hoveredAuthorName = isHovered ? author.name : "";
-    });
-  }
-
-  /// Callback fired to show/hide author arrow buttons.
-  void onAuthorIndexChanged(int index) {
-    if (index == 0 && _enableAuthorLeftArrow) {
-      setState(() => _enableAuthorLeftArrow = false);
-    } else if (index > 0 && !_enableAuthorLeftArrow) {
-      setState(() => _enableAuthorLeftArrow = true);
-    }
-
-    if (index == NavigationStateHelper.latestAddedAuthors.length - 1 &&
-        _enableAuthorRightArrow) {
-      setState(() => _enableAuthorRightArrow = false);
-    } else if (index < NavigationStateHelper.latestAddedAuthors.length - 1 &&
-        !_enableAuthorRightArrow) {
-      setState(() => _enableAuthorRightArrow = true);
     }
   }
 
@@ -649,19 +701,14 @@ class _HomePageState extends State<HomePage> with UiLoggy {
     );
   }
 
-  /// Display hovered author name.
-  void onHoverReference(Reference reference, bool isHovered) {
-    setState(() => _hoveredReferenceId = isHovered ? reference.id : "");
-  }
-
-  /// Update application's language.
-  void onChangeLanguage(EnumLanguageSelection locale) {
-    fetchRandomQuotes();
-  }
-
   /// Callback fired to show/hide reference arrow buttons.
   void onReferenceIndexChanged(int index) {
     setState(() {});
+  }
+
+  /// Refetches random quotes.
+  Future<void> refetchRandomQuotes() {
+    return fetchRandomQuotes(forceRefresh: true);
   }
 
   /// Checks if should skip fetching random quotes.

@@ -125,15 +125,6 @@ class AppBehaviourSettings extends StatelessWidget {
                       : foregroundColor?.withOpacity(0.6),
                   onTap: onToggleMinimalQuoteActions,
                 ),
-                ThemeChip(
-                  textLabel:
-                      "settings.behaviour.frame_border_style.${appBorderStyle.name}"
-                          .tr(),
-                  selected: true,
-                  accentColor: accentColor,
-                  foregroundColor: foregroundAccentColor,
-                  onTap: onToggleFrameBorderColor,
-                ),
               ]
                   .animate(interval: animateElements ? 150.ms : 0.ms)
                   .fadeIn(duration: animateElements ? 150.ms : 0.ms)

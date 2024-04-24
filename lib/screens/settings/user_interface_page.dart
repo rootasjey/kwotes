@@ -1,7 +1,6 @@
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/settings_location.dart";
@@ -71,20 +70,6 @@ class _UserInterfacePageState extends State<UserInterfacePage> {
                       ),
                     ),
                   ),
-                ),
-                ListTile(
-                  title: Text("settings.frame_border_style.name".tr()),
-                  subtitle: Text(
-                    "settings.frame_border_style.description".tr(),
-                    style: Utils.calligraphy.body(
-                      textStyle: TextStyle(
-                        fontSize: 14.0,
-                        color: foregroundColor?.withOpacity(0.4),
-                      ),
-                    ),
-                  ),
-                  trailing: const Icon(TablerIcons.chevron_right),
-                  onTap: onTapFrameBorderStyle,
                 ),
               ]),
             ),

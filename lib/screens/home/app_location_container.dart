@@ -144,32 +144,17 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
       );
     }
 
-    final Signal<Color> appFrameColor = context.get<Signal<Color>>(
-      EnumSignalId.frameBorderColor,
-    );
-
     return Shortcuts(
       shortcuts: _shortcuts,
       child: Actions(
         actions: actions,
-        child: SignalBuilder(
-          signal: appFrameColor,
-          builder: (BuildContext context, Color backgroundColor, Widget? body) {
-            return Scaffold(
-              backgroundColor: backgroundColor,
-              body: body,
-            );
-          },
-          child: Stack(
+        child: Scaffold(
+          body: Stack(
             children: [
-              Container(
-                color: Colors.transparent,
-                padding: const EdgeInsets.all(8.0),
-                child: Material(
-                  borderRadius: const BorderRadius.all(Radius.circular(12.0)),
-                  clipBehavior: Clip.antiAlias,
-                  child: _widgetChildren[_currentIndex],
-                ),
+              Material(
+                borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+                clipBehavior: Clip.antiAlias,
+                child: _widgetChildren[_currentIndex],
               ),
               Positioned(
                 bottom: 12.0,
@@ -195,7 +180,7 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
                       ),
                       child: Material(
                         color: isDarkTheme ? Colors.black87 : Colors.white,
-                        elevation: isDarkTheme ? 4.0 : 0.0,
+                        elevation: isDarkTheme ? 4.0 : 6.0,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(54.0)),
                         child: Row(
