@@ -1,6 +1,7 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/buttons/dot_close_button.dart";
+import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 
 class AddToListHeader extends StatelessWidget {
@@ -32,40 +33,51 @@ class AddToListHeader extends StatelessWidget {
 
     return Padding(
       padding: margin,
-      child: Column(
+      child: Stack(
         children: [
-          if (onBack != null)
-            IconButton(
-              onPressed: onBack,
-              icon: const Icon(TablerIcons.arrow_back),
-            ),
-          Text(
-            "lists.name".tr().toUpperCase(),
-            style: Utils.calligraphy.body(
-              textStyle: TextStyle(
-                fontSize: 18.0,
-                color: foregroundColor?.withOpacity(0.6),
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: Text(
-              create
-                  ? "list.create.name".tr()
-                  : "list.add.quote"
-                      .plural(quoteLength, args: [quoteLength.toString()]),
-              textAlign: TextAlign.center,
-              style: Utils.calligraphy.body(
-                textStyle: TextStyle(
-                  fontSize: 14.0,
-                  color: foregroundColor?.withOpacity(0.4),
-                  fontWeight: FontWeight.w400,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                "lists.name".tr().toUpperCase(),
+                textAlign: TextAlign.center,
+                style: Utils.calligraphy.body(
+                  textStyle: TextStyle(
+                    fontSize: 18.0,
+                    color: foregroundColor?.withOpacity(0.6),
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: Text(
+                  create
+                      ? "list.create.name".tr()
+                      : "list.add.quote"
+                          .plural(quoteLength, args: [quoteLength.toString()]),
+                  textAlign: TextAlign.center,
+                  style: Utils.calligraphy.body(
+                    textStyle: TextStyle(
+                      fontSize: 14.0,
+                      color: foregroundColor?.withOpacity(0.4),
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
+          if (onBack != null)
+            Positioned(
+              top: 0.0,
+              right: 0.0,
+              child: DotCloseButton(
+                onTap: onBack,
+                tooltip: "close".tr(),
+                backgroundColor: Constants.colors.delete,
+              ),
+            ),
         ],
       ),
     );

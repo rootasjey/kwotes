@@ -27,6 +27,7 @@ class AddToListDialog extends StatefulWidget {
     this.asBottomSheet = false,
     this.autofocus = false,
     this.startInCreate = false,
+    this.isIpad = false,
     this.selectedColor,
     this.quotes = const [],
     this.scrollController,
@@ -38,6 +39,9 @@ class AddToListDialog extends StatefulWidget {
 
   /// Will request focus on mount if true.
   final bool autofocus;
+
+  /// Add bottom margin if true.
+  final bool isIpad;
 
   /// If true, the widget will show inputs to create a new list.
   final bool startInCreate;
@@ -141,6 +145,7 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
     if (widget.asBottomSheet) {
       return AddToListMobile(
         asBottomSheet: widget.asBottomSheet,
+        isIpad: widget.isIpad,
         onScroll: onScroll,
         quoteLists: _quoteLists,
         selectedQuoteLists: _selectedLists,

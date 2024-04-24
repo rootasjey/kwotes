@@ -14,10 +14,11 @@ class AddToListMobile extends StatelessWidget {
   const AddToListMobile({
     super.key,
     required this.pageScrollController,
+    this.asBottomSheet = false,
+    this.isIpad = false,
     this.quoteLists = const [],
     this.selectedQuoteLists = const [],
     this.onTapListItem,
-    this.asBottomSheet = false,
     this.pageState = EnumPageState.idle,
     this.selectedColor,
     this.quotes = const [],
@@ -29,6 +30,9 @@ class AddToListMobile extends StatelessWidget {
   /// If true, this widget will take a suitable layout for bottom sheet.
   /// Otherwise, it will have a dialog layout.
   final bool asBottomSheet;
+
+  /// Add bottom margin if true.
+  final bool isIpad;
 
   /// Selected list color.
   final Color? selectedColor;
@@ -69,6 +73,8 @@ class AddToListMobile extends StatelessWidget {
       );
     }
 
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Stack(
       children: [
         ImprovedScrolling(
@@ -84,8 +90,12 @@ class AddToListMobile extends StatelessWidget {
                     AddToListHeader(
                       quoteLength: quotes.length,
                       margin: const EdgeInsets.all(12.0),
+                      onBack: () => Navigator.pop(context),
                     ),
-                    const Divider(thickness: 2.0),
+                    Divider(
+                      thickness: 2.0,
+                      color: isDark ? Colors.white12 : Colors.black12,
+                    ),
                   ],
                 ),
               ),
@@ -113,12 +123,12 @@ class AddToListMobile extends StatelessWidget {
           ),
         ),
         Positioned(
-          bottom: 0.0,
+          bottom: isIpad ? 100.0 : 0.0,
           left: 0.0,
           right: 0.0,
           child: AddToListFooter(
             asBottomSheet: asBottomSheet,
-            elevation: 6.0,
+            elevation: 0.0,
             selectedColor: selectedColor,
             selectedLists: selectedQuoteLists,
             showCreationInputs: showCreationInputs,

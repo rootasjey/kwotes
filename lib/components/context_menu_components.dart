@@ -5,6 +5,7 @@ import "package:flutter/widgets.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/actions/user_actions.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/types/author.dart";
 import "package:kwotes/types/draft_quote.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
@@ -43,7 +44,8 @@ class ContextMenuComponents {
             autofocus: true,
             quotes: [quote],
             userId: userId,
-            isMobileSize: isMobileSize,
+            isMobileSize: isMobileSize || NavigationStateHelper.isIpad,
+            isIpad: NavigationStateHelper.isIpad,
             selectedColor: selectedColor,
             startInCreate: true,
           ),
@@ -56,7 +58,8 @@ class ContextMenuComponents {
             autofocus: true,
             quotes: [quote],
             userId: userId,
-            isMobileSize: isMobileSize,
+            isMobileSize: isMobileSize || NavigationStateHelper.isIpad,
+            isIpad: NavigationStateHelper.isIpad,
             selectedColor: selectedColor,
             startInCreate: false,
           ),

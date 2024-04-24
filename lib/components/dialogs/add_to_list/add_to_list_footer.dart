@@ -43,6 +43,7 @@ class AddToListFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final Color backgroundColor = Theme.of(context).scaffoldBackgroundColor;
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
@@ -52,9 +53,10 @@ class AddToListFooter extends StatelessWidget {
       color: backgroundColor,
       child: Column(
         children: [
-          const Divider(
+          Divider(
             height: 0.0,
             thickness: 2.0,
+            color: isDark ? Colors.white12 : Colors.black12,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(
