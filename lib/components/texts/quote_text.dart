@@ -15,7 +15,11 @@ class QuoteText extends StatefulWidget {
     this.magnitude = EnumQuoteTextMagnitude.medium,
     this.onDoubleTap,
     this.onTap,
+    this.contraints = const BoxConstraints(minHeight: 0),
   });
+
+  /// Constraints for this widget.
+  final BoxConstraints contraints;
 
   /// Space around this widget.
   final EdgeInsets margin;
@@ -71,41 +75,46 @@ class _QuoteTextState extends State<QuoteText> {
 
     return Padding(
       padding: widget.margin,
-      child: InkWell(
-        hoverColor: Colors.transparent,
-        onDoubleTap: widget.onDoubleTap != null
-            ? () => widget.onDoubleTap?.call(quote)
-            : null,
-        onTap: widget.onTap != null ? () => widget.onTap?.call(quote) : null,
-        onHover: (bool isHover) {
-          if (isHover) {
+      child: ConstrainedBox(
+        constraints: widget.contraints,
+        child: InkWell(
+          hoverColor: Colors.transparent,
+          onDoubleTap: widget.onDoubleTap != null
+              ? () => widget.onDoubleTap?.call(quote)
+              : null,
+          onTap: widget.onTap != null ? () => widget.onTap?.call(quote) : null,
+          onHover: (bool isHover) {
+            if (isHover) {
+              setState(() {
+                _shadowColor = _hoverBackgroundColor?.withOpacity(0.8) ??
+                    Colors.transparent;
+              });
+
+              return;
+            }
+
             setState(() {
-              _shadowColor =
-                  _hoverBackgroundColor?.withOpacity(0.8) ?? Colors.transparent;
+              _shadowColor = Colors.transparent;
             });
-
-            return;
-          }
-
-          setState(() {
-            _shadowColor = Colors.transparent;
-          });
-        },
-        child: Text(
-          quoteName,
-          style: Utils.calligraphy.body(
-            textStyle: TextStyle(
-              fontSize: getFontSize(),
-              fontWeight: FontWeight.w200,
-              color: color,
-              fontStyle: fontStyle,
-              shadows: [
-                Shadow(
-                  blurRadius: 0.5,
-                  offset: const Offset(-1.0, 1.0),
-                  color: _shadowColor,
-                )
-              ],
+          },
+          child: Center(
+            child: Text(
+              quoteName,
+              style: Utils.calligraphy.body(
+                textStyle: TextStyle(
+                  fontSize: getFontSize(),
+                  fontWeight: FontWeight.w200,
+                  color: color,
+                  fontStyle: fontStyle,
+                  shadows: [
+                    Shadow(
+                      blurRadius: 0.5,
+                      offset: const Offset(-1.0, 1.0),
+                      color: _shadowColor,
+                    )
+                  ],
+                ),
+              ),
             ),
           ),
         ),

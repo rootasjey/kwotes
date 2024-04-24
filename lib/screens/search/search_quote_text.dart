@@ -15,6 +15,9 @@ class SearchQuoteText extends StatefulWidget {
     required this.quote,
     required this.quoteMenuProvider,
     this.tiny = false,
+    this.contraints = const BoxConstraints(
+      minHeight: 0.0,
+    ),
     this.highlightColor,
     this.splashColor,
     this.textColor,
@@ -27,6 +30,9 @@ class SearchQuoteText extends StatefulWidget {
 
   /// True if this is a mobile size.
   final bool tiny;
+
+  /// Contraints of this widget.
+  final BoxConstraints contraints;
 
   /// Focus color.
   final Color? highlightColor;
@@ -88,46 +94,49 @@ class _SearchQuoteTextState extends State<SearchQuoteText> {
       padding: widget.margin,
       child: ContextMenuWidget(
         menuProvider: widget.quoteMenuProvider,
-        child: InkWell(
-          splashColor: widget.splashColor,
-          hoverColor: Colors.transparent,
-          highlightColor: widget.highlightColor,
-          borderRadius: BorderRadius.circular(4.0),
-          onTap: onTapQuote != null ? () => onTapQuote.call(quote) : null,
-          onDoubleTap: widget.onDoubleTapQuote != null
-              ? () => widget.onDoubleTapQuote?.call(quote)
-              : null,
-          onHover: (bool isHover) {
-            if (isHover) {
-              setState(() => _textShadowColor = _topicColor.color);
-              return;
-            }
+        child: ConstrainedBox(
+          constraints: widget.contraints,
+          child: InkWell(
+            splashColor: widget.splashColor,
+            hoverColor: Colors.transparent,
+            highlightColor: widget.highlightColor,
+            borderRadius: BorderRadius.circular(4.0),
+            onTap: onTapQuote != null ? () => onTapQuote.call(quote) : null,
+            onDoubleTap: widget.onDoubleTapQuote != null
+                ? () => widget.onDoubleTapQuote?.call(quote)
+                : null,
+            onHover: (bool isHover) {
+              if (isHover) {
+                setState(() => _textShadowColor = _topicColor.color);
+                return;
+              }
 
-            setState(() => _textShadowColor = Colors.transparent);
-          },
-          child: Align(
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: widget.padding,
-              child: Text(
-                quote.name,
-                textAlign: TextAlign.start,
-                style: Utils.calligraphy.body(
-                  textStyle: TextStyle(
-                    fontSize: widget.tiny ? 24.0 : 42.0,
-                    fontWeight: FontWeight.w300,
-                    color: widget.textColor,
-                    backgroundColor: darkBrightness
-                        ? null
-                        : _topicColor.color.withOpacity(0.2),
-                    shadows: [
-                      Shadow(
-                        blurRadius: 0.0,
-                        offset: const Offset(-1.0, 1.0),
-                        color: _textShadowColor,
-                      ),
-                    ],
-                  ).merge(widget.textStyle),
+              setState(() => _textShadowColor = Colors.transparent);
+            },
+            child: Align(
+              alignment: Alignment.center,
+              child: Padding(
+                padding: widget.padding,
+                child: Text(
+                  quote.name,
+                  textAlign: TextAlign.start,
+                  style: Utils.calligraphy.body(
+                    textStyle: TextStyle(
+                      fontSize: widget.tiny ? 24.0 : 42.0,
+                      fontWeight: FontWeight.w300,
+                      color: widget.textColor,
+                      backgroundColor: darkBrightness
+                          ? null
+                          : _topicColor.color.withOpacity(0.2),
+                      shadows: [
+                        Shadow(
+                          blurRadius: 0.0,
+                          offset: const Offset(-1.0, 1.0),
+                          color: _textShadowColor,
+                        ),
+                      ],
+                    ).merge(widget.textStyle),
+                  ),
                 ),
               ),
             ),

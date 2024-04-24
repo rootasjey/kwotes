@@ -10,10 +10,14 @@ class DraftQuoteText extends StatelessWidget {
   const DraftQuoteText({
     super.key,
     required this.draftQuote,
+    this.contraints = const BoxConstraints(minHeight: 0),
     this.magnitude = EnumQuoteTextMagnitude.big,
     this.margin = EdgeInsets.zero,
     this.onTap,
   });
+
+  /// Constraints for this widget.
+  final BoxConstraints contraints;
 
   /// Main data.
   final DraftQuote draftQuote;
@@ -34,6 +38,7 @@ class DraftQuoteText extends StatelessWidget {
       quote: draftQuote,
       margin: margin,
       magnitude: magnitude,
+      contraints: contraints,
       onTap: (Quote quote) => onTap?.call(draftQuote),
     );
   }
