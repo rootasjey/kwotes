@@ -4,6 +4,7 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
+import "package:flutter_solidart/flutter_solidart.dart";
 import "package:kwotes/actions/quote_actions.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/components/loading_view.dart";
@@ -19,6 +20,7 @@ import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
+import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/firestore/document_change_map.dart";
 import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/firestore/query_doc_snap_map.dart";
@@ -26,6 +28,7 @@ import "package:kwotes/types/firestore/query_map.dart";
 import "package:kwotes/types/firestore/query_snap_map.dart";
 import "package:kwotes/types/firestore/query_snapshot_stream_subscription.dart";
 import "package:kwotes/types/quote.dart";
+import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
 import "package:screenshot/screenshot.dart";
 import "package:text_wrap_auto_size/solution.dart";
@@ -77,8 +80,7 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
   @override
   void initState() {
     super.initState();
-    initProps();
-    fetch();
+    initProps().then((_) => fetch());
   }
 
   @override
@@ -96,6 +98,9 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
         message: "${"loading".tr()}...",
       );
     }
+
+    final Signal<UserFirestore> signalUserFirestore =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
 
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
@@ -129,27 +134,39 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
                 selectedLanguage: _selectedLanguage,
                 useSliver: true,
               ),
-              AuthorQuotesPageBody(
-                accentColor: Constants.colors.getRandomFromPalette(
-                  onlyDarkerColors: true,
-                ),
-                isDark: isDark,
-                isMobileSize: isMobileSize,
-                pageState: _pageState,
-                quotes: _quotes,
-                onCopyQuoteUrl: onCopyQuoteUrl,
-                onDoubleTapQuote: onDoubleTapQuote,
-                onShareImage: onShareImage,
-                onShareLink: (Quote quote) => QuoteActions.shareQuoteLink(
-                  context,
-                  quote,
-                ),
-                onShareText: (Quote quote) => QuoteActions.shareQuoteText(
-                  context,
-                  quote,
-                ),
-                onTapQuote: onTapQuote,
-                onTapBackButton: Beamer.of(context).beamBack,
+              SignalBuilder(
+                signal: signalUserFirestore,
+                builder: (
+                  BuildContext context,
+                  UserFirestore user,
+                  Widget? child,
+                ) {
+                  return AuthorQuotesPageBody(
+                    accentColor: Constants.colors.getRandomFromPalette(
+                      onlyDarkerColors: true,
+                    ),
+                    isDark: isDark,
+                    isMobileSize: isMobileSize,
+                    pageState: _pageState,
+                    quotes: _quotes,
+                    onCopyQuoteUrl: onCopyQuoteUrl,
+                    onDoubleTapQuote: onDoubleTapQuote,
+                    onOpenAddToList: onOpenAddQuoteToList,
+                    onShareImage: onShareImage,
+                    onShareLink: (Quote quote) => QuoteActions.shareQuoteLink(
+                      context,
+                      quote,
+                    ),
+                    onShareText: (Quote quote) => QuoteActions.shareQuoteText(
+                      context,
+                      quote,
+                    ),
+                    onTapQuote: onTapQuote,
+                    onTapBackButton: Beamer.of(context).beamBack,
+                    onToggleLike: onToggleLike,
+                    userId: user.id,
+                  );
+                },
               ),
             ],
           ),
@@ -292,8 +309,8 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
   }
 
   /// Initialize props.
-  void initProps() {
-    _selectedLanguage = Utils.linguistic.getLanguageSelection();
+  Future<void> initProps() async {
+    _selectedLanguage = await Utils.vault.getReferenceQuotesLanguage();
   }
 
   /// Listen to document changes.
@@ -350,6 +367,21 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
     );
   }
 
+  /// Callback fired to open add quote to list dialog.
+  void onOpenAddQuoteToList(Quote quote) {
+    final String userId =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value.id;
+
+    Utils.graphic.showAddToListDialog(
+      context,
+      isMobileSize: Utils.measurements.isMobileSize(context) ||
+          NavigationStateHelper.isIpad,
+      isIpad: NavigationStateHelper.isIpad,
+      quotes: [quote],
+      userId: userId,
+    );
+  }
+
   /// Callback fired when the user scrolls.
   void onScroll(double offset) {
     if (!_hasMoreResults) {
@@ -376,6 +408,7 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
       _selectedLanguage = language;
     });
 
+    Utils.vault.setReferenceQuotesLanguage(language);
     fetchQuotes();
   }
 
@@ -453,5 +486,51 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
         quote.id,
       ),
     );
+  }
+
+  /// Callback fired when a quote is liked or unliked.
+  void onToggleLike(Quote quote) async {
+    final int index = _quotes.indexWhere((x) => x.id == quote.id);
+    if (index != -1) {
+      setState(() {
+        _quotes[index] = quote.copyWith(starred: !quote.starred);
+      });
+    }
+
+    try {
+      final Signal<UserFirestore> currentUser =
+          context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+
+      final DocumentSnapshotMap doc = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(currentUser.value.id)
+          .collection("favourites")
+          .doc(quote.id)
+          .get();
+
+      if (doc.exists) {
+        await FirebaseFirestore.instance
+            .collection("users")
+            .doc(currentUser.value.id)
+            .collection("favourites")
+            .doc(quote.id)
+            .delete();
+        return;
+      }
+
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(currentUser.value.id)
+          .collection("favourites")
+          .doc(quote.id)
+          .set(quote.toMapFavourite());
+    } catch (error) {
+      loggy.error(error.toString());
+      if (index != -1) {
+        setState(() {
+          _quotes[index] = quote.copyWith(starred: quote.starred);
+        });
+      }
+    }
   }
 }

@@ -135,9 +135,10 @@ class AuthorPageBody extends StatelessWidget {
           ),
           GestureDetector(
             onDoubleTap: onDoubleTapSummary,
-            child: FractionallySizedBox(
-              alignment: Alignment.topLeft,
-              widthFactor: isMobileSize ? 1.0 : 0.7,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: 800.0,
+              ),
               child: Padding(
                 padding: EdgeInsets.only(
                   left: leftPadding,
