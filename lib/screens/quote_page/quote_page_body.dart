@@ -39,6 +39,7 @@ class QuotePageBody extends StatelessWidget {
     this.onShareText,
     this.onTapAuthor,
     this.onTapReference,
+    this.windowSize = const Size(0.0, 0.0),
   });
 
   /// Whether user is authenticated.
@@ -98,6 +99,9 @@ class QuotePageBody extends StatelessWidget {
   /// Quote data for this component.
   final Quote quote;
 
+  /// Window size for this component.
+  final Size windowSize;
+
   /// Indicate text style (font size) for quote's name.
   final Solution textWrapSolution;
 
@@ -107,9 +111,18 @@ class QuotePageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (pageState == EnumPageState.loading) {
-      return LoadingView.scaffold(
+      return LoadingView(
         message: "loading".tr(),
+        useSliver: false,
       );
+    }
+
+    final Color? foregroundColor =
+        Theme.of(context).textTheme.bodyMedium?.color;
+
+    double bottomPadding = 0.0;
+    if (windowSize.width < 600 && windowSize.height >= 500) {
+      bottomPadding = 48.0;
     }
 
     return Center(
@@ -119,11 +132,11 @@ class QuotePageBody extends StatelessWidget {
         slivers: [
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.only(
+              padding: EdgeInsets.only(
                 top: 24.0,
                 left: 42.0,
-                right: 52.0,
-                bottom: 24.0,
+                right: 42.0,
+                bottom: bottomPadding,
               ),
               child: ContextMenuWidget(
                 child: GestureDetector(
@@ -186,7 +199,11 @@ class QuotePageBody extends StatelessWidget {
                     child: Text(
                       quote.author.name,
                       textAlign: TextAlign.center,
-                      style: Utils.calligraphy.body(),
+                      style: Utils.calligraphy.body(
+                        textStyle: TextStyle(
+                          color: foregroundColor?.withOpacity(0.8),
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -198,7 +215,15 @@ class QuotePageBody extends StatelessWidget {
                   onCopyAuthorUrl: onCopyAuthorUrl,
                 ),
               ),
-            ).animate(delay: 350.ms).slideY(begin: 0.8, end: 0.0).fadeIn(),
+            )
+                .animate(delay: 350.ms)
+                .slideY(
+                  begin: 0.2,
+                  end: 0.0,
+                  duration: const Duration(milliseconds: 75),
+                  curve: Curves.decelerate,
+                )
+                .fadeIn(),
           ),
           if (quote.reference.id.isNotEmpty)
             SliverToBoxAdapter(
@@ -208,13 +233,17 @@ class QuotePageBody extends StatelessWidget {
                     onTap: () => onTapReference?.call(quote.reference),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0,
+                        horizontal: 12.0,
                         vertical: 2.0,
                       ),
                       child: Text(
                         quote.reference.name,
                         textAlign: TextAlign.center,
-                        style: Utils.calligraphy.body(),
+                        style: Utils.calligraphy.body(
+                          textStyle: TextStyle(
+                            color: foregroundColor?.withOpacity(0.6),
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -235,7 +264,15 @@ class QuotePageBody extends StatelessWidget {
                     );
                   },
                 ),
-              ).animate(delay: 600.ms).slideY(begin: 0.8, end: 0.0).fadeIn(),
+              )
+                  .animate(delay: 500.ms)
+                  .slideY(
+                    begin: 0.2,
+                    end: 0.0,
+                    duration: const Duration(milliseconds: 75),
+                    curve: Curves.decelerate,
+                  )
+                  .fadeIn(),
             ),
         ],
       ),

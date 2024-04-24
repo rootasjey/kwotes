@@ -47,6 +47,7 @@ class ShareCard extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(4.0),
+          hoverColor: cardBackgroundColor,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

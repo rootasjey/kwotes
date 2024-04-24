@@ -15,6 +15,7 @@ import "package:kwotes/components/dialogs/add_to_list/add_to_list_dialog.dart";
 import "package:kwotes/components/icons/app_icon.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/quote_page/share_quote_template.dart";
 import "package:kwotes/types/enums/enum_color_value_type.dart";
 import "package:kwotes/types/enums/enum_main_genre.dart";
@@ -613,12 +614,24 @@ class Graphic with UiLoggy {
     double? maxFontSize,
     TextStyle? style,
   }) {
-    final double width = windowSize.width;
-    final double height = windowSize.height;
+    const double paddingValue = 54.0;
+    Size quoteContainerSize = const Size(0.0, 0.0);
+
+    if (NavigationStateHelper.isIpad) {
+      quoteContainerSize = Size(
+        (windowSize.width * 0.7) - paddingValue,
+        (windowSize.height * 0.5) - paddingValue,
+      );
+    }
+
+    quoteContainerSize = Size(
+      (windowSize.width * 0.7) - paddingValue,
+      (windowSize.height * 0.6) - paddingValue,
+    );
 
     try {
       return TextWrapAutoSize.solution(
-        Size(width, height),
+        quoteContainerSize,
         Text(quote.name, style: style),
         minFontSize: minFontSize,
         maxFontSize: maxFontSize,
@@ -634,8 +647,8 @@ class Graphic with UiLoggy {
             fontSize: manualFontSize,
           ),
         ),
-        Size(width, height),
-        Size(width, height),
+        quoteContainerSize,
+        windowSize,
       );
     }
   }
@@ -741,6 +754,7 @@ class Graphic with UiLoggy {
       ) {
         return ShareQuoteTemplate(
           quote: quote,
+          isMobileSize: Utils.measurements.isMobileSize(context),
           screenshotController: screenshotController,
           textWrapSolution: textWrapSolution,
           onBack: Navigator.of(context).pop,

@@ -106,17 +106,19 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
 
   @override
   Widget build(BuildContext context) {
-    final Size windowSize = preCalculate(MediaQuery.of(context).size);
+    final Size windowSize = MediaQuery.of(context).size;
+    final Size quoteContainerSize = computeWindowSize(windowSize);
+
     _textWrapSolution = Utils.graphic.getTextSolution(
       quote: _quote,
-      windowSize: windowSize,
+      windowSize: quoteContainerSize,
       style: Utils.calligraphy.body(),
-      maxFontSize: windowSize.width < 500 ? 18.0 : null,
+      maxFontSize: windowSize.width < 300 ? 18.0 : null,
     );
 
     final bool isMobileSize =
-        windowSize.width < Utils.measurements.mobileWidthTreshold ||
-            windowSize.height < Utils.measurements.mobileWidthTreshold;
+        quoteContainerSize.width < Utils.measurements.mobileWidthTreshold ||
+            quoteContainerSize.height < Utils.measurements.mobileWidthTreshold;
 
     final Signal<UserFirestore> signalUserFirestore =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
@@ -178,6 +180,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
                     selectedColor: getTopicColor(),
                     textWrapSolution: _textWrapSolution,
                     userFirestore: userFirestore,
+                    windowSize: windowSize,
                   ),
                   Positioned(
                     top: null,
@@ -404,7 +407,8 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
 
     Utils.graphic.showAddToListDialog(
       context,
-      isMobileSize: isMobileSize,
+      isMobileSize: isMobileSize || NavigationStateHelper.isIpad,
+      isIpad: NavigationStateHelper.isIpad,
       quotes: [_quote],
       userId: userId,
       selectedColor: getTopicColor(),
@@ -704,11 +708,27 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
     }
   }
 
-  Size preCalculate(Size size) {
-    if (!NavigationStateHelper.isIpad) {
-      return size;
+  /// Calculate actual quote container size based on screen size.
+  Size computeWindowSize(Size size) {
+    const double paddingValue = 54.0;
+
+    if (NavigationStateHelper.isIpad) {
+      return Size(
+        (size.width * 0.7) - paddingValue,
+        (size.height * 0.5) - paddingValue,
+      );
     }
 
-    return Size(size.width * 0.9, size.height * 0.5);
+    if (size.width < 500 && size.height > 500) {
+      return Size(
+        (size.width * 0.8) - paddingValue,
+        (size.height * 0.8) - paddingValue,
+      );
+    }
+
+    return Size(
+      (size.width * 0.7) - paddingValue,
+      (size.height * 0.6) - paddingValue,
+    );
   }
 }

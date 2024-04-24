@@ -17,6 +17,7 @@ class ShareQuoteTemplate extends StatelessWidget {
     required this.textWrapSolution,
     required this.screenshotController,
     this.isMobileSize = false,
+    this.isIpad = false,
     this.borderColor,
     this.fabIconData,
     this.fabLabelValue,
@@ -28,6 +29,9 @@ class ShareQuoteTemplate extends StatelessWidget {
 
   /// Whether the screen is mobile.
   final bool isMobileSize;
+
+  /// Whether the screen is iPad.
+  final bool isIpad;
 
   /// Border color from quote's topic.
   final Color? borderColor;
@@ -63,124 +67,152 @@ class ShareQuoteTemplate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BorderRadiusGeometry borderRadius = BorderRadius.circular(12.0);
+    final Color? foregroundColor =
+        Theme.of(context).textTheme.bodyMedium?.color;
+    final Color buttonBackgroundColor = borderColor ?? getTopicColor(context);
 
-    return Padding(
-      padding: margin,
-      child: ListView(
-        shrinkWrap: true,
-        controller: scrollController,
-        children: [
-          ColoredTextButton(
-            accentColor: borderColor ?? getTopicColor(context),
-            textValue: fabLabelValue ?? getFabLabelValue(),
-            onPressed: onTapShareImage,
-            icon: Icon(fabIconData ?? getFabIconData()),
-            margin: const EdgeInsets.only(
-              left: 16.0,
-              right: 16.0,
-            ),
-          ),
-          Screenshot(
-            controller: screenshotController,
-            child: Padding(
-              padding: isMobileSize
-                  ? const EdgeInsets.all(12.0)
-                  : const EdgeInsets.all(42.0),
-              child: Material(
-                elevation: 6.0,
-                color: Theme.of(context).scaffoldBackgroundColor,
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(
-                    color: borderColor ?? getTopicColor(context),
-                    width: isMobileSize ? 8.0 : 2.0,
-                  ),
-                  borderRadius: borderRadius,
+    return FractionallySizedBox(
+      widthFactor: isIpad ? 0.6 : 1.0,
+      heightFactor: isIpad ? 0.6 : 1.0,
+      child: Padding(
+        padding: margin,
+        child: ListView(
+          shrinkWrap: true,
+          controller: scrollController,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: ElevatedButton.icon(
+                onPressed: onTapShareImage,
+                icon: Icon(fabIconData ?? getFabIconData(), size: 18.0),
+                label: Text(
+                  fabLabelValue ?? getFabLabelValue(),
                 ),
-                child: ClipRRect(
-                  borderRadius: borderRadius,
-                  child: Stack(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(42.0),
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(
-                            minHeight: 300.0,
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                quote.name,
-                                style: textWrapSolution.style,
-                              ),
-                              if (quote.author.urls.image.isNotEmpty)
-                                BetterAvatar(
-                                  radius: 24.0,
-                                  imageProvider: NetworkImage(
-                                    quote.author.urls.image,
-                                  ),
-                                  colorFilter: const ColorFilter.mode(
-                                    Colors.grey,
-                                    BlendMode.saturation,
-                                  ),
-                                  margin: const EdgeInsets.only(top: 24.0),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: buttonBackgroundColor,
+                  textStyle: Utils.calligraphy.body(
+                    textStyle: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4.0),
+                    side: BorderSide(
+                      color: borderColor ?? getTopicColor(context),
+                      width: 2.0,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Screenshot(
+              controller: screenshotController,
+              child: Padding(
+                padding: isMobileSize
+                    ? const EdgeInsets.all(12.0)
+                    : const EdgeInsets.all(42.0),
+                child: Material(
+                  elevation: 6.0,
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: borderColor ?? getTopicColor(context),
+                      width: isMobileSize ? 8.0 : 2.0,
+                    ),
+                    borderRadius: borderRadius,
+                  ),
+                  child: ClipRRect(
+                    borderRadius: borderRadius,
+                    child: Stack(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(42.0),
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(
+                              minHeight: 300.0,
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  quote.name,
+                                  style: textWrapSolution.style,
                                 ),
-                              Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: Text(
-                                    quote.author.name,
-                                    textAlign: TextAlign.center,
-                                    style: Utils.calligraphy.body(),
+                                if (quote.author.urls.image.isNotEmpty)
+                                  BetterAvatar(
+                                    radius: 24.0,
+                                    imageProvider: NetworkImage(
+                                      quote.author.urls.image,
+                                    ),
+                                    colorFilter: const ColorFilter.mode(
+                                      Colors.grey,
+                                      BlendMode.saturation,
+                                    ),
+                                    margin: const EdgeInsets.only(top: 24.0),
                                   ),
-                                ),
-                              ),
-                              if (quote.reference.id.isNotEmpty)
                                 Center(
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0,
-                                      vertical: 2.0,
+                                    padding: EdgeInsets.only(
+                                      left: 8.0,
+                                      right: 8.0,
+                                      top: quote.author.urls.image.isEmpty
+                                          ? 24.0
+                                          : 4.0,
                                     ),
                                     child: Text(
-                                      quote.reference.name,
+                                      quote.author.name,
                                       textAlign: TextAlign.center,
                                       style: Utils.calligraphy.body(),
                                     ),
                                   ),
                                 ),
-                            ],
+                                if (quote.reference.id.isNotEmpty)
+                                  Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0,
+                                        vertical: 2.0,
+                                      ),
+                                      child: Text(
+                                        quote.reference.name,
+                                        textAlign: TextAlign.center,
+                                        style: Utils.calligraphy.body(),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      const Positioned(
-                        bottom: 16.0,
-                        right: 16.0,
-                        child: AppIcon(
-                          size: 36.0,
+                        const Positioned(
+                          bottom: 16.0,
+                          right: 16.0,
+                          child: AppIcon(
+                            size: 36.0,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          ColoredTextButton(
-            accentColor: borderColor,
-            textValue: "back".tr(),
-            onPressed: onBack,
-            icon: const Icon(TablerIcons.arrow_back),
-            margin: const EdgeInsets.only(
-              top: 16.0,
-              left: 16.0,
-              right: 16.0,
-              bottom: 32.0,
+            ColoredTextButton(
+              accentColor: foregroundColor?.withOpacity(0.4),
+              // accentColor: borderColor,
+              textValue: "back".tr(),
+              onPressed: onBack,
+              icon: const Icon(TablerIcons.arrow_back),
+              margin: const EdgeInsets.only(
+                top: 16.0,
+                left: 16.0,
+                right: 16.0,
+                bottom: 32.0,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

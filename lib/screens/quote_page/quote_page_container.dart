@@ -4,6 +4,7 @@ import "package:adaptive_theme/adaptive_theme.dart";
 import "package:dismissible_page/dismissible_page.dart";
 import "package:flutter/material.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/router/navigation_state_helper.dart";
 
 class QuotePageContainer extends StatelessWidget {
   /// Quote page container (wrapper).
@@ -41,6 +42,15 @@ class QuotePageContainer extends StatelessWidget {
     final Color backgroundColor =
         brightness == Brightness.light ? Colors.white70 : Colors.black26;
 
+    EdgeInsets outerPadding = EdgeInsets.zero;
+
+    if (!isMobileSize) {
+      outerPadding = const EdgeInsets.all(42.0);
+    }
+    if (NavigationStateHelper.isIpad) {
+      outerPadding = const EdgeInsets.all(54.0);
+    }
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: GestureDetector(
@@ -48,8 +58,7 @@ class QuotePageContainer extends StatelessWidget {
         child: Container(
           color: Colors.transparent,
           child: Padding(
-            padding:
-                isMobileSize ? EdgeInsets.zero : const EdgeInsets.all(42.0),
+            padding: outerPadding,
             child: GestureDetector(
               onTap: () {},
               child: Hero(
