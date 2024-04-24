@@ -86,6 +86,42 @@ class Vault {
     Glutton.eat(StorageKeys.quoteLanguageSelection, languageSelection.index);
   }
 
+  /// Return the saved value for author quotes language selection.
+  Future<EnumLanguageSelection> getAuthorQuotesLanguage() async {
+    final int index = await Glutton.vomit(
+      StorageKeys.authorQuotesLanguageSelection,
+      EnumLanguageSelection.en.index,
+    );
+
+    return EnumLanguageSelection.values[index];
+  }
+
+  /// Saves the author quotes language selection.
+  void setAuthorQuotesLanguage(EnumLanguageSelection languageSelection) {
+    Glutton.eat(
+      StorageKeys.authorQuotesLanguageSelection,
+      languageSelection.index,
+    );
+  }
+
+  /// Return the saved value for reference quotes language selection.
+  Future<EnumLanguageSelection> getReferenceQuotesLanguage() async {
+    final int index = await Glutton.vomit(
+      StorageKeys.referenceQuotesLanguageSelection,
+      EnumLanguageSelection.en.index,
+    );
+
+    return EnumLanguageSelection.values[index];
+  }
+
+  /// Saves the reference quotes language selection.
+  void setReferenceQuotesLanguage(EnumLanguageSelection languageSelection) {
+    Glutton.eat(
+      StorageKeys.referenceQuotesLanguageSelection,
+      languageSelection.index,
+    );
+  }
+
   /// Return the last saved value for app language.
   /// Retrieve the index of EnumLanguageSelection and return enum value.
   Future<EnumLanguageSelection> getLanguage() async {

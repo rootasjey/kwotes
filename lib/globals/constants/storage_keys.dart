@@ -36,6 +36,10 @@ class StorageKeys {
 
   /// Language selection when adding/editing a new quote.
   static const String quoteLanguageSelection = "quote_language_selection";
+  static const String authorQuotesLanguageSelection =
+      "author_quotes_language_selection";
+  static const String referenceQuotesLanguageSelection =
+      "reference_quotes_language_selection";
   static const String password = "password";
 
   /// Selected quotes language on view pages (e.g. published quotes page).
