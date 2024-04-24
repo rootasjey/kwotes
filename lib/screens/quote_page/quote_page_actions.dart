@@ -88,7 +88,7 @@ class QuotePageActions extends StatelessWidget {
         IconButton(
           color: iconColor,
           onPressed: onShareQuote,
-          icon: const Icon(TablerIcons.share),
+          icon: const Icon(TablerIcons.share_2),
           tooltip: "quote.share.name".tr(),
         ),
         if (authenticated) ...[

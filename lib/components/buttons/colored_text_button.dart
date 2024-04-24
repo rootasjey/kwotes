@@ -88,6 +88,7 @@ class _ColoredTextButtonState extends State<ColoredTextButton> {
           onHover: (bool isHover) => setState(() => _isHover = isHover),
           style: TextButton.styleFrom(
             backgroundColor: _isHover ? null : widget.backgroundColor,
+            foregroundColor: widget.accentColor,
           ).merge(widget.style),
           child: Padding(
             padding: widget.padding,
