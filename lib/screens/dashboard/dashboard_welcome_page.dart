@@ -1,8 +1,10 @@
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
@@ -15,10 +17,41 @@ import "package:kwotes/screens/quote_page/share_card.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/user/user_firestore.dart";
+import "package:loggy/loggy.dart";
+import "package:vibration/vibration.dart";
 
-class DashboardWelcomePage extends StatelessWidget {
+class DashboardWelcomePage extends StatefulWidget {
   /// Dashboard welcome page.
   const DashboardWelcomePage({super.key});
+
+  @override
+  State<DashboardWelcomePage> createState() => _DashboardWelcomePageState();
+}
+
+class _DashboardWelcomePageState extends State<DashboardWelcomePage>
+    with UiLoggy {
+  /// True if we already handled the quick action
+  /// (e.g. pull/push to trigger).
+  bool _handleQuickAction = false;
+
+  /// Previous scroll position.
+  /// Used to determine if the user is scrolling up or down.
+  double _prevPixelsPosition = 0.0;
+
+  /// Trigger offset for pull to action.
+  final double _pullTriggerOffset = -100.0;
+
+  /// Trigger offset for push to action.
+  final double _pushTriggerOffset = 100.0;
+
+  /// Page scroll controller.
+  final ScrollController _pageScrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _pageScrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,34 +68,52 @@ class DashboardWelcomePage extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            SliverList(
-              delegate: SliverChildListDelegate.fixed([
-                DashboardHeader(
-                  foregroundColor: foregroundColor,
-                  isDark: isDark,
-                  isMobileSize: isMobileSize,
-                  randomColor: randomColor,
-                  onTapUsername: showSignoutBottomSheet,
-                  onTapNewQuoteButton: onGoToAddQuotePage,
-                  onTapUserAvatar: () {
-                    Beamer.of(context, root: true).beamToNamed(
-                      SettingsLocation.route,
-                    );
-                  },
-                  userFirestore: userFirestore,
+        body: ImprovedScrolling(
+          enableMMBScrolling: true,
+          onScroll: onScroll,
+          scrollController: _pageScrollController,
+          child: ScrollConfiguration(
+            behavior: const CustomScrollBehavior(),
+            child: CustomScrollView(
+              controller: _pageScrollController,
+              physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
+              ),
+              slivers: [
+                SliverList(
+                  delegate: SliverChildListDelegate.fixed([
+                    DashboardHeader(
+                      foregroundColor: foregroundColor,
+                      isDark: isDark,
+                      isMobileSize: isMobileSize,
+                      randomColor: randomColor,
+                      onTapUsername: showSignoutBottomSheet,
+                      onTapNewQuoteButton: onGoToAddQuotePage,
+                      onTapUserAvatar: openSettingsPage,
+                      userFirestore: userFirestore,
+                    ),
+                    DashboardCardSection(
+                      isDark: isDark,
+                      isMobileSize: isMobileSize,
+                    ),
+                  ]),
                 ),
-                DashboardCardSection(
-                  isDark: isDark,
-                  isMobileSize: isMobileSize,
-                ),
-              ]),
+                const SliverPadding(padding: EdgeInsets.only(bottom: 96.0)),
+              ],
             ),
-            const SliverPadding(padding: EdgeInsets.only(bottom: 96.0)),
-          ],
+          ),
         ),
       ),
+    );
+  }
+
+  /// Set the target variable to the new value.
+  /// Then set the value back to its original value after 1 second.
+  void boomerangQuickActionValue(bool newValue) {
+    _handleQuickAction = newValue;
+    Future.delayed(
+      const Duration(milliseconds: 1000),
+      () => _handleQuickAction = !newValue,
     );
   }
 
@@ -72,6 +123,63 @@ class DashboardWelcomePage extends StatelessWidget {
     context.beamToNamed(DashboardContentLocation.addQuoteRoute);
   }
 
+  /// Open settings page.
+  void openSettingsPage() {
+    Beamer.of(context, root: true).beamToNamed(
+      SettingsLocation.route,
+    );
+  }
+
+  /// Callback on scroll.
+  void onScroll(double offset) {
+    final double pixelsPosition = _pageScrollController.position.pixels;
+
+    if (pixelsPosition < _pageScrollController.position.minScrollExtent) {
+      if (_prevPixelsPosition <= pixelsPosition) {
+        return;
+      }
+
+      _prevPixelsPosition = pixelsPosition;
+      if (pixelsPosition < _pullTriggerOffset && !_handleQuickAction) {
+        boomerangQuickActionValue(true);
+        if (Utils.graphic.isMobile()) {
+          Vibration.vibrate(amplitude: 20, duration: 25);
+        }
+
+        NavigationStateHelper.quote = Quote.empty();
+        context.beamToNamed(DashboardContentLocation.addQuoteRoute);
+      }
+      return;
+    }
+
+    if (pixelsPosition > _pageScrollController.position.maxScrollExtent) {
+      if (_prevPixelsPosition >= pixelsPosition) {
+        return;
+      }
+
+      _prevPixelsPosition = pixelsPosition;
+      if (pixelsPosition > _pushTriggerOffset && !_handleQuickAction) {
+        boomerangQuickActionValue(true);
+        if (Utils.graphic.isMobile()) {
+          Vibration.vibrate(amplitude: 20, duration: 25);
+        }
+
+        openSettingsPage();
+      }
+      return;
+    }
+  }
+
+  void onSignout(BuildContext context) async {
+    Navigator.of(context).pop();
+    final bool success = await Utils.state.signOut();
+    if (!success) return;
+    if (!context.mounted) return;
+
+    Beamer.of(context, root: true).beamToReplacementNamed(HomeLocation.route);
+  }
+
+  /// Show the sign out bottom sheet.
   void showSignoutBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -128,14 +236,5 @@ class DashboardWelcomePage extends StatelessWidget {
         );
       },
     );
-  }
-
-  void onSignout(BuildContext context) async {
-    Navigator.of(context).pop();
-    final bool success = await Utils.state.signOut();
-    if (!success) return;
-    if (!context.mounted) return;
-
-    Beamer.of(context, root: true).beamToReplacementNamed(HomeLocation.route);
   }
 }
