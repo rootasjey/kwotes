@@ -1,6 +1,5 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:kwotes/components/empty_view.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/screens/search/search_author_results_page.dart";
 import "package:kwotes/screens/search/search_quote_results_page.dart";
@@ -98,29 +97,16 @@ class SearchPageBody extends StatelessWidget {
       );
     }
 
-    if (quoteResults.isEmpty &&
-        authorResults.isEmpty &&
-        referenceResults.isEmpty &&
-        !isQueryEmpty) {
-      return EmptyView.searchEmptyView(
-        accentColor: Theme.of(context).colorScheme.secondary,
-        context,
-        foregroundColor: Theme.of(context).textTheme.bodyMedium?.color,
-        description: "search.empty.${searchCategory.name}".tr(),
-        margin: margin,
-        onReinitializeSearch: onReinitializeSearch,
-        onRefresh: onRefreshSearch,
-        title: "search.empty.results".tr(),
-      );
-    }
-
     if (searchCategory == EnumSearchCategory.quotes) {
       return SearchQuoteResultsPage(
         isDark: isDark,
         isMobileSize: isMobileSize,
+        isQueryEmpty: isQueryEmpty,
         margin: margin,
         quoteResults: quoteResults,
         onOpenAddToList: onOpenAddQuoteToList,
+        onRefreshSearch: onRefreshSearch,
+        onReinitializeSearch: onReinitializeSearch,
         onTapQuote: onTapQuote,
         onToggleLike: onToggleLike,
         userId: userId,
@@ -129,16 +115,22 @@ class SearchPageBody extends StatelessWidget {
 
     if (searchCategory == EnumSearchCategory.authors) {
       return SearchAuthorResultsPage(
-        margin: margin,
         authorResults: authorResults,
         isMobileSize: isMobileSize,
+        isQueryEmpty: isQueryEmpty,
+        margin: margin,
+        onRefreshSearch: onRefreshSearch,
+        onReinitializeSearch: onReinitializeSearch,
         onTapAuthor: onTapAuthor,
       );
     }
 
     return SearchReferenceResultsPage(
-      margin: margin,
       isMobileSize: isMobileSize,
+      isQueryEmpty: isQueryEmpty,
+      margin: margin,
+      onRefreshSearch: onRefreshSearch,
+      onReinitializeSearch: onReinitializeSearch,
       onTapReference: onTapReference,
       referenceResults: referenceResults,
     );

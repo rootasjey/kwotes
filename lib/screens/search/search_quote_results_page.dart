@@ -1,8 +1,12 @@
 import "dart:async";
 
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/context_menu_components.dart";
+import "package:kwotes/components/empty_view.dart";
+import "package:kwotes/components/swipe_from_left_container.dart";
+import "package:kwotes/components/swipe_from_right_container.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/screens/search/search_quote_text.dart";
 import "package:kwotes/types/quote.dart";
@@ -16,9 +20,12 @@ class SearchQuoteResultsPage extends StatelessWidget {
     super.key,
     this.isDark = false,
     this.isMobileSize = false,
+    this.isQueryEmpty = true,
     this.margin = EdgeInsets.zero,
     this.quoteResults = const [],
     this.onOpenAddToList,
+    this.onRefreshSearch,
+    this.onReinitializeSearch,
     this.onTapQuote,
     this.onToggleLike,
     this.userId = "",
@@ -31,6 +38,10 @@ class SearchQuoteResultsPage extends StatelessWidget {
   /// Used to determine the size of the search input.
   final bool isMobileSize;
 
+  /// True if the search query is empty.
+  /// Show empty result message if this is true.
+  final bool isQueryEmpty;
+
   /// Space around this widget.
   final EdgeInsets margin;
 
@@ -39,6 +50,12 @@ class SearchQuoteResultsPage extends StatelessWidget {
 
   /// Callback fired to add a quote to a list.
   final void Function(Quote quote)? onOpenAddToList;
+
+  /// Callback fired to refresh the search.
+  final void Function()? onRefreshSearch;
+
+  /// Callback fired to reinit the search.
+  final void Function()? onReinitializeSearch;
 
   /// Callback fired when quote name is tapped.
   final void Function(Quote quote)? onTapQuote;
@@ -54,6 +71,19 @@ class SearchQuoteResultsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (quoteResults.isEmpty && !isQueryEmpty) {
+      return EmptyView.searchEmptyView(
+        accentColor: Theme.of(context).colorScheme.secondary,
+        context,
+        foregroundColor: Theme.of(context).textTheme.bodyMedium?.color,
+        description: "search.empty.quotes".tr(),
+        margin: margin,
+        onReinitializeSearch: onReinitializeSearch,
+        onRefresh: onRefreshSearch,
+        title: "search.empty.results".tr(),
+      );
+    }
+
     return SliverPadding(
       padding: isMobileSize
           ? const EdgeInsets.only(
@@ -119,7 +149,7 @@ class SearchQuoteResultsPage extends StatelessWidget {
                   if (triggered && !vibrated) {
                     Vibration.hasVibrator().then((bool? hasVibrator) {
                       if (hasVibrator ?? false) {
-                        Vibration.vibrate(amplitude: 12);
+                        Vibration.vibrate(amplitude: 20, duration: 25);
                       }
                     });
 
@@ -135,23 +165,11 @@ class SearchQuoteResultsPage extends StatelessWidget {
                             Constants.colors.swipeStartOpacity,
                           );
 
-                    return Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8.0),
-                        color: color,
-                      ),
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 24.0),
-                          child: Icon(
-                            quote.starred
-                                ? TablerIcons.heart_filled
-                                : TablerIcons.heart,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                    return SwipeFromRightContainer(
+                      color: color,
+                      iconData: quote.starred
+                          ? TablerIcons.heart_filled
+                          : TablerIcons.heart,
                     );
                   } else if (direction == SwipeDirection.startToEnd) {
                     final Color color = triggered
@@ -160,21 +178,9 @@ class SearchQuoteResultsPage extends StatelessWidget {
                             Constants.colors.swipeStartOpacity,
                           );
 
-                    return Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8.0),
-                        color: color,
-                      ),
-                      child: const Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 24.0),
-                          child: Icon(
-                            TablerIcons.plus,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                    return SwipeFromLeftContainer(
+                      color: color,
+                      iconData: TablerIcons.plus,
                     );
                   }
 
@@ -186,7 +192,11 @@ class SearchQuoteResultsPage extends StatelessWidget {
               quote: quote,
               onTapQuote: onTapQuote,
               tiny: isMobileSize,
-              margin: const EdgeInsets.only(bottom: 16.0),
+              contraints: const BoxConstraints(minHeight: 90.0),
+              margin: const EdgeInsets.symmetric(
+                horizontal: 12.0,
+                vertical: 6.0,
+              ),
               textColor: Theme.of(context)
                   .textTheme
                   .bodyMedium

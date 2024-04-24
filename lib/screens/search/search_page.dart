@@ -62,6 +62,10 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> with UiLoggy {
+  /// True if we already handled the quick action
+  /// (e.g. pull/push to trigger).
+  bool _handleQuickAction = false;
+
   /// True if more results can be loaded.
   bool _hasMoreResults = true;
 
@@ -70,6 +74,9 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   /// Last author document for pagination.
   DocumentSnapshot? _lastAuthorDocument;
+
+  /// Trigger offset for pull to action.
+  final double _pullTriggerOffset = -110.0;
 
   /// Page's state.
   EnumPageState _pageState = EnumPageState.idle;
@@ -139,6 +146,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     super.initState();
     checkRouteParams();
     _searchFocusNode.addListener(onSearchFocusChanged);
+    NavigationStateHelper.searchRouterDelegate.addListener(onRouteChanged);
   }
 
   @override
@@ -151,6 +159,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     _streamSnapshot = null;
     _pageSateTimer?.cancel();
     _searchFocusNode.removeListener(onSearchFocusChanged);
+    NavigationStateHelper.searchRouterDelegate.removeListener(onRouteChanged);
     super.dispose();
   }
 
@@ -188,6 +197,9 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                 behavior: const CustomScrollBehavior(),
                 child: CustomScrollView(
                   controller: _scrollController,
+                  physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics(),
+                  ),
                   slivers: [
                     SearchInput(
                       inputController: _searchInputController,
@@ -289,6 +301,16 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     );
   }
 
+  /// Set the target variable to the new value.
+  /// Then set the value back to its original value after 1 second.
+  void boomerangQuickActionValue(bool newValue) {
+    _handleQuickAction = newValue;
+    Future.delayed(
+      const Duration(milliseconds: 1000),
+      () => _handleQuickAction = !newValue,
+    );
+  }
+
   /// Check text input to automatically adjust search settings.
   void checkForKeywords() {
     final String text = _searchInputController.text;
@@ -310,16 +332,16 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   /// Check route parameters to automatically search for data
   /// with the right settings.
   void checkRouteParams() async {
-    final String query = widget.query;
+    final String query = extractQuery();
 
     if (query.isNotEmpty) {
-      _searchInputController.text = widget.subjectName;
+      _searchInputController.text = extractSubjectName();
 
       final String searchType = query.split(":").first;
       manualSelectSearchCategory(searchType);
 
       if (query.indexOf(":") != query.lastIndexOf(":")) {
-        findDirectResults(query);
+        // findDirectResults(query);
         return;
       }
 
@@ -353,6 +375,36 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       setState(() => _pageState = newPageState);
       _pageSateTimer = null;
     });
+  }
+
+  /// Extract search query from route state.
+  String extractQuery() {
+    final String query = widget.query;
+    if (query.isNotEmpty) {
+      return query;
+    }
+
+    final Object? routeState =
+        NavigationStateHelper.searchRouterDelegate.configuration.state;
+    if (routeState is Map) {
+      return routeState["query"] ?? "";
+    }
+
+    return "";
+  }
+
+  /// Extract subject name (to search) from route state.
+  String extractSubjectName() {
+    if (widget.subjectName.isNotEmpty) {
+      return widget.subjectName;
+    }
+
+    final Object? routeState = Beamer.of(context).configuration.state;
+    if (routeState is Map) {
+      return routeState["subjectName"] ?? "";
+    }
+
+    return "";
   }
 
   /// Try to fetch authors alphabetically in Firestore.
@@ -418,6 +470,10 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     try {
       final Signal<UserFirestore> currentUser =
           context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+
+      if (currentUser.value.id.isEmpty) {
+        return Future.value(false);
+      }
 
       final DocumentSnapshotMap doc = await FirebaseFirestore.instance
           .collection("users")
@@ -682,6 +738,18 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     setState(() => _referenceList[index] = Reference.fromMap(data));
   }
 
+  void handlePullQuickAction() {
+    final double pixelsPosition = _scrollController.position.pixels;
+
+    if (pixelsPosition < _scrollController.position.minScrollExtent) {
+      if (pixelsPosition < _pullTriggerOffset && !_handleQuickAction) {
+        boomerangQuickActionValue(true);
+        _searchFocusNode.requestFocus();
+      }
+      return;
+    }
+  }
+
   /// Handle removed author.
   void handleRemovedAuthor(DocumentSnapshotMap doc) {
     final int index = _authorList.indexWhere((Author x) => x.id == doc.id);
@@ -718,20 +786,21 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
         NavigationStateHelper.searchRouterDelegate.configuration;
     final bool hasTopic = conf.uri.path.contains("/topic/");
 
-    if (hasTopic) {
-      final String topicName = conf.uri.pathSegments.last;
-      _searchInputController.text = topicName;
-      fetchTopic(topicName);
-
-      SystemChrome.setApplicationSwitcherDescription(
-        ApplicationSwitcherDescription(
-          label: "page_title.search_subject".tr(args: [topicName]),
-        ),
-      );
-      return true;
+    if (!hasTopic) {
+      return false;
     }
 
-    return false;
+    final String topicName = conf.uri.pathSegments.last;
+    _searchInputController.text = topicName;
+    fetchTopic(topicName);
+
+    SystemChrome.setApplicationSwitcherDescription(
+      ApplicationSwitcherDescription(
+        label: "page_title.search_subject".tr(args: [topicName]),
+      ),
+    );
+
+    return true;
   }
 
   /// Handle search query param on initialization.
@@ -790,6 +859,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   void manualSelectSearchCategory(String value) {
     switch (value) {
       case "quote":
+      case "quotes":
         onSelectSearchCategory(EnumSearchCategory.quotes);
         break;
       case "author":
@@ -835,14 +905,25 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
     Utils.graphic.showAddToListDialog(
       context,
-      isMobileSize: Utils.measurements.isMobileSize(context),
+      isMobileSize: Utils.measurements.isMobileSize(context) ||
+          NavigationStateHelper.isIpad,
+      isIpad: NavigationStateHelper.isIpad,
       quotes: [quote],
       userId: userId,
     );
   }
 
+  /// Callback fired when route changes (listen to route changes).
+  void onRouteChanged() {
+    Future.delayed(const Duration(milliseconds: 250), () {
+      checkRouteParams();
+    });
+  }
+
   /// Callback event when scrolling.
   void onScroll(double offset) {
+    handlePullQuickAction();
+
     if (!_hasMoreResults) {
       return;
     }
@@ -880,6 +961,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     _searchFocusNode.requestFocus();
   }
 
+  /// Callback fired when search input has changed.
   void onSearchFocusChanged() {
     setState(() {});
   }
@@ -970,7 +1052,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   /// Callback fired to cancel search.
   void onTapCancelButton() {
-    onClearInput();
     _searchFocusNode.unfocus();
   }
 
@@ -1015,6 +1096,13 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
           args: [topic.name],
         ),
       ),
+    );
+  }
+
+  /// Callback fired when user avatar is tapped.
+  void onTapUserAvatar() {
+    Beamer.of(context, root: true).beamToNamed(
+      SettingsLocation.route,
     );
   }
 
@@ -1329,9 +1417,15 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     final String path =
         "${SearchContentLocation.route}$queryCategory$querySearch";
 
-    Beamer.of(context).updateRouteInformation(
-      RouteInformation(uri: Uri(path: path)),
+    NavigationStateHelper.searchRouterDelegate.beamToReplacementNamed(
+      path,
     );
+    // NavigationStateHelper.searchRouterDelegate.updateRouteInformation(
+    //   RouteInformation(uri: Uri(path: path), state: {}),
+    // );
+    // NavigationStateHelper.searchRouterDelegate.update(
+    //   configuration: RouteInformation(uri: Uri(path: path)),
+    // );
   }
 
   /// Update search category from query param.
@@ -1354,11 +1448,5 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
 
     setState(() => _searchCategory = searchCategory);
-  }
-
-  void onTapUserAvatar() {
-    Beamer.of(context, root: true).beamToNamed(
-      SettingsLocation.route,
-    );
   }
 }

@@ -87,7 +87,7 @@ class SearchContentLocation extends BeamLocation<BeamState> {
           query: extractQuery(state.routeState),
           subjectName: extractSubjectName(state.routeState),
         ),
-        key: ValueKey("$route-${extractQuery(state.routeState)}"),
+        key: const ValueKey(route),
         title: getSearchPageTitle(state),
         type: BeamPageType.fadeTransition,
       ),

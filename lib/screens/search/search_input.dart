@@ -69,10 +69,6 @@ class SearchInput extends StatelessWidget {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final bool isInputEmpty = inputController?.text.isEmpty ?? true;
 
-    final Color backgroundColor =
-        isDark ? Colors.black : Theme.of(context).scaffoldBackgroundColor;
-    // final Color backgroundColor = isDark ? Colors.black : Colors.white;
-
     final Widget clearIcon = Padding(
       padding: const EdgeInsets.all(8.0),
       child: CircleButton(
@@ -85,11 +81,10 @@ class SearchInput extends StatelessWidget {
       ),
     );
 
-    final double toolbarHeight = isMobileSize ? 180.0 : 190.0;
+    const double toolbarHeight = 180.0;
 
     return SliverAppBar(
       primary: false,
-      backgroundColor: backgroundColor,
       stretch: false,
       floating: true,
       pinned: false,
@@ -99,17 +94,19 @@ class SearchInput extends StatelessWidget {
       automaticallyImplyLeading: false,
       collapsedHeight: toolbarHeight,
       expandedHeight: toolbarHeight,
+      backgroundColor: Colors.transparent,
       title: BackdropFilter(
         filter: ImageFilter.blur(
-          sigmaX: 5,
-          sigmaY: 5,
+          sigmaX: 10.0,
+          sigmaY: 10.0,
         ),
         child: Padding(
           padding: isMobileSize
               ? EdgeInsets.zero
-              : padding.subtract(const EdgeInsets.only(left: 28.0)).add(
-                    const EdgeInsets.only(top: 72.0),
-                  ),
+              : const EdgeInsets.only(
+                  left: 32.0,
+                  right: 24.0,
+                ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -141,7 +138,7 @@ class SearchInput extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: Utils.calligraphy.body(
                           textStyle: TextStyle(
-                            fontSize: isMobileSize ? 14.0 : 24.0,
+                            fontSize: isMobileSize ? 14.0 : 18.0,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -149,7 +146,9 @@ class SearchInput extends StatelessWidget {
                           hintText: hintText,
                           isDense: true,
                           filled: true,
-                          fillColor: Constants.colors.primary.withOpacity(0.1),
+                          fillColor: isDark
+                              ? Constants.colors.primary.withOpacity(0.2)
+                              : Constants.colors.primary.withOpacity(0.1),
                           suffixIcon: isInputEmpty ? null : clearIcon,
                           border: OutlineInputBorder(
                             borderSide: const BorderSide(
@@ -172,7 +171,7 @@ class SearchInput extends StatelessWidget {
                           ),
                           hintMaxLines: hintMaxLines,
                           contentPadding: const EdgeInsets.symmetric(
-                            vertical: 12.0,
+                            vertical: 10.0,
                             horizontal: 12.0,
                           ),
                         ),

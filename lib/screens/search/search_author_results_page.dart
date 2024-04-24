@@ -1,4 +1,6 @@
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:kwotes/components/empty_view.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/author.dart";
 import "package:wave_divider/wave_divider.dart";
@@ -8,8 +10,11 @@ class SearchAuthorResultsPage extends StatelessWidget {
   const SearchAuthorResultsPage({
     super.key,
     this.isMobileSize = false,
+    this.isQueryEmpty = true,
     this.margin = EdgeInsets.zero,
     this.authorResults = const [],
+    this.onRefreshSearch,
+    this.onReinitializeSearch,
     this.onTapAuthor,
   });
 
@@ -17,17 +22,39 @@ class SearchAuthorResultsPage extends StatelessWidget {
   /// Used to determine the size of the search input.
   final bool isMobileSize;
 
+  /// True if the search query is empty.
+  /// Show empty result message if this is true.
+  final bool isQueryEmpty;
+
   /// Space around this widget.
   final EdgeInsets margin;
 
   /// List of author results.
   final List<Author> authorResults;
 
+  /// Callback fired to refresh the search.
+  final void Function()? onRefreshSearch;
+
+  /// Callback fired to reinit the search.
+  final void Function()? onReinitializeSearch;
+
   /// Callback fired when author name is tapped.
   final void Function(Author author)? onTapAuthor;
-
   @override
   Widget build(BuildContext context) {
+    if (authorResults.isEmpty && !isQueryEmpty) {
+      return EmptyView.searchEmptyView(
+        accentColor: Theme.of(context).colorScheme.secondary,
+        context,
+        foregroundColor: Theme.of(context).textTheme.bodyMedium?.color,
+        description: "search.empty.authors".tr(),
+        margin: margin,
+        onReinitializeSearch: onReinitializeSearch,
+        onRefresh: onRefreshSearch,
+        title: "search.empty.results".tr(),
+      );
+    }
+
     return SliverPadding(
       padding: margin.subtract(const EdgeInsets.only(left: 12.0)),
       sliver: SliverList.separated(
