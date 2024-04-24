@@ -97,7 +97,8 @@ class _QuoteTextState extends State<QuoteText> {
               _shadowColor = Colors.transparent;
             });
           },
-          child: Center(
+          child: Align(
+            alignment: Alignment.centerLeft,
             child: Text(
               quoteName,
               style: Utils.calligraphy.body(

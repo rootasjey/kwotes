@@ -114,7 +114,7 @@ class _SearchQuoteTextState extends State<SearchQuoteText> {
               setState(() => _textShadowColor = Colors.transparent);
             },
             child: Align(
-              alignment: Alignment.center,
+              alignment: Alignment.centerLeft,
               child: Padding(
                 padding: widget.padding,
                 child: Text(
