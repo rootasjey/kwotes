@@ -4,6 +4,8 @@ import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/empty_view.dart";
 import "package:kwotes/components/loading_view.dart";
+import "package:kwotes/components/swipe_from_left_container.dart";
+import "package:kwotes/components/swipe_from_right_container.dart";
 import "package:kwotes/components/texts/quote_list_text.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
@@ -20,8 +22,9 @@ class ListsPageBody extends StatelessWidget {
     this.isDark = false,
     this.isMobileSize = false,
     this.pageState = EnumPageState.idle,
-    this.onTap,
     this.onDeleteList,
+    this.onTap,
+    this.onOpenDeleteListValidation,
     this.onEditList,
     this.editingListId = "",
     this.onSaveListChanges,
@@ -45,6 +48,9 @@ class ListsPageBody extends StatelessWidget {
 
   /// List of lists of quotes.
   final List<QuoteList> lists;
+
+  /// Callback fired to open delete list confirmation.
+  final void Function(QuoteList quoteList)? onOpenDeleteListValidation;
 
   /// Callback fired to delete a list.
   final void Function(QuoteList quoteList)? onDeleteList;
@@ -116,6 +122,7 @@ class ListsPageBody extends StatelessWidget {
             child: SwipeableTile(
               isElevated: false,
               swipeThreshold: 0.3,
+              borderRadius: 24.0,
               direction: SwipeDirection.horizontal,
               color: Theme.of(context).scaffoldBackgroundColor,
               key: ValueKey(quoteList.id),
@@ -167,36 +174,9 @@ class ListsPageBody extends StatelessWidget {
                               Constants.colors.swipeStartOpacity,
                             );
 
-                      return Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(24.0),
-                          gradient: LinearGradient(
-                            colors: [
-                              color.withOpacity(0.0),
-                              color.withOpacity(0.0),
-                              color.withOpacity(0.0),
-                              color.withOpacity(0.0),
-                              color.withOpacity(0.1),
-                            ],
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 6.0),
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: color,
-                                borderRadius: BorderRadius.circular(24.0),
-                              ),
-                              padding: const EdgeInsets.all(24.0),
-                              child: const Icon(
-                                TablerIcons.trash,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
+                      return SwipeFromRightContainer(
+                        color: color,
+                        iconData: TablerIcons.trash,
                       );
                     } else if (direction == SwipeDirection.startToEnd) {
                       final Color color = triggered
@@ -205,34 +185,9 @@ class ListsPageBody extends StatelessWidget {
                               Constants.colors.swipeStartOpacity,
                             );
 
-                      return Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(24.0),
-                          gradient: LinearGradient(colors: [
-                            color.withOpacity(0.1),
-                            color.withOpacity(0.0),
-                            color.withOpacity(0.0),
-                            color.withOpacity(0.0),
-                            color.withOpacity(0.0),
-                          ]),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 6.0),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: color,
-                                borderRadius: BorderRadius.circular(24.0),
-                              ),
-                              padding: const EdgeInsets.all(24.0),
-                              child: const Icon(
-                                TablerIcons.edit,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
+                      return SwipeFromLeftContainer(
+                        color: color,
+                        iconData: TablerIcons.edit,
                       );
                     }
 
@@ -245,6 +200,7 @@ class ListsPageBody extends StatelessWidget {
                 tiny: isMobileSize,
                 isEditing: isEditing,
                 isDeleting: isDeleting,
+                constraints: const BoxConstraints(minHeight: 70.0),
                 margin: const EdgeInsets.symmetric(horizontal: 12.0),
                 onCancelEditMode: onCancelEditListMode,
                 onTap: quoteList.id.isEmpty ? null : onTap,
