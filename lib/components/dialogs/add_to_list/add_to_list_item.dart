@@ -10,6 +10,7 @@ class AddToListItem extends StatelessWidget {
     this.selected = false,
     this.selectedColor,
     this.onTap,
+    this.onLongPress,
   });
 
   /// True if the list is selected.
@@ -24,15 +25,23 @@ class AddToListItem extends StatelessWidget {
   /// Callback fired when a quote list is tapped.
   final void Function(QuoteList quoteList)? onTap;
 
+  /// Callback fired when a quote list is long pressed.
+  final void Function(QuoteList quoteList)? onLongPress;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 12.0),
       child: TextButton(
         onPressed: onTap != null ? () => onTap?.call(quoteList) : null,
+        onLongPress:
+            onLongPress != null ? () => onLongPress?.call(quoteList) : null,
         style: TextButton.styleFrom(
           alignment: Alignment.topLeft,
           foregroundColor: selectedColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
         ),
         child: Row(
           children: [

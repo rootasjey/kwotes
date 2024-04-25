@@ -19,6 +19,7 @@ class AddToListBody extends StatelessWidget {
     this.maxHeight = 300.0,
     this.maxWidth = 300.0,
     this.onTapListItem,
+    this.onLongPressListItem,
     this.selectedQuoteLists = const [],
   });
 
@@ -42,6 +43,9 @@ class AddToListBody extends StatelessWidget {
 
   /// Callback fired when a quote list is tapped.
   final void Function(QuoteList quoteList)? onTapListItem;
+
+  /// Callback fired when a quote list is long pressed.
+  final void Function(QuoteList quoteList)? onLongPressListItem;
 
   /// List of quote lists.
   final List<QuoteList> quoteLists;
@@ -80,6 +84,7 @@ class AddToListBody extends StatelessWidget {
                       onTap: onTapListItem,
                       selected: selectedQuoteLists.contains(quoteList),
                       selectedColor: selectedColor,
+                      onLongPress: onLongPressListItem,
                     );
                   },
                   childCount: quoteLists.length,

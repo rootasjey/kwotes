@@ -1,11 +1,12 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
-import "package:kwotes/components/buttons/colored_text_button.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/dialogs/add_to_list/add_to_list_header.dart";
 import "package:kwotes/components/dialogs/input/input_dialog.dart";
 import "package:kwotes/components/texts/outlined_text_field.dart";
 import "package:kwotes/globals/constants.dart";
+import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/quote.dart";
 
 class CreateListDialog extends StatelessWidget {
@@ -19,6 +20,7 @@ class CreateListDialog extends StatelessWidget {
     this.onCancel,
     this.onValidate,
     this.nameController,
+    this.onNameListChanged,
     this.descriptionController,
     this.onTapBackButton,
     this.randomHintNumber = 0,
@@ -50,6 +52,9 @@ class CreateListDialog extends StatelessWidget {
   /// Trigger when the user tap on validation button.
   final void Function()? onValidate;
 
+  /// Callback fired when the name has changed.
+  final void Function(String name)? onNameListChanged;
+
   /// Scroll controller.
   final ScrollController? pageScrollController;
 
@@ -61,11 +66,18 @@ class CreateListDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color? foregroundColor =
+        Theme.of(context).textTheme.bodyMedium?.color;
+    final String nameValue = nameController?.text ?? "";
+    final void Function()? onConditionalValidate =
+        nameValue.isNotEmpty ? onValidate : null;
+
     if (asBottomSheet) {
       return Container(
         padding: const EdgeInsets.only(
           left: 24.0,
           right: 24.0,
+          top: 24.0,
         ),
         child: ListView(
           controller: pageScrollController,
@@ -74,6 +86,7 @@ class CreateListDialog extends StatelessWidget {
               create: true,
               margin: const EdgeInsets.only(bottom: 24.0),
               onBack: onTapBackButton,
+              showCreateListButton: false,
             ),
             OutlinedTextField(
               accentColor: accentColor ?? Constants.colors.primary,
@@ -82,6 +95,7 @@ class CreateListDialog extends StatelessWidget {
               hintText: "list.create.hints.names.$randomHintNumber".tr(),
               keyboardType: TextInputType.name,
               textInputAction: TextInputAction.next,
+              onChanged: onNameListChanged,
             ),
             Padding(
               padding: const EdgeInsets.only(top: 16.0),
@@ -97,18 +111,44 @@ class CreateListDialog extends StatelessWidget {
                 onSubmitted: (_) => onValidate?.call(),
               ),
             ),
-            ColoredTextButton(
-              textValue: "list.create.name".tr(),
-              onPressed: onValidate,
-              textAlign: TextAlign.center,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12.0,
-                vertical: 8.0,
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 24.0,
               ),
-              style: TextButton.styleFrom(
-                  backgroundColor: accentColor?.withOpacity(0.6)),
-              margin: const EdgeInsets.only(top: 24.0, bottom: 16.0),
+              child: ElevatedButton.icon(
+                onPressed: onConditionalValidate,
+                icon: const Icon(TablerIcons.hammer, size: 18.0),
+                label: Text(
+                  "list.create.name".tr(),
+                ),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: accentColor,
+                  textStyle: Utils.calligraphy.body(
+                    textStyle: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4.0),
+                    side: BorderSide(
+                      color: accentColor ?? Constants.colors.primary,
+                      width: 2.0,
+                    ),
+                  ),
+                ),
+              ),
             ),
+            if (nameValue.isEmpty)
+              Text(
+                "list.create.not_empty".tr(),
+                style: Utils.calligraphy.body(
+                  textStyle: TextStyle(
+                    fontSize: 12.0,
+                    color: foregroundColor?.withOpacity(0.6),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
           ]
               .animate(interval: 25.ms)
               .slideY(
@@ -126,12 +166,11 @@ class CreateListDialog extends StatelessWidget {
         .createMaterialColorFrom(accentColor ?? Constants.colors.primary);
 
     return InputDialog(
-      // accentColor: Colors.indigo,
       accentColor: materialAccentColor,
       descriptionController: descriptionController,
       nameController: nameController,
       onCancel: () => onCancel?.call(),
-      onSubmitted: (_) => onValidate?.call(),
+      onSubmitted: (_) => onConditionalValidate?.call(),
       titleValue: "list.create.name".tr(),
       submitButtonValue: "list.create.validate".tr(),
       subtitleValue: "list.create.description".tr(),

@@ -1,3 +1,4 @@
+import "dart:async";
 import "dart:math";
 
 import "package:beamer/beamer.dart";
@@ -66,6 +67,11 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
   /// Fetch order.
   final bool _descending = true;
 
+  /// If true, multiple lists can be selected.
+  /// Otherwise, only one list can be selected,
+  /// and the dialog will be closed after selection.
+  bool _multiSelect = false;
+
   /// More books can be fetched if true.
   bool _hasNextPage = false;
 
@@ -100,6 +106,9 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
   /// Selected quote lists to add quote(s) to.
   final List<QuoteList> _selectedLists = [];
 
+  /// Timer for name changed.
+  Timer? _timerNameChanged;
+
   @override
   void initState() {
     super.initState();
@@ -112,6 +121,7 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
   @override
   void dispose() {
     _nameController.dispose();
+    _timerNameChanged?.cancel();
     _descriptionController.dispose();
     _lastDocument = null;
 
@@ -131,6 +141,7 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
         nameController: _nameController,
         descriptionController: _descriptionController,
         quotes: widget.quotes,
+        onNameListChanged: onNameListChanged,
         onCancel: Beamer.of(context).popRoute,
         onValidate: onCreateList,
         onTapBackButton: hideCreationInputs,
@@ -155,7 +166,10 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
         pageScrollController: _pageScrollController ?? ScrollController(),
         quotes: widget.quotes,
         onTapListItem: onTapListItem,
+        onLongPressListItem: onLongPressListItem,
         showCreationInputs: showCreationInputs,
+        onCancelMultiselect: onCancelMultiselect,
+        showMultiSelectValidation: _multiSelect,
       );
     }
 
@@ -166,6 +180,7 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
       useRawDialog: true,
       title: AddToListHeader(
         quoteLength: widget.quotes.length,
+        onTapCreateList: showCreationInputs,
       ),
       body: AddToListBody(
         onScroll: onScroll,
@@ -181,9 +196,10 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
         asBottomSheet: widget.asBottomSheet,
         selectedColor: widget.selectedColor,
         selectedLists: _selectedLists,
-        showCreationInputs: showCreationInputs,
+        onCancelMultiselect: onCancelMultiselect,
         onValidate: onAddToLists,
         pageState: _pageState,
+        show: _multiSelect,
       ),
       onCancel: Beamer.of(context).popRoute,
       onValidate:
@@ -249,23 +265,9 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
     }
   }
 
-  /// Callback fired when the user scrolls.
-  void onScroll(double offset) {
-    if (!_hasNextPage) {
-      return;
-    }
-
-    if (_pageState == EnumPageState.loading ||
-        _pageState == EnumPageState.loadingMore) {
-      return;
-    }
-
-    final double maxScrollExtent =
-        _pageScrollController?.position.maxScrollExtent ?? 0.0;
-
-    if (maxScrollExtent - offset <= 200) {
-      fetch();
-    }
+  /// Hide creation inputs.
+  void hideCreationInputs() {
+    setState(() => _createMode = false);
   }
 
   /// Add selected quote to one or more lists.
@@ -292,8 +294,22 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
     Navigator.of(context).pop();
   }
 
+  /// Cancel multiselect.
+  void onCancelMultiselect() {
+    _multiSelect = false;
+    setState(() => _selectedLists.clear());
+  }
+
   /// Create a new list and add a quote to it.
   void onCreateList() async {
+    if (_nameController.text.isEmpty) {
+      Utils.graphic.showSnackbar(
+        context,
+        message: "list.create.not_empty".tr(),
+      );
+      return;
+    }
+
     Beamer.of(context).popRoute();
 
     final QuoteList? newList = await UserActions.createList(
@@ -324,11 +340,57 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
     );
   }
 
-  void showCreationInputs() {
-    setState(() => _createMode = true);
+  /// Callback fired when a quote list is long pressed.
+  /// Trigger multiselect.
+  void onLongPressListItem(QuoteList quoteList) {
+    if (_selectedLists.contains(quoteList)) {
+      if (_selectedLists.isEmpty) {
+        _multiSelect = false;
+      }
+
+      setState(() => _selectedLists.remove(quoteList));
+      return;
+    }
+
+    _multiSelect = true;
+    setState(() => _selectedLists.add(quoteList));
   }
 
+  /// On name changed.
+  /// Debounce for 500ms.
+  void onNameListChanged(String name) {
+    _timerNameChanged?.cancel();
+    _timerNameChanged = Timer(const Duration(milliseconds: 75), () {
+      setState(() {});
+    });
+  }
+
+  /// Callback fired when the user scrolls.
+  void onScroll(double offset) {
+    if (!_hasNextPage) {
+      return;
+    }
+
+    if (_pageState == EnumPageState.loading ||
+        _pageState == EnumPageState.loadingMore) {
+      return;
+    }
+
+    final double maxScrollExtent =
+        _pageScrollController?.position.maxScrollExtent ?? 0.0;
+
+    if (maxScrollExtent - offset <= 200) {
+      fetch();
+    }
+  }
+
+  /// Callback fired when a quote list is tapped.
   void onTapListItem(QuoteList quoteList) {
+    if (!_multiSelect) {
+      onAddToLists([quoteList]);
+      return;
+    }
+
     if (_selectedLists.contains(quoteList)) {
       setState(() => _selectedLists.remove(quoteList));
       return;
@@ -337,7 +399,8 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
     setState(() => _selectedLists.add(quoteList));
   }
 
-  void hideCreationInputs() {
-    setState(() => _createMode = false);
+  /// Show creation inputs.
+  void showCreationInputs() {
+    setState(() => _createMode = true);
   }
 }

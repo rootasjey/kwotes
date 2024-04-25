@@ -18,18 +18,24 @@ class AddToListMobile extends StatelessWidget {
     this.isIpad = false,
     this.quoteLists = const [],
     this.selectedQuoteLists = const [],
-    this.onTapListItem,
     this.pageState = EnumPageState.idle,
     this.selectedColor,
     this.quotes = const [],
+    this.onCancelMultiselect,
+    this.onLongPressListItem,
     this.onScroll,
+    this.onTapListItem,
     this.onValidate,
     this.showCreationInputs,
+    this.showMultiSelectValidation = false,
   });
 
   /// If true, this widget will take a suitable layout for bottom sheet.
   /// Otherwise, it will have a dialog layout.
   final bool asBottomSheet;
+
+  /// If true, the widget will show inputs to create a new list.
+  final bool showMultiSelectValidation;
 
   /// Add bottom margin if true.
   final bool isIpad;
@@ -40,17 +46,11 @@ class AddToListMobile extends StatelessWidget {
   /// Page's state (e.g. loading, idle, ...).
   final EnumPageState pageState;
 
+  /// Callback fired to cancel multiselect.
+  final void Function()? onCancelMultiselect;
+
   /// On scroll callback.
   final void Function(double)? onScroll;
-
-  /// List of quotes to add to a list.
-  final List<Quote> quotes;
-
-  /// List of user's quote lists.
-  final List<QuoteList> quoteLists;
-
-  /// Selected quote lists to add quote(s) to.
-  final List<QuoteList> selectedQuoteLists;
 
   /// Trigger when the user tap on validation button
   final void Function(List<QuoteList> selectedLists)? onValidate;
@@ -60,6 +60,18 @@ class AddToListMobile extends StatelessWidget {
 
   /// Callback fired when a quote list is tapped.
   final void Function(QuoteList quoteList)? onTapListItem;
+
+  /// Callback fired when a quote list is long pressed.
+  final void Function(QuoteList quoteList)? onLongPressListItem;
+
+  /// List of quotes to add to a list.
+  final List<Quote> quotes;
+
+  /// List of user's quote lists.
+  final List<QuoteList> quoteLists;
+
+  /// Selected quote lists to add quote(s) to.
+  final List<QuoteList> selectedQuoteLists;
 
   /// Scroll controller.
   final ScrollController pageScrollController;
@@ -91,6 +103,7 @@ class AddToListMobile extends StatelessWidget {
                       quoteLength: quotes.length,
                       margin: const EdgeInsets.all(12.0),
                       onBack: () => Navigator.pop(context),
+                      onTapCreateList: showCreationInputs,
                     ),
                     Divider(
                       thickness: 2.0,
@@ -108,6 +121,7 @@ class AddToListMobile extends StatelessWidget {
                       return AddToListItem(
                         quoteList: quoteList,
                         onTap: onTapListItem,
+                        onLongPress: onLongPressListItem,
                         selected: selectedQuoteLists.contains(quoteList),
                         selectedColor: selectedColor,
                       );
@@ -131,9 +145,10 @@ class AddToListMobile extends StatelessWidget {
             elevation: 0.0,
             selectedColor: selectedColor,
             selectedLists: selectedQuoteLists,
-            showCreationInputs: showCreationInputs,
+            onCancelMultiselect: onCancelMultiselect,
             onValidate: selectedQuoteLists.isEmpty ? null : onValidate,
             pageState: pageState,
+            show: showMultiSelectValidation,
           ),
         ),
       ],

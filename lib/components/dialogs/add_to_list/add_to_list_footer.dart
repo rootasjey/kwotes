@@ -2,7 +2,8 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/buttons/circle_button.dart";
-import "package:kwotes/components/buttons/colored_text_button.dart";
+import "package:kwotes/globals/constants.dart";
+import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/quote_list.dart";
 
@@ -15,13 +16,17 @@ class AddToListFooter extends StatelessWidget {
     this.elevation = 0.0,
     this.pageState = EnumPageState.idle,
     this.onValidate,
-    this.showCreationInputs,
+    this.onCancelMultiselect,
     this.selectedLists = const [],
+    this.show = false,
   });
 
   /// If true, this widget will take a suitable layout for bottom sheet.
   /// Otherwise, it will have a dialog layout.
   final bool asBottomSheet;
+
+  /// If true, the widget will show button to validate addition.
+  final bool show;
 
   /// Selected list color.
   final Color? selectedColor;
@@ -35,14 +40,18 @@ class AddToListFooter extends StatelessWidget {
   /// Trigger when the user tap on validation button
   final void Function(List<QuoteList> selectedLists)? onValidate;
 
-  /// Callback fired to show creation inputs.
-  final void Function()? showCreationInputs;
+  /// Callback fired to cancel multiselect.
+  final void Function()? onCancelMultiselect;
 
   /// List of quote lists.
   final List<QuoteList> selectedLists;
 
   @override
   Widget build(BuildContext context) {
+    if (!show) {
+      return const SizedBox.shrink();
+    }
+
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final Color backgroundColor = Theme.of(context).scaffoldBackgroundColor;
     final Color? foregroundColor =
@@ -70,35 +79,46 @@ class AddToListFooter extends StatelessWidget {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(right: 8.0),
-                    child: ColoredTextButton(
-                      textAlign: TextAlign.center,
-                      style: TextButton.styleFrom(
-                        backgroundColor: selectedLists.isEmpty
-                            ? backgroundColor
-                            : selectedColor?.withOpacity(0.4),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 4.0,
-                        vertical: 4.0,
-                      ),
-                      tooltip:
-                          selectedLists.isEmpty ? "list.add.hint".tr() : "",
-                      onPressed: selectedLists.isEmpty
-                          ? null
-                          : () => onValidate?.call(selectedLists),
-                      textValue:
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: ElevatedButton.icon(
+                        onPressed: selectedLists.isEmpty
+                            ? null
+                            : () => onValidate?.call(selectedLists),
+                        icon: const Icon(TablerIcons.checks, size: 18.0),
+                        label: Text(
                           "${"list.add.to".plural(selectedLists.length)} "
                           "(${selectedLists.length})",
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Constants.colors.lists,
+                          textStyle: Utils.calligraphy.body(
+                            textStyle: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0),
+                            side: BorderSide(
+                              color: Constants.colors.lists,
+                              width: 2.0,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
                 CircleButton(
                   backgroundColor: backgroundColor,
-                  icon: Icon(TablerIcons.playlist_add,
-                      color: foregroundColor?.withOpacity(0.6)),
+                  tooltip: "back".tr(),
+                  icon: Icon(
+                    TablerIcons.arrow_back,
+                    color: foregroundColor?.withOpacity(0.6),
+                  ),
                   onTap: pageState == EnumPageState.loading
                       ? null
-                      : showCreationInputs,
+                      : onCancelMultiselect,
                 ),
               ],
             ),

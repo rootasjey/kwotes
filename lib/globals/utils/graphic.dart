@@ -587,7 +587,7 @@ class Graphic with UiLoggy {
             userId: userId,
             quotes: quotes,
             scrollController: scrollController,
-            selectedColor: selectedColor,
+            selectedColor: selectedColor ?? Constants.colors.lists,
           );
         },
       );
@@ -598,7 +598,7 @@ class Graphic with UiLoggy {
       builder: (BuildContext context) => AddToListDialog(
         asBottomSheet: isMobileSize,
         autofocus: autofocus,
-        selectedColor: selectedColor,
+        selectedColor: selectedColor ?? Constants.colors.lists,
         startInCreate: startInCreate,
         userId: userId,
         quotes: quotes,
