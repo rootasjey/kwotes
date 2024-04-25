@@ -198,7 +198,7 @@ class AuthorQuotesPageBody extends StatelessWidget {
               onDoubleTapQuote: onDoubleTapQuote,
               onTapQuote: onTapQuote,
               tiny: isMobileSize,
-              contraints: const BoxConstraints(minHeight: 90.0),
+              constraints: const BoxConstraints(minHeight: 90.0),
               quoteMenuProvider: (MenuRequest menuRequest) {
                 return ContextMenuComponents.quoteMenuProvider(
                   context,

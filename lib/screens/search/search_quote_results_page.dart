@@ -192,7 +192,7 @@ class SearchQuoteResultsPage extends StatelessWidget {
               quote: quote,
               onTapQuote: onTapQuote,
               tiny: isMobileSize,
-              contraints: const BoxConstraints(minHeight: 90.0),
+              constraints: const BoxConstraints(minHeight: 90.0),
               margin: const EdgeInsets.symmetric(
                 horizontal: 12.0,
                 vertical: 6.0,

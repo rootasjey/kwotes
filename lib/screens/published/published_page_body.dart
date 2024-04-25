@@ -193,7 +193,7 @@ class PublishedPageBody extends StatelessWidget {
                     ? EnumQuoteTextMagnitude.medium
                     : EnumQuoteTextMagnitude.big,
                 margin: const EdgeInsets.symmetric(horizontal: 12.0),
-                contraints: const BoxConstraints(minHeight: 90.0),
+                constraints: const BoxConstraints(minHeight: 90.0),
                 quote: quote,
                 onTap: onTap,
               ),

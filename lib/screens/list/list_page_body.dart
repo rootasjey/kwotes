@@ -191,7 +191,7 @@ class ListPageBody extends StatelessWidget {
                 );
               },
               child: QuoteText(
-                contraints: const BoxConstraints(minHeight: 90.0),
+                constraints: const BoxConstraints(minHeight: 90.0),
                 margin: const EdgeInsets.symmetric(horizontal: 12.0),
                 magnitude: isMobileSize
                     ? EnumQuoteTextMagnitude.medium

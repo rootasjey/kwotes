@@ -15,7 +15,7 @@ class SearchQuoteText extends StatefulWidget {
     required this.quote,
     required this.quoteMenuProvider,
     this.tiny = false,
-    this.contraints = const BoxConstraints(
+    this.constraints = const BoxConstraints(
       minHeight: 0.0,
     ),
     this.highlightColor,
@@ -32,7 +32,7 @@ class SearchQuoteText extends StatefulWidget {
   final bool tiny;
 
   /// Contraints of this widget.
-  final BoxConstraints contraints;
+  final BoxConstraints constraints;
 
   /// Focus color.
   final Color? highlightColor;
@@ -95,7 +95,7 @@ class _SearchQuoteTextState extends State<SearchQuoteText> {
       child: ContextMenuWidget(
         menuProvider: widget.quoteMenuProvider,
         child: ConstrainedBox(
-          constraints: widget.contraints,
+          constraints: widget.constraints,
           child: InkWell(
             splashColor: widget.splashColor,
             hoverColor: Colors.transparent,
