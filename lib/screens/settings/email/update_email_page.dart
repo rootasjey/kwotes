@@ -82,7 +82,7 @@ class _UpdateEmailPageState extends State<UpdateEmailPage> with UiLoggy {
             SettingsPageHeader(
               isMobileSize: isMobileSize,
               onTapBackButton: context.beamBack,
-              title: "email.update.name".tr(),
+              title: "email.edit.name".tr(),
             ),
             SliverToBoxAdapter(
               child: Padding(

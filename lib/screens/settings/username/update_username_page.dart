@@ -66,7 +66,7 @@ class _UpdateUsernamePageState extends State<UpdateUsernamePage> with UiLoggy {
             SettingsPageHeader(
               isMobileSize: isMobileSize,
               onTapBackButton: context.beamBack,
-              title: "username.update.name".tr(),
+              title: "username.edit.name".tr(),
             ),
             SliverToBoxAdapter(
               child: Padding(

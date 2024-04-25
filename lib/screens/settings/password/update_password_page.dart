@@ -39,6 +39,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> with UiLoggy {
   /// Page's state (e.g. loading, idle, ...).
   EnumPageState _pageState = EnumPageState.idle;
 
+  /// Performs password checks and save the results.
   PasswordChecks _passwordChecks = PasswordChecks.empty();
 
   /// Current password error message.
@@ -83,7 +84,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> with UiLoggy {
             SettingsPageHeader(
               isMobileSize: isMobileSize,
               onTapBackButton: context.beamBack,
-              title: "password.update.name".tr(),
+              title: "password.edit.name".tr(),
             ),
             UpdatePasswordPageHeader(
               accentColor: accentColor,

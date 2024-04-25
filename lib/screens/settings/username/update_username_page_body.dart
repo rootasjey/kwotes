@@ -109,6 +109,9 @@ class UpdateUsernamePageBody extends StatelessWidget {
               onPressed: onTapUpdateButton,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black87,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
               ),
               child: Container(
                 padding: const EdgeInsets.symmetric(
