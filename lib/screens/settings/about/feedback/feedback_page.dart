@@ -75,6 +75,7 @@ class _FeedbackPageState extends State<FeedbackPage> with UiLoggy {
   @override
   Widget build(BuildContext context) {
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    final String titleValue = "contact.us".tr();
 
     return SafeArea(
       child: Scaffold(
@@ -83,7 +84,7 @@ class _FeedbackPageState extends State<FeedbackPage> with UiLoggy {
             SettingsPageHeader(
               isMobileSize: isMobileSize,
               onTapBackButton: context.beamBack,
-              title: "feedback.name".tr(),
+              title: titleValue,
               show: isMobileSize,
             ),
             SliverToBoxAdapter(
@@ -92,7 +93,7 @@ class _FeedbackPageState extends State<FeedbackPage> with UiLoggy {
                   BigTextHeader(
                     show: !isMobileSize,
                     accentColor: _accentColor,
-                    titleValue: "feedback.name".tr(),
+                    titleValue: titleValue,
                   ),
                   WaveDivider(
                     padding: EdgeInsets.symmetric(

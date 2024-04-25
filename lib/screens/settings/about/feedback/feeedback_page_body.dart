@@ -1,7 +1,5 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
-import "package:kwotes/components/buttons/colored_text_button.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
@@ -133,27 +131,30 @@ class FeedbackPageBody extends StatelessWidget {
                   ),
                 ),
               ),
-              Wrap(
-                spacing: 8.0,
-                runSpacing: 8.0,
-                children: [
-                  FeedbackCard(
-                    accentColor: accentColor,
-                    titleValue: "form.name".tr(),
-                    onTap: onToggleForm,
-                    isMobileSize: isMobileSize,
-                    selected:
-                        communicationType == EnumFeedbackCommunicationType.form,
-                  ),
-                  FeedbackCard(
-                    accentColor: Constants.colors.authors,
-                    titleValue: "email.name".tr(),
-                    onTap: onToggleEmail,
-                    isMobileSize: isMobileSize,
-                    selected: communicationType ==
-                        EnumFeedbackCommunicationType.email,
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Wrap(
+                  spacing: 8.0,
+                  runSpacing: 8.0,
+                  children: [
+                    FeedbackCard(
+                      accentColor: accentColor,
+                      titleValue: "form.name".tr(),
+                      onTap: onToggleForm,
+                      isMobileSize: isMobileSize,
+                      selected: communicationType ==
+                          EnumFeedbackCommunicationType.form,
+                    ),
+                    FeedbackCard(
+                      accentColor: Constants.colors.authors,
+                      titleValue: "email.name".tr(),
+                      onTap: onToggleEmail,
+                      isMobileSize: isMobileSize,
+                      selected: communicationType ==
+                          EnumFeedbackCommunicationType.email,
+                    ),
+                  ],
+                ),
               ),
               FeedbackContactBody(
                 emailController: emailController,
@@ -165,19 +166,6 @@ class FeedbackPageBody extends StatelessWidget {
                 onTapSendFeedback: onTapSendFeedback,
                 onEmailChanged: onEmailChanged,
                 onMessageBodyChanged: onMessageBodyChanged,
-              ),
-              ColoredTextButton(
-                textFlex: 0,
-                textValue: "back".tr(),
-                onPressed: () => Utils.passage.deepBack(context),
-                icon: const Icon(TablerIcons.arrow_narrow_left),
-                margin: const EdgeInsets.only(
-                  top: 42.0,
-                ),
-                style: TextButton.styleFrom(
-                  foregroundColor: accentColor,
-                  backgroundColor: accentColor.withOpacity(0.2),
-                ),
               ),
             ],
           ),

@@ -69,7 +69,7 @@ class FeedbackContactBody extends StatelessWidget {
           onPressed: onTapOpenEmail,
           icon: const Icon(TablerIcons.mail, size: 18.0),
           label: Text(
-            "Send email".tr(),
+            "email.write".tr(),
           ),
           style: ElevatedButton.styleFrom(
             foregroundColor: accentColor,
@@ -96,6 +96,7 @@ class FeedbackContactBody extends StatelessWidget {
     }
 
     if (communicationType == EnumFeedbackCommunicationType.form) {
+      final bool isDark = Theme.of(context).brightness == Brightness.dark;
       const double borderWidth = 2.0;
       final borderRadius = BorderRadius.circular(4.0);
       final Color? foregroundColor =
@@ -118,122 +119,127 @@ class FeedbackContactBody extends StatelessWidget {
         ),
         FeedbackChipData(
           color: wordColor,
-          label: "feedback.word".tr(),
-          type: EnumFeedbackType.word,
+          label: "feedback.other".tr(),
+          type: EnumFeedbackType.other,
         ),
       ];
 
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 60.0,
-            child: ListView.separated(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: chipDataList.length,
-              itemBuilder: (context, index) {
-                final FeedbackChipData chipData = chipDataList[index];
+      return Padding(
+        padding: const EdgeInsets.only(top: 24.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 60.0,
+              child: ListView.separated(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: chipDataList.length,
+                itemBuilder: (context, index) {
+                  final FeedbackChipData chipData = chipDataList[index];
+                  final bool selected = feedbackType == chipData.type;
 
-                return ChoiceChip(
-                  selected: feedbackType == chipData.type,
-                  label: Text(chipData.label),
-                  onSelected: (value) =>
-                      onFeedbackTypeChanged?.call(chipData.type),
-                  selectedColor: chipData.color.shade50,
-                  shape: StadiumBorder(
-                    side:
-                        BorderSide(color: chipData.color.shade300, width: 1.2),
-                  ),
-                );
-              },
-              separatorBuilder: (context, index) {
-                return const SizedBox(width: 8.0);
-              },
-            ),
-          ),
-          SigninPageEmailInput(
-            emailController: emailController,
-            accentColor: accentColor,
-            labelText: "email.name_optional".tr(),
-            hintText: "feedback.email_hint".tr(),
-            margin: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-            borderRadius: borderRadius,
-            borderWidth: borderWidth,
-            onEmailChanged: onEmailChanged,
-          ),
-          TextField(
-            autofocus: false,
-            focusNode: messageBodyFocusNode,
-            onChanged: onMessageBodyChanged,
-            controller: messageBodyController,
-            minLines: 4,
-            maxLines: null,
-            textInputAction: TextInputAction.next,
-            keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-              isDense: true,
-              labelText: "feedback.name".tr(),
-              hintText: "feedback.hint".tr(),
-              alignLabelWithHint: true,
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 12.0,
-                horizontal: 12.0,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: borderRadius,
-                borderSide: BorderSide(
-                  color: accentColor,
-                  width: borderWidth,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: borderRadius,
-                borderSide: BorderSide(
-                  color: foregroundColor?.withOpacity(0.4) ?? Colors.white12,
-                  width: borderWidth,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: borderRadius,
-                borderSide: BorderSide(
-                  color: accentColor,
-                  width: borderWidth,
-                ),
+                  return ChoiceChip(
+                    selected: selected,
+                    label: Text(
+                      chipData.label,
+                      style: Utils.calligraphy.body(
+                        textStyle: TextStyle(
+                          color: isDark && selected ? Colors.black : null,
+                        ),
+                      ),
+                    ),
+                    onSelected: (value) =>
+                        onFeedbackTypeChanged?.call(chipData.type),
+                    selectedColor: chipData.color.shade50,
+                    shape: StadiumBorder(
+                      side: BorderSide(
+                          color: chipData.color.shade300, width: 1.2),
+                    ),
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return const SizedBox(width: 8.0);
+                },
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 12.0),
-            child: ElevatedButton.icon(
-              onPressed: onTapSendFeedback,
-              icon: const Icon(TablerIcons.send, size: 18.0),
-              label: Text("email.send".tr()),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: accentColor,
-                shape: RoundedRectangleBorder(
+            SigninPageEmailInput(
+              emailController: emailController,
+              accentColor: accentColor,
+              labelText: "email.name_optional".tr(),
+              hintText: "feedback.email_hint".tr(),
+              margin: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+              borderRadius: borderRadius,
+              borderWidth: borderWidth,
+              onEmailChanged: onEmailChanged,
+            ),
+            TextField(
+              autofocus: false,
+              focusNode: messageBodyFocusNode,
+              onChanged: onMessageBodyChanged,
+              controller: messageBodyController,
+              minLines: 4,
+              maxLines: null,
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                isDense: true,
+                labelText: "feedback.name".tr(),
+                hintText: "feedback.hint".tr(),
+                alignLabelWithHint: true,
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 12.0,
+                  horizontal: 12.0,
+                ),
+                border: OutlineInputBorder(
                   borderRadius: borderRadius,
-                  side: BorderSide(
+                  borderSide: BorderSide(
                     color: accentColor,
-                    width: 2.0,
+                    width: borderWidth,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: borderRadius,
+                  borderSide: BorderSide(
+                    color: foregroundColor?.withOpacity(0.4) ?? Colors.white12,
+                    width: borderWidth,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: borderRadius,
+                  borderSide: BorderSide(
+                    color: accentColor,
+                    width: borderWidth,
                   ),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 36.0, bottom: 0.0),
-            child: Divider(
-              color: foregroundColor?.withOpacity(0.4),
+            Padding(
+              padding: const EdgeInsets.only(top: 12.0),
+              child: ElevatedButton.icon(
+                onPressed: onTapSendFeedback,
+                icon: const Icon(TablerIcons.send, size: 18.0),
+                label: Text("email.send".tr()),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: accentColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: borderRadius,
+                    side: BorderSide(
+                      color: accentColor,
+                      width: 2.0,
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
-        ].animate(interval: 25.ms).fadeIn().slideY(
-              begin: 0.4,
-              end: 0.0,
-              duration: 75.ms,
-              curve: Curves.decelerate,
-            ),
+          ].animate(interval: 25.ms).fadeIn().slideY(
+                begin: 0.4,
+                end: 0.0,
+                duration: 75.ms,
+                curve: Curves.decelerate,
+              ),
+        ),
       );
     }
 

@@ -43,8 +43,8 @@ class FeedbackCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Container(
-          width: 100.0,
-          height: 100.0,
+          width: 120.0,
+          height: 120.0,
           padding: const EdgeInsets.all(16.0),
           child: Text(
             titleValue,
