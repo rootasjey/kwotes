@@ -13,6 +13,7 @@
     "create": "Create account",
     "creating": "Creating account",
     "delete": {
+      "description": "All data associated with your account will be deleted. This action is irreversible.",
       "error": "An error occurred while deleting your account",
       "ing": "Deleting account",
       "name": "Delete account",
@@ -112,7 +113,10 @@
   },
   "connection_check_try": "Check your connection and try again.",
   "confirm": "Confirm",
-  "contact": "Contact",
+  "contact": {
+    "name": "Contact",
+    "us": "Contact us"
+  },
   "content": {
     "name": "Content"
   },
@@ -168,6 +172,9 @@
   },
   "email": {
     "check_spam": "Please check your spam folder too",
+    "edit": {
+      "name": "Edit email"
+    },
     "error": {
       "doesnt_exist": "Sorry, this email doesn't exist.",
       "empty_forbidden": "Email cannot be empty",
@@ -188,7 +195,8 @@
     "update": "Update email",
     "update_tips": "Enter your new email address below with your password to confirm this change.",
     "use_other": "Use another email",
-    "user_use": "No, your email will NOT be used to send you spam or shared with thrid-parties"
+    "user_use": "No, your email will NOT be used to send you spam or shared with thrid-parties",
+    "write": "Write an email"
   },
   "empty_quote": {
     "home": "There's no quotes yet.\n There's probably an network issue.",
@@ -211,6 +219,7 @@
     "help": "Help",
     "hint": "I wanted to say that...",
     "name": "Feedback",
+    "other": "Other",
     "send": "Send feedback",
     "sent": "Feedback sent",
     "sent_description": "Thank you for your feedback!",
@@ -360,6 +369,7 @@
       "failed": "An error occurred while creating your list",
       "ing": "Creating list",
       "name": "Create list",
+      "not_empty": "Please enter at least one character for the list name",
       "hints": {
         "names": {
           "0": "Good quotes, bad quotes",
@@ -479,6 +489,7 @@
     "changelog": "@:kwotes_leading Changelog",
     "color_palette": "@:kwotes_leading Color palette",
     "color_detail": "@:kwotes_leading Color: {}",
+    "contact_us": "@:kwotes_leading Contact us",
     "credits": "@:kwotes_leading Credits",
     "dashboard": "@:kwotes_leading My diary",
     "delete_account": "@:kwotes_leading Delete account",
@@ -522,6 +533,9 @@
   "password": {
     "confirm": "Confirm password",
     "current": "Current password",
+    "edit": {
+      "name": "Edit password"
+    },
     "error": {
       "current_empty": "The field is empty. Please enter your current password.",
       "empty_forbidden": "Password cannot be empty.",
@@ -1218,6 +1232,9 @@
     "name": "Update"
   },
   "username": {
+    "edit": {
+      "name": "Edit username"
+    },
     "error": {
       "already_taken": "The username is already taken.",
       "empty": "The username cannot be empty.",

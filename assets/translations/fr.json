@@ -13,6 +13,7 @@
     "create": "Créer un compte",
     "creating": "Création du compte",
     "delete": {
+      "description": "Toutes les données associées à votre compte seront supprimées. Cette action est irréversible.",
       "error": "Une erreur s'est produite lors de la suppression de votre compte",
       "ing": "Suppression du compte",
       "name": "Supprimer mon compte",
@@ -112,7 +113,10 @@
   },
   "connection_check_try": "Vérifiez votre connexion et réeesayez ultérieurement.",
   "confirm": "Confirmer",
-  "contact": "Contact",
+  "contact": {
+    "name": "Contact",
+    "us": "Nous contacter"
+  },
   "content": {
     "name": "Contenu"
   },
@@ -170,6 +174,9 @@
   },
   "email": {
     "check_spam": "Veuillez vérifier votre dossier de spam",
+    "edit": {
+      "name": "Modifier l'email"
+    },
     "error": {
       "doesnt_exist": "Désolés, cette adresse email n'existe pas.",
       "empty_forbidden": "L'email ne peut pas être vide",
@@ -190,7 +197,8 @@
     "update": "Mettre à jour mon email",
     "update_tips": "Entrez votre nouvelle adresse email ci-dessous ainsi que votre mot de passe pour confirmer ce changement.",
     "use_other": "Utiliser une autre adresse email",
-    "user_use": "Non, votre email ne sera pas utilisé pour vous envoyer du spam ni partagé avec des tiers"
+    "user_use": "Non, votre email ne sera pas utilisé pour vous envoyer du spam ni partagé avec des tiers",
+    "write": "Ecrire un email"
   },
   "empty_quote": {
     "home": "Il n'y a aucune citations pour le moment.\n Il y a probablement un problème de connexion."
@@ -212,6 +220,7 @@
     "help": "Aide",
     "hint": "Je voulais vous dire...",
     "name": "Votre avis",
+    "other": "Autre",
     "send": "Envoyer mon avis",
     "sent": "Message envoyé",
     "sent_description": "Merci pour votre aide !",
@@ -361,6 +370,7 @@
       "failed": "Une erreur s'est produite lors de la création de la liste",
       "ing": "Création de la liste",
       "name": "Créer une liste",
+      "not_empty": "Veuillez entrer au moins un caractère pour le nom de la liste",
       "hints": {
         "names": {
           "0": "Les bonnes citations, et les mauvaises citations",
@@ -480,6 +490,7 @@
     "changelog": "@:kwotes_leading Historique de versions",
     "color_palette": "@:kwotes_leading Palette de couleurs",
     "color_detail": "@:kwotes_leading Couleur: {}",
+    "contact_us": "@:kwotes_leading Nous contacter",
     "credits": "@:kwotes_leading Crédits",
     "dashboard": "@:kwotes_leading Mon journal",
     "delete_account": "@:kwotes_leading Suppression du compte",
@@ -523,6 +534,9 @@
   "password": {
     "confirm": "Confirmer le mot de passe",
     "current": "Mot de passe actuel",
+    "edit": {
+      "name": "Modifier mon mot de passe"
+    },
     "error": {
       "current_empty": "Le champ est vide. Veuillez saisir votre mot de passe actuel.",
       "empty_forbidden": "Le mot de passe ne peut pas être vide",
@@ -1230,6 +1244,9 @@
     "name": "Mettre à jour"
   },
   "username": {
+    "edit": {
+      "name": "Modifier mon nom d'utilisateur"
+    },
     "error": {
       "already_taken": "Ce nom d'utilisateur est déjà pris.",
       "empty": "Le nom d'utilisateur ne peut pas être vide.",
