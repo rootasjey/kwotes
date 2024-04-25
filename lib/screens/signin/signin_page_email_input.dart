@@ -1,6 +1,5 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:flutter_animate/flutter_animate.dart";
 
 class SigninPageEmailInput extends StatelessWidget {
   const SigninPageEmailInput({
@@ -8,12 +7,22 @@ class SigninPageEmailInput extends StatelessWidget {
     required this.emailController,
     this.accentColor = Colors.amber,
     this.margin = EdgeInsets.zero,
+    this.borderWidth = 0.0,
     this.focusNode,
     this.onEmailChanged,
+    this.borderRadius = BorderRadius.zero,
+    this.labelText,
+    this.hintText,
   });
+
+  /// Border radius.
+  final BorderRadius borderRadius;
 
   /// Accent color.
   final Color accentColor;
+
+  /// Border width.
+  final double borderWidth;
 
   /// Spacing around this widget.
   final EdgeInsets margin;
@@ -24,6 +33,12 @@ class SigninPageEmailInput extends StatelessWidget {
   /// Callback fired when typed email changed.
   final void Function(String email)? onEmailChanged;
 
+  /// Text label for this input.
+  final String? labelText;
+
+  /// Text hint for this input.
+  final String? hintText;
+
   /// Input controller for the name/email.
   final TextEditingController emailController;
 
@@ -31,9 +46,6 @@ class SigninPageEmailInput extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
-
-    const double borderWidth = 0.0;
-    final BorderRadius borderRadius = BorderRadius.circular(36.0);
 
     return Padding(
       padding: margin,
@@ -45,11 +57,9 @@ class SigninPageEmailInput extends StatelessWidget {
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
-          // filled: true,
           isDense: true,
-          // fillColor: Colors.white70,
-          labelText: "email.name".tr(),
-          hintText: "steven@universe.galaxy",
+          labelText: labelText ?? "email.name".tr(),
+          hintText: hintText ?? "steven@universe.galaxy",
           contentPadding: const EdgeInsets.symmetric(
             vertical: 12.0,
             horizontal: 12.0,
@@ -77,13 +87,6 @@ class SigninPageEmailInput extends StatelessWidget {
           ),
         ),
       ),
-    )
-        .animate(delay: 55.ms)
-        .slideY(
-          begin: 0.2,
-          end: 0.0,
-          // duration: const Duration(milliseconds: 100),
-        )
-        .fadeIn();
+    );
   }
 }

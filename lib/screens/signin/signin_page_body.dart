@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter_animate/flutter_animate.dart";
 import "package:kwotes/screens/signin/forgot_password_button.dart";
 import "package:kwotes/screens/signin/signin_page_footer.dart";
 import "package:kwotes/screens/signin/signin_page_email_input.dart";
@@ -86,6 +87,7 @@ class SigninPageBody extends StatelessWidget {
             children: <Widget>[
               SigninPageEmailInput(
                 accentColor: accentColor,
+                borderRadius: BorderRadius.circular(36.0),
                 focusNode: emailFocusNode,
                 emailController: emailController,
                 onEmailChanged: onEmailChanged,
@@ -118,7 +120,17 @@ class SigninPageBody extends StatelessWidget {
                 passwordController: passwordController,
                 showBackButton: !isMobileSize,
               ),
-            ],
+            ]
+                .animate(
+                  interval: 75.ms,
+                )
+                .fadeIn()
+                .slideY(
+                  begin: 0.2,
+                  end: 0.0,
+                  duration: 125.ms,
+                  curve: Curves.decelerate,
+                ),
           ),
         ),
       ),

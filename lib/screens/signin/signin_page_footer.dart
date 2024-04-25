@@ -137,13 +137,7 @@ class SigninPageFooter extends StatelessWidget {
               child: submitButton,
             ),
           ),
-        ]
-            .animate(delay: 125.ms, interval: 25.ms)
-            .slideY(
-              begin: 0.2,
-              end: 0.0,
-            )
-            .fadeIn(),
+        ],
       ),
     );
   }

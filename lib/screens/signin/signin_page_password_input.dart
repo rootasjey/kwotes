@@ -1,6 +1,5 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/buttons/sufffix_button.dart";
 
@@ -91,12 +90,6 @@ class SigninPagePasswordInput extends StatelessWidget {
           ),
         ),
       ),
-    )
-        .animate(delay: 100.ms)
-        .slideY(
-          begin: 0.2,
-          end: 0.0,
-        )
-        .fadeIn();
+    );
   }
 }

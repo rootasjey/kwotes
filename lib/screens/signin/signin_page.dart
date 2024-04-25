@@ -30,6 +30,7 @@ class _SigninPageState extends State<SigninPage> with UiLoggy {
   /// Used to hide/show password.
   bool _hidePassword = true;
 
+  /// Accent color
   Color _accentColor = Colors.amber;
 
   /// Page's current state (e.g. loading, idle, etc).

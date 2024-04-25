@@ -1,6 +1,5 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:flutter_animate/flutter_animate.dart";
 import "package:kwotes/globals/utils.dart";
 
 class ForgotPasswordButton extends StatelessWidget {
@@ -59,13 +58,6 @@ class ForgotPasswordButton extends StatelessWidget {
           ],
         ),
       ),
-    )
-        .animate(delay: 100.ms)
-        .slideY(
-          begin: 0.2,
-          end: 0.0,
-          duration: const Duration(milliseconds: 100),
-        )
-        .fadeIn();
+    );
   }
 }
