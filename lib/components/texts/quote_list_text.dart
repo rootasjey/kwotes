@@ -20,6 +20,7 @@ class QuoteListText extends StatefulWidget {
     this.onSaveChanges,
     this.onConfirmDelete,
     this.onCancelDelete,
+    this.constraints = const BoxConstraints(minHeight: 0),
   });
 
   /// Show text input if true.
@@ -30,6 +31,9 @@ class QuoteListText extends StatefulWidget {
 
   /// Show confirm delete button if true.
   final bool isDeleting;
+
+  /// Contraints of this widget.
+  final BoxConstraints constraints;
 
   /// Space around this widget.
   final EdgeInsets margin;
@@ -179,144 +183,148 @@ class _QuoteListTextState extends State<QuoteListText> {
 
     return Padding(
       padding: widget.margin,
-      child: InkWell(
-        hoverColor: Colors.transparent,
-        onTap: widget.onTap != null
-            ? () => widget.onTap?.call(widget.quoteList)
-            : null,
-        onHover: (bool isHover) {
-          if (isHover) {
+      child: ConstrainedBox(
+        constraints: widget.constraints,
+        child: InkWell(
+          hoverColor: Colors.transparent,
+          onTap: widget.onTap != null
+              ? () => widget.onTap?.call(widget.quoteList)
+              : null,
+          onHover: (bool isHover) {
+            if (isHover) {
+              setState(() {
+                _textShadowColor = Constants.colors.lists;
+              });
+
+              return;
+            }
+
             setState(() {
-              _textShadowColor = Constants.colors.lists;
+              _textShadowColor = Colors.transparent;
             });
-
-            return;
-          }
-
-          setState(() {
-            _textShadowColor = Colors.transparent;
-          });
-        },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Hero(
-              tag: quoteList.id,
-              child: Material(
-                color: Colors.transparent,
-                child: Text(
-                  quoteList.name,
-                  style: Utils.calligraphy.body(
-                    textStyle: TextStyle(
-                      fontSize: widget.tiny ? 36.0 : 54.0,
-                      fontWeight: FontWeight.w200,
-                      color: quoteList.id.isNotEmpty
-                          ? foregroundColor?.withOpacity(0.8)
-                          : foregroundColor?.withOpacity(0.4),
-                      shadows: [
-                        Shadow(
-                          blurRadius: 0.5,
-                          offset: const Offset(-1.0, 1.0),
-                          color: _textShadowColor,
-                        ),
-                      ],
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Hero(
+                tag: quoteList.id,
+                child: Material(
+                  color: Colors.transparent,
+                  child: Text(
+                    quoteList.name,
+                    style: Utils.calligraphy.body(
+                      textStyle: TextStyle(
+                        fontSize: widget.tiny ? 36.0 : 54.0,
+                        fontWeight: FontWeight.w200,
+                        color: quoteList.id.isNotEmpty
+                            ? foregroundColor?.withOpacity(0.8)
+                            : foregroundColor?.withOpacity(0.4),
+                        shadows: [
+                          Shadow(
+                            blurRadius: 0.5,
+                            offset: const Offset(-1.0, 1.0),
+                            color: _textShadowColor,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            if (quoteList.id.isEmpty)
-              Row(
-                children: [
-                  Text(
-                    "${"list.create.ing".tr()}...",
-                    style: Utils.calligraphy.body4(
-                      textStyle: TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w600,
-                        color: foregroundColor?.withOpacity(0.4),
-                      ),
-                    ),
-                  ),
-                  Lottie.asset(
-                    "assets/animations/dots-loading.json",
-                    width: 124.0,
-                    // height: 54.0,
-                  ),
-                ],
-              ),
-
-            if (widget.isDeleting)
-              Wrap(
-                spacing: 12.0,
-                runSpacing: 12.0,
-                alignment: WrapAlignment.start,
-                children: [
-                  TextButton(
-                    onPressed: widget.onCancelDelete != null
-                        ? () => widget.onCancelDelete?.call(widget.quoteList)
-                        : null,
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 18.0,
-                        vertical: 6.0,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4.0),
-                      ),
-                      backgroundColor: Colors.black12,
-                      foregroundColor:
-                          Theme.of(context).textTheme.bodyMedium?.color,
-                      textStyle: Utils.calligraphy.body4(
-                        textStyle: const TextStyle(
-                          fontWeight: FontWeight.w600,
+              if (quoteList.id.isEmpty)
+                Row(
+                  children: [
+                    Text(
+                      "${"list.create.ing".tr()}...",
+                      style: Utils.calligraphy.body4(
+                        textStyle: TextStyle(
                           fontSize: 14.0,
+                          fontWeight: FontWeight.w600,
+                          color: foregroundColor?.withOpacity(0.4),
                         ),
                       ),
                     ),
-                    child: Text(
-                      "cancel".tr(),
+                    Lottie.asset(
+                      "assets/animations/dots-loading.json",
+                      width: 124.0,
+                      // height: 54.0,
                     ),
-                  ),
-                  TextButton(
-                    onPressed: widget.onConfirmDelete != null
-                        ? () => widget.onConfirmDelete?.call(widget.quoteList)
-                        : null,
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 18.0,
-                        vertical: 6.0,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4.0),
-                      ),
-                      backgroundColor: Constants.colors.delete.withOpacity(0.1),
-                      foregroundColor: Constants.colors.delete,
-                      textStyle: Utils.calligraphy.body4(
-                        textStyle: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14.0,
+                  ],
+                ),
+              if (widget.isDeleting)
+                Wrap(
+                  spacing: 12.0,
+                  runSpacing: 12.0,
+                  alignment: WrapAlignment.start,
+                  children: [
+                    TextButton(
+                      onPressed: widget.onCancelDelete != null
+                          ? () => widget.onCancelDelete?.call(widget.quoteList)
+                          : null,
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 18.0,
+                          vertical: 6.0,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                        backgroundColor: Colors.black12,
+                        foregroundColor:
+                            Theme.of(context).textTheme.bodyMedium?.color,
+                        textStyle: Utils.calligraphy.body4(
+                          textStyle: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14.0,
+                          ),
                         ),
                       ),
+                      child: Text(
+                        "cancel".tr(),
+                      ),
                     ),
-                    child: Text(
-                      "list.delete.name".tr(),
+                    TextButton(
+                      onPressed: widget.onConfirmDelete != null
+                          ? () => widget.onConfirmDelete?.call(widget.quoteList)
+                          : null,
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 18.0,
+                          vertical: 6.0,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                        backgroundColor:
+                            Constants.colors.delete.withOpacity(0.1),
+                        foregroundColor: Constants.colors.delete,
+                        textStyle: Utils.calligraphy.body4(
+                          textStyle: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        "list.delete.name".tr(),
+                      ),
+                    ),
+                  ],
+                ),
+              if (quoteList.description.isNotEmpty)
+                Text(
+                  quoteList.description,
+                  style: Utils.calligraphy.body2(
+                    textStyle: TextStyle(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w400,
+                      color: foregroundColor?.withOpacity(0.3),
                     ),
                   ),
-                ],
-              ),
-            // if (quoteList.description.isNotEmpty)
-            //   Text(
-            //     quoteList.description,
-            //     style: Utils.calligraphy.body2(
-            //       textStyle: TextStyle(
-            //         fontSize: 14.0,
-            //         fontWeight: FontWeight.w400,
-            //         color: foregroundColor?.withOpacity(0.3),
-            //       ),
-            //     ),
-            //   ),
-          ],
+                ),
+            ],
+          ),
         ),
       ),
     );

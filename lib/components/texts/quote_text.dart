@@ -15,11 +15,11 @@ class QuoteText extends StatefulWidget {
     this.magnitude = EnumQuoteTextMagnitude.medium,
     this.onDoubleTap,
     this.onTap,
-    this.contraints = const BoxConstraints(minHeight: 0),
+    this.constraints = const BoxConstraints(minHeight: 0),
   });
 
   /// Constraints for this widget.
-  final BoxConstraints contraints;
+  final BoxConstraints constraints;
 
   /// Space around this widget.
   final EdgeInsets margin;
@@ -76,7 +76,7 @@ class _QuoteTextState extends State<QuoteText> {
     return Padding(
       padding: widget.margin,
       child: ConstrainedBox(
-        constraints: widget.contraints,
+        constraints: widget.constraints,
         child: InkWell(
           hoverColor: Colors.transparent,
           onDoubleTap: widget.onDoubleTap != null

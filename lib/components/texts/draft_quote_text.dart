@@ -38,7 +38,7 @@ class DraftQuoteText extends StatelessWidget {
       quote: draftQuote,
       margin: margin,
       magnitude: magnitude,
-      contraints: contraints,
+      constraints: contraints,
       onTap: (Quote quote) => onTap?.call(draftQuote),
     );
   }
