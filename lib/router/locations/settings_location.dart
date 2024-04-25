@@ -11,6 +11,7 @@ import "package:kwotes/screens/settings/about/feedback/feedback_page.dart";
 import "package:kwotes/screens/settings/about/terms_of_service_page.dart";
 import "package:kwotes/screens/settings/about/about_us_page.dart";
 import "package:kwotes/screens/settings/account/account_page.dart";
+import "package:kwotes/screens/settings/delete_account/delete_account_page.dart";
 import "package:kwotes/screens/settings/email/update_email_page.dart";
 import "package:kwotes/screens/settings/frame_border_style_page.dart";
 import "package:kwotes/screens/settings/language_page.dart";
@@ -95,6 +96,9 @@ class SettingsContentLocation extends BeamLocation<BeamState> {
   /// User interface route location.
   static const String userInterfaceRoute = "$route/user-interface";
 
+  /// Delete account route location.
+  static const String deleteAccountRoute = "$accountRoute/delete-account";
+
   /// Update email route location.
   static const String updateEmailRoute = "$accountRoute/email";
 
@@ -119,6 +123,7 @@ class SettingsContentLocation extends BeamLocation<BeamState> {
         tosRoute,
         themeRoute,
         aboutUsRoute,
+        deleteAccountRoute,
         userInterfaceRoute,
         updateEmailRoute,
         updatePasswordRoute,
@@ -258,7 +263,15 @@ class SettingsContentLocation extends BeamLocation<BeamState> {
         BeamPage(
           child: const FeedbackPage(),
           key: const ValueKey(feedbackRoute),
-          title: "page_title.feedback".tr(),
+          title: "page_title.contact_us".tr(),
+          type: BeamPageType.slideRightTransition,
+        ),
+      if (state.pathPatternSegments
+          .contains(deleteAccountRoute.split("/").last))
+        BeamPage(
+          child: const DeleteAccountPage(),
+          key: const ValueKey(deleteAccountRoute),
+          title: "page_title.delete_account".tr(),
           type: BeamPageType.slideRightTransition,
         ),
     ];

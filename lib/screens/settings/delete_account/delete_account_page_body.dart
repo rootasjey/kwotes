@@ -100,6 +100,9 @@ class DeleteAccountPageBody extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black87,
                   surfaceTintColor: Colors.pink,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
                 ),
                 child: SizedBox(
                   width: 320.0,

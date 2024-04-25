@@ -37,22 +37,28 @@ class AccountPage extends StatelessWidget {
             sliver: SliverList.list(
               children: [
                 SettingsItemData(
-                  name: "username.update.name".tr(),
+                  name: "username.edit.name".tr(),
                   description: userFirestore.name,
                   route: SettingsContentLocation.updateUsernameRoute,
                   iconData: TablerIcons.forms,
                 ),
                 SettingsItemData(
-                  name: "email.update".tr(),
+                  name: "email.edit.name".tr(),
                   description: userFirestore.email,
                   route: SettingsContentLocation.updateEmailRoute,
                   iconData: TablerIcons.mail,
                 ),
                 SettingsItemData(
-                  name: "password.update.name".tr(),
+                  name: "password.edit.name".tr(),
                   description: "password.update.description".tr(),
                   route: SettingsContentLocation.updatePasswordRoute,
                   iconData: TablerIcons.key,
+                ),
+                SettingsItemData(
+                  name: "account.delete.name".tr(),
+                  description: "account.delete.description".tr(),
+                  route: SettingsContentLocation.deleteAccountRoute,
+                  iconData: TablerIcons.trash,
                 ),
               ].map((SettingsItemData settingsItemData) {
                 return Padding(

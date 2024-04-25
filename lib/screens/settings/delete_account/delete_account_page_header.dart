@@ -29,7 +29,6 @@ class DeleteAccountPageHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const FontWeight fontWeight = FontWeight.w500;
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
 
@@ -59,26 +58,6 @@ class DeleteAccountPageHeader extends StatelessWidget {
                           TablerIcons.arrow_left,
                           size: 18.0,
                           color: foregroundColor?.withOpacity(0.6),
-                        ),
-                      ),
-                      MouseRegion(
-                        cursor: SystemMouseCursors.click,
-                        child: GestureDetector(
-                          onTap: onTapLeftPartHeader,
-                          child: Text(
-                            "${"settings.name".tr()} > ",
-                            textAlign: isMobileSize
-                                ? TextAlign.left
-                                : TextAlign.center,
-                            style: Utils.calligraphy.body(
-                              textStyle: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: fontWeight,
-                                height: 1.0,
-                                color: foregroundColor?.withOpacity(0.6),
-                              ),
-                            ),
-                          ),
                         ),
                       ),
                       Text(
