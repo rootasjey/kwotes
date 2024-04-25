@@ -110,9 +110,19 @@ class _MyQuotesPageState extends State<MyQuotesPage> {
     );
   }
 
+  /// Initialize properties.
+  /// TODO: Simplify later.
   void initProps() async {
+    final Signal<UserFirestore> signalUserFirestore =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+    final UserFirestore userFirestore = signalUserFirestore.value;
+
+    final bool canManageQuotes = userFirestore.rights.canManageQuotes;
+    _selectedOwnership = canManageQuotes
+        ? await Utils.vault.getDataOwnership()
+        : EnumDataOwnership.owned;
+
     _selectedLanguage = await Utils.vault.getPageLanguage();
-    _selectedOwnership = await Utils.vault.getDataOwnership();
     final int savedTabIndex = await Utils.vault.getMyQuotesPageTabIndex();
 
     setState(() {
@@ -200,32 +210,37 @@ class _MyQuotesPageState extends State<MyQuotesPage> {
 
     final bool isIpad = NavigationStateHelper.isIpad;
 
+    final bool isMobileSize =
+        Utils.measurements.isMobileSize(context) || isIpad;
+
     Utils.graphic.showAdaptiveDialog(
       context,
-      isMobileSize: Utils.graphic.isMobile() || isIpad,
+      isMobileSize: isMobileSize || isIpad,
       builder: (BuildContext context) {
         return Align(
           heightFactor: 1.0,
           alignment: Alignment.bottomCenter,
-          child: Padding(
-            padding: EdgeInsets.only(
-              left: 16.0,
-              right: 16.0,
-              bottom: isIpad ? 160.0 : 24.0,
-              top: 12.0,
-            ),
-            child: HeaderFilter(
-              direction: Axis.vertical,
-              showAllOwnership: showAllOwnership,
-              chipSelectedColor: getChipSelectedColor(newTab),
-              chipBackgroundColor: chipBackgroundColor,
-              selectedOwnership: _selectedOwnership,
-              onSelectedOwnership: onSelectOwnership,
-              selectedLanguage: _selectedLanguage,
-              onSelectLanguage: (EnumLanguageSelection language) {
-                onSelectedLanguage(language);
-                Navigator.pop(context);
-              },
+          child: Material(
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+                bottom: isIpad ? 160.0 : 24.0,
+                top: 12.0,
+              ),
+              child: HeaderFilter(
+                direction: Axis.vertical,
+                showAllOwnership: showAllOwnership,
+                chipSelectedColor: getChipSelectedColor(newTab),
+                chipBackgroundColor: chipBackgroundColor,
+                selectedOwnership: _selectedOwnership,
+                onSelectedOwnership: onSelectOwnership,
+                selectedLanguage: _selectedLanguage,
+                onSelectLanguage: (EnumLanguageSelection language) {
+                  onSelectedLanguage(language);
+                  Navigator.pop(context);
+                },
+              ),
             ),
           ),
         );
