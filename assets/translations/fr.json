@@ -88,6 +88,9 @@
   "brightness": "Luminosité",
   "cancel": "Annuler",
   "caracterization": "Caractérisation",
+  "categories": {
+    "name": "Categories"
+  },
   "changelog": {
     "description": "Liste des changements récents",
     "name": "Historique des mises à jour",
