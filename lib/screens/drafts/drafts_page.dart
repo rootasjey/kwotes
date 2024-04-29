@@ -272,6 +272,7 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
 
     data["id"] = doc.id;
     final DraftQuote draft = DraftQuote.fromMap(data);
+    if (!mounted) return;
     setState(() => _drafts.insert(0, draft));
   }
 
@@ -292,6 +293,7 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
 
     data["id"] = doc.id;
     final DraftQuote draft = DraftQuote.fromMap(data);
+    if (!mounted) return;
     setState(() => _drafts[index] = draft);
   }
 
@@ -305,6 +307,7 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
       return;
     }
 
+    if (!mounted) return;
     setState(() => _drafts.removeAt(index));
   }
 
@@ -383,6 +386,7 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
   /// Callback fired when a draft quote is going to be deleted.
   void onDeleteDraftQuote(DraftQuote quote) async {
     final int index = _drafts.indexOf(quote);
+    if (!mounted) return;
     setState(() => _drafts.removeAt(index));
 
     final Signal<UserFirestore> userFirestore =
@@ -430,13 +434,15 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
       return;
     }
 
+    Utils.vault.setPageLanguage(language);
+
+    if (!mounted) return;
     setState(() {
       // _selectedLanguage = language;
       _drafts.clear();
       _lastDocument = null;
     });
 
-    Utils.vault.setPageLanguage(language);
     fetch();
   }
 
@@ -470,6 +476,7 @@ class _DraftsPageState extends State<DraftsPage> with UiLoggy {
         !NavigationStateHelper.showHeaderPageOptions;
     Utils.vault.setShowHeaderOptions(newShowPageOptions);
 
+    if (!mounted) return;
     setState(() {
       NavigationStateHelper.showHeaderPageOptions = newShowPageOptions;
     });
