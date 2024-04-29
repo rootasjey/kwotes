@@ -10,7 +10,7 @@ class SearchResultMeta extends StatelessWidget {
     super.key,
     this.isMobileSize = false,
     this.show = true,
-    this.padding = EdgeInsets.zero,
+    this.margin = EdgeInsets.zero,
     this.pageState,
     this.foregroundColor,
     this.resultCount = 0,
@@ -27,8 +27,8 @@ class SearchResultMeta extends StatelessWidget {
   /// Text color.
   final Color? foregroundColor;
 
-  /// Padding of this widget.
-  final EdgeInsets padding;
+  /// Spacing around this widget.
+  final EdgeInsets margin;
 
   /// Page's state (e.g. searching, idle, ...).
   final EnumPageState? pageState;
@@ -46,44 +46,47 @@ class SearchResultMeta extends StatelessWidget {
         ? "search.ing".tr()
         : "search.result_count".plural(resultCount);
 
-    return Opacity(
-      opacity: show ? 1.0 : 0.0,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 8.0, top: 6.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              textValue,
-              style: Utils.calligraphy.body(
-                textStyle: TextStyle(
-                  fontSize: 14.0,
-                  color: foregroundColor?.withOpacity(0.6),
+    return Padding(
+      padding: margin,
+      child: Opacity(
+        opacity: show ? 1.0 : 0.0,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 8.0, top: 6.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                textValue,
+                style: Utils.calligraphy.body(
+                  textStyle: TextStyle(
+                    fontSize: 14.0,
+                    color: foregroundColor?.withOpacity(0.6),
+                  ),
                 ),
               ),
-            ),
-            if (onClearInput != null)
-              JustTheTooltip(
-                tailLength: 10.0,
-                preferredDirection: AxisDirection.down,
-                content: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "search.clear".tr(),
-                    style: Utils.calligraphy.body(
-                      textStyle: const TextStyle(
-                        fontWeight: FontWeight.w500,
+              if (onClearInput != null)
+                JustTheTooltip(
+                  tailLength: 10.0,
+                  preferredDirection: AxisDirection.down,
+                  content: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "search.clear".tr(),
+                      style: Utils.calligraphy.body(
+                        textStyle: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
+                  child: IconButton(
+                    onPressed: onClearInput,
+                    color: foregroundColor?.withOpacity(0.6),
+                    icon: const Icon(TablerIcons.square_rounded_x),
+                  ),
                 ),
-                child: IconButton(
-                  onPressed: onClearInput,
-                  color: foregroundColor?.withOpacity(0.6),
-                  icon: const Icon(TablerIcons.square_rounded_x),
-                ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );

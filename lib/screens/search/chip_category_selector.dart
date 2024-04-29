@@ -66,7 +66,7 @@ class ChipCategorySelector extends StatelessWidget {
                   fontWeight: quoteSelected ? selectedWeight : null,
                 ),
               ),
-              label: Text("quote.names".tr()),
+              label: Text("categories.name".tr()),
             ),
             FilterChip(
               showCheckmark: false,

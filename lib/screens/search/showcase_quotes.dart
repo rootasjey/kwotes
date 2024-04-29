@@ -41,37 +41,34 @@ class ShowcaseQuotes extends StatelessWidget {
     return SliverPadding(
       padding: margin,
       sliver: SliverList.list(children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 24.0),
-          child: FractionallySizedBox(
-            widthFactor: isMobileSize ? 1.0 : 0.8,
-            child: Wrap(
-              spacing: spacing,
-              runSpacing: spacing,
-              alignment: WrapAlignment.center,
-              children: topicColors
-                  .map(
-                    (Topic topicColor) {
-                      return TopicCard(
-                        topic: topicColor,
-                        isDark: isDark,
-                        backgroundColor: backgroundColor,
-                        foregroundColor: foregroundColor,
-                        onTap: onTapTopicColor,
-                        size: isMobileSize
-                            ? const Size(90.0, 90.0)
-                            : const Size(100.0, 100.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      );
-                    },
-                  )
-                  .toList()
-                  .animate(interval: 15.ms)
-                  .fadeIn(duration: 125.ms, curve: Curves.decelerate)
-                  .slideY(begin: 0.2, end: 0.0),
-            ),
+        FractionallySizedBox(
+          widthFactor: isMobileSize ? 1.0 : 0.8,
+          child: Wrap(
+            spacing: spacing,
+            runSpacing: spacing,
+            alignment: WrapAlignment.center,
+            children: topicColors
+                .map(
+                  (Topic topicColor) {
+                    return TopicCard(
+                      topic: topicColor,
+                      isDark: isDark,
+                      backgroundColor: backgroundColor,
+                      foregroundColor: foregroundColor,
+                      onTap: onTapTopicColor,
+                      size: isMobileSize
+                          ? const Size(90.0, 90.0)
+                          : const Size(100.0, 100.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    );
+                  },
+                )
+                .toList()
+                .animate(interval: 15.ms)
+                .fadeIn(duration: 125.ms, curve: Curves.decelerate)
+                .slideY(begin: 0.2, end: 0.0),
           ),
         ),
       ]),

@@ -15,7 +15,7 @@ class SearchInput extends StatelessWidget {
     super.key,
     this.isMobileSize = false,
     this.searchCategory = EnumSearchCategory.quotes,
-    this.padding = const EdgeInsets.only(left: 12.0),
+    this.padding = EdgeInsets.zero,
     this.onChangedTextField,
     this.onTapClearIconButton,
     this.onTapCancelButton,
@@ -81,7 +81,7 @@ class SearchInput extends StatelessWidget {
       ),
     );
 
-    const double toolbarHeight = 180.0;
+    const double toolbarHeight = 112.0;
 
     return SliverAppBar(
       primary: false,
@@ -117,6 +117,8 @@ class SearchInput extends StatelessWidget {
                     heroTag: "user-avatar",
                     onTap: onTapUserAvatar,
                     radius: 16.0,
+                    selected: true,
+                    borderColor: Colors.grey,
                     margin: const EdgeInsets.only(right: 8.0),
                     imageProvider: const AssetImage(
                       "assets/images/profile-picture-avocado.jpg",

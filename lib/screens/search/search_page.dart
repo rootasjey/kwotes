@@ -37,7 +37,6 @@ import "package:kwotes/types/reference.dart";
 import "package:kwotes/types/topic.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
-import "package:wave_divider/wave_divider.dart";
 
 class SearchPage extends StatefulWidget {
   const SearchPage({
@@ -147,6 +146,10 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     checkRouteParams();
     _searchFocusNode.addListener(onSearchFocusChanged);
     NavigationStateHelper.searchRouterDelegate.addListener(onRouteChanged);
+
+    if (NavigationStateHelper.searchValue.isEmpty) {
+      fetchShowcaseData();
+    }
   }
 
   @override
@@ -167,7 +170,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   Widget build(BuildContext context) {
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
     final EdgeInsets padding = EdgeInsets.only(
-      top: 0.0,
       left: isMobileSize ? 28.0 : 48.0,
       right: 24,
     );
@@ -205,37 +207,32 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                       inputController: _searchInputController,
                       onChangedTextField: onSearchInputChanged,
                       focusNode: _searchFocusNode,
-                      padding: padding,
                       onTapCancelButton: onTapCancelButton,
                       onTapClearIconButton: onClearInput,
                       onTapUserAvatar: onTapUserAvatar,
                       searchCategory: _searchCategory,
                       isMobileSize: isMobileSize,
-                      bottom: Padding(
-                        padding: const EdgeInsets.only(top: 12.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            ChipCategorySelector(
-                              isDark: isDark,
-                              categorySelected: _searchCategory,
-                              onSelectCategory: onSelectSearchCategory,
-                            ),
-                            SearchResultMeta(
-                              isMobileSize: isMobileSize,
-                              foregroundColor: foregroundColor,
-                              padding: padding,
-                              pageState: _pageState,
-                              resultCount: _resultCount,
-                              show: showResultCount,
-                            ),
-                          ],
-                        ),
+                      bottom: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          ChipCategorySelector(
+                            isDark: isDark,
+                            categorySelected: _searchCategory,
+                            onSelectCategory: onSelectSearchCategory,
+                          ),
+                        ],
                       ),
                     ),
-                    const SliverToBoxAdapter(
-                      child: WaveDivider(),
+                    SliverToBoxAdapter(
+                      child: SearchResultMeta(
+                        margin: const EdgeInsets.only(left: 24.0),
+                        isMobileSize: isMobileSize,
+                        foregroundColor: foregroundColor,
+                        pageState: _pageState,
+                        resultCount: _resultCount,
+                        show: showResultCount,
+                      ),
                     ),
                     SignalBuilder(
                       signal: signalUserFirestore,
@@ -369,10 +366,14 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
   }
 
   /// Set the new page state with a delay of 2 seconds.
-  void defferPageState(EnumPageState newPageState) {
+  void deferPageState({
+    EnumPageState newPageState = EnumPageState.idle,
+    void Function()? fct,
+  }) {
     _pageSateTimer?.cancel();
     _pageSateTimer = Timer(const Duration(seconds: 2), () {
       setState(() => _pageState = newPageState);
+      fct?.call();
       _pageSateTimer = null;
     });
   }
@@ -418,13 +419,17 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
     if (reinit) {
       _showMoreButton = false;
-      _authorList.clear();
       _hasMoreResults = true;
-      defferPageState(EnumPageState.loading);
+      deferPageState(
+        newPageState: EnumPageState.loading,
+        fct: () {
+          _authorList.clear();
+        },
+      );
     }
 
     if (fetchMore) {
-      setImmediatePageState(EnumPageState.loadingMore);
+      setImmediatePageState(newPageState: EnumPageState.loadingMore);
     }
 
     try {
@@ -436,7 +441,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       final DocumentSnapshot? lastDocument = _lastAuthorDocument;
       if (!reinit && lastDocument != null) {
         query = query.startAfterDocument(lastDocument);
-        setImmediatePageState(EnumPageState.loadingMore);
+        setImmediatePageState(newPageState: EnumPageState.loadingMore);
       }
 
       final QuerySnapMap snapshot = await query.get();
@@ -454,15 +459,24 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
         _authorList.add(Author.fromMap(data));
       }
 
-      setState(() {
-        _showMoreButton = true;
-        _lastAuthorDocument = snapshot.docs.last;
-        setImmediatePageState(EnumPageState.idle);
-        _hasMoreResults = snapshot.size == _limitFetchAuthors;
-      });
+      // setState(() {
+      //   _showMoreButton = true;
+      //   _lastAuthorDocument = snapshot.docs.last;
+      //   setImmediatePageState(newPageState: EnumPageState.idle);
+      //   _hasMoreResults = snapshot.size == _limitFetchAuthors;
+      // });
+      setImmediatePageState(
+        newPageState: EnumPageState.idle,
+        fct: () {
+          _showMoreButton = true;
+          _lastAuthorDocument = snapshot.docs.last;
+          setImmediatePageState(newPageState: EnumPageState.idle);
+          _hasMoreResults = snapshot.size == _limitFetchAuthors;
+        },
+      );
     } catch (error) {
       loggy.error(error);
-      setImmediatePageState(EnumPageState.idle);
+      setImmediatePageState();
     }
   }
 
@@ -500,9 +514,14 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
     if (reinit) {
       _showMoreButton = false;
-      _referenceList.clear();
       _hasMoreResults = true;
-      defferPageState(EnumPageState.loading);
+      // _referenceList.clear();
+      deferPageState(
+        newPageState: EnumPageState.loading,
+        fct: () {
+          _referenceList.clear();
+        },
+      );
     }
 
     if (fetchMore) {
@@ -526,7 +545,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
       if (snapshot.size == 0) {
         _hasMoreResults = false;
-        setImmediatePageState(EnumPageState.idle);
+        setImmediatePageState();
         return;
       }
 
@@ -536,15 +555,20 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
         _referenceList.add(Reference.fromMap(data));
       }
 
-      setState(() {
+      // setState(() {
+      //   _showMoreButton = true;
+      //   _lastReferenceDocument = snapshot.docs.last;
+      //   setImmediatePageState(EnumPageState.idle);
+      //   _hasMoreResults = snapshot.size == _limitFetchReferences;
+      // });
+      setImmediatePageState(fct: () {
         _showMoreButton = true;
         _lastReferenceDocument = snapshot.docs.last;
-        setImmediatePageState(EnumPageState.idle);
         _hasMoreResults = snapshot.size == _limitFetchReferences;
       });
     } catch (error) {
       loggy.error(error);
-      setImmediatePageState(EnumPageState.idle);
+      setImmediatePageState();
     }
   }
 
@@ -995,12 +1019,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       fetchShowcaseData();
       return;
     }
-
-    _searchTimer?.cancel();
-    _searchTimer = Timer(
-      delay,
-      search,
-    );
   }
 
   /// Callback fired when a different search category is selected (e.g. author).
@@ -1162,12 +1180,11 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       return;
     }
 
-    setState(() {
-      _searchPage = 0;
-      _pageState = EnumPageState.searching;
-      _authorResults.clear();
-    });
-
+    _searchPage = 0;
+    deferPageState(
+      newPageState: EnumPageState.searching,
+      fct: () => _authorResults.clear(),
+    );
     searchAuthors(text);
   }
 
@@ -1191,12 +1208,13 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       return;
     }
 
-    setState(() {
-      _searchPage = 0;
-      _pageState = EnumPageState.searching;
-      _quoteResults.clear();
-    });
-
+    _searchPage = 0;
+    deferPageState(
+      newPageState: EnumPageState.searching,
+      fct: () {
+        _quoteResults.clear();
+      },
+    );
     searchQuotes(text);
   }
 
@@ -1217,11 +1235,12 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       return;
     }
 
-    setState(() {
-      _pageState = EnumPageState.searching;
-      _referenceResults.clear();
-    });
-
+    deferPageState(
+      newPageState: EnumPageState.searching,
+      fct: () {
+        _referenceResults.clear();
+      },
+    );
     searchReferences(text);
   }
 
@@ -1278,13 +1297,11 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       final AlgoliaQuerySnapshot snapshot = await query.getObjects();
 
       if (snapshot.empty) {
-        setState(() {
-          _hasMoreResults = false;
-          _pageState = EnumPageState.idle;
-        });
+        setImmediatePageState(fct: () => _hasMoreResults = false);
         return;
       }
 
+      _authorResults.clear();
       for (final AlgoliaObjectSnapshot hit in snapshot.hits) {
         final Json data = hit.data;
         data["id"] = hit.objectID;
@@ -1293,15 +1310,14 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
         _authorResults.add(author);
       }
 
-      setState(() {
+      setImmediatePageState(fct: () {
         _searchPage = _searchPage + 1;
         _resultCount = snapshot.nbHits;
-        _pageState = EnumPageState.idle;
         _hasMoreResults = snapshot.page < snapshot.nbPages - 1;
       });
     } catch (error) {
       loggy.error(error.toString());
-      setState(() => _pageState = EnumPageState.idle);
+      setImmediatePageState();
     }
   }
 
@@ -1337,13 +1353,11 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       final AlgoliaQuerySnapshot snapshot = await query.getObjects();
 
       if (snapshot.empty) {
-        setState(() {
-          _hasMoreResults = false;
-          _pageState = EnumPageState.idle;
-        });
+        setImmediatePageState(fct: () => _hasMoreResults = false);
         return;
       }
 
+      _quoteResults.clear();
       for (final AlgoliaObjectSnapshot hit in snapshot.hits) {
         final Json data = hit.data;
         data["id"] = hit.objectID;
@@ -1354,15 +1368,14 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
         _quoteResults.add(quote);
       }
 
-      setState(() {
+      setImmediatePageState(fct: () {
         _searchPage = _searchPage + 1;
         _resultCount = snapshot.nbHits;
-        _pageState = EnumPageState.idle;
         _hasMoreResults = snapshot.page < snapshot.nbPages - 1;
       });
     } catch (error) {
       loggy.error(error.toString());
-      setState(() => _pageState = EnumPageState.idle);
+      setImmediatePageState();
     }
   }
 
@@ -1378,10 +1391,11 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       final AlgoliaQuerySnapshot snapshot = await query.getObjects();
 
       if (snapshot.empty) {
-        setState(() => _pageState = EnumPageState.idle);
+        setImmediatePageState();
         return;
       }
 
+      _referenceResults.clear();
       for (final AlgoliaObjectSnapshot hit in snapshot.hits) {
         final Json data = hit.data;
         data["id"] = hit.objectID;
@@ -1390,22 +1404,28 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
         _referenceResults.add(reference);
       }
 
-      setState(() {
+      setImmediatePageState(fct: () {
         _searchPage++;
-        _pageState = EnumPageState.idle;
         _resultCount = snapshot.nbHits;
         _hasMoreResults = snapshot.page < snapshot.nbPages - 1;
       });
     } catch (error) {
       loggy.error(error.toString());
-      setState(() => _pageState = EnumPageState.idle);
+      setImmediatePageState();
     }
   }
 
   /// Set the new page state without any delay.
-  void setImmediatePageState(EnumPageState newPageState) {
+  void setImmediatePageState({
+    EnumPageState newPageState = EnumPageState.idle,
+    void Function()? fct,
+  }) {
     _pageSateTimer?.cancel();
-    setState(() => _pageState = newPageState);
+    setState(() {
+      _pageState = newPageState;
+      fct?.call();
+      _pageSateTimer = null;
+    });
   }
 
   /// Update browser URL on input changes.
@@ -1420,12 +1440,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     NavigationStateHelper.searchRouterDelegate.beamToReplacementNamed(
       path,
     );
-    // NavigationStateHelper.searchRouterDelegate.updateRouteInformation(
-    //   RouteInformation(uri: Uri(path: path), state: {}),
-    // );
-    // NavigationStateHelper.searchRouterDelegate.update(
-    //   configuration: RouteInformation(uri: Uri(path: path)),
-    // );
   }
 
   /// Update search category from query param.
