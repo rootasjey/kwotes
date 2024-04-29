@@ -246,20 +246,11 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
 
     final SystemUiOverlayStyle overlayStyle =
         currentBrightness == Brightness.dark
-            ? SystemUiOverlayStyle(
-                statusBarColor: Constants.colors.dark,
-                systemNavigationBarColor: Color.alphaBlend(
-                  Colors.black26,
-                  Constants.colors.dark,
-                ),
-                systemNavigationBarDividerColor: Colors.transparent,
-                statusBarIconBrightness: Brightness.light,
+            ? SystemUiOverlayStyle.light.copyWith(
+                statusBarColor: Colors.transparent, // optional
               )
-            : SystemUiOverlayStyle(
-                statusBarColor: Constants.colors.lightBackground,
-                systemNavigationBarColor: Colors.white,
-                systemNavigationBarDividerColor: Colors.transparent,
-                statusBarIconBrightness: Brightness.dark,
+            : SystemUiOverlayStyle.dark.copyWith(
+                statusBarColor: Colors.transparent, // optional
               );
 
     SystemChrome.setSystemUIOverlayStyle(overlayStyle);
