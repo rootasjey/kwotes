@@ -34,6 +34,42 @@ class SettingsPageBody extends StatelessWidget {
               children: [
                 ...[
                   SettingsItemData(
+                    name: "premium.subscription".tr(),
+                    route: SettingsContentLocation.themeRoute,
+                  ),
+                  SettingsItemData(
+                    name: "premium.in_app_purchases".tr(),
+                    route: SettingsContentLocation.languageRoute,
+                  ),
+                ].map(
+                  (SettingsItemData settingsItemData) {
+                    return ListTile(
+                      onTap: () {
+                        context.beamToNamed(settingsItemData.route);
+                      },
+                      title: Text(
+                        settingsItemData.name,
+                      ),
+                      dense: true,
+                      trailing: Icon(
+                        TablerIcons.chevron_right,
+                        size: 18.0,
+                        color: foregroundColor?.withOpacity(0.6),
+                      ),
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 4.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    );
+                  },
+                ).toList(),
+                Divider(
+                  color: foregroundColor?.withOpacity(0.1),
+                  thickness: 1.5,
+                ),
+                ...[
+                  SettingsItemData(
                     name: "theme.name".tr(),
                     route: SettingsContentLocation.themeRoute,
                   ),
@@ -72,7 +108,6 @@ class SettingsPageBody extends StatelessWidget {
                   color: foregroundColor?.withOpacity(0.1),
                   thickness: 1.5,
                 ),
-                // WaveDivider(color: foregroundColor?.withOpacity(0.6)),
                 ...[
                   SettingsItemData(
                     name: "tos.name".tr(),
