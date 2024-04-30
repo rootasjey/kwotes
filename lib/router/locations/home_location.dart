@@ -2,6 +2,7 @@ import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
+import "package:kwotes/components/hero_photo_page.dart";
 import "package:kwotes/screens/add_quote/add_quote_page.dart";
 import "package:kwotes/screens/author/author_page.dart";
 import "package:kwotes/screens/author/author_quotes_page.dart";
@@ -31,6 +32,15 @@ class HomeLocation extends BeamLocation<BeamState> {
   /// Settings location for deep navigation.
   static const String settingsRoute = "/settings/*";
 
+  /// Image location.
+  static const String imageRoute = "/image/*";
+
+  /// Image author location.
+  static const String imageAuthorRoute = "/image/author/:authorId";
+
+  /// Image reference location.
+  static const String imageReferenceRoute = "/image/reference/:referenceId";
+
   @override
   List<Pattern> get pathPatterns => [
         dashboardRoute,
@@ -38,6 +48,9 @@ class HomeLocation extends BeamLocation<BeamState> {
         route,
         searchRoute,
         settingsRoute,
+        imageRoute,
+        imageAuthorRoute,
+        imageReferenceRoute,
       ];
 
   @override
@@ -49,6 +62,18 @@ class HomeLocation extends BeamLocation<BeamState> {
         title: "page_title.home".tr(),
         type: BeamPageType.fadeTransition,
       ),
+      if (state.pathPatternSegments.contains("image"))
+        BeamPage(
+          child: HeroPhotoPage(
+            imageProvider: NetworkImage(extractImageUrl()),
+            initScale: extractInitScale(),
+            heroTag: extractHeroTag(),
+          ),
+          key: const ValueKey(imageRoute),
+          title: "page_title.image".tr(),
+          type: BeamPageType.fadeTransition,
+          opaque: false,
+        ),
       if (state.pathPatternSegments.contains("settings"))
         BeamPage(
           child: const SettingsDialogPage(),
@@ -58,6 +83,33 @@ class HomeLocation extends BeamLocation<BeamState> {
           opaque: false,
         ),
     ];
+  }
+
+  String extractImageUrl() {
+    if (state.routeState == null) {
+      return "";
+    }
+
+    final Map routeState = state.routeState as Map;
+    return routeState["image-url"] ?? "";
+  }
+
+  String extractHeroTag() {
+    if (state.routeState == null) {
+      return "";
+    }
+
+    final Map routeState = state.routeState as Map;
+    return routeState["hero-tag"] ?? "";
+  }
+
+  double extractInitScale() {
+    if (state.routeState == null) {
+      return 0.2;
+    }
+
+    final Map routeState = state.routeState as Map;
+    return routeState["init-scale"] ?? 0.2;
   }
 }
 
