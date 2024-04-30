@@ -214,6 +214,8 @@ class ColorPalette {
 
   final Color password = Colors.orange.shade300;
 
+  final Color premium = Colors.amber.shade700;
+
   /// Primary application's color.
   final Color primary = Colors.deepPurple.shade400;
   // final Color primary = Colors.blue.shade700;

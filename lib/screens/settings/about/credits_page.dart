@@ -282,13 +282,6 @@ class CreditsPage extends StatelessWidget {
         link: "https://pub.dev/packages/firebase_storage",
       ),
       CreditItemData(
-        title: "flex_list",
-        subtitle: "Puts as many provided elements as possible "
-            "in one row (like Wrap), but also extends "
-            "the width of the elements by the remaining space per row.",
-        link: "https://pub.dev/packages/firebase_storage",
-      ),
-      CreditItemData(
         title: "flutter_animate",
         subtitle: "A performant library "
             "that makes it simple to add almost any kind "
@@ -416,6 +409,12 @@ class CreditsPage extends StatelessWidget {
         subtitle: "A Flutter plugin to share content from your Flutter app "
             "via the platform's share dialog.",
         link: "https://pub.dev/packages/share_plus",
+      ),
+      CreditItemData(
+        title: "sliver_tools",
+        subtitle: "A set of useful sliver tools that are missing "
+            "from the flutter framework.",
+        link: "https://pub.dev/packages/firebase_storage",
       ),
       CreditItemData(
         title: "smooth_page_indicator",

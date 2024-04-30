@@ -85,6 +85,32 @@ class ChangelogPage extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: Text(
+                          "• Add missing delete account page",
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              color: foregroundColor?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "• Update add to list dialog/bottom sheet",
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              color: foregroundColor?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
                           "• Add user actions on author/reference quotes pages",
                           style: Utils.calligraphy.body(
                             textStyle: TextStyle(
