@@ -113,14 +113,12 @@ class HeroQuote extends StatelessWidget {
                       hoverColor: accentColor.withOpacity(0.1),
                       highlightColor: accentColor.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(2.0),
-                      child: Padding(
+                      child: Container(
                         padding: const EdgeInsets.only(left: 4.0, right: 4.0),
                         child: Text(
                           "— ${quote.author.name}",
                           style: Utils.calligraphy.body(
-                            textStyle: TextStyle(
-                              color: accentColor,
-                            ),
+                            textStyle: const TextStyle(),
                           ),
                         ),
                       ),
