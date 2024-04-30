@@ -1,8 +1,10 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:infinite_carousel/infinite_carousel.dart";
 import "package:kwotes/components/better_avatar.dart";
+import "package:kwotes/components/buttons/circle_button.dart";
 import "package:kwotes/components/context_menu_components.dart";
 import "package:kwotes/components/hero_quote.dart";
 import "package:kwotes/components/loading_view.dart";
@@ -97,7 +99,8 @@ class MobileLayout extends StatelessWidget {
 
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final Color topBackgroundColor = isDark
-        ? Colors.black.withAlpha(100)
+        ? Theme.of(context).scaffoldBackgroundColor
+        // ? Colors.black.withAlpha(100)
         : Theme.of(context).scaffoldBackgroundColor;
 
     final Color backgroundColor =
@@ -120,17 +123,47 @@ class MobileLayout extends StatelessWidget {
               SliverToBoxAdapter(
                 child: Container(
                   color: topBackgroundColor,
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: BetterAvatar(
-                      margin: const EdgeInsets.only(top: 40.5, left: 16.0),
-                      heroTag: "user-avatar",
-                      onTap: onTapUserAvatar,
-                      radius: 16.0,
-                      imageProvider: const AssetImage(
-                        "assets/images/profile-picture-avocado.jpg",
+                  padding: const EdgeInsets.only(left: 16.2),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      BetterAvatar(
+                        radius: 16.0,
+                        heroTag: "user-avatar",
+                        onTap: onTapUserAvatar,
+                        selected: true,
+                        borderColor: Colors.grey,
+                        imageProvider: const AssetImage(
+                          "assets/images/profile-picture-avocado.jpg",
+                        ),
                       ),
-                    ),
+                      CircleButton(
+                        onTap: () {},
+                        radius: 19.0,
+                        shape: CircleBorder(
+                          side: BorderSide(
+                            color: Constants.colors.premium,
+                            width: 2.0,
+                          ),
+                        ),
+                        margin: const EdgeInsets.only(left: 12.0),
+                        icon: Container(
+                          padding: const EdgeInsets.all(4.0),
+                          decoration: BoxDecoration(
+                            color: Constants.colors.premium,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Constants.colors.premium,
+                            ),
+                          ),
+                          child: Icon(
+                            TablerIcons.crown,
+                            size: 18.0,
+                            color: isDark ? Colors.black87 : Colors.white,
+                          ),
+                        ),
+                      ).animate().shake(),
+                    ],
                   ),
                 ),
               ),
