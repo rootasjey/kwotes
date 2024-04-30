@@ -1,5 +1,6 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/enums/enum_search_category.dart";
@@ -29,96 +30,62 @@ class ChipCategorySelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color? defaultColor = Theme.of(context).textTheme.bodyMedium?.color;
-    final bool quoteSelected = categorySelected == EnumSearchCategory.quotes;
-    final bool authorSelected = categorySelected == EnumSearchCategory.authors;
-    final bool referenceSelected =
-        categorySelected == EnumSearchCategory.references;
-
     const FontWeight selectedWeight = FontWeight.w500;
 
-    return Padding(
-        padding: margin,
-        child: Wrap(
-          spacing: 12.0,
-          runSpacing: 12.0,
-          alignment: WrapAlignment.start,
-          children: [
-            FilterChip(
-              showCheckmark: false,
-              selected: quoteSelected,
-              elevation: quoteSelected ? 2.0 : 0.0,
-              selectedColor: Constants.colors.quotes,
-              onSelected: (bool _) => onSelectCategory?.call(
-                EnumSearchCategory.quotes,
-              ),
-              shape: const StadiumBorder(
-                side: BorderSide(
-                  color: Colors.transparent,
-                ),
-              ),
-              labelStyle: Utils.calligraphy.body(
-                textStyle: TextStyle(
-                  color: getForegroundColor(
-                    selected: quoteSelected,
-                    defaultColor: defaultColor,
-                    selectedColor: Constants.colors.quotes,
-                  ),
-                  fontWeight: quoteSelected ? selectedWeight : null,
-                ),
-              ),
-              label: Text("categories.name".tr()),
+    return Container(
+      height: 60.0,
+      padding: margin,
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: Wrap(
+        spacing: 12.0,
+        runSpacing: 12.0,
+        alignment: WrapAlignment.start,
+        children: [
+          EnumSearchCategory.quotes,
+          EnumSearchCategory.authors,
+          EnumSearchCategory.references,
+        ].map((EnumSearchCategory category) {
+          final bool selected = category == categorySelected;
+          final Color selectedColor = getSelectedColor();
+          final Color? foregroundColor = getForegroundColor(
+            selected: selected,
+            defaultColor: defaultColor,
+            selectedColor: selectedColor,
+          );
+
+          return FilterChip(
+            showCheckmark: false,
+            selected: selected,
+            padding: EdgeInsets.zero,
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            labelPadding: const EdgeInsets.only(
+              right: 12.0,
             ),
-            FilterChip(
-              showCheckmark: false,
-              selected: authorSelected,
-              elevation: authorSelected ? 2.0 : 0.0,
-              selectedColor: Constants.colors.secondary,
-              onSelected: (bool _) => onSelectCategory?.call(
-                EnumSearchCategory.authors,
-              ),
-              shape: const StadiumBorder(
-                side: BorderSide(
-                  color: Colors.transparent,
-                ),
-              ),
-              label: Text("author.names".tr()),
-              labelStyle: Utils.calligraphy.body(
-                textStyle: TextStyle(
-                  color: getForegroundColor(
-                    selected: authorSelected,
-                    defaultColor: defaultColor,
-                    selectedColor: Constants.colors.authors,
-                  ),
-                  fontWeight: authorSelected ? selectedWeight : null,
-                ),
+            selectedColor: selectedColor,
+            // backgroundColor: getBackgroundColor(category),
+            onSelected: (bool _) => onSelectCategory?.call(category),
+            shape: StadiumBorder(
+              side: BorderSide(
+                color: getBackgroundColor(category),
+                // color: Colors.transparent,
               ),
             ),
-            FilterChip(
-              showCheckmark: false,
-              selected: referenceSelected,
-              elevation: referenceSelected ? 2.0 : 0.0,
-              selectedColor: Constants.colors.references,
-              onSelected: (bool _) =>
-                  onSelectCategory?.call(EnumSearchCategory.references),
-              shape: const StadiumBorder(
-                side: BorderSide(
-                  color: Colors.transparent,
-                ),
-              ),
-              label: Text("reference.names".tr()),
-              labelStyle: Utils.calligraphy.body(
-                textStyle: TextStyle(
-                  color: getForegroundColor(
-                    selected: referenceSelected,
-                    defaultColor: defaultColor,
-                    selectedColor: Constants.colors.references,
-                  ),
-                  fontWeight: referenceSelected ? selectedWeight : null,
-                ),
+            avatar: CircleAvatar(
+              foregroundColor: foregroundColor,
+              backgroundColor: Colors.transparent,
+              child: Icon(getIconData(category), size: 16.0),
+            ),
+            label: Text("search.chip.${category.name}".tr()),
+            labelStyle: Utils.calligraphy.body(
+              textStyle: TextStyle(
+                color: foregroundColor,
+                fontWeight: selected ? selectedWeight : null,
               ),
             ),
-          ],
-        ));
+          );
+        }).toList(),
+      ),
+    );
   }
 
   /// Get the foreground color based on the selected state.
@@ -127,10 +94,43 @@ class ChipCategorySelector extends StatelessWidget {
     Color? defaultColor,
     Color selectedColor = Colors.black,
   }) {
-    if (!selected) {
+    if (!selected || isDark) {
       return defaultColor;
     }
 
-    return selectedColor.computeLuminance() < 0.5 ? Colors.white : Colors.black;
+    return selectedColor.computeLuminance() < 0.4 ? Colors.white : Colors.black;
+  }
+
+  Color getSelectedColor() {
+    switch (categorySelected) {
+      case EnumSearchCategory.quotes:
+        return Constants.colors.quotes.withOpacity(0.2);
+      case EnumSearchCategory.authors:
+        return Constants.colors.authors.withOpacity(0.2);
+      case EnumSearchCategory.references:
+        return Constants.colors.references.withOpacity(0.2);
+    }
+  }
+
+  Color getBackgroundColor(EnumSearchCategory category) {
+    switch (category) {
+      case EnumSearchCategory.quotes:
+        return Constants.colors.quotes.withOpacity(0.2);
+      case EnumSearchCategory.authors:
+        return Constants.colors.authors.withOpacity(0.2);
+      case EnumSearchCategory.references:
+        return Constants.colors.references.withOpacity(0.2);
+    }
+  }
+
+  IconData? getIconData(EnumSearchCategory category) {
+    switch (category) {
+      case EnumSearchCategory.quotes:
+        return TablerIcons.quote;
+      case EnumSearchCategory.authors:
+        return TablerIcons.users;
+      case EnumSearchCategory.references:
+        return TablerIcons.books;
+    }
   }
 }

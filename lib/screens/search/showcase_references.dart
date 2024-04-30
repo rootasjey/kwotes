@@ -1,3 +1,4 @@
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:kwotes/components/texts/showcase_text.dart";
@@ -7,12 +8,17 @@ import "package:wave_divider/wave_divider.dart";
 class ShowcaseReferences extends StatelessWidget {
   const ShowcaseReferences({
     super.key,
+    this.animateItemList = false,
     this.isDark = false,
     this.isMobileSize = false,
     this.margin = EdgeInsets.zero,
     this.references = const [],
     this.onTapReference,
   });
+
+  /// Animate item if true.
+  /// Used to skip animation while scrolling.
+  final bool animateItemList;
 
   /// Whether dark theme is active.
   final bool isDark;
@@ -49,24 +55,54 @@ class ShowcaseReferences extends StatelessWidget {
                   ?.color
                   ?.withOpacity(0.2),
             ),
-          );
+          )
+              .animate(
+                delay:
+                    animateItemList ? Duration(milliseconds: 25 * index) : null,
+              )
+              .fadeIn(
+                duration: Duration(milliseconds: 25 * index),
+                curve: Curves.decelerate,
+              )
+              .slideY(
+                begin: 0.4,
+                end: 0.0,
+              );
         },
         itemBuilder: (BuildContext context, int index) {
           final Reference reference = references[index];
+
+          ImageProvider? imageProvider =
+              const AssetImage("assets/images/profile-picture-carrot.png");
+          if (reference.urls.image.isNotEmpty) {
+            imageProvider = NetworkImage(reference.urls.image);
+          }
 
           return ShowcaseText(
             docId: reference.id,
             isDark: isDark,
             index: index,
+            useSquareAvatar: true,
+            imageProvider: imageProvider,
+            subtitleValue: "genre.primary".tr(gender: reference.type.primary),
             initialForegroundColor: foregroundColor?.withOpacity(0.8),
             isMobileSize: isMobileSize,
             onTap: onTapReference != null
                 ? () => onTapReference?.call(reference)
                 : null,
             textValue: reference.name,
-          ).animate().fadeIn(duration: 125.ms).scale(
-                begin: const Offset(1.1, 1.1),
-                end: const Offset(1.0, 1.0),
+          )
+              .animate(
+                delay:
+                    animateItemList ? Duration(milliseconds: 25 * index) : null,
+              )
+              .fadeIn(
+                duration: 125.ms,
+                curve: Curves.decelerate,
+              )
+              .slideY(
+                begin: 0.4,
+                end: 0.0,
               );
         },
         itemCount: references.length,

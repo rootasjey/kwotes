@@ -15,7 +15,7 @@ class SearchInput extends StatelessWidget {
     super.key,
     this.isMobileSize = false,
     this.searchCategory = EnumSearchCategory.quotes,
-    this.padding = EdgeInsets.zero,
+    this.margin = EdgeInsets.zero,
     this.onChangedTextField,
     this.onTapClearIconButton,
     this.onTapCancelButton,
@@ -29,8 +29,8 @@ class SearchInput extends StatelessWidget {
   /// Used to determine the size of the search input.
   final bool isMobileSize;
 
-  /// Padding of this widget.
-  final EdgeInsets padding;
+  /// Spacing aroung this widget.
+  final EdgeInsets margin;
 
   /// What type of category we are searching.
   final EnumSearchCategory searchCategory;
@@ -58,7 +58,8 @@ class SearchInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String hintText = "${"search.${searchCategory.name}".tr()}...";
+    final String hintText = "${"search.type_a_keyword".tr()}...";
+    // final String hintText = "${"search.${searchCategory.name}".tr()}...";
     final BorderRadius borderRadius = BorderRadius.circular(24.0);
 
     int hintMaxLines = 1;
@@ -81,7 +82,8 @@ class SearchInput extends StatelessWidget {
       ),
     );
 
-    const double toolbarHeight = 112.0;
+    // const double toolbarHeight = 92.0;
+    const double toolbarHeight = 40.0;
 
     return SliverAppBar(
       primary: false,
@@ -90,6 +92,7 @@ class SearchInput extends StatelessWidget {
       pinned: false,
       snap: true,
       elevation: 0.0,
+      titleSpacing: 0.0,
       toolbarHeight: toolbarHeight,
       automaticallyImplyLeading: false,
       collapsedHeight: toolbarHeight,
@@ -100,18 +103,15 @@ class SearchInput extends StatelessWidget {
           sigmaX: 10.0,
           sigmaY: 10.0,
         ),
-        child: Padding(
-          padding: isMobileSize
-              ? EdgeInsets.zero
-              : const EdgeInsets.only(
-                  left: 32.0,
-                  right: 24.0,
-                ),
+        child: Container(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          padding: margin,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: MainAxisSize.max,
                 children: [
                   BetterAvatar(
                     heroTag: "user-avatar",
@@ -148,9 +148,13 @@ class SearchInput extends StatelessWidget {
                           hintText: hintText,
                           isDense: true,
                           filled: true,
-                          fillColor: isDark
-                              ? Constants.colors.primary.withOpacity(0.2)
-                              : Colors.white54,
+                          constraints: BoxConstraints(
+                            minHeight: 0.0,
+                            minWidth: 0.0,
+                            maxHeight: isMobileSize ? 54.0 : 70.0,
+                          ),
+                          fillColor:
+                              isDark ? Colors.grey.shade900 : Colors.white54,
                           suffixIcon: isInputEmpty ? null : clearIcon,
                           border: OutlineInputBorder(
                             borderSide: const BorderSide(
@@ -173,7 +177,7 @@ class SearchInput extends StatelessWidget {
                           ),
                           hintMaxLines: hintMaxLines,
                           contentPadding: const EdgeInsets.symmetric(
-                            vertical: 10.0,
+                            vertical: 8.0,
                             horizontal: 12.0,
                           ),
                         ),
@@ -196,12 +200,16 @@ class SearchInput extends StatelessWidget {
                           child: TextButton(
                             onPressed: onTapCancelButton,
                             style: TextButton.styleFrom(
+                              foregroundColor: Constants.colors.error,
+                              backgroundColor: isDark
+                                  ? Colors.grey.shade900
+                                  : Colors.white60,
                               padding: const EdgeInsets.symmetric(
-                                vertical: 16.0,
+                                vertical: 2.0,
                                 horizontal: 12.0,
                               ),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
+                                borderRadius: BorderRadius.circular(16.0),
                               ),
                             ),
                             child: Text(
@@ -210,8 +218,8 @@ class SearchInput extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               style: Utils.calligraphy.body(
                                 textStyle: TextStyle(
-                                  fontSize: isMobileSize ? 14.0 : 18.0,
-                                  fontWeight: FontWeight.w400,
+                                  fontSize: isMobileSize ? 15.0 : 18.0,
+                                  fontWeight: FontWeight.w200,
                                 ),
                               ),
                             ),

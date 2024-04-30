@@ -15,10 +15,9 @@ import "package:kwotes/globals/utils/linguistic.dart";
 import "package:kwotes/router/locations/search_location.dart";
 import "package:kwotes/router/locations/settings_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
-import "package:kwotes/screens/search/chip_category_selector.dart";
+import "package:kwotes/screens/search/chip_category_app_bar.dart";
 import "package:kwotes/screens/search/search_input.dart";
 import "package:kwotes/screens/search/search_page_body.dart";
-import "package:kwotes/screens/search/search_result_meta.dart";
 import "package:kwotes/screens/search/show_more_button.dart";
 import "package:kwotes/screens/search/showcase.dart";
 import "package:kwotes/types/alias/json_alias.dart";
@@ -61,6 +60,10 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> with UiLoggy {
+  /// True if we should animate item list.
+  /// Used to skip animation while scrolling.
+  bool _animateItemList = true;
+
   /// True if we already handled the quick action
   /// (e.g. pull/push to trigger).
   bool _handleQuickAction = false;
@@ -91,9 +94,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   /// Count limit for fetching references in alphabetically order from firestore.
   final int _limitFetchReferences = 60;
-
-  /// Result count for a specific search.
-  int _resultCount = 0;
 
   /// Search result count limit (algolia).
   final int _searchLimit = 20;
@@ -168,23 +168,10 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   @override
   Widget build(BuildContext context) {
-    final bool isMobileSize = Utils.measurements.isMobileSize(context);
-    final EdgeInsets padding = EdgeInsets.only(
-      left: isMobileSize ? 28.0 : 48.0,
-      right: 24,
-    );
-
-    final EdgeInsets marginBoddy = padding.copyWith(top: 24.0);
-
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
-
-    final bool showResultCount =
-        removeSpecialKeywords(_searchInputController.text).isNotEmpty &&
-            _resultCount > 0;
-
+    final bool isMobileSize = Utils.measurements.isMobileSize(context);
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-
     final Signal<UserFirestore> signalUserFirestore =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
 
@@ -204,6 +191,10 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                   ),
                   slivers: [
                     SearchInput(
+                      margin: const EdgeInsets.only(
+                        left: 16.0,
+                        right: 16.0,
+                      ),
                       inputController: _searchInputController,
                       onChangedTextField: onSearchInputChanged,
                       focusNode: _searchFocusNode,
@@ -212,27 +203,16 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                       onTapUserAvatar: onTapUserAvatar,
                       searchCategory: _searchCategory,
                       isMobileSize: isMobileSize,
-                      bottom: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          ChipCategorySelector(
-                            isDark: isDark,
-                            categorySelected: _searchCategory,
-                            onSelectCategory: onSelectSearchCategory,
-                          ),
-                        ],
-                      ),
                     ),
-                    SliverToBoxAdapter(
-                      child: SearchResultMeta(
-                        margin: const EdgeInsets.only(left: 24.0),
-                        isMobileSize: isMobileSize,
-                        foregroundColor: foregroundColor,
-                        pageState: _pageState,
-                        resultCount: _resultCount,
-                        show: showResultCount,
+                    ChipCategoryAppBar(
+                      isDark: isDark,
+                      margin: const EdgeInsets.only(
+                        top: 12.0,
+                        left: 18.0,
+                        bottom: 12.0,
                       ),
+                      categorySelected: _searchCategory,
+                      onSelectCategory: onSelectSearchCategory,
                     ),
                     SignalBuilder(
                       signal: signalUserFirestore,
@@ -246,7 +226,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                           isDark: isDark,
                           isMobileSize: isMobileSize,
                           isQueryEmpty: _searchInputController.text.isEmpty,
-                          margin: marginBoddy,
+                          margin: const EdgeInsets.symmetric(horizontal: 6.0),
                           onOpenAddQuoteToList: onOpenAddQuoteToList,
                           onRefreshSearch: search,
                           onReinitializeSearch: onClearInput,
@@ -262,12 +242,30 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                         );
                       },
                     ),
+                    if (_searchCategory == EnumSearchCategory.quotes &&
+                        _searchInputController.text.isEmpty)
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 24.0, top: 12.0),
+                          child: Text(
+                            "Categories",
+                            style: Utils.calligraphy.body(
+                              textStyle: TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w500,
+                                color: foregroundColor?.withOpacity(0.6),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     Showcase(
+                      animateItemList: _animateItemList,
                       authors: _authorList,
                       isDark: isDark,
                       isMobileSize: isMobileSize,
                       margin: EdgeInsets.only(
-                        top: isMobileSize ? 0.0 : 24.0,
+                        top: 24.0,
                         bottom: 54.0,
                         left: isMobileSize ? 24.0 : 24.0,
                         right: isMobileSize ? 24.0 : 24.0,
@@ -458,16 +456,10 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
         data["id"] = doc.id;
         _authorList.add(Author.fromMap(data));
       }
-
-      // setState(() {
-      //   _showMoreButton = true;
-      //   _lastAuthorDocument = snapshot.docs.last;
-      //   setImmediatePageState(newPageState: EnumPageState.idle);
-      //   _hasMoreResults = snapshot.size == _limitFetchAuthors;
-      // });
       setImmediatePageState(
         newPageState: EnumPageState.idle,
         fct: () {
+          _animateItemList = false;
           _showMoreButton = true;
           _lastAuthorDocument = snapshot.docs.last;
           setImmediatePageState(newPageState: EnumPageState.idle);
@@ -555,13 +547,8 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
         _referenceList.add(Reference.fromMap(data));
       }
 
-      // setState(() {
-      //   _showMoreButton = true;
-      //   _lastReferenceDocument = snapshot.docs.last;
-      //   setImmediatePageState(EnumPageState.idle);
-      //   _hasMoreResults = snapshot.size == _limitFetchReferences;
-      // });
       setImmediatePageState(fct: () {
+        _animateItemList = false;
         _showMoreButton = true;
         _lastReferenceDocument = snapshot.docs.last;
         _hasMoreResults = snapshot.size == _limitFetchReferences;
@@ -627,7 +614,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
         _pageState = EnumPageState.idle;
         _hasMoreResults = snapshot.size == _searchLimit;
         _lastQuoteDocument = snapshot.docs.last;
-        _resultCount = _quoteResults.length;
       });
     } catch (error) {
       loggy.error(error);
@@ -663,7 +649,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
       setState(() {
         _pageState = EnumPageState.idle;
-        _resultCount = _quoteResults.length;
       });
     } catch (error) {
       loggy.error(error);
@@ -762,6 +747,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     setState(() => _referenceList[index] = Reference.fromMap(data));
   }
 
+  /// Trigger an action on pull gesture.
   void handlePullQuickAction() {
     final double pixelsPosition = _scrollController.position.pixels;
 
@@ -908,7 +894,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     );
 
     setState(() {
-      _resultCount = 0;
       _prevSearchTextValue = "";
       NavigationStateHelper.searchValue = "";
       _hasMoreResults = true;
@@ -1028,7 +1013,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
     setState(() {
       _searchCategory = searchEntity;
-      _resultCount = 0;
       _showMoreButton = searchEntity != EnumSearchCategory.quotes;
     });
 
@@ -1312,7 +1296,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
       setImmediatePageState(fct: () {
         _searchPage = _searchPage + 1;
-        _resultCount = snapshot.nbHits;
         _hasMoreResults = snapshot.page < snapshot.nbPages - 1;
       });
     } catch (error) {
@@ -1370,7 +1353,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
       setImmediatePageState(fct: () {
         _searchPage = _searchPage + 1;
-        _resultCount = snapshot.nbHits;
         _hasMoreResults = snapshot.page < snapshot.nbPages - 1;
       });
     } catch (error) {
@@ -1406,7 +1388,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
       setImmediatePageState(fct: () {
         _searchPage++;
-        _resultCount = snapshot.nbHits;
         _hasMoreResults = snapshot.page < snapshot.nbPages - 1;
       });
     } catch (error) {

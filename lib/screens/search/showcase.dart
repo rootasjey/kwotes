@@ -11,6 +11,7 @@ import "package:kwotes/types/topic.dart";
 class Showcase extends StatelessWidget {
   const Showcase({
     super.key,
+    this.animateItemList = false,
     this.authors = const [],
     this.references = const [],
     this.topicColors = const [],
@@ -24,6 +25,10 @@ class Showcase extends StatelessWidget {
     this.onTapReference,
     this.onTapTopicColor,
   });
+
+  /// Animate item if true.
+  /// Used to skip animation while scrolling.
+  final bool animateItemList;
 
   /// Whether dark theme is active.
   final bool isDark;
@@ -69,6 +74,7 @@ class Showcase extends StatelessWidget {
 
     if (searchCategory == EnumSearchCategory.authors) {
       return ShowcaseAuthors(
+        animateItemList: animateItemList,
         authors: authors,
         isDark: isDark,
         isMobileSize: isMobileSize,
@@ -79,6 +85,7 @@ class Showcase extends StatelessWidget {
 
     if (searchCategory == EnumSearchCategory.references) {
       return ShowcaseReferences(
+        animateItemList: animateItemList,
         isDark: isDark,
         isMobileSize: isMobileSize,
         margin: margin,
@@ -88,6 +95,7 @@ class Showcase extends StatelessWidget {
     }
 
     return ShowcaseQuotes(
+      animateItemList: animateItemList,
       isDark: isDark,
       isMobileSize: isMobileSize,
       margin: margin,

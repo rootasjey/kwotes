@@ -56,7 +56,7 @@ class SearchAuthorResultsPage extends StatelessWidget {
     }
 
     return SliverPadding(
-      padding: margin.subtract(const EdgeInsets.only(left: 12.0)),
+      padding: margin,
       sliver: SliverList.separated(
         separatorBuilder: (BuildContext context, int index) {
           return Padding(

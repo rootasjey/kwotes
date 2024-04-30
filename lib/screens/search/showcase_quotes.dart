@@ -1,17 +1,24 @@
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:kwotes/components/topic_card.dart";
+import "package:kwotes/components/topic_tile.dart";
 import "package:kwotes/types/topic.dart";
+import "package:wave_divider/wave_divider.dart";
 
 class ShowcaseQuotes extends StatelessWidget {
   const ShowcaseQuotes({
     super.key,
+    this.animateItemList = false,
     this.isDark = false,
     this.isMobileSize = false,
     this.margin = EdgeInsets.zero,
     this.topicColors = const [],
     this.onTapTopicColor,
   });
+
+  /// Animate item if true.
+  /// Used to skip animation while scrolling.
+  final bool animateItemList;
 
   /// Whether dark theme is active.
   final bool isDark;
@@ -38,40 +45,92 @@ class ShowcaseQuotes extends StatelessWidget {
     final Color? backgroundColor =
         brightness == Brightness.light ? Colors.white38 : null;
 
+    if (isMobileSize) {
+      return SliverPadding(
+        padding: margin,
+        sliver: SliverList.separated(
+          separatorBuilder: (BuildContext context, int index) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: WaveDivider(
+                waveHeight: 2.0,
+                waveWidth: 5.0,
+                color: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.color
+                    ?.withOpacity(0.2),
+              ),
+            )
+                .animate(
+                  delay: animateItemList
+                      ? Duration(milliseconds: 25 * index)
+                      : null,
+                )
+                .fadeIn(
+                  duration: 125.ms,
+                  curve: Curves.decelerate,
+                )
+                .slideY(
+                  begin: 0.4,
+                  end: 0.0,
+                );
+          },
+          itemBuilder: (BuildContext context, int index) {
+            final Topic topic = topicColors[index];
+            return TopicTile(
+              topic: topic,
+              isDark: isDark,
+              onTap: onTapTopicColor,
+            )
+                .animate(
+                  delay: animateItemList
+                      ? Duration(milliseconds: 25 * index)
+                      : null,
+                )
+                .fadeIn(
+                  duration: Duration(milliseconds: 25 * index),
+                  curve: Curves.decelerate,
+                )
+                .slideY(
+                  begin: 0.4,
+                  end: 0.0,
+                );
+          },
+          itemCount: topicColors.length,
+        ),
+      );
+    }
+
     return SliverPadding(
       padding: margin,
-      sliver: SliverList.list(children: [
-        FractionallySizedBox(
-          widthFactor: isMobileSize ? 1.0 : 0.8,
-          child: Wrap(
-            spacing: spacing,
-            runSpacing: spacing,
-            alignment: WrapAlignment.center,
-            children: topicColors
-                .map(
-                  (Topic topicColor) {
-                    return TopicCard(
-                      topic: topicColor,
-                      isDark: isDark,
-                      backgroundColor: backgroundColor,
-                      foregroundColor: foregroundColor,
-                      onTap: onTapTopicColor,
-                      size: isMobileSize
-                          ? const Size(90.0, 90.0)
-                          : const Size(100.0, 100.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    );
-                  },
-                )
-                .toList()
-                .animate(interval: 15.ms)
-                .fadeIn(duration: 125.ms, curve: Curves.decelerate)
-                .slideY(begin: 0.2, end: 0.0),
-          ),
-        ),
-      ]),
+      sliver: Wrap(
+        spacing: spacing,
+        runSpacing: spacing,
+        alignment: WrapAlignment.spaceEvenly,
+        children: topicColors
+            .map(
+              (Topic topicColor) {
+                return TopicCard(
+                  topic: topicColor,
+                  isDark: isDark,
+                  backgroundColor: backgroundColor,
+                  foregroundColor: foregroundColor,
+                  onTap: onTapTopicColor,
+                  size: isMobileSize
+                      ? const Size(90.0, 90.0)
+                      : const Size(100.0, 100.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                );
+              },
+            )
+            .toList()
+            .animate(interval: 15.ms)
+            .fadeIn(duration: 125.ms, curve: Curves.decelerate)
+            .slideY(begin: 0.2, end: 0.0),
+      ),
     );
   }
 }

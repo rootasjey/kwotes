@@ -85,12 +85,7 @@ class SearchQuoteResultsPage extends StatelessWidget {
     }
 
     return SliverPadding(
-      padding: isMobileSize
-          ? const EdgeInsets.only(
-              left: 24.0,
-              right: 24.0,
-            )
-          : margin,
+      padding: margin,
       sliver: SliverList.separated(
         separatorBuilder: (BuildContext context, int index) {
           return Padding(

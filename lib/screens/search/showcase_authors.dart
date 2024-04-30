@@ -7,12 +7,17 @@ import "package:wave_divider/wave_divider.dart";
 class ShowcaseAuthors extends StatelessWidget {
   const ShowcaseAuthors({
     super.key,
+    this.animateItemList = false,
     this.isDark = false,
     this.isMobileSize = false,
     this.margin = EdgeInsets.zero,
     this.authors = const [],
     this.onTapAuthor,
   });
+
+  /// Animate item if true.
+  /// Used to skip animation while scrolling.
+  final bool animateItemList;
 
   /// Whether dark theme is active.
   final bool isDark;
@@ -49,21 +54,51 @@ class ShowcaseAuthors extends StatelessWidget {
                   ?.color
                   ?.withOpacity(0.2),
             ),
-          );
+          )
+              .animate(
+                delay:
+                    animateItemList ? Duration(milliseconds: 25 * index) : null,
+              )
+              .fadeIn(
+                duration: Duration(milliseconds: 25 * index),
+                curve: Curves.decelerate,
+              )
+              .slideY(
+                begin: 0.4,
+                end: 0.0,
+              );
         },
         itemBuilder: (BuildContext context, int index) {
           final Author author = authors[index];
+
+          ImageProvider? imageProvider =
+              const AssetImage("assets/images/profile-picture-carrot.png");
+          if (author.urls.image.isNotEmpty) {
+            imageProvider = NetworkImage(author.urls.image);
+          }
+
           return ShowcaseText(
             docId: author.id,
             isDark: isDark,
             index: index,
+            subtitleValue: author.job,
+            imageProvider: imageProvider,
             initialForegroundColor: foregroundColor?.withOpacity(0.8),
             isMobileSize: isMobileSize,
             onTap: onTapAuthor != null ? () => onTapAuthor?.call(author) : null,
             textValue: author.name,
-          ).animate().fadeIn(duration: 125.ms).scale(
-                begin: const Offset(1.1, 1.1),
-                end: const Offset(1.0, 1.0),
+          )
+              .animate(
+                delay:
+                    animateItemList ? Duration(milliseconds: 25 * index) : null,
+              )
+              .fadeIn(
+                duration: Duration(milliseconds: 25 * index),
+                curve: Curves.decelerate,
+              )
+              .slideY(
+                begin: 0.4,
+                end: 0.0,
               );
         },
         itemCount: authors.length,
