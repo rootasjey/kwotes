@@ -573,6 +573,17 @@
       }
     }
   },
+  "premium": {
+    "free": "Gratuit",
+    "in_app": "In-app",
+    "in_app_purchase": "Achat in-app",
+    "in_app_purchases": "Achats in-app",
+    "name": "Premium",
+    "subscription": "Abonnement",
+    "subscriptions": "Abonnements",
+    "super_powers": "Obtenez des super pouvoirs",
+    "trial": "Essaie gratuit"
+  },
   "previous": "Précédent",
   "published": {
     "description": "Votre contribution au monde",
@@ -1074,6 +1085,12 @@
   "save": "Enregistrer",
   "search": {
     "authors": "Recherche d'auteurs",
+    "chip": {
+      "authors": "Auteurs",
+      "categories": "Catégories",
+      "quotes": "Citations",
+      "references": "Références"
+    },
     "clear": "Effacer",
     "empty_quotes": "Aucune citation trouvée pour votre recherche.",
     "empty": {
@@ -1107,7 +1124,8 @@
       "many": "{} resultats trouvés",
       "other": "{} resultats trouvés"
     },
-    "some_topics": "Quelques thèmes"
+    "some_topics": "Quelques thèmes",
+    "type_a_keyword": "Insérez une mot-clé"
   },
   "see_metadata": "Voir les métadonnées",
   "see_related_quotes": "Voir les citations liées",

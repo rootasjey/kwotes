@@ -572,6 +572,17 @@
       }
     }
   },
+  "premium": {
+    "free": "Free",
+    "in_app": "In-app",
+    "in_app_purchase": "In-app purchase",
+    "in_app_purchases": "In-app purchases",
+    "name": "Premium",
+    "subscription": "Subscription",
+    "subscriptions": "Subscriptions",
+    "super_powers": "Get super powers",
+    "trial": "Free trial"
+  },
   "previous": "Previous",
   "published": {
     "description": "Your contribution to the world.",
@@ -1062,6 +1073,12 @@
   "save": "Save",
   "search": {
     "authors": "Search authors",
+    "chip": {
+      "authors": "Authors",
+      "categories": "Categories",
+      "quotes": "Quotes",
+      "references": "References"
+    },
     "clear": "Clear",
     "empty_quotes": "No quote found for your search.",
     "empty": {
@@ -1095,7 +1112,8 @@
       "many": "{} results found",
       "other": "{} results found"
     },
-    "some_topics": "Some topics"
+    "some_topics": "Some topics",
+    "type_a_keyword": "Type a keyword"
   },
   "see_metadata": "See metadata",
   "see_related_quotes": "See related quotes",
