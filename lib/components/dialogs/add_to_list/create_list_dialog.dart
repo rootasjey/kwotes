@@ -66,11 +66,14 @@ class CreateListDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
     final String nameValue = nameController?.text ?? "";
     final void Function()? onConditionalValidate =
         nameValue.isNotEmpty ? onValidate : null;
+
+    final Color borderColor = accentColor ?? Constants.colors.primary;
 
     if (asBottomSheet) {
       return Container(
@@ -123,6 +126,7 @@ class CreateListDialog extends StatelessWidget {
                 ),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: accentColor,
+                  disabledBackgroundColor: isDark ? Colors.grey.shade900 : null,
                   textStyle: Utils.calligraphy.body(
                     textStyle: const TextStyle(
                       fontWeight: FontWeight.w500,
@@ -131,7 +135,9 @@ class CreateListDialog extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4.0),
                     side: BorderSide(
-                      color: accentColor ?? Constants.colors.primary,
+                      color: onConditionalValidate != null
+                          ? borderColor
+                          : Colors.black12,
                       width: 2.0,
                     ),
                   ),
