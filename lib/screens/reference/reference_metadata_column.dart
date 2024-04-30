@@ -156,6 +156,7 @@ class ReferenceMetadaColumn extends StatelessWidget {
           if (isOpen)
             ColoredTextButton(
               icon: const Icon(TablerIcons.x, size: 16.0),
+              backgroundColor: isDark ? Colors.black26 : Colors.white38,
               onPressed: onToggleOpen,
               textValue: "close".tr(),
               textStyle: Utils.calligraphy.body(

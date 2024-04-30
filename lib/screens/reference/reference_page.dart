@@ -1,15 +1,18 @@
+import "dart:async";
 import "dart:math";
+import "dart:ui" as ui;
 
 import "package:beamer/beamer.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:just_the_tooltip/just_the_tooltip.dart";
 import "package:kwotes/components/application_bar.dart";
-import "package:kwotes/components/photo_view_route_wrapper.dart";
+import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
@@ -47,6 +50,10 @@ class ReferencePage extends StatefulWidget {
 }
 
 class _ReferencePageState extends State<ReferencePage> with UiLoggy {
+  /// True if we already handled the quick action
+  /// (e.g. pull/push to trigger).
+  bool _handleQuickAction = false;
+
   /// Show reference metadata if true.
   bool _metadataOpened = true;
 
@@ -55,6 +62,9 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
 
   /// Subscription to author data.
   DocSnapshotStreamSubscription? _referenceSubscription;
+
+  /// Trigger offset for pull to action.
+  final double _pullTriggerOffset = -110.0;
 
   /// List of quotes associated with the author.
   final List<Quote> _referenceQuotes = [];
@@ -68,6 +78,9 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
   /// Author page data.
   Reference _reference = Reference.empty();
 
+  /// Scroll controller.
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -79,6 +92,7 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
   void dispose() {
     _tooltipController.dispose();
     _referenceSubscription?.cancel();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -110,38 +124,64 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
               child: const Icon(TablerIcons.pencil),
             )
           : null,
-      body: CustomScrollView(
-        slivers: [
-          ApplicationBar(
-            pinned: false,
-            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            isMobileSize: isMobileSize,
-            title: const SizedBox.shrink(),
-            rightChildren: canManageReference
-                ? ReferenceAppBarChildren.getChildren(
-                    context,
-                    tooltipController: _tooltipController,
-                    onDeleteReference: onDeleteReference,
-                  )
-                : [],
+      body: ImprovedScrolling(
+        onScroll: onScroll,
+        scrollController: _scrollController,
+        child: ScrollConfiguration(
+          behavior: const CustomScrollBehavior(),
+          child: CustomScrollView(
+            controller: _scrollController,
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
+            slivers: [
+              ApplicationBar(
+                pinned: false,
+                toolbarHeight: 48.0,
+                isMobileSize: isMobileSize,
+                hideIcon: true,
+                padding: EdgeInsets.zero,
+                title: const SizedBox.shrink(),
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                rightChildren: ReferenceAppBarChildren.getChildren(
+                  context,
+                  isDark: isDark,
+                  reference: _reference,
+                  canManageReference: canManageReference,
+                  tooltipController: _tooltipController,
+                  onDeleteReference: onDeleteReference,
+                  onTapPoster: onTapPoster,
+                ),
+              ),
+              ReferencePageBody(
+                areMetadataOpen: _metadataOpened,
+                isDark: isDark,
+                isMobileSize: isMobileSize,
+                maxHeight: windowSize.height / 2,
+                onTapSeeQuotes: onTapRelatedQuotes,
+                pageState: _pageState,
+                onDoubleTapName: onDoubleTapReferenceName,
+                onDoubleTapSummary: onDoubleTapReferenceSummary,
+                onTapPoster: onTapPoster,
+                onToggleMetadata: onToggleReferenceMetadata,
+                randomColor: randomColor,
+                referenceNameTextStyle: textWrapSolution.style,
+                reference: _reference,
+              ),
+            ],
           ),
-          ReferencePageBody(
-            areMetadataOpen: _metadataOpened,
-            isDark: isDark,
-            isMobileSize: isMobileSize,
-            maxHeight: windowSize.height / 2,
-            onTapSeeQuotes: onTapRelatedQuotes,
-            pageState: _pageState,
-            onDoubleTapName: onDoubleTapReferenceName,
-            onDoubleTapSummary: onDoubleTapReferenceSummary,
-            onTapPoster: onTapPoster,
-            onToggleMetadata: onToggleReferenceMetadata,
-            randomColor: randomColor,
-            referenceNameTextStyle: textWrapSolution.style,
-            reference: _reference,
-          ),
-        ],
+        ),
       ),
+    );
+  }
+
+  /// Set the target variable to the new value.
+  /// Then set the value back to its original value after 1 second.
+  void boomerangQuickActionValue(bool newValue) {
+    _handleQuickAction = newValue;
+    Future.delayed(
+      const Duration(milliseconds: 1000),
+      () => _handleQuickAction = !newValue,
     );
   }
 
@@ -172,12 +212,13 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
 
   /// Get text height based on window size.
   double getTextHeight(Size windowSize) {
-    return max(windowSize.height / 3, 200.0);
+    final double maxHeight = windowSize.height / 6;
+    return min(windowSize.height / 3, maxHeight);
   }
 
   /// Get text height based on window size.
   double getTextWidth(Size windowSize) {
-    return max(windowSize.width - 54.0, 200.0);
+    return min(windowSize.width - 54.0, 200.0);
   }
 
   /// Get text solution (style) based on window size.
@@ -269,6 +310,19 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
     }
   }
 
+  /// Trigger an action on pull gesture.
+  void handlePullQuickAction() {
+    final double pixelsPosition = _scrollController.position.pixels;
+
+    if (pixelsPosition < _scrollController.position.minScrollExtent) {
+      if (pixelsPosition < _pullTriggerOffset && !_handleQuickAction) {
+        boomerangQuickActionValue(true);
+        context.beamBack();
+      }
+      return;
+    }
+  }
+
   /// Initialize properties.
   void initProps() async {
     _metadataOpened = await Utils.vault.getReferenceMetadataOpened();
@@ -347,7 +401,7 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
   }
 
   /// Callback fired to open image viewer.
-  void onTapPoster(Reference reference) {
+  void onTapPoster(Reference reference) async {
     if (reference.urls.image.isEmpty) {
       Utils.graphic.showSnackbar(
         context,
@@ -356,16 +410,32 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
       return;
     }
 
-    final ImageProvider imageProvider =
-        Image.network(reference.urls.image).image;
+    final Image imageNetwork = Image.network(reference.urls.image);
+    Completer<ui.Image> completer = Completer<ui.Image>();
+    imageNetwork.image
+        .resolve(const ImageConfiguration())
+        .addListener(ImageStreamListener((ImageInfo info, bool _) {
+      final ui.Image image = info.image;
+      info.image.height;
+      completer.complete(image);
+    }));
 
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (BuildContext context) => HeroPhotoViewRouteWrapper(
-          imageProvider: imageProvider,
-          heroTag: "${reference.id}-avatar",
-        ),
-      ),
+    final ui.Image image = await completer.future;
+    final double ratio = image.width / image.height;
+    final double scaledRatio = min(ratio / (image.width / 900), 1.0);
+
+    if (!mounted) return;
+    Beamer.of(context, root: true).beamToNamed(
+      HomeLocation.imageReferenceRoute
+          .replaceFirst(":referenceId", reference.id),
+      routeState: {
+        "image-url": reference.urls.image,
+        "hero-tag": reference.id,
+        "title": reference.name,
+        "id": reference.id,
+        "init-scale": scaledRatio,
+        "type": "reference",
+      },
     );
   }
 
@@ -421,5 +491,9 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
   void onToggleReferenceMetadata() {
     Utils.vault.setReferenceMetadataOpened(!_metadataOpened);
     setState(() => _metadataOpened = !_metadataOpened);
+  }
+
+  void onScroll(double offset) {
+    handlePullQuickAction();
   }
 }

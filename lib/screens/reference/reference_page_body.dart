@@ -95,7 +95,7 @@ class ReferencePageBody extends StatelessWidget {
                 right: rightPadding,
               ),
               child: Hero(
-                tag: reference.id,
+                tag: reference.name,
                 child: Material(
                   color: Colors.transparent,
                   child: Text(

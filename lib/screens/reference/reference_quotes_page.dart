@@ -1,3 +1,7 @@
+import "dart:async";
+import "dart:math";
+import "dart:ui" as ui;
+
 import "package:beamer/beamer.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
@@ -8,7 +12,6 @@ import "package:flutter_solidart/flutter_solidart.dart";
 import "package:kwotes/actions/quote_actions.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/components/loading_view.dart";
-import "package:kwotes/components/photo_view_route_wrapper.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/home_location.dart";
@@ -123,7 +126,7 @@ class _ReferenceQuotesPageState extends State<ReferenceQuotesPage>
                 reference: _reference,
                 onDoubleTapName: onDoubleTapReferenceName,
                 onTapName: onTapReferenceName,
-                onTapPoster: onTapReferencePoster,
+                onTapPoster: onTapPoster,
               ),
               HeaderFilterListView(
                 margin: EdgeInsets.only(
@@ -501,25 +504,42 @@ class _ReferenceQuotesPageState extends State<ReferenceQuotesPage>
     );
   }
 
-  /// Callback fired when reference poster is tapped.
-  void onTapReferencePoster(Reference reference) {
+  /// Callback fired to open image viewer.
+  void onTapPoster(Reference reference) async {
     if (reference.urls.image.isEmpty) {
       Utils.graphic.showSnackbar(
         context,
-        message: "author.error.no_image".tr(),
+        message: "reference.error.no_image".tr(),
       );
       return;
     }
 
-    final ImageProvider imageProvider =
-        Image.network(reference.urls.image).image;
+    final Image imageNetwork = Image.network(reference.urls.image);
+    Completer<ui.Image> completer = Completer<ui.Image>();
+    imageNetwork.image
+        .resolve(const ImageConfiguration())
+        .addListener(ImageStreamListener((ImageInfo info, bool _) {
+      final ui.Image image = info.image;
+      info.image.height;
+      completer.complete(image);
+    }));
 
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (BuildContext context) => HeroPhotoViewRouteWrapper(
-          imageProvider: imageProvider,
-        ),
-      ),
+    final ui.Image image = await completer.future;
+    final double ratio = image.width / image.height;
+    final double scaledRatio = min(ratio / (image.width / 900), 1.0);
+
+    if (!mounted) return;
+    Beamer.of(context, root: true).beamToNamed(
+      HomeLocation.imageReferenceRoute
+          .replaceFirst(":referenceId", reference.id),
+      routeState: {
+        "image-url": reference.urls.image,
+        "hero-tag": reference.id,
+        "title": reference.name,
+        "id": reference.id,
+        "init-scale": scaledRatio,
+        "type": "reference",
+      },
     );
   }
 
