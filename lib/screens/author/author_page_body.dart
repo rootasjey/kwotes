@@ -89,14 +89,14 @@ class AuthorPageBody extends StatelessWidget {
           GestureDetector(
             onDoubleTap: onDoubleTapName,
             onLongPress: onTapAvatar,
-            child: Padding(
+            child: Container(
               padding: EdgeInsets.only(
                 left: leftPadding,
                 right: rightPadding,
                 bottom: 24.0,
               ),
               child: Hero(
-                tag: author.id,
+                tag: author.name,
                 child: Material(
                   color: Colors.transparent,
                   child: Text(

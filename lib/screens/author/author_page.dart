@@ -1,4 +1,5 @@
 import "dart:async";
+import "dart:ui" as ui;
 import "dart:math";
 
 import "package:beamer/beamer.dart";
@@ -6,11 +7,12 @@ import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:just_the_tooltip/just_the_tooltip.dart";
 import "package:kwotes/components/application_bar.dart";
-import "package:kwotes/components/photo_view_route_wrapper.dart";
+import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
@@ -48,6 +50,10 @@ class AuthorPage extends StatefulWidget {
 }
 
 class _AuthorPageState extends State<AuthorPage> with UiLoggy {
+  /// True if we already handled the quick action
+  /// (e.g. pull/push to trigger).
+  bool _handleQuickAction = false;
+
   /// Author page data.
   Author _author = Author.empty();
 
@@ -60,6 +66,9 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
   /// Subscription to author data.
   DocSnapshotStreamSubscription? _authorSubscription;
 
+  /// Trigger offset for pull to action.
+  final double _pullTriggerOffset = -110.0;
+
   /// Page's state (e.g. loading, idle, ...).
   EnumPageState _pageState = EnumPageState.idle;
 
@@ -69,6 +78,8 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
   /// List of quotes associated with the author.
   final List<Quote> _authorQuotes = [];
 
+  /// Scroll controller.
+  final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
@@ -80,6 +91,7 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
   void dispose() {
     _tooltipController.dispose();
     _authorSubscription?.cancel();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -111,37 +123,64 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
               child: const Icon(TablerIcons.pencil),
             )
           : null,
-      body: CustomScrollView(
-        slivers: [
-          ApplicationBar(
-            pinned: false,
-            isMobileSize: isMobileSize,
-            title: const SizedBox.shrink(),
-            rightChildren: canManageAuthor
-                ? AuthorAppBarChildren.getChildren(
-                    context,
-                    tooltipController: _tooltipController,
-                    onDeleteAuthor: onDeleteAuthor,
-                  )
-                : [],
+      body: ImprovedScrolling(
+        scrollController: _scrollController,
+        onScroll: onScroll,
+        child: ScrollConfiguration(
+          behavior: const CustomScrollBehavior(),
+          child: CustomScrollView(
+            controller: _scrollController,
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
+            slivers: [
+              ApplicationBar(
+                pinned: false,
+                toolbarHeight: 48.0,
+                isMobileSize: isMobileSize,
+                hideIcon: true,
+                padding: EdgeInsets.zero,
+                title: const SizedBox.shrink(),
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                rightChildren: AuthorAppBarChildren.getChildren(
+                  context,
+                  isDark: isDark,
+                  canManageAuthor: canManageAuthor,
+                  tooltipController: _tooltipController,
+                  onDeleteAuthor: onDeleteAuthor,
+                  author: _author,
+                  onTapAvatar: onTapAvatar,
+                ),
+              ),
+              AuthorPageBody(
+                areMetadataOpen: _metadataOpened,
+                authorNameTextStyle: textWrapSolution.style,
+                author: _author,
+                isDark: isDark,
+                isMobileSize: isMobileSize,
+                pageState: _pageState,
+                maxHeight: windowSize.height / 2,
+                onDoubleTapName: onDoubleTapAuthorName,
+                onDoubleTapSummary: onDoubleTapAuthorSummary,
+                onTapAvatar: onTapAvatar,
+                onTapSeeQuotes: onTapRelatedQuotes,
+                onToggleMetadata: onToggleAuthorMetadata,
+                randomColor: randomColor,
+              ),
+            ],
           ),
-          AuthorPageBody(
-            areMetadataOpen: _metadataOpened,
-            authorNameTextStyle: textWrapSolution.style,
-            author: _author,
-            isDark: isDark,
-            isMobileSize: isMobileSize,
-            pageState: _pageState,
-            maxHeight: windowSize.height / 2,
-            onDoubleTapName: onDoubleTapAuthorName,
-            onDoubleTapSummary: onDoubleTapAuthorSummary,
-            onTapAvatar: onTapAuthorName,
-            onTapSeeQuotes: onTapRelatedQuotes,
-            onToggleMetadata: onToggleAuthorMetadata,
-            randomColor: randomColor,
-          ),
-        ],
+        ),
       ),
+    );
+  }
+
+  /// Set the target variable to the new value.
+  /// Then set the value back to its original value after 1 second.
+  void boomerangQuickActionValue(bool newValue) {
+    _handleQuickAction = newValue;
+    Future.delayed(
+      const Duration(milliseconds: 1000),
+      () => _handleQuickAction = !newValue,
     );
   }
 
@@ -230,12 +269,13 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
 
   /// Get text height based on window size.
   double getTextHeight(Size windowSize) {
-    return max(windowSize.height / 3, 200.0);
+    final double maxHeight = windowSize.height / 6;
+    return min(windowSize.height / 3, maxHeight);
   }
 
   /// Get text height based on window size.
   double getTextWidth(Size windowSize) {
-    return max(windowSize.width - 54.0, 200.0);
+    return min(windowSize.width - 54.0, 200.0);
   }
 
   /// Get text solution (style) based on window size.
@@ -251,7 +291,10 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
     } catch (e) {
       loggy.error(e);
       return Solution(
-        Text(_author.name),
+        Text(
+          _author.name,
+          maxLines: 1,
+        ),
         Utils.calligraphy.title(
           textStyle: const TextStyle(
             fontSize: 54.0,
@@ -261,6 +304,19 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
         Size(width, height),
         Size(width, height),
       );
+    }
+  }
+
+  /// Trigger an action on pull gesture.
+  void handlePullQuickAction() {
+    final double pixelsPosition = _scrollController.position.pixels;
+
+    if (pixelsPosition < _scrollController.position.minScrollExtent) {
+      if (pixelsPosition < _pullTriggerOffset && !_handleQuickAction) {
+        boomerangQuickActionValue(true);
+        context.beamBack();
+      }
+      return;
     }
   }
 
@@ -343,7 +399,7 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
 
   /// Callback fired when the author name is tapped.
   /// Opens an image viewer.
-  void onTapAuthorName() {
+  void onTapAvatar() async {
     if (_author.urls.image.isEmpty) {
       Utils.graphic.showSnackbar(
         context,
@@ -353,15 +409,30 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
     }
 
     final Image imageNetwork = Image.network(_author.urls.image);
-    final ImageProvider imageProvider = imageNetwork.image;
+    Completer<ui.Image> completer = Completer<ui.Image>();
+    imageNetwork.image
+        .resolve(const ImageConfiguration())
+        .addListener(ImageStreamListener((ImageInfo info, bool _) {
+      final ui.Image image = info.image;
+      info.image.height;
+      completer.complete(image);
+    }));
 
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (BuildContext context) => HeroPhotoViewRouteWrapper(
-          imageProvider: imageProvider,
-          heroTag: "${_author.id}-avatar",
-        ),
-      ),
+    final ui.Image image = await completer.future;
+    final double ratio = image.width / image.height;
+    final double scaledRatio = min(ratio / (image.width / 900), 1.7);
+
+    if (!mounted) return;
+    Beamer.of(context, root: true).beamToNamed(
+      HomeLocation.imageAuthorRoute.replaceFirst(":authorId", _author.id),
+      routeState: {
+        "image-url": _author.urls.image,
+        "hero-tag": _author.id,
+        "title": _author.name,
+        "id": _author.id,
+        "init-scale": scaledRatio,
+        "type": "author",
+      },
     );
   }
 
@@ -414,5 +485,9 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
   void onToggleAuthorMetadata() {
     Utils.vault.setAuthorMetadataOpened(!_metadataOpened);
     setState(() => _metadataOpened = !_metadataOpened);
+  }
+
+  void onScroll(double offset) {
+    handlePullQuickAction();
   }
 }

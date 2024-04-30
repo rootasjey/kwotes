@@ -1,3 +1,7 @@
+import "dart:async";
+import "dart:math";
+import "dart:ui" as ui;
+
 import "package:beamer/beamer.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
@@ -8,7 +12,6 @@ import "package:flutter_solidart/flutter_solidart.dart";
 import "package:kwotes/actions/quote_actions.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/components/loading_view.dart";
-import "package:kwotes/components/photo_view_route_wrapper.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/home_location.dart";
@@ -119,7 +122,7 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
                 isMobileSize: isMobileSize,
                 onDoubleTapName: onDoubleTapAuthorName,
                 onTapName: onTapAuthorName,
-                onTapAvatar: onTapAuthorAvatar,
+                onTapAvatar: onTapAvatar,
               ),
               HeaderFilterListView(
                 margin: EdgeInsets.only(
@@ -445,9 +448,9 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
     );
   }
 
-  /// Callback fired when the author avatar is tapped.
-  /// Open author's avatar in the image viewer.
-  void onTapAuthorAvatar() {
+  /// Callback fired when the author name is tapped.
+  /// Opens an image viewer.
+  void onTapAvatar() async {
     if (_author.urls.image.isEmpty) {
       Utils.graphic.showSnackbar(
         context,
@@ -456,15 +459,31 @@ class _AuthorQuotesPageState extends State<AuthorQuotesPage> with UiLoggy {
       return;
     }
 
-    final ImageProvider imageProvider = Image.network(_author.urls.image).image;
+    final Image imageNetwork = Image.network(_author.urls.image);
+    Completer<ui.Image> completer = Completer<ui.Image>();
+    imageNetwork.image
+        .resolve(const ImageConfiguration())
+        .addListener(ImageStreamListener((ImageInfo info, bool _) {
+      final ui.Image image = info.image;
+      info.image.height;
+      completer.complete(image);
+    }));
 
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (BuildContext context) => HeroPhotoViewRouteWrapper(
-          imageProvider: imageProvider,
-          heroTag: "${_author.id}-avatar",
-        ),
-      ),
+    final ui.Image image = await completer.future;
+    final double ratio = image.width / image.height;
+    final double scaledRatio = min(ratio / (image.width / 900), 1.7);
+
+    if (!mounted) return;
+    Beamer.of(context, root: true).beamToNamed(
+      HomeLocation.imageAuthorRoute.replaceFirst(":authorId", _author.id),
+      routeState: {
+        "image-url": _author.urls.image,
+        "hero-tag": _author.id,
+        "title": _author.name,
+        "id": _author.id,
+        "init-scale": scaledRatio,
+        "type": "author",
+      },
     );
   }
 
