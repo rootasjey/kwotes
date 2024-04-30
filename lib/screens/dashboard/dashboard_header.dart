@@ -12,7 +12,7 @@ class DashboardHeader extends StatelessWidget {
     this.isMobileSize = false,
     this.isDark = false,
     this.foregroundColor,
-    this.randomColor,
+    this.accentColor,
     this.onTapUsername,
     this.onTapNewQuoteButton,
     this.onTapUserAvatar,
@@ -29,7 +29,7 @@ class DashboardHeader extends StatelessWidget {
   final Color? foregroundColor;
 
   /// Random color.
-  final Color? randomColor;
+  final Color? accentColor;
 
   /// Callback fired when username is tapped.
   /// Show signout bottom sheet.
@@ -46,11 +46,11 @@ class DashboardHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
       padding: isMobileSize
-          ? const EdgeInsets.only(top: 47.0, left: 16.0, right: 24.0)
+          ? const EdgeInsets.only(top: 0.0, left: 16.0, right: 24.0)
           : const EdgeInsets.only(
-              top: 24.0,
+              top: 0.0,
               left: 48.0,
               right: 76.0,
             ),
@@ -61,6 +61,9 @@ class DashboardHeader extends StatelessWidget {
             heroTag: "user-avatar",
             onTap: onTapUserAvatar,
             radius: 16.0,
+            selected: true,
+            margin: EdgeInsets.zero,
+            borderColor: Colors.amber.shade700,
             imageProvider: const AssetImage(
               "assets/images/profile-picture-avocado.jpg",
             ),
@@ -74,8 +77,10 @@ class DashboardHeader extends StatelessWidget {
               style: TextButton.styleFrom(
                 backgroundColor: isDark ? Colors.black : Colors.white,
                 foregroundColor: foregroundColor,
+                minimumSize: const Size(0.0, 0.0),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 padding: const EdgeInsets.symmetric(
-                  vertical: 6.0,
+                  vertical: 8.0,
                   horizontal: 24.0,
                 ),
                 shape: const StadiumBorder(),
@@ -85,6 +90,7 @@ class DashboardHeader extends StatelessWidget {
                 "quote.name".tr(),
                 style: Utils.calligraphy.body(
                   textStyle: const TextStyle(
+                    // fontSize: 12.0,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

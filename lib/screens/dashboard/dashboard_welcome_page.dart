@@ -61,7 +61,7 @@ class _DashboardWelcomePageState extends State<DashboardWelcomePage>
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
 
-    final Color randomColor = Constants.colors.getRandomFromPalette();
+    final Color accentColor = Constants.colors.getRandomFromPalette();
 
     final UserFirestore userFirestore =
         context.observe<UserFirestore>(EnumSignalId.userFirestore);
@@ -86,7 +86,7 @@ class _DashboardWelcomePageState extends State<DashboardWelcomePage>
                       foregroundColor: foregroundColor,
                       isDark: isDark,
                       isMobileSize: isMobileSize,
-                      randomColor: randomColor,
+                      accentColor: accentColor,
                       onTapUsername: showSignoutBottomSheet,
                       onTapNewQuoteButton: onGoToAddQuotePage,
                       onTapUserAvatar: openSettingsPage,

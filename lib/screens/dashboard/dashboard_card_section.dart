@@ -34,6 +34,20 @@ class DashboardCardSection extends StatelessWidget {
         children: [
           DashboardCard(
             compact: isMobileSize,
+            hoverColor: Constants.colors.premium,
+            iconData: TablerIcons.crown,
+            isDark: isDark,
+            textSubtitle: "premium.super_powers".tr(),
+            textTitle: "premium.name".tr(),
+            heroKey: "premium",
+            onTap: () {
+              context.beamToNamed(
+                DashboardContentLocation.myQuotesRoute,
+              );
+            },
+          ),
+          DashboardCard(
+            compact: isMobileSize,
             hoverColor: Constants.colors.inValidation,
             iconData: TablerIcons.note,
             isDark: isDark,
