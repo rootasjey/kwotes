@@ -125,8 +125,8 @@ class OutlinedTextField extends StatelessWidget {
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: borderRadius,
-                borderSide: BorderSide(
-                  color: accentColor,
+                borderSide: const BorderSide(
+                  color: Colors.grey,
                   width: 2.0,
                 ),
               ),
