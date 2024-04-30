@@ -45,23 +45,28 @@ class AddToListItem extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Text(
-              quoteList.name,
-              style: Utils.calligraphy.body(
-                textStyle: TextStyle(
-                  color: selected
-                      ? null
-                      : Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.color
-                          ?.withOpacity(0.8),
-                  fontSize: 34.0,
-                  fontWeight: FontWeight.w200,
+            Expanded(
+              child: Text(
+                quoteList.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Utils.calligraphy.body(
+                  textStyle: TextStyle(
+                    color: selected
+                        ? null
+                        : Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.color
+                            ?.withOpacity(0.8),
+                    fontSize: 34.0,
+                    fontWeight: FontWeight.w200,
+                  ),
                 ),
               ),
             ),
-            const Spacer(),
+            if (quoteList.description.isNotEmpty) Text(quoteList.description),
+            if (selected) const Spacer(),
             if (selected) const Icon(TablerIcons.check),
           ],
         ),
