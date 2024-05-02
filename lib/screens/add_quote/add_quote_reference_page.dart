@@ -3,6 +3,8 @@ import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:jiffy/jiffy.dart";
 import "package:kwotes/components/buttons/circle_button.dart";
+import "package:kwotes/components/buttons/colored_text_button.dart";
+import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/screens/add_quote/add_reference_metadata_column.dart";
 import "package:kwotes/screens/add_quote/add_reference_metadata_wrap.dart";
@@ -20,9 +22,10 @@ class AddQuoteReferencePage extends StatelessWidget {
     required this.reference,
     required this.nameFocusNode,
     required this.summaryFocusNode,
-    this.canManageQuote = false,
+    this.canManageReferences = false,
     this.isDark = false,
     this.isMobileSize = false,
+    this.standalone = false,
     this.metadataOpened = true,
     this.metadataBorderSide = BorderSide.none,
     this.randomReferenceInt = 0,
@@ -37,6 +40,7 @@ class AddQuoteReferencePage extends StatelessWidget {
     this.onUrlChanged,
     this.nameController,
     this.onDeleteQuote,
+    this.onDeleteReference,
     this.onTapCancelButtonName,
     this.onToggleMetadata,
     this.onToggleNagativeReleaseDate,
@@ -47,10 +51,11 @@ class AddQuoteReferencePage extends StatelessWidget {
     this.floatingActionButton,
     this.referenceNameErrorText,
     this.onTapCancelButtonSummary,
+    this.appBarRightChild,
   });
 
   /// Show metadata card if true.
-  final bool canManageQuote;
+  final bool canManageReferences;
 
   /// Adapt user interface to dark mode if true.
   final bool isDark;
@@ -61,6 +66,12 @@ class AddQuoteReferencePage extends StatelessWidget {
   /// Expand metadata widget if true.
   final bool metadataOpened;
 
+  /// Tell if we're in standalone mode.
+  /// if true, this page is shown individually (and not in add quote page).
+  /// Update some UI elements if true.
+  final bool standalone;
+
+  /// Border side for metadata widget.
   final BorderSide metadataBorderSide;
 
   /// Random int for displaying hint texts.
@@ -74,6 +85,9 @@ class AddQuoteReferencePage extends StatelessWidget {
 
   /// Callback fired to delete the quote we're editing.
   final void Function()? onDeleteQuote;
+
+  /// Callback fired to delete the reference.
+  final void Function()? onDeleteReference;
 
   /// Callback fired when reference's name has changed.
   final void Function(String name)? onNameChanged;
@@ -138,6 +152,10 @@ class AddQuoteReferencePage extends StatelessWidget {
   /// Floating action button.
   final Widget? floatingActionButton;
 
+  /// AppBar right child.
+  /// If null, no right child is shown.
+  final Widget? appBarRightChild;
+
   @override
   Widget build(BuildContext context) {
     final Color? foregroundColor =
@@ -163,33 +181,49 @@ class AddQuoteReferencePage extends StatelessWidget {
       ),
     );
 
+    final EdgeInsets containerPadding = isMobileSize
+        ? const EdgeInsets.only(
+            top: 24.0,
+            left: 24.0,
+            right: 24.0,
+            bottom: 190.0,
+          )
+        : const EdgeInsets.only(
+            left: 48.0,
+            right: 90.0,
+            top: 24.0,
+            bottom: 240.0,
+          );
+
     return Scaffold(
       floatingActionButton: floatingActionButton,
       body: CustomScrollView(
         slivers: [
           SliverPadding(
-            padding: isMobileSize
-                ? const EdgeInsets.only(
-                    top: 24.0,
-                    left: 24.0,
-                    right: 24.0,
-                    bottom: 190.0,
-                  )
-                : const EdgeInsets.only(
-                    left: 48.0,
-                    right: 90.0,
-                    top: 24.0,
-                    bottom: 240.0,
-                  ),
+            padding: containerPadding,
             sliver: SliverList.list(
               children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: StepChip(
-                    currentStep: 2,
-                    isBonusStep: true,
-                    isDark: isDark,
-                  ),
+                Row(
+                  mainAxisAlignment: standalone
+                      ? MainAxisAlignment.spaceBetween
+                      : MainAxisAlignment.end,
+                  children: [
+                    if (standalone)
+                      StepChip.withLabel(
+                        labelValue: "reference.edit.name".tr(),
+                        isDark: isDark,
+                      ),
+                    if (!standalone)
+                      StepChip(
+                        currentStep: 2,
+                        isBonusStep: true,
+                        isDark: isDark,
+                      ),
+                    const SizedBox(width: 12.0),
+                    ...appBarRightChildren,
+                    if (appBarRightChild != null)
+                      appBarRightChild ?? const SizedBox.shrink(),
+                  ],
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
@@ -278,10 +312,10 @@ class AddQuoteReferencePage extends StatelessWidget {
                   reference: reference,
                   releaseText: releaseText,
                   randomReferenceInt: randomReferenceInt,
-                  show: isMobileSize,
+                  show: isMobileSize && canManageReferences,
                 ),
                 AddReferenceMetadataWrap(
-                  show: !isMobileSize,
+                  show: !isMobileSize && canManageReferences,
                   reference: reference,
                   iconColor: iconColor,
                   onPictureUrlChanged: onPictureUrlChanged,
@@ -383,6 +417,15 @@ class AddQuoteReferencePage extends StatelessWidget {
                     top: 24.0,
                   ),
                 ),
+                if (onDeleteReference != null)
+                  ColoredTextButton(
+                    textValue: "reference.delete.name".tr(),
+                    backgroundColor: Constants.colors.delete.withOpacity(0.1),
+                    accentColor: Constants.colors.delete,
+                    onPressed: onDeleteReference,
+                    textFlex: 0,
+                    margin: const EdgeInsets.only(top: 24.0),
+                  ),
               ],
             ),
           ),

@@ -19,10 +19,11 @@ class AddQuoteAuthorPage extends StatelessWidget {
     required this.nameFocusNode,
     required this.jobFocusNode,
     required this.summaryFocusNode,
-    this.canManageQuote = false,
+    this.canManageAuthors = false,
     this.isDark = false,
     this.isMobileSize = false,
     this.metadataOpened = true,
+    this.standalone = false,
     this.randomAuthorInt = 0,
     this.onDeleteQuote,
     this.onJobChanged,
@@ -49,13 +50,14 @@ class AddQuoteAuthorPage extends StatelessWidget {
     this.jobController,
     this.nameController,
     this.summaryController,
+    this.appBarRightChild,
   });
 
   /// Main page data.
   final Author author;
 
   /// Show metadata card if true.
-  final bool canManageQuote;
+  final bool canManageAuthors;
 
   /// Adapt user interface to dark mode if true.
   final bool isDark;
@@ -65,6 +67,11 @@ class AddQuoteAuthorPage extends StatelessWidget {
 
   /// Expand metadata widget if true.
   final bool metadataOpened;
+
+  /// Tell if we're in standalone mode.
+  /// if true, this page is shown individually (and not in add quote page).
+  /// Update some UI elements if true.
+  final bool standalone;
 
   /// Random int for displaying hint texts.
   final int randomAuthorInt;
@@ -154,6 +161,10 @@ class AddQuoteAuthorPage extends StatelessWidget {
   /// Author's summary input controller.
   final TextEditingController? summaryController;
 
+  /// AppBar right child.
+  /// If null, no right child is shown.
+  final Widget? appBarRightChild;
+
   @override
   Widget build(BuildContext context) {
     final Color? foregroundColor =
@@ -177,33 +188,49 @@ class AddQuoteAuthorPage extends StatelessWidget {
       ),
     );
 
+    final EdgeInsets containerPadding = isMobileSize
+        ? const EdgeInsets.only(
+            top: 24.0,
+            left: 24.0,
+            right: 24.0,
+            bottom: 190.0,
+          )
+        : const EdgeInsets.only(
+            left: 48.0,
+            right: 90.0,
+            top: 24.0,
+            bottom: 240.0,
+          );
+
     return Scaffold(
       floatingActionButton: floatingActionButton,
       body: CustomScrollView(
         slivers: [
           SliverPadding(
-            padding: isMobileSize
-                ? const EdgeInsets.only(
-                    top: 24.0,
-                    left: 24.0,
-                    right: 24.0,
-                    bottom: 190.0,
-                  )
-                : const EdgeInsets.only(
-                    left: 48.0,
-                    right: 90.0,
-                    top: 24.0,
-                    bottom: 240.0,
-                  ),
+            padding: containerPadding,
             sliver: SliverList.list(
               children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: StepChip(
-                    currentStep: 1,
-                    isBonusStep: true,
-                    isDark: isDark,
-                  ),
+                Row(
+                  mainAxisAlignment: standalone
+                      ? MainAxisAlignment.spaceBetween
+                      : MainAxisAlignment.end,
+                  children: [
+                    if (standalone)
+                      StepChip.withLabel(
+                        labelValue: "author.edit.name".tr(),
+                        isDark: isDark,
+                      ),
+                    if (!standalone)
+                      StepChip(
+                        currentStep: 1,
+                        isBonusStep: true,
+                        isDark: isDark,
+                      ),
+                    const SizedBox(width: 12.0),
+                    ...appBarRightChildren,
+                    if (appBarRightChild != null)
+                      appBarRightChild ?? const SizedBox.shrink(),
+                  ],
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
@@ -329,7 +356,7 @@ class AddQuoteAuthorPage extends StatelessWidget {
                   onToggleNagativeDeathDate: onToggleNagativeDeathDate,
                   onToggleIsFictional: onToggleIsFictional,
                   onToggleOpen: onToggleMetadata,
-                  show: isMobileSize && canManageQuote,
+                  show: isMobileSize && canManageAuthors,
                 ),
                 AddAuthorMetadaWrap(
                   author: author,
@@ -339,7 +366,7 @@ class AddQuoteAuthorPage extends StatelessWidget {
                   onToggleNagativeBirthDate: onToggleNagativeBirthDate,
                   onToggleNagativeDeathDate: onToggleNagativeDeathDate,
                   onToggleIsFictional: onToggleIsFictional,
-                  show: !isMobileSize && canManageQuote,
+                  show: !isMobileSize && canManageAuthors,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 24.0),

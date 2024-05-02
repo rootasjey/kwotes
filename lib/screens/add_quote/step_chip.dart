@@ -47,7 +47,28 @@ class StepChip extends StatelessWidget {
                 },
               ),
       ),
-      // label: const Text("Step 1/2"),
+    );
+  }
+
+  static withLabel({
+    required String labelValue,
+    bool isDark = false,
+    Color? foregroundColor,
+  }) {
+    return Chip(
+      shape: const StadiumBorder(
+        side: BorderSide(color: Colors.transparent),
+      ),
+      backgroundColor: isDark ? Colors.black : Colors.white,
+      padding: const EdgeInsets.all(6.0),
+      labelStyle: Utils.calligraphy.body(
+        textStyle: TextStyle(
+          fontSize: 12.0,
+          fontWeight: FontWeight.w500,
+          color: foregroundColor?.withOpacity(0.6),
+        ),
+      ),
+      label: Text(labelValue),
     );
   }
 }
