@@ -205,7 +205,7 @@ class AuthorMetadataColumn extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4.0),
                 ),
                 surfaceTintColor: Colors.grey.shade50,
-                color: isDark ? null : Colors.grey.shade100,
+                color: isDark ? Colors.black : Colors.grey.shade100,
                 child: InkWell(
                   onTap: onToggleOpen,
                   borderRadius: BorderRadius.circular(4.0),

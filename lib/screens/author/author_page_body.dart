@@ -147,7 +147,7 @@ class AuthorPageBody extends StatelessWidget {
                 child: DefaultTextStyle(
                   style: Utils.calligraphy.body(
                     textStyle: TextStyle(
-                      fontSize: isMobileSize ? 16.0 : 28.0,
+                      fontSize: isMobileSize ? 16.0 : 18.0,
                       color: foregroundColor.withOpacity(0.6),
                       fontWeight: isMobileSize ? null : FontWeight.w300,
                     ),

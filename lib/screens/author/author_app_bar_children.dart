@@ -19,6 +19,7 @@ class AuthorAppBarChildren {
     Author? author,
     bool canManageAuthor = false,
     final void Function()? onTapAvatar,
+    void Function()? onGoToEditPage,
   }) {
     return [
       if (author != null && author.urls.image.isNotEmpty)
@@ -30,7 +31,7 @@ class AuthorAppBarChildren {
           heroTag: author.id,
           imageProvider: NetworkImage(author.urls.image),
         ),
-      if (canManageAuthor)
+      if (canManageAuthor) ...[
         JustTheTooltip(
           isModal: true,
           backgroundColor: isDark ? Colors.black : Colors.white,
@@ -60,11 +61,27 @@ class AuthorAppBarChildren {
           child: CircleButton(
             radius: 14.0,
             onTap: () => tooltipController?.showTooltip(),
-            backgroundColor: isDark ? Colors.white12 : Colors.black12,
+            backgroundColor: Constants.colors.delete.withOpacity(0.1),
             tooltip: "author.delete.name".tr(),
-            icon: const Icon(TablerIcons.trash, size: 18.0),
+            icon: Icon(
+              TablerIcons.trash,
+              size: 18.0,
+              color: Constants.colors.delete,
+            ),
           ),
         ),
+        CircleButton(
+          radius: 14.0,
+          onTap: onGoToEditPage,
+          tooltip: "author.edit.name".tr(),
+          backgroundColor: Constants.colors.edit.withOpacity(0.1),
+          icon: Icon(
+            TablerIcons.pencil,
+            size: 18.0,
+            color: Constants.colors.edit,
+          ),
+        ),
+      ]
     ];
   }
 }

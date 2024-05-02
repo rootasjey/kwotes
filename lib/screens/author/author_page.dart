@@ -9,7 +9,6 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
-import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:just_the_tooltip/just_the_tooltip.dart";
 import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
@@ -108,21 +107,15 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
         userFirestoreSignal.value.rights.canManageAuthors;
 
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final Color randomColor = Constants.colors.getRandomFromPalette(
+    final Color accentColor = Constants.colors.getRandomFromPalette(
       onlyDarkerColors: !isDark,
     );
 
+    final EdgeInsets appbarPadding = Utils.graphic.isMobile()
+        ? EdgeInsets.zero
+        : const EdgeInsets.only(top: 18.0);
+
     return Scaffold(
-      floatingActionButton: canManageAuthor
-          ? FloatingActionButton(
-              onPressed: onEditAuthor,
-              backgroundColor: randomColor,
-              foregroundColor: randomColor.computeLuminance() < 0.5
-                  ? Colors.white
-                  : Colors.black,
-              child: const Icon(TablerIcons.pencil),
-            )
-          : null,
       body: ImprovedScrolling(
         scrollController: _scrollController,
         onScroll: onScroll,
@@ -139,7 +132,7 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
                 toolbarHeight: 48.0,
                 isMobileSize: isMobileSize,
                 hideIcon: true,
-                padding: EdgeInsets.zero,
+                padding: appbarPadding,
                 title: const SizedBox.shrink(),
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 rightChildren: AuthorAppBarChildren.getChildren(
@@ -150,6 +143,7 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
                   onDeleteAuthor: onDeleteAuthor,
                   author: _author,
                   onTapAvatar: onTapAvatar,
+                  onGoToEditPage: onEditAuthor,
                 ),
               ),
               AuthorPageBody(
@@ -165,7 +159,7 @@ class _AuthorPageState extends State<AuthorPage> with UiLoggy {
                 onTapAvatar: onTapAvatar,
                 onTapSeeQuotes: onTapRelatedQuotes,
                 onToggleMetadata: onToggleAuthorMetadata,
-                randomColor: randomColor,
+                randomColor: accentColor,
               ),
             ],
           ),

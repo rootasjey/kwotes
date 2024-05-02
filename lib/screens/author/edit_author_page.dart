@@ -5,7 +5,6 @@ import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
-import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:just_the_tooltip/just_the_tooltip.dart";
 import "package:kwotes/components/empty_view.dart";
 import "package:kwotes/components/loading_view.dart";
@@ -133,34 +132,27 @@ class _EditAuthorPageState extends State<EditAuthorPage> with UiLoggy {
       );
     }
 
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
     final bool isAuthorValid = _author.name.isNotEmpty;
 
-    final Color? fabForegroundColor = getFabForegroundColor(isAuthorValid);
-    final Color? fabBackgroundColor = getFabBackgroundColor(isAuthorValid);
+    final UserFirestore userFirestore =
+        context.observe<UserFirestore>(EnumSignalId.userFirestore);
 
     return AddQuoteAuthorPage(
-      appBarRightChildren: AddQuoteAppBarChildren.getChildren(
-        context,
-        onDeleteAuthor: onDeleteAuthor,
-        tooltipController: _tooltipController,
-        onResetAuthor: onResetAuthor,
+      appBarRightChild: Row(
+        children: AddQuoteAppBarChildren.getChildren(
+          context,
+          isDark: isDark,
+          onSave: onDone,
+          onCancel: onGoBack,
+          tooltipController: _tooltipController,
+        ),
       ),
+      standalone: true,
+      isDark: isDark,
+      canManageAuthors: userFirestore.rights.canManageAuthors,
       summaryFocusNode: _authorSummaryFocusNode,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: onDone,
-        backgroundColor: fabBackgroundColor,
-        foregroundColor: fabForegroundColor,
-        tooltip: isAuthorValid ? null : "author.save.name_required".tr(),
-        elevation: 0.0,
-        disabledElevation: 0.0,
-        hoverElevation: 4.0,
-        focusElevation: 0.0,
-        highlightElevation: 0.0,
-        splashColor: Colors.white,
-        label: Text("done".tr()),
-        icon: const Icon(TablerIcons.check),
-      ),
       author: _author,
       authorNameErrorText:
           isAuthorValid ? null : "author.save.name_required".tr(),
@@ -267,6 +259,7 @@ class _EditAuthorPageState extends State<EditAuthorPage> with UiLoggy {
     _metadataOpened = await Utils.vault.getAddAuthorMetadataOpened();
   }
 
+  /// Listen to author document changes.
   void listenToAuthor(DocumentMap query) {
     _authorSubscription = query.snapshots().skip(1).listen(
       (DocumentSnapshotMap snapshot) {
@@ -290,6 +283,7 @@ class _EditAuthorPageState extends State<EditAuthorPage> with UiLoggy {
     );
   }
 
+  /// Callback fired to delete the author.
   void onDeleteAuthor() async {
     _authorSubscription?.cancel();
 
@@ -365,6 +359,15 @@ class _EditAuthorPageState extends State<EditAuthorPage> with UiLoggy {
     }
 
     beamer.beamToNamed(HomeLocation.route);
+  }
+
+  /// Callback fired when user wants to go back.
+  void onGoBack() {
+    final BeamerDelegate beamer = Beamer.of(context);
+    if (beamer.canBeamBack) {
+      beamer.beamBack();
+      return;
+    }
   }
 
   /// Reset the reference to initial data before navigating to this page.
