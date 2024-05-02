@@ -123,6 +123,8 @@ class QuotePageBody extends StatelessWidget {
     double bottomPadding = 0.0;
     if (windowSize.width < 600 && windowSize.height >= 500) {
       bottomPadding = 48.0;
+    } else if (windowSize.width > 1000) {
+      bottomPadding = 12.0;
     }
 
     return Center(

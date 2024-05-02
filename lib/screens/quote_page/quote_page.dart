@@ -726,6 +726,13 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
       );
     }
 
+    if (size.width < 900 && size.height < 900) {
+      return Size(
+        (size.width) - paddingValue,
+        (size.height) - paddingValue,
+      );
+    }
+
     return Size(
       (size.width * 0.7) - paddingValue,
       (size.height * 0.6) - paddingValue,
