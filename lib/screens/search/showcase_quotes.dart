@@ -68,7 +68,9 @@ class ShowcaseQuotes extends StatelessWidget {
                       : null,
                 )
                 .fadeIn(
-                  duration: 125.ms,
+                  duration: animateItemList
+                      ? 125.ms * index
+                      : const Duration(milliseconds: 0),
                   curve: Curves.decelerate,
                 )
                 .slideY(
@@ -84,12 +86,12 @@ class ShowcaseQuotes extends StatelessWidget {
               onTap: onTapTopicColor,
             )
                 .animate(
-                  delay: animateItemList
-                      ? Duration(milliseconds: 25 * index)
-                      : null,
+                  delay: animateItemList ? 25.ms * index : null,
                 )
                 .fadeIn(
-                  duration: Duration(milliseconds: 25 * index),
+                  duration: animateItemList
+                      ? 25.ms * index
+                      : const Duration(milliseconds: 0),
                   curve: Curves.decelerate,
                 )
                 .slideY(
@@ -104,32 +106,34 @@ class ShowcaseQuotes extends StatelessWidget {
 
     return SliverPadding(
       padding: margin,
-      sliver: Wrap(
-        spacing: spacing,
-        runSpacing: spacing,
-        alignment: WrapAlignment.spaceEvenly,
-        children: topicColors
-            .map(
-              (Topic topicColor) {
-                return TopicCard(
-                  topic: topicColor,
-                  isDark: isDark,
-                  backgroundColor: backgroundColor,
-                  foregroundColor: foregroundColor,
-                  onTap: onTapTopicColor,
-                  size: isMobileSize
-                      ? const Size(90.0, 90.0)
-                      : const Size(100.0, 100.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                );
-              },
-            )
-            .toList()
-            .animate(interval: 15.ms)
-            .fadeIn(duration: 125.ms, curve: Curves.decelerate)
-            .slideY(begin: 0.2, end: 0.0),
+      sliver: SliverToBoxAdapter(
+        child: Wrap(
+          spacing: spacing,
+          runSpacing: spacing,
+          alignment: WrapAlignment.spaceEvenly,
+          children: topicColors
+              .map(
+                (Topic topicColor) {
+                  return TopicCard(
+                    topic: topicColor,
+                    isDark: isDark,
+                    backgroundColor: backgroundColor,
+                    foregroundColor: foregroundColor,
+                    onTap: onTapTopicColor,
+                    size: isMobileSize
+                        ? const Size(90.0, 90.0)
+                        : const Size(100.0, 100.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  );
+                },
+              )
+              .toList()
+              .animate(interval: 15.ms)
+              .fadeIn(duration: 125.ms, curve: Curves.decelerate)
+              .slideY(begin: 0.2, end: 0.0),
+        ),
       ),
     );
   }

@@ -168,8 +168,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   @override
   Widget build(BuildContext context) {
-    final Color? foregroundColor =
-        Theme.of(context).textTheme.bodyMedium?.color;
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final Signal<UserFirestore> signalUserFirestore =
@@ -191,7 +189,8 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                   ),
                   slivers: [
                     SearchInput(
-                      margin: const EdgeInsets.only(
+                      margin: EdgeInsets.only(
+                        top: Utils.graphic.getDesktopPadding(),
                         left: 16.0,
                         right: 16.0,
                       ),
@@ -242,23 +241,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                         );
                       },
                     ),
-                    if (_searchCategory == EnumSearchCategory.quotes &&
-                        _searchInputController.text.isEmpty)
-                      SliverToBoxAdapter(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 24.0, top: 12.0),
-                          child: Text(
-                            "Categories",
-                            style: Utils.calligraphy.body(
-                              textStyle: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w500,
-                                color: foregroundColor?.withOpacity(0.6),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
                     Showcase(
                       animateItemList: _animateItemList,
                       authors: _authorList,
@@ -266,7 +248,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                       isMobileSize: isMobileSize,
                       margin: EdgeInsets.only(
                         top: 24.0,
-                        bottom: 54.0,
+                        bottom: isMobileSize ? 54.0 : 160.0,
                         left: isMobileSize ? 24.0 : 24.0,
                         right: isMobileSize ? 24.0 : 24.0,
                       ),
@@ -507,7 +489,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     if (reinit) {
       _showMoreButton = false;
       _hasMoreResults = true;
-      // _referenceList.clear();
       deferPageState(
         newPageState: EnumPageState.loading,
         fct: () {
@@ -578,6 +559,14 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
         fetchMore: fetchMore,
       );
       return;
+    }
+
+    if (_searchCategory == EnumSearchCategory.quotes) {
+      _hasMoreResults = false;
+      Future.delayed(
+        const Duration(seconds: 1),
+        () => _animateItemList = false,
+      );
     }
   }
 
@@ -1012,6 +1001,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     Utils.vault.saveLastSearchCategory(searchEntity);
 
     setState(() {
+      _animateItemList = true;
       _searchCategory = searchEntity;
       _showMoreButton = searchEntity != EnumSearchCategory.quotes;
     });

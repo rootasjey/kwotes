@@ -56,11 +56,12 @@ class ShowcaseAuthors extends StatelessWidget {
             ),
           )
               .animate(
-                delay:
-                    animateItemList ? Duration(milliseconds: 25 * index) : null,
+                delay: animateItemList ? 25.ms * index : null,
               )
               .fadeIn(
-                duration: Duration(milliseconds: 25 * index),
+                duration: animateItemList
+                    ? 25.ms * index
+                    : const Duration(milliseconds: 0),
                 curve: Curves.decelerate,
               )
               .slideY(
@@ -93,7 +94,9 @@ class ShowcaseAuthors extends StatelessWidget {
                     animateItemList ? Duration(milliseconds: 25 * index) : null,
               )
               .fadeIn(
-                duration: Duration(milliseconds: 25 * index),
+                duration: animateItemList
+                    ? Duration(milliseconds: 25 * index)
+                    : const Duration(milliseconds: 0),
                 curve: Curves.decelerate,
               )
               .slideY(

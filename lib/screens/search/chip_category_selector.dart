@@ -62,12 +62,10 @@ class ChipCategorySelector extends StatelessWidget {
               right: 12.0,
             ),
             selectedColor: selectedColor,
-            // backgroundColor: getBackgroundColor(category),
             onSelected: (bool _) => onSelectCategory?.call(category),
             shape: StadiumBorder(
               side: BorderSide(
                 color: getBackgroundColor(category),
-                // color: Colors.transparent,
               ),
             ),
             avatar: CircleAvatar(

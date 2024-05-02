@@ -82,8 +82,8 @@ class SearchInput extends StatelessWidget {
       ),
     );
 
-    // const double toolbarHeight = 92.0;
-    const double toolbarHeight = 40.0;
+    final bool isMobile = Utils.graphic.isMobile();
+    final double toolbarHeight = isMobile ? 40.0 : 76.0;
 
     return SliverAppBar(
       primary: false,

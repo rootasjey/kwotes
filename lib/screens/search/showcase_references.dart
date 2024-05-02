@@ -61,7 +61,9 @@ class ShowcaseReferences extends StatelessWidget {
                     animateItemList ? Duration(milliseconds: 25 * index) : null,
               )
               .fadeIn(
-                duration: Duration(milliseconds: 25 * index),
+                duration: animateItemList
+                    ? 25.ms * index
+                    : const Duration(milliseconds: 0),
                 curve: Curves.decelerate,
               )
               .slideY(
@@ -84,7 +86,9 @@ class ShowcaseReferences extends StatelessWidget {
             index: index,
             useSquareAvatar: true,
             imageProvider: imageProvider,
-            subtitleValue: "genre.primary".tr(gender: reference.type.primary),
+            subtitleValue: "genre.primary".tr(
+              gender: reference.type.primary.toLowerCase(),
+            ),
             initialForegroundColor: foregroundColor?.withOpacity(0.8),
             isMobileSize: isMobileSize,
             onTap: onTapReference != null
@@ -93,11 +97,11 @@ class ShowcaseReferences extends StatelessWidget {
             textValue: reference.name,
           )
               .animate(
-                delay:
-                    animateItemList ? Duration(milliseconds: 25 * index) : null,
+                delay: animateItemList ? 25.ms * index : null,
               )
               .fadeIn(
-                duration: 125.ms,
+                duration:
+                    animateItemList ? 125.ms : const Duration(milliseconds: 0),
                 curve: Curves.decelerate,
               )
               .slideY(
