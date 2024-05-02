@@ -1,5 +1,11 @@
 /// Different page's states.
 enum EnumPageState {
+  /// Buying an in app purchase.
+  buyingInAppPurchase,
+
+  /// Buying a subscription.
+  buyingSubscription,
+
   /// Check if the username is available.
   checkingUsername,
 
@@ -38,6 +44,9 @@ enum EnumPageState {
 
   /// Loading reference's data.
   loadingReference,
+
+  /// Opening the app store.
+  openingStore,
 
   /// Looking for data results according of the user input.
   searching,

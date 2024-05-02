@@ -10,6 +10,7 @@ class EmptyView extends StatelessWidget {
   /// A sliver component to display when data is not ready yet.
   const EmptyView({
     Key? key,
+    this.columnCrossAxisAlignment = CrossAxisAlignment.start,
     this.description = "",
     this.icon,
     this.onRefresh,
@@ -17,6 +18,9 @@ class EmptyView extends StatelessWidget {
     this.title = "",
     this.margin = EdgeInsets.zero,
   }) : super(key: key);
+
+  /// Column cross axis alignment.
+  final CrossAxisAlignment columnCrossAxisAlignment;
 
   /// Space around this widget.
   final EdgeInsets margin;
@@ -46,7 +50,7 @@ class EmptyView extends StatelessWidget {
             return onRefresh?.call();
           },
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: columnCrossAxisAlignment,
             children: <Widget>[
               icon ?? const SizedBox.shrink(),
               if (title.isNotEmpty)
@@ -149,6 +153,74 @@ class EmptyView extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  /// Return a Scaffold widget displaying an empty view.
+  static Widget premium(
+    BuildContext context, {
+    Icon? icon,
+    String title = "",
+    String description = "",
+    EdgeInsets margin = EdgeInsets.zero,
+    void Function()? onRefresh,
+    void Function()? onTapDescription,
+  }) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: margin,
+        child: RefreshIndicator(
+          onRefresh: () async {
+            return onRefresh?.call();
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              icon ?? const SizedBox.shrink(),
+              if (title.isNotEmpty)
+                AnimatedTextKit(
+                  repeatForever: true,
+                  isRepeatingAnimation: true,
+                  animatedTexts: [
+                    ColorizeAnimatedText(
+                      title,
+                      textStyle: Utils.calligraphy.code(
+                        textStyle: const TextStyle(
+                          fontSize: 24.0,
+                        ),
+                      ),
+                      colors: [
+                        Constants.colors.foregroundPalette.first,
+                        Constants.colors.foregroundPalette[1],
+                        Constants.colors.foregroundPalette[2],
+                        Constants.colors.foregroundPalette[3],
+                        Constants.colors.foregroundPalette[4],
+                      ],
+                    ),
+                  ],
+                ),
+              if (description.isNotEmpty)
+                Opacity(
+                  opacity: 0.6,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                    ),
+                    onPressed: onTapDescription,
+                    child: Text(
+                      description,
+                      style: Utils.calligraphy.body(
+                        textStyle: const TextStyle(
+                          fontSize: 14.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

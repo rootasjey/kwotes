@@ -55,8 +55,10 @@ class CircleButton extends StatelessWidget {
     );
 
     if (tooltip != null) {
+      final bool isDark = Theme.of(context).brightness == Brightness.dark;
       child = Utils.graphic.tooltip(
         tooltipString: tooltip ?? "",
+        backgroundColor: isDark ? Colors.black : Colors.white,
         child: child,
       );
     }

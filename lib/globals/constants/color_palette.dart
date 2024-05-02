@@ -201,7 +201,8 @@ class ColorPalette {
 
   /// Color for galleries.
   final Color published = Colors.green;
-  final Color edit = Colors.deepPurple;
+  final Color save = Colors.lightGreen;
+  final Color edit = Colors.amber;
 
   final Color home = Colors.blue.shade300;
 

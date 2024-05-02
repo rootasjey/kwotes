@@ -33,6 +33,14 @@ import "package:text_wrap_auto_size/text_wrap_auto_size.dart";
 class Graphic with UiLoggy {
   const Graphic();
 
+  double getDesktopPadding() {
+    if (!Utils.graphic.isMobile()) {
+      return 36.0;
+    }
+
+    return 0.0;
+  }
+
   /// Return the color based on the content type.
   Color getSnackbarColorType(SnackbarType type) {
     switch (type) {

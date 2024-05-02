@@ -59,6 +59,7 @@ class MenuNavigationItem extends StatelessWidget {
           child: IconButton(
             color: selected ? selectedColor : null,
             isSelected: selected,
+            iconSize: 20.0,
             onPressed: () => onTap?.call(index),
             icon: icon,
           ),
