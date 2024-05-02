@@ -9,7 +9,6 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
-import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:just_the_tooltip/just_the_tooltip.dart";
 import "package:kwotes/components/application_bar.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
@@ -113,17 +112,11 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
       onlyDarkerColors: !isDark,
     );
 
+    final EdgeInsets appbarPadding = Utils.graphic.isMobile()
+        ? EdgeInsets.zero
+        : const EdgeInsets.only(top: 18.0);
+
     return Scaffold(
-      floatingActionButton: canManageReference
-          ? FloatingActionButton(
-              onPressed: onEditReference,
-              backgroundColor: randomColor,
-              foregroundColor: randomColor.computeLuminance() < 0.5
-                  ? Colors.white
-                  : Colors.black,
-              child: const Icon(TablerIcons.pencil),
-            )
-          : null,
       body: ImprovedScrolling(
         onScroll: onScroll,
         scrollController: _scrollController,
@@ -140,7 +133,7 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
                 toolbarHeight: 48.0,
                 isMobileSize: isMobileSize,
                 hideIcon: true,
-                padding: EdgeInsets.zero,
+                padding: appbarPadding,
                 title: const SizedBox.shrink(),
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 rightChildren: ReferenceAppBarChildren.getChildren(
@@ -151,6 +144,7 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
                   tooltipController: _tooltipController,
                   onDeleteReference: onDeleteReference,
                   onTapPoster: onTapPoster,
+                  onGoToEditPage: onEditReference,
                 ),
               ),
               ReferencePageBody(

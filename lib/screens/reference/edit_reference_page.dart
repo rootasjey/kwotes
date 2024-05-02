@@ -134,52 +134,48 @@ class _EditReferencePageState extends State<EditReferencePage> with UiLoggy {
       );
     }
 
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
     final bool isAuthorValid = _reference.name.isNotEmpty;
 
-    final Color? fabForegroundColor = getFabForegroundColor(isAuthorValid);
-    final Color? fabBackgroundColor = getFabBackgroundColor(isAuthorValid);
+    final UserFirestore userFirestore =
+        context.observe<UserFirestore>(EnumSignalId.userFirestore);
 
-    return AddQuoteReferencePage(
-      appBarRightChildren: AddQuoteAppBarChildren.getChildren(
-        context,
-        onDeleteReference: onDeleteReference,
-        onResetReference: onResetReference,
-        tooltipController: _tooltipController,
+    return SafeArea(
+      child: AddQuoteReferencePage(
+        appBarRightChild: Row(
+          children: AddQuoteAppBarChildren.getChildren(
+            context,
+            isDark: isDark,
+            onSave: onDone,
+            onCancel: onGoBack,
+            tooltipController: _tooltipController,
+          ),
+        ),
+        isDark: isDark,
+        referenceNameErrorText:
+            isAuthorValid ? null : "author.save.name_required".tr(),
+        isMobileSize: isMobileSize,
+        standalone: true,
+        canManageReferences: userFirestore.rights.canManageReferences,
+        lastUsedUrls: _lastUsedReferenceUrls,
+        metadataOpened: _metadataOpened,
+        nameController: _referenceNameController,
+        nameFocusNode: _referenceNameFocusNode,
+        onNameChanged: onReferenceNameChanged,
+        onPictureUrlChanged: onReferencePictureUrlChanged,
+        onPrimaryGenreChanged: onPrimaryGenreChanged,
+        onSecondaryGenreChanged: onSecondaryGenreChanged,
+        onSummaryChanged: onReferenceSummaryChanged,
+        onTapReleaseDate: onTapReleaseDate,
+        onToggleMetadata: onToggleMetadata,
+        onToggleNagativeReleaseDate: onToggleNagativeReleaseDate,
+        onUrlChanged: onReferenceUrlChanged,
+        reference: _reference,
+        summaryController: _referenceSummaryController,
+        summaryFocusNode: _referenceSummaryFocusNode,
+        onDeleteReference: onConfirmDeleteReference,
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: onDone,
-        backgroundColor: fabBackgroundColor,
-        foregroundColor: fabForegroundColor,
-        tooltip: isAuthorValid ? null : "quote.submit.required".tr(),
-        elevation: 6.0,
-        disabledElevation: 0.0,
-        hoverElevation: 4.0,
-        focusElevation: 0.0,
-        highlightElevation: 0.0,
-        splashColor: Colors.white,
-        icon: const Icon(TablerIcons.check),
-        label: Text("done".tr()),
-      ),
-      referenceNameErrorText:
-          isAuthorValid ? null : "author.save.name_required".tr(),
-      isMobileSize: isMobileSize,
-      lastUsedUrls: _lastUsedReferenceUrls,
-      metadataOpened: _metadataOpened,
-      nameController: _referenceNameController,
-      nameFocusNode: _referenceNameFocusNode,
-      onNameChanged: onReferenceNameChanged,
-      onPictureUrlChanged: onReferencePictureUrlChanged,
-      onPrimaryGenreChanged: onPrimaryGenreChanged,
-      onSecondaryGenreChanged: onSecondaryGenreChanged,
-      onSummaryChanged: onReferenceSummaryChanged,
-      onTapReleaseDate: onTapReleaseDate,
-      onToggleMetadata: onToggleMetadata,
-      onToggleNagativeReleaseDate: onToggleNagativeReleaseDate,
-      onUrlChanged: onReferenceUrlChanged,
-      reference: _reference,
-      summaryController: _referenceSummaryController,
-      summaryFocusNode: _referenceSummaryFocusNode,
     );
   }
 
@@ -314,6 +310,15 @@ class _EditReferencePageState extends State<EditReferencePage> with UiLoggy {
     }
 
     beamer.beamToNamed(HomeLocation.route);
+  }
+
+  /// Callback fired when user wants to go back.
+  void onGoBack() {
+    final BeamerDelegate beamer = Beamer.of(context);
+    if (beamer.canBeamBack) {
+      beamer.beamBack();
+      return;
+    }
   }
 
   /// Callback fired when main genre has changed.
@@ -476,6 +481,60 @@ class _EditReferencePageState extends State<EditReferencePage> with UiLoggy {
     _timerUpdateReference = Timer(
       const Duration(milliseconds: 1000),
       () => _docRef?.update(_reference.toMap()),
+    );
+  }
+
+  void onConfirmDeleteReference() {
+    if (_docRef == null) {
+      return;
+    }
+
+    Utils.graphic.showAdaptiveDialog(
+      context,
+      isMobileSize: Utils.measurements.isMobileSize(context),
+      builder: (context) {
+        return Material(
+          child: Container(
+            padding: const EdgeInsets.all(24.0),
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () {
+                    _docRef?.delete();
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                  },
+                  icon: const Icon(TablerIcons.checks, size: 18.0),
+                  label: Text(
+                    "confirm".tr(),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Constants.colors.lists,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 42.0,
+                      vertical: 12.0,
+                    ),
+                    textStyle: Utils.calligraphy.body(
+                      textStyle: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4.0),
+                      side: BorderSide(
+                        color: Constants.colors.lists,
+                        width: 2.0,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

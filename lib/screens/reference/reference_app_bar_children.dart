@@ -17,6 +17,7 @@ class ReferenceAppBarChildren {
     bool canManageReference = false,
     bool isDark = false,
     void Function(Reference reference)? onTapPoster,
+    void Function()? onGoToEditPage,
     Reference? reference,
   }) {
     return [
@@ -24,7 +25,7 @@ class ReferenceAppBarChildren {
         Hero(
           tag: reference.id,
           child: Card(
-            margin: const EdgeInsets.only(right: 12.0),
+            margin: const EdgeInsets.only(right: 0.0),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4.0),
             ),
@@ -42,7 +43,7 @@ class ReferenceAppBarChildren {
             ),
           ),
         ),
-      if (canManageReference)
+      if (canManageReference) ...[
         JustTheTooltip(
           isModal: true,
           controller: tooltipController,
@@ -73,10 +74,26 @@ class ReferenceAppBarChildren {
             radius: 14.0,
             onTap: () => tooltipController?.showTooltip(),
             tooltip: "reference.delete.name".tr(),
-            backgroundColor: isDark ? Colors.white12 : Colors.black12,
-            icon: const Icon(TablerIcons.trash, size: 18.0),
+            backgroundColor: Constants.colors.delete.withOpacity(0.1),
+            icon: Icon(
+              TablerIcons.trash,
+              size: 18.0,
+              color: Constants.colors.delete,
+            ),
           ),
         ),
+        CircleButton(
+          radius: 14.0,
+          onTap: onGoToEditPage,
+          tooltip: "reference.edit.name".tr(),
+          backgroundColor: Constants.colors.edit.withOpacity(0.1),
+          icon: Icon(
+            TablerIcons.pencil,
+            size: 18.0,
+            color: Constants.colors.edit,
+          ),
+        ),
+      ]
     ];
   }
 }

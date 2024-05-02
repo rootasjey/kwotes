@@ -146,6 +146,11 @@ class ReferenceMetadaColumn extends StatelessWidget {
             ColoredTextButton(
               icon: const Icon(TablerIcons.eye, size: 16.0),
               onPressed: onToggleOpen,
+              style: TextButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+              ),
               textValue: "see_metadata".tr(),
               textStyle: Utils.calligraphy.body(
                 textStyle: const TextStyle(
@@ -156,8 +161,12 @@ class ReferenceMetadaColumn extends StatelessWidget {
           if (isOpen)
             ColoredTextButton(
               icon: const Icon(TablerIcons.x, size: 16.0),
-              backgroundColor: isDark ? Colors.black26 : Colors.white38,
               onPressed: onToggleOpen,
+              style: TextButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+              ),
               textValue: "close".tr(),
               textStyle: Utils.calligraphy.body(
                 textStyle: const TextStyle(
@@ -173,7 +182,7 @@ class ReferenceMetadaColumn extends StatelessWidget {
               child: Card(
                 elevation: 8.0,
                 surfaceTintColor: Colors.grey.shade50,
-                color: isDark ? null : Colors.grey.shade100,
+                color: isDark ? Colors.black : Colors.grey.shade100,
                 margin: EdgeInsets.zero,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4.0),
