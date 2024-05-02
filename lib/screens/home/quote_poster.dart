@@ -189,7 +189,8 @@ class _QuotePosterState extends State<QuotePoster> {
 
     final Solution solution = Utils.graphic.getTextSolution(
       quote: widget.quote,
-      windowSize: Size(_cardSize.width / 1.3, _cardSize.height / 1.5),
+      windowSize: Size(_cardSize.width, _cardSize.height),
+      // windowSize: Size(_cardSize.width / 1.3, _cardSize.height / 1.5),
       style: widget.textStyle,
     );
 

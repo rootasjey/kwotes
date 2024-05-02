@@ -14,8 +14,8 @@ import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/locations/settings_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
-import "package:kwotes/screens/home/desktop_layout.dart";
 import "package:kwotes/screens/home/mobile_layout.dart";
+import "package:kwotes/screens/home/quote_desktop_layout.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_frame_border_style.dart";
@@ -151,7 +151,7 @@ class _HomePageState extends State<HomePage> with UiLoggy {
   Widget build(BuildContext context) {
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
     final List<Quote> quotes = NavigationStateHelper.randomQuotes;
-    // final bool isDark = Theme.of(context).brightness == Brightness.dark;
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     if (isMobileSize) {
       return MobileLayout(
@@ -174,7 +174,23 @@ class _HomePageState extends State<HomePage> with UiLoggy {
       );
     }
 
-    // return MinimalDesktopLayout(
+    return QuoteDesktopLayout(
+      isDark: isDark,
+      isMobileSize: isMobileSize,
+      refetchRandomQuotes: refetchRandomQuotes,
+      authors: NavigationStateHelper.latestAddedAuthors,
+      onCopyQuote: onCopyQuote,
+      onCopyQuoteUrl: onCopyQuoteUrl,
+      onTapAuthor: onTapAuthor,
+      onTapQuote: onTapQuote,
+      onTapReference: onTapReference,
+      onTapTopic: onTapTopic,
+      pageState: _pageState,
+      quotes: quotes,
+      topics: Constants.colors.topics,
+    );
+
+    // return CardDesktopLayout(
     //   authors: NavigationStateHelper.latestAddedAuthors,
     //   isDark: isDark,
     //   isMobileSize: isMobileSize,
@@ -199,53 +215,53 @@ class _HomePageState extends State<HomePage> with UiLoggy {
     //   topics: Constants.colors.topics,
     // );
 
-    return DesktopLayout(
-      authors: NavigationStateHelper.latestAddedAuthors,
-      authorCardExtent: _authorCardExtent,
-      authorScrollController: _authorScrollController,
-      enableAuthorLeftArrow: _enableAuthorLeftArrow,
-      enableAuthorRightArrow: _enableAuthorRightArrow,
-      enableQuoteLeftArrow: _enableQuoteLeftArrow,
-      enableQuoteRightArrow: _enableQuoteRightArrow,
-      enableTopicLeftArrow: _enableTopicLeftArrow,
-      enableTopicRightArrow: _enableTopicRightArrow,
-      // hoveredAuthorName: _hoveredAuthorName,
-      // hoveredReferenceId: _hoveredReferenceId,
-      // hoveredTopicName: _hoveredTopicName,
-      onAuthorIndexChanged: onAuthorIndexChanged,
-      onChangeLanguage: onChangeLanguage,
-      onCopyQuote: onCopyQuote,
-      onCopyQuoteUrl: onCopyQuoteUrl,
-      onDoubleTapAuthor: onCopyAuthorName,
-      onHoverAuthor: onHoverAuthor,
-      onHoverReference: onHoverReference,
-      onHoverTopic: onHoverTopic,
-      onQuoteIndexChanged: onQuoteIndexChanged,
-      onTapAuthor: onTapAuthor,
-      onTapAuthorLeftArrow: onTapAuthorLeftArrow,
-      onTapAuthorRightArrow: onTapAuthorRightArrow,
-      onTapGitHub: onTapGitHub,
-      onTapQuote: onTapQuote,
-      onTapQuoteLeftArrow: onTapQuoteLeftArrow,
-      onTapQuoteRightArrow: onTapQuoteRightArrow,
-      onTapTopicLeftArrow: onTapTopicLeftArrow,
-      onTapTopicRightArrow: onTapTopicRightArrow,
-      onTapReference: onTapReference,
-      onTapTopic: onTapTopic,
-      onTapUserAvatar: onTapUserAvatar,
-      onTopicIndexChanged: onTopicIndexChanged,
-      pageState: _pageState,
-      quoteScrollController: _quoteScrollController,
-      // posterBackgroundColor: _posterBackgroundColor,
-      quotes: quotes,
-      quoteCardExtent: _quoteCardExtent,
-      references: NavigationStateHelper.latestAddedReferences,
-      topicCardExtent: _topicCardExtent,
-      refetchRandomQuotes: refetchRandomQuotes,
-      subQuotes: _subRandomQuotes,
-      topics: Constants.colors.topics,
-      topicScrollController: _topicScrollController,
-    );
+    // return DesktopLayout(
+    //   authors: NavigationStateHelper.latestAddedAuthors,
+    //   authorCardExtent: _authorCardExtent,
+    //   authorScrollController: _authorScrollController,
+    //   enableAuthorLeftArrow: _enableAuthorLeftArrow,
+    //   enableAuthorRightArrow: _enableAuthorRightArrow,
+    //   enableQuoteLeftArrow: _enableQuoteLeftArrow,
+    //   enableQuoteRightArrow: _enableQuoteRightArrow,
+    //   enableTopicLeftArrow: _enableTopicLeftArrow,
+    //   enableTopicRightArrow: _enableTopicRightArrow,
+    //   // hoveredAuthorName: _hoveredAuthorName,
+    //   // hoveredReferenceId: _hoveredReferenceId,
+    //   // hoveredTopicName: _hoveredTopicName,
+    //   onAuthorIndexChanged: onAuthorIndexChanged,
+    //   onChangeLanguage: onChangeLanguage,
+    //   onCopyQuote: onCopyQuote,
+    //   onCopyQuoteUrl: onCopyQuoteUrl,
+    //   onDoubleTapAuthor: onCopyAuthorName,
+    //   onHoverAuthor: onHoverAuthor,
+    //   onHoverReference: onHoverReference,
+    //   onHoverTopic: onHoverTopic,
+    //   onQuoteIndexChanged: onQuoteIndexChanged,
+    //   onTapAuthor: onTapAuthor,
+    //   onTapAuthorLeftArrow: onTapAuthorLeftArrow,
+    //   onTapAuthorRightArrow: onTapAuthorRightArrow,
+    //   onTapGitHub: onTapGitHub,
+    //   onTapQuote: onTapQuote,
+    //   onTapQuoteLeftArrow: onTapQuoteLeftArrow,
+    //   onTapQuoteRightArrow: onTapQuoteRightArrow,
+    //   onTapTopicLeftArrow: onTapTopicLeftArrow,
+    //   onTapTopicRightArrow: onTapTopicRightArrow,
+    //   onTapReference: onTapReference,
+    //   onTapTopic: onTapTopic,
+    //   onTapUserAvatar: onTapUserAvatar,
+    //   onTopicIndexChanged: onTopicIndexChanged,
+    //   pageState: _pageState,
+    //   quoteScrollController: _quoteScrollController,
+    //   // posterBackgroundColor: _posterBackgroundColor,
+    //   quotes: quotes,
+    //   quoteCardExtent: _quoteCardExtent,
+    //   references: NavigationStateHelper.latestAddedReferences,
+    //   topicCardExtent: _topicCardExtent,
+    //   refetchRandomQuotes: refetchRandomQuotes,
+    //   subQuotes: _subRandomQuotes,
+    //   topics: Constants.colors.topics,
+    //   topicScrollController: _topicScrollController,
+    // );
   }
 
   /// Fetches a specific author from their id.

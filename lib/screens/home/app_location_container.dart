@@ -1,10 +1,14 @@
+import "dart:math";
+
 import "package:adaptive_theme/adaptive_theme.dart";
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/buttons/circle_button.dart";
 import "package:kwotes/components/buttons/menu_navigation_item.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
@@ -33,6 +37,12 @@ class AppLocationContainer extends StatefulWidget {
 }
 
 class _AppLocationContainerState extends State<AppLocationContainer> {
+  /// Whether navigation bar is visible.
+  bool _navigationBarVisible = true;
+
+  /// Animation target.
+  double _target = 0.0;
+
   /// Previous brightness.
   Brightness? _previousBrightness;
 
@@ -169,51 +179,64 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
 
                     return const SizedBox.shrink();
                   },
-                  child: Center(
-                    child: Container(
-                      width: 320.0,
-                      height: 120.0,
-                      color: Colors.transparent,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12.0,
-                        vertical: 24.0,
-                      ),
-                      child: Material(
-                        color: isDarkTheme ? Colors.black87 : Colors.white,
-                        elevation: isDarkTheme ? 4.0 : 6.0,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(54.0)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            MenuNavigationItem(
-                              index: 0,
-                              icon: const Icon(TablerIcons.home),
-                              onTap: onTapBottomBarItem,
-                              selectedColor: Constants.colors.home,
-                              selected: _currentIndex == 0,
-                              tooltip: "home".tr(),
+                  child: Column(
+                    children: [
+                      if (_navigationBarVisible)
+                        Container(
+                          width: 240.0,
+                          height: 58.0,
+                          color: Colors.transparent,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12.0,
+                            vertical: 4.0,
+                          ),
+                          child: Material(
+                            color: isDarkTheme ? Colors.black87 : Colors.white,
+                            elevation: isDarkTheme ? 4.0 : 6.0,
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(54.0)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                MenuNavigationItem(
+                                  index: 0,
+                                  icon: const Icon(TablerIcons.home),
+                                  onTap: onTapBottomBarItem,
+                                  selectedColor: Constants.colors.home,
+                                  selected: _currentIndex == 0,
+                                  tooltip: "home".tr(),
+                                ),
+                                MenuNavigationItem(
+                                  icon: const Icon(TablerIcons.search),
+                                  index: 1,
+                                  onTap: onTapBottomBarItem,
+                                  selected: _currentIndex == 1,
+                                  selectedColor: Constants.colors.search,
+                                  tooltip: "search.name".tr(),
+                                ),
+                                MenuNavigationItem(
+                                  icon: const Icon(TablerIcons.notebook),
+                                  index: 2,
+                                  onTap: onTapBottomBarItem,
+                                  selected: _currentIndex == 2,
+                                  selectedColor: Constants.colors.delete,
+                                  tooltip: "dashboard".tr(),
+                                ),
+                              ],
                             ),
-                            MenuNavigationItem(
-                              icon: const Icon(TablerIcons.search),
-                              index: 1,
-                              onTap: onTapBottomBarItem,
-                              selected: _currentIndex == 1,
-                              selectedColor: Constants.colors.search,
-                              tooltip: "search.name".tr(),
-                            ),
-                            MenuNavigationItem(
-                              icon: const Icon(TablerIcons.notebook),
-                              index: 2,
-                              onTap: onTapBottomBarItem,
-                              selected: _currentIndex == 2,
-                              selectedColor: Constants.colors.delete,
-                              tooltip: "dashboard".tr(),
-                            ),
-                          ],
+                          ),
                         ),
+                      CircleButton(
+                        radius: 14.0,
+                        icon: const Icon(
+                          TablerIcons.chevron_down,
+                          size: 14.0,
+                        )
+                            .animate(target: _target)
+                            .rotate(begin: 0.0, end: (pi / 4) * 0.64),
+                        onTap: toggleNavigationBarVisibility,
                       ),
-                    ),
+                    ],
                   ),
                 ),
               ),
@@ -248,9 +271,15 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
         currentBrightness == Brightness.dark
             ? SystemUiOverlayStyle.light.copyWith(
                 statusBarColor: Colors.transparent, // optional
+                systemNavigationBarColor: Color.alphaBlend(
+                  Colors.black26,
+                  Constants.colors.dark,
+                ),
               )
             : SystemUiOverlayStyle.dark.copyWith(
                 statusBarColor: Colors.transparent, // optional
+                systemNavigationBarColor: Colors.white,
+                systemNavigationBarDividerColor: Colors.transparent,
               );
 
     SystemChrome.setSystemUIOverlayStyle(overlayStyle);
@@ -389,6 +418,13 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
         default:
           break;
       }
+    });
+  }
+
+  void toggleNavigationBarVisibility() {
+    setState(() {
+      _target = _target == 0.0 ? 1.0 : 0.0;
+      _navigationBarVisible = !_navigationBarVisible;
     });
   }
 }
