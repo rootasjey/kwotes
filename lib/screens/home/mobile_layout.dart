@@ -1,3 +1,4 @@
+import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
@@ -10,6 +11,8 @@ import "package:kwotes/components/hero_quote.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/components/texts/random_quote_text.dart";
 import "package:kwotes/globals/constants.dart";
+import "package:kwotes/globals/utils.dart";
+import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/screens/home/home_topics.dart";
 import "package:kwotes/screens/home/latest_added_authors.dart";
 import "package:kwotes/screens/home/reference_posters.dart";
@@ -123,7 +126,10 @@ class MobileLayout extends StatelessWidget {
               SliverToBoxAdapter(
                 child: Container(
                   color: topBackgroundColor,
-                  padding: const EdgeInsets.only(left: 16.2),
+                  padding: EdgeInsets.only(
+                    top: Utils.graphic.getDesktopPadding(),
+                    left: 16.0,
+                  ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -138,7 +144,7 @@ class MobileLayout extends StatelessWidget {
                         ),
                       ),
                       CircleButton(
-                        onTap: () {},
+                        onTap: () => onTapPremiumIcon(context),
                         radius: 19.0,
                         shape: CircleBorder(
                           side: BorderSide(
@@ -285,6 +291,12 @@ class MobileLayout extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void onTapPremiumIcon(BuildContext context) {
+    Beamer.of(context, root: true).beamToNamed(
+      HomeLocation.premiumRoute,
     );
   }
 }

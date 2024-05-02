@@ -34,12 +34,12 @@ class SettingsPageBody extends StatelessWidget {
               children: [
                 ...[
                   SettingsItemData(
-                    name: "premium.subscription".tr(),
-                    route: SettingsContentLocation.themeRoute,
+                    name: "premium.subscription.name".tr(),
+                    route: SettingsContentLocation.subscriptionsRoute,
                   ),
                   SettingsItemData(
-                    name: "premium.in_app_purchases".tr(),
-                    route: SettingsContentLocation.languageRoute,
+                    name: "premium.in_app_purchase.names".tr(),
+                    route: SettingsContentLocation.inAppPurchasesRoute,
                   ),
                 ].map(
                   (SettingsItemData settingsItemData) {

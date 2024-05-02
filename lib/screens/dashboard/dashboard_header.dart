@@ -46,14 +46,21 @@ class DashboardHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobile = Utils.graphic.isMobile();
+    final double verticalButtonPadding = isMobile ? 8.0 : 16.0;
+    final EdgeInsets padding = isMobileSize
+        ? EdgeInsets.only(
+            top: Utils.graphic.getDesktopPadding(),
+            left: 16.0,
+            right: 24.0,
+          )
+        : EdgeInsets.only(
+            top: Utils.graphic.getDesktopPadding(),
+            left: 48.0,
+            right: 76.0,
+          );
     return Container(
-      padding: isMobileSize
-          ? const EdgeInsets.only(top: 0.0, left: 16.0, right: 24.0)
-          : const EdgeInsets.only(
-              top: 0.0,
-              left: 48.0,
-              right: 76.0,
-            ),
+      padding: padding,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -63,7 +70,7 @@ class DashboardHeader extends StatelessWidget {
             radius: 16.0,
             selected: true,
             margin: EdgeInsets.zero,
-            borderColor: Colors.amber.shade700,
+            borderColor: Colors.grey,
             imageProvider: const AssetImage(
               "assets/images/profile-picture-avocado.jpg",
             ),
@@ -79,8 +86,8 @@ class DashboardHeader extends StatelessWidget {
                 foregroundColor: foregroundColor,
                 minimumSize: const Size(0.0, 0.0),
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8.0,
+                padding: EdgeInsets.symmetric(
+                  vertical: verticalButtonPadding,
                   horizontal: 24.0,
                 ),
                 shape: const StadiumBorder(),

@@ -5,6 +5,7 @@ import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
+import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/screens/dashboard/dashboard_card.dart";
 
 class DashboardCardSection extends StatelessWidget {
@@ -41,8 +42,8 @@ class DashboardCardSection extends StatelessWidget {
             textTitle: "premium.name".tr(),
             heroKey: "premium",
             onTap: () {
-              context.beamToNamed(
-                DashboardContentLocation.myQuotesRoute,
+              Beamer.of(context, root: true).beamToNamed(
+                HomeLocation.premiumRoute,
               );
             },
           ),

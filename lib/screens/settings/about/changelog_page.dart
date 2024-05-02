@@ -72,7 +72,7 @@ class ChangelogPage extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: Text(
-                          "23/04/2024",
+                          "01/05/2024",
                           style: Utils.calligraphy.body(
                             textStyle: TextStyle(
                               fontSize: 12.0,
@@ -85,12 +85,65 @@ class ChangelogPage extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: Text(
-                          "• Add missing delete account page",
+                          "• Add in-app purchases",
                           style: Utils.calligraphy.body(
                             textStyle: TextStyle(
                               fontSize: 14.0,
                               fontWeight: FontWeight.w400,
                               color: foregroundColor?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "• Update search page",
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              color: foregroundColor?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "• Update author & reference pages",
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              color: foregroundColor?.withOpacity(0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Divider(
+                        color: foregroundColor?.withOpacity(0.2),
+                        height: 42.0,
+                      ),
+                      Text(
+                        "Previously",
+                        style: Utils.calligraphy.body(
+                          textStyle: TextStyle(
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.w200,
+                            color: foregroundColor?.withOpacity(0.8),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "23/04/2024",
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w200,
+                              color: foregroundColor?.withOpacity(0.3),
                             ),
                           ),
                         ),
@@ -287,20 +340,6 @@ class ChangelogPage extends StatelessWidget {
                               fontWeight: FontWeight.w400,
                               color: foregroundColor?.withOpacity(0.4),
                             ),
-                          ),
-                        ),
-                      ),
-                      Divider(
-                        color: foregroundColor?.withOpacity(0.2),
-                        height: 42.0,
-                      ),
-                      Text(
-                        "Previously",
-                        style: Utils.calligraphy.body(
-                          textStyle: TextStyle(
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.w200,
-                            color: foregroundColor?.withOpacity(0.8),
                           ),
                         ),
                       ),

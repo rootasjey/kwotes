@@ -1,6 +1,7 @@
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/widgets.dart";
+import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/locations/search_location.dart";
@@ -207,5 +208,28 @@ class NavigationStateHelper {
     }
 
     homePageTabIndex = lastSavedIndex ?? 0;
+  }
+
+  static Future<void> navigateBackToLastRoot(BuildContext context) async {
+    if (!context.mounted) return;
+
+    final int tabIndex = await Utils.vault.getHomePageTabIndex();
+    String routeTab = "/h";
+    switch (tabIndex) {
+      case 0:
+        routeTab = "/h";
+        break;
+      case 1:
+        routeTab = "/s";
+        break;
+      case 2:
+        routeTab = "/d";
+        break;
+      default:
+        routeTab = "/h";
+    }
+
+    if (!context.mounted) return;
+    Beamer.of(context, root: true).beamToNamed(routeTab);
   }
 }

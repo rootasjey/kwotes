@@ -67,20 +67,23 @@ class SettingsPageHeader extends StatelessWidget {
                       tag: "settings",
                       child: Material(
                         color: Colors.transparent,
-                        child: Text(
-                          title,
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: Utils.calligraphy.body(
-                            textStyle: TextStyle(
-                              fontSize: isMobileSize ? 18.0 : 24.0,
-                              fontWeight: FontWeight.w500,
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.color
-                                  ?.withOpacity(0.8),
+                        child: FractionallySizedBox(
+                          widthFactor: 0.8,
+                          child: Text(
+                            title,
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Utils.calligraphy.body(
+                              textStyle: TextStyle(
+                                fontSize: isMobileSize ? 18.0 : 24.0,
+                                fontWeight: FontWeight.w500,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.color
+                                    ?.withOpacity(0.8),
+                              ),
                             ),
                           ),
                         ),

@@ -7,6 +7,7 @@ class SettingsItemData {
   final String route;
   final bool isExternalLink;
   final String description;
+  final String actionId;
   final bool enabled;
   final IconData? iconData;
 
@@ -17,6 +18,7 @@ class SettingsItemData {
     this.description = "",
     this.enabled = true,
     this.iconData,
+    this.actionId = "",
   });
 
   SettingsItemData copyWith({
@@ -25,6 +27,7 @@ class SettingsItemData {
     bool? isExternalLink,
     String? description,
     bool? enabled,
+    String? actionId,
     IconData? iconData,
   }) {
     return SettingsItemData(
@@ -34,6 +37,7 @@ class SettingsItemData {
       description: description ?? this.description,
       enabled: enabled ?? this.enabled,
       iconData: iconData ?? this.iconData,
+      actionId: actionId ?? this.actionId,
     );
   }
 
@@ -44,6 +48,7 @@ class SettingsItemData {
       "isExternalLink": isExternalLink,
       "description": description,
       "enabled": enabled,
+      "actionId": actionId,
     };
   }
 
@@ -54,6 +59,7 @@ class SettingsItemData {
       isExternalLink: map["isExternalLink"] ?? false,
       description: map["description"] ?? "",
       enabled: map["enabled"] ?? false,
+      actionId: map["actionId"] ?? "",
     );
   }
 
@@ -66,7 +72,7 @@ class SettingsItemData {
   String toString() {
     return "SettingsItemData(name: $name, route: $route, "
         "isExternalLink: $isExternalLink, description: $description, "
-        "enabled: $enabled)";
+        "enabled: $enabled, actionId: $actionId)";
   }
 
   @override
@@ -78,7 +84,8 @@ class SettingsItemData {
         other.isExternalLink == isExternalLink &&
         other.description == description &&
         other.enabled == enabled &&
-        other.iconData == iconData;
+        other.iconData == iconData &&
+        other.actionId == actionId;
   }
 
   @override
@@ -88,6 +95,7 @@ class SettingsItemData {
         isExternalLink.hashCode ^
         description.hashCode ^
         enabled.hashCode ^
-        iconData.hashCode;
+        iconData.hashCode ^
+        actionId.hashCode;
   }
 }

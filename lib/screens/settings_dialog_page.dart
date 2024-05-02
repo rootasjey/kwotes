@@ -5,7 +5,6 @@ import "package:beamer/beamer.dart";
 import "package:bottom_sheet/bottom_sheet.dart";
 import "package:flutter/material.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
-import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 
 class SettingsDialogPage extends StatefulWidget {
@@ -36,7 +35,6 @@ class _SettingsDialogPageState extends State<SettingsDialogPage> {
   void openDialog() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       NavigationStateHelper.rootContext = context;
-      // final bool isMobileSize = Utils.measurements.isMobileSize(context);
       showFlexibleBottomSheet(
         context: context,
         minHeight: 0.0,
@@ -55,26 +53,7 @@ class _SettingsDialogPageState extends State<SettingsDialogPage> {
           NavigationStateHelper.bottomSheetScrollController = scrollController;
           return PopScope(
             onPopInvoked: (bool didPop) async {
-              if (!context.mounted) return;
-
-              final int tabIndex = await Utils.vault.getHomePageTabIndex();
-              String routeTab = "/h";
-              switch (tabIndex) {
-                case 0:
-                  routeTab = "/h";
-                  break;
-                case 1:
-                  routeTab = "/s";
-                  break;
-                case 2:
-                  routeTab = "/d";
-                  break;
-                default:
-                  routeTab = "/h";
-              }
-
-              if (!context.mounted) return;
-              Beamer.of(context, root: true).beamToNamed(routeTab);
+              NavigationStateHelper.navigateBackToLastRoot(context);
             },
             child: Theme(
               data: AdaptiveTheme.of(context).theme,
