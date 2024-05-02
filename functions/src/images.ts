@@ -31,8 +31,8 @@ export const onAddAuthorPofilePicture = functions
 
     // -- Upload, Naming, & Update Firestore
     const suffix = Date.now();
-    const imageName = `${data.name}-${suffix}.${fileType?.ext}`;
-    
+    const sanitazedName = data.name.replace(/[^a-z0-9]/gi, '-');
+    const imageName = `${sanitazedName}-${suffix}.${fileType?.ext}`;
     const uploadedFile = bucket.file(`images/pp/${imageName}`);
 
     const buffer = await got.get(onlineURL).buffer();
@@ -90,7 +90,8 @@ export const onUpdateAuthorProfilePicture = functions
 
     // -- Upload, Naming, & Update Firestore
     const suffix = Date.now();
-    const imageName = `${afterData.name}-${suffix}.${fileType?.ext}`;
+    const sanitazedName = afterData.name.replace(/[^a-z0-9]/gi, '-');
+    const imageName = `${sanitazedName}-${suffix}.${fileType?.ext}`;
 
     const uploadedFile = bucket.file(`images/pp/${imageName}`);
 
@@ -159,8 +160,8 @@ export const onAddReferenceProfilePicture = functions
 
     // -- Upload, Naming, & Update Firestore
     const suffix = Date.now();
-    const imageName = `${data.name}-${suffix}.${fileType?.ext}`;
-
+    const sanitazedName = data.name.replace(/[^a-z0-9]/gi, '-');
+    const imageName = `${sanitazedName}-${suffix}.${fileType?.ext}`;
     const uploadedFile = bucket.file(`images/pp/${imageName}`);
 
     const buffer = await got.get(onlineURL).buffer();
@@ -219,7 +220,8 @@ export const onUpdateReferenceProfilePicture = functions
 
     // -- Upload, Naming, & Update Firestore
     const suffix = Date.now();
-    const imageName = `${afterData.name}-${suffix}.${fileType?.ext}`;
+    const sanitazedName = afterData.name.replace(/[^a-z0-9]/gi, '-');
+    const imageName = `${sanitazedName}-${suffix}.${fileType?.ext}`;
 
     const uploadedFile = bucket.file(`images/pp/${imageName}`);
 
