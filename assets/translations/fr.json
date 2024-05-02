@@ -59,6 +59,10 @@
       "name": "Supprimer l'auteur",
       "success": "L'auteur a été supprimé"
     },
+    "edit": {
+      "name": "Modifier l'auteur",
+      "success": "L'auteur a été modifié !"
+    },
     "error": {
       "id": "Nous navons pas pu récupérer l'auteur car son identifiant est invalide ou vide.",
       "no_image": "Cet auteur n'a pas d'image."
@@ -72,6 +76,7 @@
     "reset": "Reinitialiser l'auteur",
     "save": {
       "done": "Toutes les modifications sont terminées",
+      "name": "Enregistrer l'auteur",
       "name_required": "Le nom de l'auteur est obligatoire"
     },
     "show_more": "Voir plus d'auteurs",
@@ -114,6 +119,7 @@
     "name": "Couleur",
     "palette": "Palette de couleurs"
   },
+  "comming_soon": "Prochainement",
   "connection_check_try": "Vérifiez votre connexion et réeesayez ultérieurement.",
   "confirm": "Confirmer",
   "contact": {
@@ -245,11 +251,14 @@
   "genre": {
     "name": "Genre",
     "primary": {
+      "animated_tv_series": "Série-TV animée",
       "article": "Article",
       "bd": "BD",
       "blog": "Blog",
       "book": "Livre",
       "comic": "Comic",
+      "conference": "Conférence",
+      "encyclopedia": "Encyclopédie",
       "film": "Film",
       "graphic_novel": "Roman graphique",
       "game": "Jeu",
@@ -268,12 +277,14 @@
       "post": "Post",
       "poetry": "Poésie",
       "short_story": "Nouvelle",
+      "tv_channel": "Chaîne TV",
       "TV series": "Série TV",
       "tv series": "Série TV",
       "tv_series": "Série TV",
       "video_game": "Jeu vidéo",
       "video": "Video",
-      "website": "Site web"
+      "website": "Site web",
+      "youtube": "YouTube"
     },
     "secondary": {
       "gothic horror": "Horreur gothique",
@@ -506,6 +517,7 @@
     "forgot_password": "@:kwotes_leading Forgot Password",
     "frame_border_style": "@:kwotes_leading Style de bordure de fenêtre",
     "home": "@:kwotes_leading Home",
+    "in_app_purchase": "@:kwotes_leading Achats in-app",
     "in_validation": "@:kwotes_leading En Validation",
     "language": "@:kwotes_leading Langage",
     "list": "@:kwotes_leading {}",
@@ -514,6 +526,7 @@
     "not_found": "@:kwotes_leading 404",
     "post": "@:kwotes_leading Post",
     "posts": "@:kwotes_leading Posts",
+    "premium": "@:kwotes_leading Premium",
     "project": "@:kwotes_leading Project",
     "projects": "@:kwotes_leading Projects",
     "published": "@:kwotes_leading Publiées",
@@ -524,6 +537,8 @@
     "settings": "@:kwotes_leading Settings",
     "signin": "@:kwotes_leading Signin",
     "signup": "@:kwotes_leading Signup",
+    "subscription": "@:kwotes_leading Abonnement",
+    "subscriptions": "@:kwotes_leading Abonnements",
     "terms_of_service": "@:kwotes_leading Conditions Générales d'Utilisation",
     "the_purpose": "@:kwotes_leading Le But",
     "theme": "@:kwotes_leading Theme",
@@ -574,13 +589,39 @@
     }
   },
   "premium": {
+    "comming_soon": {
+      "description": "Nous préparons de nouvelles fonctionnalités pour vous. Veuillez revenir dans quelques semaines.",
+      "name": "Prochainement"
+    },
+    "description": "Obtenez des fonctionnalités supplémentaires tels que la recherche personnalisée, des soumissions de citations illimitees et la création illimité de listes, et plus.",
     "free": "Gratuit",
     "in_app": "In-app",
-    "in_app_purchase": "Achat in-app",
-    "in_app_purchases": "Achats in-app",
+    "in_app_purchase": {
+      "buying": "Achat de l'in-app...",
+      "description": "Obtenez des fonctionnalités supplémentaires tels que la recherche personnalisée, des soumissions illimitees de citations et la création aditionnelle de listes, et plus.",
+      "error": "Une erreur est survenue lors de l'achat de l'abonnement",
+      "loading": "Chargement des achats in-app...",
+      "name": "Achat in-app",
+      "names": "Achats in-app",
+      "no_product": "Aucun produit",
+      "no_product_description": "Il y a aucun produit pour le moment.",
+      "subtitle": "Obtenez des cadeaux spécifics an achetant des fonctionnalités uniques."
+    },
     "name": "Premium",
-    "subscription": "Abonnement",
-    "subscriptions": "Abonnements",
+    "opening_store": "Ouverture du magasin...",
+    "subscription": {
+      "buying": "Achat de l'abonnement...",
+      "cancel": "Annuler l'abonnement",
+      "cancel_confirm": "Voulez-vous vraiment annuler votre abonnement?",
+      "description": "Avec cet abonnement mensuel, vous débloquerez toutes les fonctionnalités. Et vous nous aidez à proposer des fonctionnalités supplemmentaires.",
+      "error": "Une erreur est survenue lors de l'achat de l'abonnement",
+      "loading": "Chargement des abonnements...",
+      "name": "Abonnement",
+      "names": "Abonnements",
+      "no_product": "Aucun produit",
+      "no_product_description": "Il y a aucun abonnement pour le moment.",
+      "subtitle": "Abonnement mensuel pour débloquer toutes les fonctionnalités."
+    },
     "super_powers": "Obtenez des super pouvoirs",
     "trial": "Essaie gratuit"
   },
@@ -1062,6 +1103,10 @@
       "name": "Supprimer la référence",
       "success": "La référence a été supprimée !"
     },
+    "edit": {
+      "name": "Modifier la référence",
+      "success": "La référence a été modifiée !"
+    },
     "error": {
       "no_image": "Cette référence n'a pas d'image."
     },
@@ -1071,6 +1116,10 @@
     "names": "Références",
     "optional": "Référence (optionnelle)",
     "reset": "Reinitialiser la référence",
+    "save": {
+      "name": "Enregistrer la référénce",
+      "success": "La référénce a été sauvegardée !"
+    },
     "show_more": "Afficher plus de reférences",
     "update": {
       "failed": "Une erreur est survenue lors de la mise à jour de la référence.",
@@ -1088,7 +1137,7 @@
     "chip": {
       "authors": "Auteurs",
       "categories": "Catégories",
-      "quotes": "Citations",
+      "quotes": "Categories",
       "references": "Références"
     },
     "clear": "Effacer",
@@ -1186,7 +1235,10 @@
     "in": "Connexion en cours",
     "name": "Se connecter"
   },
-  "signout": "Se déconnecter",
+  "signout": {
+    "name": "Se déconnecter",
+    "description": "Redevenir anonyme."
+  },
   "signup": "S'inscrire",
   "step": {
     "bonus": {
