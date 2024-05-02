@@ -126,7 +126,7 @@ class SignupPageBody extends StatelessWidget {
             right: 24.0,
             bottom: 200.0,
           ),
-          width: 600.0,
+          width: 500.0,
           child: Column(
             children: [
               SignupPageUsernameInput(

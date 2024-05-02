@@ -4,6 +4,7 @@ import "package:flutter/material.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/locations/settings_location.dart";
 import "package:kwotes/screens/settings/settings_item_data.dart";
 import "package:kwotes/screens/settings/settings_page_header.dart";
@@ -20,7 +21,7 @@ class AccountPage extends StatelessWidget {
 
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
 
-    final userFirestore = context.observe<UserFirestore>(
+    final UserFirestore userFirestore = context.observe<UserFirestore>(
       EnumSignalId.userFirestore,
     );
 
@@ -60,14 +61,28 @@ class AccountPage extends StatelessWidget {
                   route: SettingsContentLocation.deleteAccountRoute,
                   iconData: TablerIcons.trash,
                 ),
+                SettingsItemData(
+                  name: "signout.name".tr(),
+                  description: "signout.description".tr(),
+                  route: "",
+                  actionId: "signout",
+                  iconData: TablerIcons.logout,
+                ),
               ].map((SettingsItemData settingsItemData) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                   child: ListTile(
                     onTap: () {
+                      if (settingsItemData.actionId == "signout") {
+                        Utils.state.signOut();
+                        Beamer.of(context, root: true).beamToNamed(
+                          HomeLocation.route,
+                        );
+                        return;
+                      }
+
                       context.beamToNamed(settingsItemData.route);
                     },
-                    // tileColor: Colors.white,
                     title: Text(settingsItemData.name),
                     dense: false,
                     leading: settingsItemData.iconData != null
@@ -77,11 +92,13 @@ class AccountPage extends StatelessWidget {
                             color: foregroundColor?.withOpacity(0.6),
                           )
                         : null,
-                    trailing: Icon(
-                      TablerIcons.chevron_right,
-                      size: 18.0,
-                      color: foregroundColor?.withOpacity(0.6),
-                    ),
+                    trailing: settingsItemData.route.isNotEmpty
+                        ? Icon(
+                            TablerIcons.chevron_right,
+                            size: 18.0,
+                            color: foregroundColor?.withOpacity(0.6),
+                          )
+                        : null,
                     subtitle: Text(settingsItemData.description),
                     subtitleTextStyle: Utils.calligraphy.body(
                       textStyle: TextStyle(

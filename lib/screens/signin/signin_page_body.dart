@@ -80,9 +80,9 @@ class SigninPageBody extends StatelessWidget {
             top: isMobileSize ? 0.0 : 40.0,
             left: 24.0,
             right: 24.0,
-            bottom: 54.0,
+            bottom: isMobileSize ? 54.0 : 160.0,
           ),
-          width: 600.0,
+          width: 500.0,
           child: Column(
             children: <Widget>[
               SigninPageEmailInput(
