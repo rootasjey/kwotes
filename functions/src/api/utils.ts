@@ -74,7 +74,7 @@ export const getRandomIntInclusive = (min: number, max: number) => {
 }
 
 export const getRandomQuoteAuthored = async (params: RandomQuoteAuthoredParams) => {
-  let { lang, guessType } = params;
+  let { language, guessType } = params;
   const previousQuestionsIds = params.previousQuestionsIds;
 
   let lastAuthorReferenceId = '';
@@ -83,8 +83,8 @@ export const getRandomQuoteAuthored = async (params: RandomQuoteAuthoredParams) 
     lastAuthorReferenceId = previousQuestionsIds[previousQuestionsIds.length - 1];
   }
 
-  if (!isLangAvailable(lang)) {
-    lang = 'en';
+  if (!isLangAvailable(language)) {
+    language = 'en';
   }
 
   if (!guessType) {
@@ -98,7 +98,7 @@ export const getRandomQuoteAuthored = async (params: RandomQuoteAuthoredParams) 
 
   let snapshot = await adminApp.firestore()
     .collection('quotes')
-    .where('lang', '==', lang)
+    .where('language', '==', language)
     .where('createdAt', '>=', createdAt)
     .limit(limit)
     .get();
@@ -106,7 +106,7 @@ export const getRandomQuoteAuthored = async (params: RandomQuoteAuthoredParams) 
   if (snapshot.empty) {
     snapshot = await adminApp.firestore()
       .collection('quotes')
-      .where('lang', '==', lang)
+      .where('language', '==', language)
       .where('createdAt', '<=', createdAt)
       .limit(limit)
       .get();
@@ -199,10 +199,10 @@ export const getRandomReferences = async (params?: GetRandomReferencesParams) =>
 
 /**
  * Return true if the specified lang is available.
- * @param lang - Language to test.
+ * @param language - Language to test.
  */
-export const isLangAvailable = (lang: string) => {
-  return ['en', 'fr'].includes(lang);
+export const isLangAvailable = (language: string) => {
+  return ['en', 'fr'].includes(language);
 };
 
 export const shuffle = (array: any[]) => {

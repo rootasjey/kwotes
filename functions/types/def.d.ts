@@ -172,7 +172,7 @@ interface NotifFuncParams {
 }
 
 interface RandomQuoteAuthoredParams {
-  lang: string;
+  language: string;
   guessType: 'author' | 'reference';
   previousQuestionsIds?: Array<string>;
 }

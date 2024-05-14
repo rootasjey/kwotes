@@ -5,9 +5,10 @@ import { checkAPIKey, getRandomIntInclusive, isLangAvailable } from '../utils';
 export const quotesRouter = express.Router()
   .use(checkAPIKey)
   .get('/', async (req, res, next) => {
-    const startAfter = req.query.startAfter as string ?? '';
-
-    const strOffset = req.query.offset as string ?? '0';
+    const startAfter = req.query.startAfter as string;
+    const strOffset = req.query.offset as string;
+    const order: 'asc' | 'desc' = req.query.order as 'asc' | 'desc' ?? 'desc';
+    const orderBy = req.query.orderBy as string;
     const offset = parseInt(strOffset);
     
     const userStrLimit = req.query.limit as string ?? '12';
@@ -16,7 +17,7 @@ export const quotesRouter = express.Router()
     const isLimitInRange = userIntLimit > 0 && userIntLimit < 21;
     const limit = isLimitInRange ? userIntLimit : 12;
 
-    const lang = req.query.lang as string ?? 'en';
+    const language = req.query.language as string ?? 'en';
 
     const warningStr = isLimitInRange 
       ? '' 
@@ -32,10 +33,10 @@ export const quotesRouter = express.Router()
       warning: warningStr,
     };
 
-    if (!isLangAvailable(lang)) {
+    if (!isLangAvailable(language)) {
       res.status(400).send({
         error: {
-          reason: `The language ${lang} is not available. 
+          reason: `The language ${language} is not available. 
             Please try the following values: 'en', 'fr'.`,
         }
       });
@@ -44,9 +45,13 @@ export const quotesRouter = express.Router()
 
     const query = adminApp.firestore()
       .collection('quotes')
-      .where('lang', '==', lang)
+      .where('language', '==', language)
       .offset(offset)
       .limit(limit);
+
+    if (order && orderBy) {
+      query.orderBy(orderBy, order);
+    }
 
     if (startAfter) {
       const startAfterDoc = await adminApp.firestore()
@@ -79,6 +84,7 @@ export const quotesRouter = express.Router()
       quotes.push(docData);
     }
 
+    responsePayload.success = true;
     responsePayload.quotes = quotes;
     res.send({ response: responsePayload });
   })
@@ -123,7 +129,7 @@ export const quotesRouter = express.Router()
       : `The value '${userStrLimit}' for the query string 'limit' is not valid. 
           Please use a value between '1' and '3' included.`;
 
-    const lang = req.query.lang as string ?? 'en';
+    const language = req.query.language as string ?? 'en';
 
     const responsePayload = {
       quotes: <FirebaseFirestore.DocumentData>[],
@@ -136,10 +142,10 @@ export const quotesRouter = express.Router()
       },
     };
 
-    if (!isLangAvailable(lang)) {
+    if (!isLangAvailable(language)) {
       res.status(400).send({
         error: {
-          reason: `The language ${lang} is not available. 
+          reason: `The language ${language} is not available. 
             Please try the following values: 'en', 'fr'.`,
         }
       });
@@ -154,8 +160,8 @@ export const quotesRouter = express.Router()
     try {
       snapshot = await adminApp.firestore()
         .collection('quotes')
-        .where('lang', '==', lang)
-        .where('createdAt', '>=', createdAt)
+        .where('language', '==', language)
+        .where('created_at', '>=', createdAt)
         .limit(limit)
         .get();
     } catch (error) {

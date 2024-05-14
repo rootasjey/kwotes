@@ -11,10 +11,10 @@ import {
 export const disRouter = express.Router()
   .use(checkAPIKey)
   .get('/random', async (req, res, next) => {
-    const lang = req.query?.lang as string ?? 'en';
+    const language = req.query?.language as string ?? 'en';
     const guessStrType = req.query?.guessType as string ?? '';
 
-    let guessType: ('author' | 'reference') = 'author';
+    let guessType: ('author' | 'reference') = 'author';
 
     if (guessStrType) {
       guessType = guessStrType === 'author'
@@ -54,14 +54,14 @@ export const disRouter = express.Router()
 
     try { 
       randQuoteRes = await getRandomQuoteAuthored({
-        lang,
+        language,
         guessType,
       }); 
 
       // 2nd try if no authored quote is found.
       if (!randQuoteRes.quote) {
         randQuoteRes = await getRandomQuoteAuthored({
-          lang,
+          language,
           guessType,
         });
       }
@@ -177,10 +177,10 @@ export const disRouter = express.Router()
     res.send({ response: responsePayload });
   })
   .post('/random', async (req, res, next) => {
-    let lang = req.query?.lang as string ?? 'en';
+    let language = req.query?.language as string ?? 'en';
     let guessStrType = req.query?.guessType as string ?? '';
 
-    lang = req.body.lang ?? lang;
+    language = req.body.language ?? language;
     guessStrType = req.body.guessType ?? guessStrType;
 
     const previousQuestionsIdsStr: string = req.body.previousQuestionsIds;
@@ -226,7 +226,7 @@ export const disRouter = express.Router()
 
     try {
       randQuoteRes = await getRandomQuoteAuthored({
-        lang,
+        language,
         guessType,
         previousQuestionsIds,
       });
@@ -234,7 +234,7 @@ export const disRouter = express.Router()
       // 2nd try if no authored quote is found.
       if (!randQuoteRes.quote) {
         randQuoteRes = await getRandomQuoteAuthored({
-          lang,
+          language,
           guessType,
           previousQuestionsIds,
         });

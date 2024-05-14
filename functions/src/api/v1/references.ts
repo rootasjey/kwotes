@@ -16,7 +16,7 @@ export const referencesRouter = express.Router()
     const isLimitInRange = userIntLimit > 0 && userIntLimit < 21;
     const limit = isLimitInRange ? userIntLimit : 12;
 
-    const lang = req.query.lang as string ?? 'en';
+    const language = req.query.language as string ?? 'en';
 
     const warningStr = isLimitInRange
       ? ''
@@ -32,10 +32,10 @@ export const referencesRouter = express.Router()
       warning: warningStr,
     };
 
-    if (!isLangAvailable(lang)) {
+    if (!isLangAvailable(language)) {
       res.status(400).send({
         error: {
-          reason: `The language ${lang} is not available. 
+          reason: `The language ${language} is not available. 
             Please try the following values: 'en', 'fr'.`,
         }
       });
@@ -44,7 +44,7 @@ export const referencesRouter = express.Router()
 
     const query = adminApp.firestore()
       .collection('references')
-      .where('lang', '==', lang)
+      .where('language', '==', language)
       .offset(offset)
       .limit(limit);
 
