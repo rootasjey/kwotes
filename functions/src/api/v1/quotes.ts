@@ -9,7 +9,7 @@ export const quotesRouter = express.Router()
     const strOffset = req.query.offset as string;
     const order: 'asc' | 'desc' = req.query.order as 'asc' | 'desc' ?? 'desc';
     const orderBy = req.query.orderBy as string;
-    const offset = parseInt(strOffset);
+    const offset = strOffset ? parseInt(strOffset) : null;
     
     const userStrLimit = req.query.limit as string ?? '12';
     const userIntLimit = parseInt(userStrLimit);
@@ -43,14 +43,16 @@ export const quotesRouter = express.Router()
       return;
     }
 
-    const query = adminApp.firestore()
+    let query = adminApp.firestore()
       .collection('quotes')
       .where('language', '==', language)
-      .offset(offset)
       .limit(limit);
 
+    if (typeof offset === 'number') {
+      query = query.offset(offset);
+    }
     if (order && orderBy) {
-      query.orderBy(orderBy, order);
+      query = query.orderBy(orderBy, order);
     }
 
     if (startAfter) {
@@ -59,7 +61,7 @@ export const quotesRouter = express.Router()
         .doc(startAfter)
         .get();
 
-      query.startAfter(startAfterDoc);
+      query = query.startAfter(startAfterDoc);
     }
 
     let snapshot: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>;
