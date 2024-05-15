@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:kwotes/globals/utils.dart";
+import "package:kwotes/components/better_tooltip.dart";
 
 class CircleButton extends StatelessWidget {
   /// An alternative to IconButton.
@@ -56,7 +56,7 @@ class CircleButton extends StatelessWidget {
 
     if (tooltip != null) {
       final bool isDark = Theme.of(context).brightness == Brightness.dark;
-      child = Utils.graphic.tooltip(
+      child = BetterTooltip(
         tooltipString: tooltip ?? "",
         backgroundColor: isDark ? Colors.black : Colors.white,
         child: child,
@@ -82,7 +82,7 @@ class CircleButton extends StatelessWidget {
     final EdgeInsets margin = EdgeInsets.zero,
     final String tooltip = "",
   }) {
-    return Utils.graphic.tooltip(
+    return BetterTooltip(
       tooltipString: tooltip,
       child: Padding(
         padding: margin,

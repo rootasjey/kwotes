@@ -1,6 +1,7 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/better_tooltip.dart";
 import "package:kwotes/globals/utils.dart";
 
 class BigTextHeader extends StatelessWidget {
@@ -37,7 +38,7 @@ class BigTextHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Utils.graphic.tooltip(
+        BetterTooltip(
           tooltipString: "back".tr(),
           child: IconButton(
             onPressed: () => Utils.passage.deepBack(context),

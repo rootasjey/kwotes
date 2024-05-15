@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:kwotes/components/better_tooltip.dart";
 import "package:kwotes/globals/utils.dart";
 
 class ThemeChip extends StatelessWidget {
@@ -33,7 +34,7 @@ class ThemeChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Utils.graphic.tooltip(
+    return BetterTooltip(
       tooltipString: tooltip ?? "",
       child: ActionChip(
         label: Text(textLabel),

@@ -2,8 +2,8 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:just_the_tooltip/just_the_tooltip.dart";
+import "package:kwotes/components/better_tooltip.dart";
 import "package:kwotes/components/buttons/circle_button.dart";
-import "package:kwotes/globals/utils.dart";
 import "package:kwotes/screens/add_quote/step_chip.dart";
 import "package:text_wrap_auto_size/solution.dart";
 
@@ -88,7 +88,7 @@ class AddQuoteContent extends StatelessWidget {
                 runSpacing: 12.0,
                 alignment: WrapAlignment.end,
                 children: [
-                  Utils.graphic.tooltip(
+                  BetterTooltip(
                     tooltipString: "quote.add.builder.minimal".tr(),
                     child: ActionChip(
                       label: const Icon(TablerIcons.pencil, size: 20.0),

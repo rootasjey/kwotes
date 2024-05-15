@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:kwotes/globals/utils.dart";
+import "package:kwotes/components/better_tooltip.dart";
 
 class SuffixButton extends StatelessWidget {
   /// Textfield suffix button.
@@ -24,7 +24,7 @@ class SuffixButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: 8.0),
-      child: Utils.graphic.tooltip(
+      child: BetterTooltip(
         tooltipString: tooltipString,
         child: IconButton(
           icon: icon,

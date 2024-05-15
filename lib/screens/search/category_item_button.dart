@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/better_tooltip.dart";
 import "package:kwotes/components/dot_indicator.dart";
-import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/enums/enum_indicator_type.dart";
 import "package:kwotes/types/enums/enum_search_category.dart";
 
@@ -47,7 +47,7 @@ class CategoryItemButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 3.0),
-      child: Utils.graphic.tooltip(
+      child: BetterTooltip(
         tooltipString: tooltip ?? "",
         child: Column(
           children: [

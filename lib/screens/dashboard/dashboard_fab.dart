@@ -1,6 +1,7 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/better_tooltip.dart";
 import "package:kwotes/globals/utils.dart";
 
 class DashboardFab extends StatelessWidget {
@@ -29,7 +30,7 @@ class DashboardFab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isMobileSize) {
-      return Utils.graphic.tooltip(
+      return BetterTooltip(
         tooltipString: "quote.add.a".tr(),
         child: FloatingActionButton(
           onPressed: () => onGoToAddQuotePage?.call(context),

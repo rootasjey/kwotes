@@ -2,6 +2,7 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/better_avatar.dart";
+import "package:kwotes/components/better_tooltip.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 
@@ -75,7 +76,7 @@ class DashboardHeader extends StatelessWidget {
               "assets/images/profile-picture-avocado.jpg",
             ),
           ),
-          Utils.graphic.tooltip(
+          BetterTooltip(
             tooltipString: "quote.new".tr(),
             child: TextButton.icon(
               onPressed: () {

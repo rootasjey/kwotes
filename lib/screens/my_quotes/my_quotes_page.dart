@@ -111,7 +111,6 @@ class _MyQuotesPageState extends State<MyQuotesPage> {
   }
 
   /// Initialize properties.
-  /// TODO: Simplify later.
   void initProps() async {
     final Signal<UserFirestore> signalUserFirestore =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);

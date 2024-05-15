@@ -2,6 +2,7 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:just_the_tooltip/just_the_tooltip.dart";
+import "package:kwotes/components/better_tooltip.dart";
 import "package:kwotes/components/buttons/circle_button.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
@@ -130,7 +131,7 @@ class AddQuoteAppBarChildren {
           ),
         ),
       if (onSave != null)
-        Utils.graphic.tooltip(
+        BetterTooltip(
           backgroundColor: isDark ? Colors.black : Colors.white,
           tooltipString: "reference.save.name".tr(),
           child: ActionChip(

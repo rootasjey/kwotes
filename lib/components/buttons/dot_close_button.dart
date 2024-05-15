@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
-import "package:kwotes/globals/utils.dart";
+import "package:kwotes/components/better_tooltip.dart";
 
 /// A close button in the shape of a little pink dot.
 class DotCloseButton extends StatefulWidget {
@@ -30,7 +30,7 @@ class _DotCloseButtonState extends State<DotCloseButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Utils.graphic.tooltip(
+    return BetterTooltip(
       tooltipString: widget.tooltip,
       child: InkWell(
         onTap: widget.onTap,
