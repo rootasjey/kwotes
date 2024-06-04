@@ -14,11 +14,15 @@ class DashboardCardSection extends StatelessWidget {
     super.key,
     this.isMobileSize = false,
     this.isDark = false,
+    this.isPremiumUser = false,
   });
 
   /// True if the screen size is similar to a mobile.
   /// Adapt UI accordingly.
   final bool isMobileSize;
+
+  /// True if the user is premium.
+  final bool isPremiumUser;
 
   /// True if the theme is dark.
   final bool isDark;
@@ -33,20 +37,21 @@ class DashboardCardSection extends StatelessWidget {
         spacing: 12.0,
         runSpacing: 12.0,
         children: [
-          DashboardCard(
-            compact: isMobileSize,
-            hoverColor: Constants.colors.premium,
-            iconData: TablerIcons.crown,
-            isDark: isDark,
-            textSubtitle: "premium.super_powers".tr(),
-            textTitle: "premium.name".tr(),
-            heroKey: "premium",
-            onTap: () {
-              Beamer.of(context, root: true).beamToNamed(
-                HomeLocation.premiumRoute,
-              );
-            },
-          ),
+          if (!isPremiumUser)
+            DashboardCard(
+              compact: isMobileSize,
+              hoverColor: Constants.colors.premium,
+              iconData: TablerIcons.crown,
+              isDark: isDark,
+              textSubtitle: "premium.super_powers".tr(),
+              textTitle: "premium.name".tr(),
+              heroKey: "premium",
+              onTap: () {
+                Beamer.of(context, root: true).beamToNamed(
+                  HomeLocation.premiumRoute,
+                );
+              },
+            ),
           DashboardCard(
             compact: isMobileSize,
             hoverColor: Constants.colors.inValidation,

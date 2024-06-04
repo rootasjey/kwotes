@@ -2,6 +2,7 @@ import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
+import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:infinite_carousel/infinite_carousel.dart";
 import "package:kwotes/components/better_avatar.dart";
@@ -18,9 +19,12 @@ import "package:kwotes/screens/home/latest_added_authors.dart";
 import "package:kwotes/screens/home/reference_posters.dart";
 import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
+import "package:kwotes/types/enums/enum_signal_id.dart";
+import "package:kwotes/types/enums/enum_user_plan.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/reference.dart";
 import "package:kwotes/types/topic.dart";
+import "package:kwotes/types/user/user_firestore.dart";
 import "package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart";
 import "package:super_context_menu/super_context_menu.dart";
 
@@ -114,6 +118,9 @@ class MobileLayout extends StatelessWidget {
 
     final Quote firstQuote = quotes.isNotEmpty ? quotes.first : Quote.empty();
 
+    final UserFirestore userFirestore =
+        context.observe<UserFirestore>(EnumSignalId.userFirestore);
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: isDark ? Colors.black26 : Colors.white,
@@ -131,6 +138,7 @@ class MobileLayout extends StatelessWidget {
                     left: 16.0,
                   ),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       BetterAvatar(
@@ -143,32 +151,33 @@ class MobileLayout extends StatelessWidget {
                           "assets/images/profile-picture-avocado.jpg",
                         ),
                       ),
-                      CircleButton(
-                        onTap: () => onTapPremiumIcon(context),
-                        radius: 19.0,
-                        shape: CircleBorder(
-                          side: BorderSide(
-                            color: Constants.colors.premium,
-                            width: 2.0,
-                          ),
-                        ),
-                        margin: const EdgeInsets.only(left: 12.0),
-                        icon: Container(
-                          padding: const EdgeInsets.all(4.0),
-                          decoration: BoxDecoration(
-                            color: Constants.colors.premium,
-                            shape: BoxShape.circle,
-                            border: Border.all(
+                      if (userFirestore.plan != EnumUserPlan.premium)
+                        CircleButton(
+                          onTap: () => onTapPremiumIcon(context),
+                          radius: 19.0,
+                          shape: CircleBorder(
+                            side: BorderSide(
                               color: Constants.colors.premium,
+                              width: 2.0,
                             ),
                           ),
-                          child: Icon(
-                            TablerIcons.crown,
-                            size: 18.0,
-                            color: isDark ? Colors.black87 : Colors.white,
+                          margin: const EdgeInsets.only(left: 12.0),
+                          icon: Container(
+                            padding: const EdgeInsets.all(4.0),
+                            decoration: BoxDecoration(
+                              color: Constants.colors.premium,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: Constants.colors.premium,
+                              ),
+                            ),
+                            child: Icon(
+                              TablerIcons.crown,
+                              size: 18.0,
+                              color: isDark ? Colors.black87 : Colors.white,
+                            ),
                           ),
-                        ),
-                      ).animate().shake(),
+                        ).animate().shake(),
                     ],
                   ),
                 ),

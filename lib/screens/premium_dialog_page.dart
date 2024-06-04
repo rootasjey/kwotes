@@ -5,12 +5,17 @@ import "package:beamer/beamer.dart";
 import "package:bottom_sheet/bottom_sheet.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
-import "package:kwotes/router/locations/settings_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
+import "package:kwotes/types/enums/enum_signal_id.dart";
+import "package:kwotes/types/enums/enum_user_plan.dart";
+import "package:kwotes/types/user/user_firestore.dart";
+import "package:loggy/loggy.dart";
+import "package:purchases_ui_flutter/purchases_ui_flutter.dart";
 
 class PremiumDialogPage extends StatefulWidget {
   const PremiumDialogPage({super.key});
@@ -19,11 +24,11 @@ class PremiumDialogPage extends StatefulWidget {
   State<PremiumDialogPage> createState() => _PremiumDialogPageState();
 }
 
-class _PremiumDialogPageState extends State<PremiumDialogPage> {
+class _PremiumDialogPageState extends State<PremiumDialogPage> with UiLoggy {
   @override
   void initState() {
     super.initState();
-    openDialog();
+    presentPaywallIfNeeded();
   }
 
   @override
@@ -143,7 +148,6 @@ class _PremiumDialogPageState extends State<PremiumDialogPage> {
                                     ),
                                   ),
                                   child: InkWell(
-                                    onTap: onTapSubscription,
                                     child: Container(
                                       padding: const EdgeInsets.all(12.0),
                                       child: Column(
@@ -186,7 +190,6 @@ class _PremiumDialogPageState extends State<PremiumDialogPage> {
                                     ),
                                   ),
                                   child: InkWell(
-                                    onTap: onTapInAppPurchases,
                                     child: Container(
                                       padding: const EdgeInsets.all(12.0),
                                       child: Column(
@@ -235,15 +238,45 @@ class _PremiumDialogPageState extends State<PremiumDialogPage> {
     });
   }
 
-  void onTapSubscription() {
-    Beamer.of(context, root: true).beamToNamed(
-      SettingsContentLocation.subscriptionsRoute,
-    );
-  }
+  void presentPaywallIfNeeded() async {
+    if (!mounted) return;
+    final PaywallResult paywallResult =
+        await RevenueCatUI.presentPaywallIfNeeded("premium");
+    loggy.debug(paywallResult);
 
-  void onTapInAppPurchases() {
-    Beamer.of(context, root: true).beamToNamed(
-      SettingsContentLocation.inAppPurchasesRoute,
-    );
+    if (!context.mounted) return;
+
+    if (paywallResult == PaywallResult.purchased ||
+        paywallResult == PaywallResult.restored) {
+      final Signal<UserFirestore> signalFirestoreUser =
+          context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+
+      if (signalFirestoreUser.value.id.isNotEmpty) {
+        signalFirestoreUser.update(
+          (UserFirestore user) => user.copyWith(
+            plan: EnumUserPlan.premium,
+          ),
+        );
+      }
+    }
+
+    final int tabIndex = await Utils.vault.getHomePageTabIndex();
+    String routeTab = "/h";
+    switch (tabIndex) {
+      case 0:
+        routeTab = "/h";
+        break;
+      case 1:
+        routeTab = "/s";
+        break;
+      case 2:
+        routeTab = "/d";
+        break;
+      default:
+        routeTab = "/h";
+    }
+
+    if (!context.mounted) return;
+    Beamer.of(context, root: true).beamToNamed(routeTab);
   }
 }

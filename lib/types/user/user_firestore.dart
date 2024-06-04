@@ -1,6 +1,7 @@
 import "dart:convert";
 
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/types/enums/enum_user_plan.dart";
 import "package:kwotes/types/user/social_links.dart";
 import "package:kwotes/types/user/profile_picture.dart";
 import "package:kwotes/types/user/user_rights.dart";
@@ -13,6 +14,7 @@ class UserFirestore {
     required this.profilePicture,
     required this.socialLinks,
     required this.createdAt,
+    this.plan = EnumUserPlan.free,
     this.email = "anonymous@kwotes.fr",
     this.job = "Ghosting",
     this.language = "en",
@@ -29,6 +31,9 @@ class UserFirestore {
 
   /// Last time this account was updated (any field update).
   final DateTime? updatedAt;
+
+  /// User plan (e.g. free, premium).
+  final EnumUserPlan plan;
 
   /// Profile picture.
   final ProfilePicture profilePicture;
@@ -63,6 +68,40 @@ class UserFirestore {
   /// Public links to find more about this user.
   final SocialLinks socialLinks;
 
+  UserFirestore copyWith({
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? id,
+    String? email,
+    String? job,
+    String? language,
+    String? location,
+    String? name,
+    String? nameLowerCase,
+    String? bio,
+    ProfilePicture? profilePicture,
+    UserRights? rights,
+    SocialLinks? socialLinks,
+    EnumUserPlan? plan,
+  }) {
+    return UserFirestore(
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      id: id ?? this.id,
+      email: email ?? this.email,
+      job: job ?? this.job,
+      language: language ?? this.language,
+      location: location ?? this.location,
+      name: name ?? this.name,
+      nameLowerCase: nameLowerCase ?? this.nameLowerCase,
+      bio: bio ?? this.bio,
+      profilePicture: profilePicture ?? this.profilePicture,
+      rights: rights ?? this.rights,
+      socialLinks: socialLinks ?? this.socialLinks,
+      plan: plan ?? this.plan,
+    );
+  }
+
   factory UserFirestore.empty() {
     return UserFirestore(
       createdAt: DateTime.now(),
@@ -78,6 +117,7 @@ class UserFirestore {
       updatedAt: DateTime.now(),
       socialLinks: SocialLinks.empty(),
       rights: const UserRights(),
+      plan: EnumUserPlan.free,
     );
   }
 
@@ -136,6 +176,8 @@ class UserFirestore {
         "name: $name, nameLowerCase: $nameLowerCase, "
         "profilePicture: $profilePicture, "
         "bio: $bio, "
+        "rights: $rights, "
+        "plan: $plan, "
         "updatedAt: $updatedAt, socialLinks: $socialLinks)";
   }
 
@@ -155,6 +197,7 @@ class UserFirestore {
         other.profilePicture == profilePicture &&
         other.rights == rights &&
         other.bio == bio &&
+        other.plan == plan &&
         other.updatedAt == updatedAt &&
         other.socialLinks == socialLinks;
   }
@@ -172,6 +215,7 @@ class UserFirestore {
         profilePicture.hashCode ^
         rights.hashCode ^
         bio.hashCode ^
+        plan.hashCode ^
         updatedAt.hashCode ^
         socialLinks.hashCode;
   }

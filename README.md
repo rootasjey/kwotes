@@ -14,12 +14,12 @@
 # Download
 
 <span style="margin-right: 10px;">
-  <a href="https://apps.apple.com/us/app/out-of-context/id1516117110?ls=1">
+  <a href="https://apps.apple.com/us/app/kwotes/id6478239805">
     <img src="./screenshots/app_store_badge.png" title="Ppp Store" width="160"/>
   </a>
 </span>
 
-<span style="margin-right: 10px;">
+<!-- <span style="margin-right: 10px;">
   <a href="https://play.google.com/store/apps/details?id=com.outofcontext.app">
     <img src="./screenshots/google_play_badge.png" title="Play Store" width="160"/>
   </a>
@@ -29,18 +29,18 @@
   <a href="https://kwotes.fr">
     <img src="./screenshots/web_badge.png" title="Web" width="160"/>
   </a>
-</span>
+</span> -->
 <br>
 <br>
 <br>
-
+<!-- 
 <p align="middle">
   <img src="./screenshots/minimal-and-cute.jpg" title="kwotes home web" />
 </p>
 
 <p align="middle">
   <img src="./screenshots/responsive-layout.jpg" title="kwotes home web" />
-</p>
+</p> -->
 
 # Table of Contents
 

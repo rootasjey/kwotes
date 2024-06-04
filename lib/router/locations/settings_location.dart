@@ -16,7 +16,6 @@ import "package:kwotes/screens/settings/email/update_email_page.dart";
 import "package:kwotes/screens/settings/frame_border_style_page.dart";
 import "package:kwotes/screens/settings/language_page.dart";
 import "package:kwotes/screens/settings/password/update_password_page.dart";
-import "package:kwotes/screens/settings/premium/in_app_purchases_page.dart";
 import "package:kwotes/screens/settings/premium/subscriptions_page.dart";
 import "package:kwotes/screens/settings/settings_page.dart";
 import "package:kwotes/screens/settings/theme_page.dart";
@@ -110,9 +109,6 @@ class SettingsContentLocation extends BeamLocation<BeamState> {
   /// Update username route location.
   static const String updateUsernameRoute = "$accountRoute/username";
 
-  /// In app purchases route
-  static const String inAppPurchasesRoute = "$route/in-app-purchases";
-
   /// Subscriptions route
   static const String subscriptionsRoute = "$route/subscriptions";
 
@@ -136,7 +132,6 @@ class SettingsContentLocation extends BeamLocation<BeamState> {
         updateEmailRoute,
         updatePasswordRoute,
         updateUsernameRoute,
-        inAppPurchasesRoute,
         subscriptionsRoute,
       ];
 
@@ -282,14 +277,6 @@ class SettingsContentLocation extends BeamLocation<BeamState> {
           child: const DeleteAccountPage(),
           key: const ValueKey(deleteAccountRoute),
           title: "page_title.delete_account".tr(),
-          type: BeamPageType.slideRightTransition,
-        ),
-      if (state.pathPatternSegments
-          .contains(inAppPurchasesRoute.split("/").last))
-        BeamPage(
-          child: const InAppPurchasesPage(),
-          key: const ValueKey(inAppPurchasesRoute),
-          title: "page_title.in_app_purchases".tr(),
           type: BeamPageType.slideRightTransition,
         ),
       if (state.pathPatternSegments

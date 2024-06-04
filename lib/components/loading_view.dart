@@ -5,7 +5,7 @@ import "package:kwotes/globals/utils.dart";
 class LoadingView extends StatelessWidget {
   const LoadingView({
     super.key,
-    this.message = "loading...",
+    this.message = "Loading...",
     this.useSliver = true,
   });
 
@@ -13,6 +13,7 @@ class LoadingView extends StatelessWidget {
   final String message;
 
   /// If true, it will display a sliver.
+  /// Default to true.
   final bool useSliver;
 
   @override

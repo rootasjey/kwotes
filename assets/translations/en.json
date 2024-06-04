@@ -608,6 +608,11 @@
     },
     "name": "Premium",
     "opening_store": "Opening store...",
+    "payment": {
+      "cancelled": "The payment was cancelled",
+      "name": "Payment",
+      "names": "Payments"
+    },
     "subscription": {
       "buying": "Buying subscription...",
       "cancel": "Cancel subscription",
@@ -615,6 +620,8 @@
       "cancel_confirmation": "Are you sure you want to cancel your subscription?",
       "description": "With this monthly subscription, you'll get all the features of the app. And you help us to make it even better.",
       "error": "An error occurred while buying your subscription",
+      "free": "You're currently on the free plan.",
+      "premium": "You're currently on the premium plan.",
       "loading": "Loading subscriptions...",
       "name": "Subscription",
       "names": "Subscriptions",

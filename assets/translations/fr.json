@@ -609,12 +609,19 @@
     },
     "name": "Premium",
     "opening_store": "Ouverture du magasin...",
+    "payment": {
+      "cancelled": "Le paiement a été annulé",
+      "name": "Paiement",
+      "names": "Paiements"
+    },
     "subscription": {
       "buying": "Achat de l'abonnement...",
       "cancel": "Annuler l'abonnement",
       "cancel_confirm": "Voulez-vous vraiment annuler votre abonnement?",
       "description": "Avec cet abonnement mensuel, vous débloquerez toutes les fonctionnalités. Et vous nous aidez à proposer des fonctionnalités supplemmentaires.",
       "error": "Une erreur est survenue lors de l'achat de l'abonnement",
+      "free": "Vous êtes actuellement sur l'abonnement gratuit",
+      "premium": "Vous êtes actuellement sur l'abonnement Premium",
       "loading": "Chargement des abonnements...",
       "name": "Abonnement",
       "names": "Abonnements",

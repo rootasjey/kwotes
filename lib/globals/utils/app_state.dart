@@ -13,12 +13,14 @@ import "package:kwotes/types/cloud_fun_error.dart";
 import "package:kwotes/types/cloud_fun_response.dart";
 import "package:kwotes/types/create_account_response.dart";
 import "package:kwotes/types/credentials.dart";
+import "package:kwotes/types/enums/enum_user_plan.dart";
 import "package:kwotes/types/firestore/doc_snapshot_stream_subscription.dart";
 import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/user/user_auth.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 import "package:kwotes/types/user_action_response.dart";
 import "package:loggy/loggy.dart";
+import "package:purchases_flutter/purchases_flutter.dart";
 
 class AppState with UiLoggy {
   AppState() {
@@ -57,6 +59,21 @@ class AppState with UiLoggy {
   /// Whether the user is authenticated.
   bool get userAuthenticated => userAuth.value != null;
 
+  /// Refresh the premium status of the user.
+  Future<void> refreshPremiumPlan() async {
+    if (userAuth.value == null) return;
+
+    final String userId = userAuth.value?.uid ?? "";
+    if (userId.isEmpty) return;
+
+    final bool hasPremiumPlan = await Utils.monetization.hasPremiumPlan();
+    userFirestore.update(
+      (UserFirestore previousValue) => previousValue.copyWith(
+        plan: hasPremiumPlan ? EnumUserPlan.premium : EnumUserPlan.free,
+      ),
+    );
+  }
+
   /// Try to sign in the user.
   Future<UserAuth?> signIn({String? email, String? password}) async {
     try {
@@ -83,6 +100,20 @@ class AppState with UiLoggy {
         email: email,
         password: password,
       );
+
+      final String userId = authResult.user?.uid ?? "";
+      if (userId.isNotEmpty) {
+        await Utils.monetization.initOrLogin(userId);
+        final bool hasPremium = await Utils.monetization.hasPremiumPlan();
+        userFirestore.update(
+          (UserFirestore previousValue) => previousValue.copyWith(
+            plan: hasPremium ? EnumUserPlan.premium : EnumUserPlan.free,
+          ),
+        );
+
+        Purchases.removeCustomerInfoUpdateListener(onCustomerInfoUpdated);
+        Purchases.addCustomerInfoUpdateListener(onCustomerInfoUpdated);
+      }
 
       return authResult.user;
     } catch (error) {
@@ -339,7 +370,11 @@ class AppState with UiLoggy {
         }
 
         map["id"] = snapshot.id;
-        userFirestore.update((value) => UserFirestore.fromMap(map));
+        userFirestore.update(
+          (UserFirestore previousValue) => UserFirestore.fromMap(map).copyWith(
+            plan: previousValue.plan,
+          ),
+        );
       },
       onError: (error) {
         loggy.error(error);
@@ -350,5 +385,31 @@ class AppState with UiLoggy {
         userFirestore.update((value) => UserFirestore.empty());
       },
     );
+  }
+
+  void onCustomerInfoUpdated(CustomerInfo customerInfo) {
+    final EnumUserPlan updatedPlan = getUpdatedPlan(customerInfo);
+
+    userFirestore.update(
+      (UserFirestore previousValue) => previousValue.copyWith(
+        plan: updatedPlan,
+      ),
+    );
+  }
+
+  EnumUserPlan getUpdatedPlan(CustomerInfo customerInfo) {
+    final Map<String, EntitlementInfo> activeEntitlements =
+        customerInfo.entitlements.active;
+
+    if (activeEntitlements.isEmpty) return EnumUserPlan.free;
+    final bool hasPremium = activeEntitlements.containsKey("premium");
+
+    if (!hasPremium) return EnumUserPlan.free;
+    final EntitlementInfo? premiumEntitlement = activeEntitlements["premium"];
+    if (premiumEntitlement == null) return EnumUserPlan.free;
+
+    return premiumEntitlement.isActive
+        ? EnumUserPlan.premium
+        : EnumUserPlan.free;
   }
 }
