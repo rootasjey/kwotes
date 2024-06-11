@@ -589,6 +589,7 @@
     }
   },
   "premium": {
+    "add_quote_reached_free_plan_limit": "Vous avez atteint le nombre maximum de citations ({}) dans votre abonnement. Veuillez mettre à jour votre compte vers un abonnement premium pour ajouter une nouvelle citation.",
     "comming_soon": {
       "description": "Nous préparons de nouvelles fonctionnalités pour vous. Veuillez revenir dans quelques semaines.",
       "name": "Prochainement"

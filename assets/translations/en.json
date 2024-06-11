@@ -588,6 +588,7 @@
     }
   },
   "premium": {
+    "add_quote_reached_free_plan_limit": "You have reached the limit of {} quotes you can add on the free plan. Please upgrade to a premium plan to add more quotes.",
     "comming_soon": {
       "description": "We're cooking new features for you. Please check again in some weeks.",
       "name": "Comming soon"

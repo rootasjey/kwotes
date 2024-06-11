@@ -4,6 +4,7 @@ import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/enums/enum_user_plan.dart";
 import "package:kwotes/types/user/social_links.dart";
 import "package:kwotes/types/user/profile_picture.dart";
+import "package:kwotes/types/user/user_metrics.dart";
 import "package:kwotes/types/user/user_rights.dart";
 
 /// User model from Firestore.
@@ -14,6 +15,7 @@ class UserFirestore {
     required this.profilePicture,
     required this.socialLinks,
     required this.createdAt,
+    required this.metrics,
     this.plan = EnumUserPlan.free,
     this.email = "anonymous@kwotes.fr",
     this.job = "Ghosting",
@@ -68,6 +70,9 @@ class UserFirestore {
   /// Public links to find more about this user.
   final SocialLinks socialLinks;
 
+  /// Metrics for this user.
+  final UserMetrics metrics;
+
   UserFirestore copyWith({
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -83,6 +88,7 @@ class UserFirestore {
     UserRights? rights,
     SocialLinks? socialLinks,
     EnumUserPlan? plan,
+    UserMetrics? metrics,
   }) {
     return UserFirestore(
       createdAt: createdAt ?? this.createdAt,
@@ -99,6 +105,7 @@ class UserFirestore {
       rights: rights ?? this.rights,
       socialLinks: socialLinks ?? this.socialLinks,
       plan: plan ?? this.plan,
+      metrics: metrics ?? this.metrics,
     );
   }
 
@@ -118,6 +125,7 @@ class UserFirestore {
       socialLinks: SocialLinks.empty(),
       rights: const UserRights(),
       plan: EnumUserPlan.free,
+      metrics: UserMetrics.empty(),
     );
   }
 
@@ -140,6 +148,7 @@ class UserFirestore {
       updatedAt: Utils.tictac.fromFirestore(map["updated_at"]),
       socialLinks: SocialLinks.fromMap(map["social_links"]),
       rights: UserRights.fromMap(map["rights"]),
+      metrics: UserMetrics.fromMap(map["metrics"]),
     );
   }
 
@@ -186,35 +195,37 @@ class UserFirestore {
     if (identical(this, other)) return true;
 
     return other is UserFirestore &&
+        other.bio == bio &&
         other.createdAt == createdAt &&
         other.email == email &&
         other.id == id &&
         other.job == job &&
         other.language == language &&
         other.location == location &&
+        other.metrics == metrics &&
         other.name == name &&
         other.nameLowerCase == nameLowerCase &&
+        other.plan == plan &&
         other.profilePicture == profilePicture &&
         other.rights == rights &&
-        other.bio == bio &&
-        other.plan == plan &&
-        other.updatedAt == updatedAt &&
-        other.socialLinks == socialLinks;
+        other.socialLinks == socialLinks &&
+        other.updatedAt == updatedAt;
   }
 
   @override
   int get hashCode {
     return createdAt.hashCode ^
+        bio.hashCode ^
         email.hashCode ^
-        id.hashCode ^
         job.hashCode ^
+        id.hashCode ^
         language.hashCode ^
         location.hashCode ^
+        metrics.hashCode ^
         name.hashCode ^
         nameLowerCase.hashCode ^
         profilePicture.hashCode ^
         rights.hashCode ^
-        bio.hashCode ^
         plan.hashCode ^
         updatedAt.hashCode ^
         socialLinks.hashCode;
