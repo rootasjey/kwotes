@@ -6,7 +6,6 @@ import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:infinite_carousel/infinite_carousel.dart";
 import "package:kwotes/components/better_avatar.dart";
-import "package:kwotes/components/buttons/circle_button.dart";
 import "package:kwotes/components/context_menu_components.dart";
 import "package:kwotes/components/hero_quote.dart";
 import "package:kwotes/components/loading_view.dart";
@@ -151,33 +150,32 @@ class MobileLayout extends StatelessWidget {
                           "assets/images/profile-picture-avocado.jpg",
                         ),
                       ),
-                      if (userFirestore.plan != EnumUserPlan.premium)
-                        CircleButton(
-                          onTap: () => onTapPremiumIcon(context),
-                          radius: 19.0,
-                          shape: CircleBorder(
-                            side: BorderSide(
-                              color: Constants.colors.premium,
-                              width: 2.0,
+                      if (userFirestore.plan != EnumUserPlan.premium) ...[
+                        Padding(
+                          padding: const EdgeInsets.only(right: 16.0),
+                          child: TextButton.icon(
+                            onPressed: () => onTapPremiumIcon(context),
+                            style: TextButton.styleFrom(
+                              foregroundColor: Constants.colors.premium,
+                              backgroundColor:
+                                  Constants.colors.premium.withAlpha(30),
                             ),
-                          ),
-                          margin: const EdgeInsets.only(left: 12.0),
-                          icon: Container(
-                            padding: const EdgeInsets.all(4.0),
-                            decoration: BoxDecoration(
-                              color: Constants.colors.premium,
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Constants.colors.premium,
-                              ),
-                            ),
-                            child: Icon(
+                            icon: const Icon(
                               TablerIcons.crown,
                               size: 18.0,
-                              color: isDark ? Colors.black87 : Colors.white,
                             ),
-                          ),
-                        ).animate().shake(),
+                            label: Text(
+                              "premium.name".tr(),
+                              style: Utils.calligraphy.body(
+                                textStyle: const TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ).animate().shake(),
+                        ),
+                      ]
                     ],
                   ),
                 ),
