@@ -240,6 +240,14 @@ class _PremiumDialogPageState extends State<PremiumDialogPage> with UiLoggy {
 
   void presentPaywallIfNeeded() async {
     if (!mounted) return;
+    if (!Utils.graphic.isMobile()) {
+      Utils.graphic.showSnackbar(
+        context,
+        message: "Paywall only available on mobile",
+      );
+      return;
+    }
+
     final PaywallResult paywallResult =
         await RevenueCatUI.presentPaywallIfNeeded("premium");
     loggy.debug(paywallResult);
@@ -260,23 +268,7 @@ class _PremiumDialogPageState extends State<PremiumDialogPage> with UiLoggy {
       }
     }
 
-    final int tabIndex = await Utils.vault.getHomePageTabIndex();
-    String routeTab = "/h";
-    switch (tabIndex) {
-      case 0:
-        routeTab = "/h";
-        break;
-      case 1:
-        routeTab = "/s";
-        break;
-      case 2:
-        routeTab = "/d";
-        break;
-      default:
-        routeTab = "/h";
-    }
-
     if (!context.mounted) return;
-    Beamer.of(context, root: true).beamToNamed(routeTab);
+    context.beamBack();
   }
 }
