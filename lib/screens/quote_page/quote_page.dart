@@ -11,6 +11,7 @@ import "package:kwotes/actions/quote_actions.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/quote_page/quote_page_actions.dart";
 import "package:kwotes/screens/quote_page/quote_page_body.dart";
@@ -21,6 +22,7 @@ import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_draft_quote_operation.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
+import "package:kwotes/types/enums/enum_user_plan.dart";
 import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/intents/add_to_list_intent.dart";
 import "package:kwotes/types/intents/copy_intent.dart";
@@ -602,15 +604,16 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
       builder: (BuildContext context) {
         return ShareQuoteBottomSheet(
           quote: _quote,
-          onShareImage: (Quote quote, {bool pop = true}) =>
-              Utils.graphic.onOpenShareImage(
-            context,
-            pop: pop,
-            quote: quote,
-            screenshotController: _screenshotController,
-            textWrapSolution: _textWrapSolution,
-            mounted: mounted,
-          ),
+          onShareImage: onShareImage,
+          // onShareImage: (Quote quote, {bool pop = true}) =>
+          //     Utils.graphic.onOpenShareImage(
+          //   context,
+          //   pop: pop,
+          //   quote: quote,
+          //   screenshotController: _screenshotController,
+          //   textWrapSolution: _textWrapSolution,
+          //   mounted: mounted,
+          // ),
           onShareLink: (Quote quote) => Utils.graphic.onShareLink(
             context,
             quote: quote,
@@ -625,12 +628,24 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
     );
   }
 
-  void onShareImage(Quote quote) {
+  void onShareImage(Quote quote, {bool pop = true}) {
+    final UserFirestore userFirestore =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
+
+    if (userFirestore.plan == EnumUserPlan.free) {
+      Beamer.of(context, root: true).beamToNamed(
+        HomeLocation.premiumRoute,
+      );
+      return;
+    }
+
     Utils.graphic.onOpenShareImage(
       context,
+      pop: pop,
       quote: quote,
       screenshotController: _screenshotController,
       textWrapSolution: _textWrapSolution,
+      mounted: mounted,
     );
   }
 

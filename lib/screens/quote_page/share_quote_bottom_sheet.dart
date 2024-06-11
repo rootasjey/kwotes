@@ -71,16 +71,16 @@ class ShareQuoteBottomSheet extends StatelessWidget {
                     onShareText?.call(quote);
                   },
                 ),
-                ShareCard(
-                  cardBackgroundColor: cardBackgroundColor,
-                  labelValue: "link.name".tr(),
-                  icon: const Icon(TablerIcons.link),
-                  margin: margin,
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    onShareLink?.call(quote);
-                  },
-                ),
+                // ShareCard(
+                //   cardBackgroundColor: cardBackgroundColor,
+                //   labelValue: "link.name".tr(),
+                //   icon: const Icon(TablerIcons.link),
+                //   margin: margin,
+                //   onTap: () {
+                //     Navigator.of(context).pop();
+                //     onShareLink?.call(quote);
+                //   },
+                // ),
                 ShareCard(
                   cardBackgroundColor: cardBackgroundColor,
                   labelValue: "image".tr(),
