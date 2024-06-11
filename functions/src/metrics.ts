@@ -350,10 +350,11 @@ export const onCreateQuote = functions
       return; 
     }
 
-    const userPub: number = userData.metrics.quotes.published ?? 0;
+    const userPublishedQuoteCount: number = userData.metrics.quotes.published ?? 0;
+    const newPublishedQuoteCount: number = userPublishedQuoteCount + 1;
     await userSnap.ref.update(
       'metrics.quotes.published', 
-      userPub + 1,
+      newPublishedQuoteCount,
     );
 
     return true;
@@ -714,10 +715,17 @@ export const onCreateUserDraft = functions
       return false; 
     }
 
-    const userDrafts: number = userData.metrics?.drafts ?? 0;
+    const userQuoteCreatedCount: number = userData.metrics?.quotes?.created ?? 0;
+    const newUserQuoteCreatedCount = userQuoteCreatedCount + 1;
+    const userDraftCount: number = userData.metrics?.drafts ?? 0;
+    const newUserDraftCount = userDraftCount + 1;
     await userSnap.ref.update(
       'metrics.drafts', 
-      userDrafts + 1,  
+      newUserDraftCount,  
+    );
+    await userSnap.ref.update(
+      'metrics.quotes.created', 
+      newUserQuoteCreatedCount,  
     );
 
     const metricSnap = await firestore
@@ -750,10 +758,11 @@ export const onDeleteUserDraft = functions
       return false; 
     }
 
-    const userDrafts: number = userData.metrics.drafts ?? 0;
+    const userDraftCount: number = userData.metrics.drafts ?? 0;
+    const newUserDraftCount = Math.max(0, userDraftCount - 1);
     await userSnap.ref.update(
       'metrics.drafts', 
-      Math.max(0, userDrafts - 1),
+      newUserDraftCount,
     );
 
     const metricSnap = await firestore
@@ -793,10 +802,11 @@ export const onCreateList = functions
       return false; 
     }
 
-    const userLists: number = userData.metrics?.lists ?? 0;
+    const userListCount: number = userData.metrics?.lists ?? 0;
+    const newUserListCount = userListCount + 1;
     await user.ref.update(
       'metrics.lists', 
-      userLists + 1,
+      newUserListCount,
     );
 
     const metricSnap = await firestore

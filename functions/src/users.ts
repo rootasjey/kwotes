@@ -122,6 +122,7 @@ export const createAccount = functions
       },
       name: username,
       name_lower_case: username.toLowerCase(),
+      plan: 'free',
       rights: {
         'user:manage_data'      : false,
         'user:manage_authors'   : false,
