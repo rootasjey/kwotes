@@ -23,3 +23,10 @@ enum EnumTopic {
   travel,
   work,
 }
+
+enum EnumFreeTopic {
+  biology,
+  feelings,
+  proverb,
+  social,
+}
