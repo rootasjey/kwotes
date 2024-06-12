@@ -5,16 +5,20 @@ class DotIndicator extends StatelessWidget {
   const DotIndicator({
     super.key,
     this.color = Colors.transparent,
+    this.size = 8.0,
   });
 
   /// Color of the dot.
   final Color color;
 
+  /// Size of the dot.
+  final double size;
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 8.0,
-      height: 8.0,
+      width: size,
+      height: size,
       foregroundDecoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12.0),
         color: color,
