@@ -2,6 +2,7 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:kwotes/components/topic_card.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/types/enums/enum_topic.dart";
 import "package:kwotes/types/topic.dart";
 
 class HomeTopics extends StatelessWidget {
@@ -78,6 +79,11 @@ class HomeTopics extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 12.0, right: 12.0),
                 scrollDirection: Axis.horizontal,
                 children: topics.map((Topic topic) {
+                  final bool isFreeTopic = EnumFreeTopic.values
+                      .map((e) => e.name)
+                      .toList()
+                      .contains(topic.name);
+
                   return TopicCard(
                     backgroundColor: cardBackgroundColor,
                     heroTag: topic.name,
@@ -87,6 +93,7 @@ class HomeTopics extends StatelessWidget {
                     size: const Size(70.0, 70.0),
                     startElevation: 4.0,
                     topic: topic,
+                    showDot: isFreeTopic ? false : true,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
