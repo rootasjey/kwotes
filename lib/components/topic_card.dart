@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
+import "package:kwotes/components/dot_indicator.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/topic.dart";
 
@@ -9,6 +10,7 @@ class TopicCard extends StatefulWidget {
     super.key,
     required this.topic,
     this.isDark = false,
+    this.showDot = false,
     this.showName = true,
     this.startElevation = 0.0,
     this.backgroundColor,
@@ -24,6 +26,10 @@ class TopicCard extends StatefulWidget {
 
   /// Whether to use dark theme.
   final bool isDark;
+
+  /// Show dot indicator if true.
+  /// Default: false.
+  final bool showDot;
 
   /// Show topic name below icon if true.
   /// Default: true.
@@ -155,18 +161,16 @@ class _TopicCardState extends State<TopicCard> {
                       style: Utils.calligraphy.body(
                         textStyle: TextStyle(
                           fontSize: 12.0,
-                          color: widget.isDark
-                              ? topic.color
-                              : Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.color
-                                  ?.withOpacity(0.6),
+                          color: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.color
+                              ?.withOpacity(0.6),
                           fontWeight: FontWeight.w500,
                           shadows: [
                             Shadow(
                               color: widget.isDark
-                                  ? Colors.black
+                                  ? topic.color.withOpacity(0.8)
                                   : topic.color.withOpacity(0.8),
                               offset: widget.isDark
                                   ? const Offset(1, 1)
@@ -178,6 +182,11 @@ class _TopicCardState extends State<TopicCard> {
                       ),
                     ),
                   ),
+                ),
+              if (widget.showDot)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: DotIndicator(color: topic.color, size: 4.0),
                 ),
             ],
           ),
