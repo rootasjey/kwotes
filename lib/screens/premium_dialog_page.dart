@@ -5,6 +5,7 @@ import "package:beamer/beamer.dart";
 import "package:bottom_sheet/bottom_sheet.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
+import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
@@ -241,10 +242,14 @@ class _PremiumDialogPageState extends State<PremiumDialogPage> with UiLoggy {
   void presentPaywallIfNeeded() async {
     if (!mounted) return;
     if (!Utils.graphic.isMobile()) {
-      Utils.graphic.showSnackbar(
-        context,
-        message: "Paywall only available on mobile",
-      );
+      if (!mounted) return;
+      Future.delayed(1.seconds, () {
+        context.beamBack();
+        Utils.graphic.showSnackbar(
+          context,
+          message: "Paywall only available on mobile",
+        );
+      });
       return;
     }
 
