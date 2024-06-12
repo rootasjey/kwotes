@@ -23,7 +23,7 @@ class Showcase extends StatelessWidget {
     this.margin = EdgeInsets.zero,
     this.onTapAuthor,
     this.onTapReference,
-    this.onTapTopicColor,
+    this.onTapTopic,
   });
 
   /// Animate item if true.
@@ -64,7 +64,7 @@ class Showcase extends StatelessWidget {
   final void Function(Reference reference)? onTapReference;
 
   /// Callback fired when a topic color is tapped.
-  final void Function(Topic topicColor)? onTapTopicColor;
+  final void Function(Topic topicColor)? onTapTopic;
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +100,7 @@ class Showcase extends StatelessWidget {
       isMobileSize: isMobileSize,
       margin: margin,
       topicColors: topicColors,
-      onTapTopicColor: onTapTopicColor,
+      onTapTopic: onTapTopic,
     );
   }
 }

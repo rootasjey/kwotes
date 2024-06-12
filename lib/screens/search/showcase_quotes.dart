@@ -2,6 +2,8 @@ import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:kwotes/components/topic_card.dart";
 import "package:kwotes/components/topic_tile.dart";
+import "package:kwotes/globals/constants.dart";
+import "package:kwotes/types/enums/enum_topic.dart";
 import "package:kwotes/types/topic.dart";
 import "package:wave_divider/wave_divider.dart";
 
@@ -13,7 +15,7 @@ class ShowcaseQuotes extends StatelessWidget {
     this.isMobileSize = false,
     this.margin = EdgeInsets.zero,
     this.topicColors = const [],
-    this.onTapTopicColor,
+    this.onTapTopic,
   });
 
   /// Animate item if true.
@@ -30,7 +32,7 @@ class ShowcaseQuotes extends StatelessWidget {
   final EdgeInsets margin;
 
   /// Callback fired when a topic color is tapped.
-  final void Function(Topic topicColor)? onTapTopicColor;
+  final void Function(Topic topicColor)? onTapTopic;
 
   /// List of topic colors.
   final List<Topic> topicColors;
@@ -80,10 +82,28 @@ class ShowcaseQuotes extends StatelessWidget {
           },
           itemBuilder: (BuildContext context, int index) {
             final Topic topic = topicColors[index];
+            final bool isFreeTopic = EnumFreeTopic.values
+                .map((e) => e.name)
+                .toList()
+                .contains(topic.name);
+
             return TopicTile(
               topic: topic,
               isDark: isDark,
-              onTap: onTapTopicColor,
+              onTap: onTapTopic,
+              shape: isFreeTopic
+                  ? null
+                  : RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      side: BorderSide(
+                        color: Constants.colors
+                            .getColorFromTopicName(
+                              context,
+                              topicName: topic.name,
+                            )
+                            .withOpacity(0.2),
+                      ),
+                    ),
             )
                 .animate(
                   delay: animateItemList ? 25.ms * index : null,
@@ -113,19 +133,22 @@ class ShowcaseQuotes extends StatelessWidget {
           alignment: WrapAlignment.spaceEvenly,
           children: topicColors
               .map(
-                (Topic topicColor) {
+                (Topic topic) {
+                  final bool isFreeTopic = EnumFreeTopic.values
+                      .map((EnumFreeTopic x) => x.name)
+                      .toList()
+                      .contains(topic.name);
+
                   return TopicCard(
-                    topic: topicColor,
+                    topic: topic,
                     isDark: isDark,
+                    showDot: isFreeTopic ? false : true,
                     backgroundColor: backgroundColor,
                     foregroundColor: foregroundColor,
-                    onTap: onTapTopicColor,
+                    onTap: onTapTopic,
                     size: isMobileSize
                         ? const Size(90.0, 90.0)
                         : const Size(100.0, 100.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
                   );
                 },
               )

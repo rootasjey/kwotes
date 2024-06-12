@@ -12,6 +12,7 @@ import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/globals/utils/linguistic.dart";
+import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/locations/search_location.dart";
 import "package:kwotes/router/locations/settings_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
@@ -25,6 +26,8 @@ import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_search_category.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
+import "package:kwotes/types/enums/enum_topic.dart";
+import "package:kwotes/types/enums/enum_user_plan.dart";
 import "package:kwotes/types/firestore/document_change_map.dart";
 import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/firestore/query_doc_snap_map.dart";
@@ -168,7 +171,10 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   @override
   Widget build(BuildContext context) {
-    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    final Size windowSize = MediaQuery.of(context).size;
+    final bool isMobileSize =
+        windowSize.width < Utils.measurements.mobileWidthTreshold;
+    // final bool isMobileSize = Utils.measurements.isMobileSize(context);
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final Signal<UserFirestore> signalUserFirestore =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
@@ -247,13 +253,13 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                       isDark: isDark,
                       isMobileSize: isMobileSize,
                       margin: EdgeInsets.only(
-                        top: 24.0,
+                        top: windowSize.width < 380.0 ? 54.0 : 24.0,
                         bottom: isMobileSize ? 54.0 : 160.0,
                         left: isMobileSize ? 24.0 : 24.0,
                         right: isMobileSize ? 24.0 : 24.0,
                       ),
                       pageState: _pageState,
-                      onTapTopicColor: onTapTopic,
+                      onTapTopic: onTapTopic,
                       onTapAuthor: onTapAuthor,
                       onTapReference: onTapReference,
                       references: _referenceList,
@@ -829,6 +835,21 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     setState(() {});
   }
 
+  /// Check if user is premium.
+  bool isPremiumUser() {
+    final UserFirestore userFirestore =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
+
+    if (userFirestore.plan == EnumUserPlan.free) {
+      Beamer.of(context, root: true).beamToNamed(
+        HomeLocation.premiumRoute,
+      );
+      return false;
+    }
+
+    return true;
+  }
+
   /// Listen to document changes.
   void listenToDocumentChanges(QueryMap query) {
     _streamSnapshot?.cancel();
@@ -973,6 +994,12 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       return;
     }
 
+    if (!isPremiumUser()) {
+      _searchInputController.text = "";
+      _searchFocusNode.unfocus();
+      return;
+    }
+
     NavigationStateHelper.searchValue = value;
     SystemChrome.setApplicationSwitcherDescription(
       ApplicationSwitcherDescription(
@@ -1064,6 +1091,21 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   /// Callback fired when a topic is tapped.
   void onTapTopic(Topic topic) {
+    final bool isFreeTopic = EnumFreeTopic.values
+        .map((EnumFreeTopic x) => x.name)
+        .toList()
+        .contains(topic.name);
+
+    final UserFirestore userFirestore =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
+
+    if (userFirestore.plan == EnumUserPlan.free && !isFreeTopic) {
+      Beamer.of(context, root: true).beamToNamed(
+        HomeLocation.premiumRoute,
+      );
+      return;
+    }
+
     FocusManager.instance.primaryFocus?.unfocus();
     _searchInputController.text = topic.name;
 
