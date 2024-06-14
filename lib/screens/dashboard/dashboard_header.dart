@@ -60,6 +60,7 @@ class DashboardHeader extends StatelessWidget {
             left: 48.0,
             right: 76.0,
           );
+
     return Container(
       padding: padding,
       child: Row(

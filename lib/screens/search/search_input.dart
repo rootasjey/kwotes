@@ -59,7 +59,6 @@ class SearchInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String hintText = "${"search.type_a_keyword".tr()}...";
-    // final String hintText = "${"search.${searchCategory.name}".tr()}...";
     final BorderRadius borderRadius = BorderRadius.circular(24.0);
 
     int hintMaxLines = 1;
@@ -84,6 +83,8 @@ class SearchInput extends StatelessWidget {
 
     final bool isMobile = Utils.graphic.isMobile();
     final double toolbarHeight = isMobile ? 40.0 : 76.0;
+
+    final searchInputWidthFactor = isMobileSize ? 1.0 : 0.75;
 
     return SliverAppBar(
       primary: false,
@@ -125,60 +126,63 @@ class SearchInput extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: AnimatedSize(
-                      duration: const Duration(milliseconds: 125),
-                      child: TextField(
-                        maxLines: null,
-                        autofocus: false,
-                        cursorColor: Constants.colors.primary,
-                        focusNode: focusNode,
-                        controller: inputController,
-                        keyboardType: TextInputType.multiline,
-                        textCapitalization: TextCapitalization.sentences,
-                        textInputAction: TextInputAction.search,
-                        onChanged: onChangedTextField,
-                        textAlign: TextAlign.center,
-                        style: Utils.calligraphy.body(
-                          textStyle: TextStyle(
-                            fontSize: isMobileSize ? 14.0 : 18.0,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        decoration: InputDecoration(
-                          hintText: hintText,
-                          isDense: true,
-                          filled: true,
-                          constraints: BoxConstraints(
-                            minHeight: 0.0,
-                            minWidth: 0.0,
-                            maxHeight: isMobileSize ? 54.0 : 70.0,
-                          ),
-                          fillColor:
-                              isDark ? Colors.grey.shade900 : Colors.white54,
-                          suffixIcon: isInputEmpty ? null : clearIcon,
-                          border: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.transparent,
+                    child: FractionallySizedBox(
+                      widthFactor: searchInputWidthFactor,
+                      child: AnimatedSize(
+                        duration: const Duration(milliseconds: 125),
+                        child: TextField(
+                          maxLines: null,
+                          autofocus: false,
+                          cursorColor: Constants.colors.primary,
+                          focusNode: focusNode,
+                          controller: inputController,
+                          keyboardType: TextInputType.multiline,
+                          textCapitalization: TextCapitalization.sentences,
+                          textInputAction: TextInputAction.search,
+                          onChanged: onChangedTextField,
+                          textAlign: TextAlign.center,
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: isMobileSize ? 14.0 : 18.0,
+                              fontWeight: FontWeight.w400,
                             ),
-                            borderRadius: borderRadius,
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.transparent,
-                              width: 1.6,
+                          decoration: InputDecoration(
+                            hintText: hintText,
+                            isDense: true,
+                            filled: true,
+                            constraints: BoxConstraints(
+                              minHeight: 0.0,
+                              minWidth: 0.0,
+                              maxHeight: isMobileSize ? 54.0 : 70.0,
                             ),
-                            borderRadius: borderRadius,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.transparent,
+                            fillColor:
+                                isDark ? Colors.grey.shade900 : Colors.white54,
+                            suffixIcon: isInputEmpty ? null : clearIcon,
+                            border: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                color: Colors.transparent,
+                              ),
+                              borderRadius: borderRadius,
                             ),
-                            borderRadius: borderRadius,
-                          ),
-                          hintMaxLines: hintMaxLines,
-                          contentPadding: const EdgeInsets.symmetric(
-                            vertical: 8.0,
-                            horizontal: 12.0,
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                color: Colors.transparent,
+                                width: 1.6,
+                              ),
+                              borderRadius: borderRadius,
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                color: Colors.transparent,
+                              ),
+                              borderRadius: borderRadius,
+                            ),
+                            hintMaxLines: hintMaxLines,
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 8.0,
+                              horizontal: 12.0,
+                            ),
                           ),
                         ),
                       ),

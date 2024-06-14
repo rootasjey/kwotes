@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "package:kwotes/components/topic_card.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/enums/enum_topic.dart";
+import "package:kwotes/types/enums/enum_user_plan.dart";
 import "package:kwotes/types/topic.dart";
 
 class HomeTopics extends StatelessWidget {
@@ -14,6 +15,7 @@ class HomeTopics extends StatelessWidget {
     this.cardBackgroundColor,
     this.margin = EdgeInsets.zero,
     this.onTapTopic,
+    this.userPlan = EnumUserPlan.free,
   });
 
   /// Whether to use dark theme.
@@ -27,6 +29,9 @@ class HomeTopics extends StatelessWidget {
 
   /// Margin of the widget.
   final EdgeInsets margin;
+
+  /// Current user plan.
+  final EnumUserPlan userPlan;
 
   /// Callback fired when topic is tapped.
   final void Function(Topic topic)? onTapTopic;
@@ -84,6 +89,9 @@ class HomeTopics extends StatelessWidget {
                       .toList()
                       .contains(topic.name);
 
+                  final bool showLockIcon =
+                      !isFreeTopic && userPlan == EnumUserPlan.free;
+
                   return TopicCard(
                     backgroundColor: cardBackgroundColor,
                     heroTag: topic.name,
@@ -93,7 +101,7 @@ class HomeTopics extends StatelessWidget {
                     size: const Size(70.0, 70.0),
                     startElevation: 4.0,
                     topic: topic,
-                    showDot: isFreeTopic ? false : true,
+                    showLockIcon: showLockIcon,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),

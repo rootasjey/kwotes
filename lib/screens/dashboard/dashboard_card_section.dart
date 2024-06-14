@@ -7,6 +7,7 @@ import "package:kwotes/globals/constants.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/screens/dashboard/dashboard_card.dart";
+import "package:kwotes/types/enums/enum_card_layout.dart";
 
 class DashboardCardSection extends StatelessWidget {
   /// A list of dashboard card widgets.
@@ -15,6 +16,7 @@ class DashboardCardSection extends StatelessWidget {
     this.isMobileSize = false,
     this.isDark = false,
     this.isPremiumUser = false,
+    this.windowSize = const Size(0, 0),
   });
 
   /// True if the screen size is similar to a mobile.
@@ -27,8 +29,18 @@ class DashboardCardSection extends StatelessWidget {
   /// True if the theme is dark.
   final bool isDark;
 
+  /// Window size.
+  final Size windowSize;
+
   @override
   Widget build(BuildContext context) {
+    EnumCardLayout cardLayout =
+        isMobileSize ? EnumCardLayout.compact : EnumCardLayout.normal;
+
+    if (windowSize.width >= 900.0) {
+      cardLayout = EnumCardLayout.largeText;
+    }
+
     return Padding(
       padding: isMobileSize
           ? const EdgeInsets.only(top: 36.0, left: 12.0, right: 12.0)
@@ -36,10 +48,13 @@ class DashboardCardSection extends StatelessWidget {
       child: Wrap(
         spacing: 12.0,
         runSpacing: 12.0,
+        direction: cardLayout == EnumCardLayout.largeText
+            ? Axis.vertical
+            : Axis.horizontal,
         children: [
           if (!isPremiumUser)
             DashboardCard(
-              compact: isMobileSize,
+              cardLayout: cardLayout,
               hoverColor: Constants.colors.premium,
               iconData: TablerIcons.crown,
               isDark: isDark,
@@ -53,7 +68,7 @@ class DashboardCardSection extends StatelessWidget {
               },
             ),
           DashboardCard(
-            compact: isMobileSize,
+            cardLayout: cardLayout,
             hoverColor: Constants.colors.inValidation,
             iconData: TablerIcons.note,
             isDark: isDark,
@@ -67,7 +82,7 @@ class DashboardCardSection extends StatelessWidget {
             },
           ),
           DashboardCard(
-            compact: isMobileSize,
+            cardLayout: cardLayout,
             iconData: TablerIcons.heart,
             isDark: isDark,
             hoverColor: Constants.colors.likes,
@@ -81,7 +96,7 @@ class DashboardCardSection extends StatelessWidget {
             },
           ),
           DashboardCard(
-            compact: isMobileSize,
+            cardLayout: cardLayout,
             hoverColor: Constants.colors.lists,
             iconData: TablerIcons.list,
             isDark: isDark,

@@ -5,6 +5,7 @@ import "package:kwotes/screens/search/showcase_references.dart";
 import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_search_category.dart";
+import "package:kwotes/types/enums/enum_user_plan.dart";
 import "package:kwotes/types/reference.dart";
 import "package:kwotes/types/topic.dart";
 
@@ -21,6 +22,7 @@ class Showcase extends StatelessWidget {
     this.isMobileSize = false,
     this.show = true,
     this.margin = EdgeInsets.zero,
+    this.userPlan = EnumUserPlan.free,
     this.onTapAuthor,
     this.onTapReference,
     this.onTapTopic,
@@ -47,6 +49,9 @@ class Showcase extends StatelessWidget {
 
   /// What type of entity we are searching.
   final EnumSearchCategory searchCategory;
+
+  /// Current user plan.
+  final EnumUserPlan userPlan;
 
   /// List of authors.
   final List<Author> authors;
@@ -101,6 +106,7 @@ class Showcase extends StatelessWidget {
       margin: margin,
       topicColors: topicColors,
       onTapTopic: onTapTopic,
+      userPlan: userPlan,
     );
   }
 }

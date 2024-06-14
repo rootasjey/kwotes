@@ -56,19 +56,19 @@ class BigTextHeader extends StatelessWidget {
               fontSize: 84.0,
               fontWeight: FontWeight.w700,
               color: accentColor,
-              height: 1.0,
+              height: 1.2,
             ),
           ),
         ),
         if (subtitleValue.isNotEmpty)
           Opacity(
-            opacity: 0.4,
+            opacity: 0.6,
             child: Text(
               subtitleValue,
               style: Utils.calligraphy.body(
                 textStyle: const TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w400,
                   // color: accentColor,
                 ),
               ),

@@ -1,9 +1,11 @@
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/topic_card.dart";
 import "package:kwotes/components/topic_tile.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/types/enums/enum_topic.dart";
+import "package:kwotes/types/enums/enum_user_plan.dart";
 import "package:kwotes/types/topic.dart";
 import "package:wave_divider/wave_divider.dart";
 
@@ -14,6 +16,7 @@ class ShowcaseQuotes extends StatelessWidget {
     this.isDark = false,
     this.isMobileSize = false,
     this.margin = EdgeInsets.zero,
+    this.userPlan = EnumUserPlan.free,
     this.topicColors = const [],
     this.onTapTopic,
   });
@@ -30,6 +33,9 @@ class ShowcaseQuotes extends StatelessWidget {
 
   /// Space around this widget.
   final EdgeInsets margin;
+
+  /// Current user plan.
+  final EnumUserPlan userPlan;
 
   /// Callback fired when a topic color is tapped.
   final void Function(Topic topicColor)? onTapTopic;
@@ -87,23 +93,31 @@ class ShowcaseQuotes extends StatelessWidget {
                 .toList()
                 .contains(topic.name);
 
+            final bool showLockIcon =
+                !isFreeTopic && userPlan == EnumUserPlan.free;
+
             return TopicTile(
               topic: topic,
               isDark: isDark,
               onTap: onTapTopic,
-              shape: isFreeTopic
-                  ? null
-                  : RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      side: BorderSide(
-                        color: Constants.colors
-                            .getColorFromTopicName(
-                              context,
-                              topicName: topic.name,
-                            )
-                            .withOpacity(0.2),
-                      ),
-                    ),
+              trailing: showLockIcon
+                  ? const Icon(
+                      TablerIcons.lock,
+                      size: 16.0,
+                      color: Colors.grey,
+                    )
+                  : null,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+                side: BorderSide(
+                  color: Constants.colors
+                      .getColorFromTopicName(
+                        context,
+                        topicName: topic.name,
+                      )
+                      .withOpacity(0.2),
+                ),
+              ),
             )
                 .animate(
                   delay: animateItemList ? 25.ms * index : null,
@@ -139,10 +153,21 @@ class ShowcaseQuotes extends StatelessWidget {
                       .toList()
                       .contains(topic.name);
 
+                  final bool showLockIcon =
+                      !isFreeTopic && userPlan == EnumUserPlan.free;
+
                   return TopicCard(
                     topic: topic,
                     isDark: isDark,
-                    showDot: isFreeTopic ? false : true,
+                    showLockIcon: showLockIcon,
+                    // showDot: isFreeTopic ? false : true,
+                    // badge: showLockIcon
+                    //     ? Icon(
+                    //         TablerIcons.lock,
+                    //         size: 20.0,
+                    //         color: foregroundColor?.withOpacity(0.6),
+                    //       )
+                    //     : null,
                     backgroundColor: backgroundColor,
                     foregroundColor: foregroundColor,
                     onTap: onTapTopic,

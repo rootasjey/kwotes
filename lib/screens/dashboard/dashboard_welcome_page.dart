@@ -63,7 +63,9 @@ class _DashboardWelcomePageState extends State<DashboardWelcomePage>
   @override
   Widget build(BuildContext context) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final bool isMobileSize = Utils.measurements.isMobileSize(context);
+    final Size windowSize = MediaQuery.of(context).size;
+    final bool isMobileSize =
+        windowSize.width < Utils.measurements.mobileWidthTreshold;
 
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
@@ -103,6 +105,7 @@ class _DashboardWelcomePageState extends State<DashboardWelcomePage>
                       isDark: isDark,
                       isMobileSize: isMobileSize,
                       isPremiumUser: userFirestore.plan == EnumUserPlan.premium,
+                      windowSize: windowSize,
                     ),
                   ]),
                 ),

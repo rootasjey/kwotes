@@ -267,6 +267,7 @@ class MobileLayout extends StatelessWidget {
                 topics: Constants.colors.topics,
                 onTapTopic: onTapTopic,
                 cardBackgroundColor: backgroundColor,
+                userPlan: userFirestore.plan,
                 margin: const EdgeInsets.only(
                   top: 24.0,
                   bottom: 42.0,

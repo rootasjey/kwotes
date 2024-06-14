@@ -174,10 +174,22 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     final Size windowSize = MediaQuery.of(context).size;
     final bool isMobileSize =
         windowSize.width < Utils.measurements.mobileWidthTreshold;
-    // final bool isMobileSize = Utils.measurements.isMobileSize(context);
+
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final Signal<UserFirestore> signalUserFirestore =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+
+    final EdgeInsets searchInputMargin = isMobileSize
+        ? EdgeInsets.only(
+            top: Utils.graphic.getDesktopPadding(),
+            left: 16.0,
+            right: 16.0,
+          )
+        : EdgeInsets.only(
+            top: Utils.graphic.getDesktopPadding(),
+            left: 48.0,
+            right: 76.0,
+          );
 
     return SafeArea(
       child: Scaffold(
@@ -195,11 +207,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                   ),
                   slivers: [
                     SearchInput(
-                      margin: EdgeInsets.only(
-                        top: Utils.graphic.getDesktopPadding(),
-                        left: 16.0,
-                        right: 16.0,
-                      ),
+                      margin: searchInputMargin,
                       inputController: _searchInputController,
                       onChangedTextField: onSearchInputChanged,
                       focusNode: _searchFocusNode,
@@ -211,9 +219,8 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                     ),
                     ChipCategoryAppBar(
                       isDark: isDark,
-                      margin: const EdgeInsets.only(
+                      margin: searchInputMargin.copyWith(
                         top: 12.0,
-                        left: 18.0,
                         bottom: 12.0,
                       ),
                       categorySelected: _searchCategory,
@@ -247,25 +254,32 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                         );
                       },
                     ),
-                    Showcase(
-                      animateItemList: _animateItemList,
-                      authors: _authorList,
-                      isDark: isDark,
-                      isMobileSize: isMobileSize,
-                      margin: EdgeInsets.only(
-                        top: windowSize.width < 380.0 ? 54.0 : 24.0,
-                        bottom: isMobileSize ? 54.0 : 160.0,
-                        left: isMobileSize ? 24.0 : 24.0,
-                        right: isMobileSize ? 24.0 : 24.0,
-                      ),
-                      pageState: _pageState,
-                      onTapTopic: onTapTopic,
-                      onTapAuthor: onTapAuthor,
-                      onTapReference: onTapReference,
-                      references: _referenceList,
-                      searchCategory: _searchCategory,
-                      show: _searchInputController.text.isEmpty,
-                      topicColors: Constants.colors.topics,
+                    SignalBuilder(
+                      signal: signalUserFirestore,
+                      builder: (BuildContext context,
+                          UserFirestore userFireStore, Widget? child) {
+                        return Showcase(
+                          animateItemList: _animateItemList,
+                          authors: _authorList,
+                          isDark: isDark,
+                          isMobileSize: isMobileSize,
+                          margin: EdgeInsets.only(
+                            top: windowSize.width < 380.0 ? 54.0 : 24.0,
+                            bottom: isMobileSize ? 54.0 : 160.0,
+                            left: isMobileSize ? 24.0 : 24.0,
+                            right: isMobileSize ? 24.0 : 24.0,
+                          ),
+                          pageState: _pageState,
+                          onTapTopic: onTapTopic,
+                          onTapAuthor: onTapAuthor,
+                          onTapReference: onTapReference,
+                          references: _referenceList,
+                          searchCategory: _searchCategory,
+                          show: _searchInputController.text.isEmpty,
+                          topicColors: Constants.colors.topics,
+                          userPlan: userFireStore.plan,
+                        );
+                      },
                     ),
                     ShowMoreButton(
                       searchCategory: _searchCategory,

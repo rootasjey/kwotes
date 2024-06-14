@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/types/enums/enum_card_layout.dart";
 
 class DashboardCard extends StatefulWidget {
   const DashboardCard({
@@ -8,12 +9,12 @@ class DashboardCard extends StatefulWidget {
     required this.iconData,
     required this.textSubtitle,
     required this.textTitle,
-    this.compact = false,
     this.isDark = false,
     this.isWide = false,
     this.noSizeConstraints = false,
     this.hoverColor = Colors.pink,
     this.elevation = 0.0,
+    this.cardLayout = EnumCardLayout.normal,
     this.onTap,
     this.heroKey = "",
   }) : super(key: key);
@@ -28,14 +29,14 @@ class DashboardCard extends StatefulWidget {
   /// This card will have less height but with normal width.
   final bool isWide;
 
-  /// If true, the card's width will be 200.0.
-  final bool compact;
-
   /// Icon will be of this color on hover.
   final Color hoverColor;
 
   /// Card's elevation.
   final double elevation;
+
+  /// Card layout.
+  final EnumCardLayout cardLayout;
 
   /// Icon's data which will be displayed before text.
   final IconData iconData;
@@ -81,7 +82,8 @@ class _DashboardCardState extends State<DashboardCard> {
   @override
   void initState() {
     super.initState();
-    _startElevation = widget.compact ? 6.0 : widget.elevation;
+    _startElevation =
+        widget.cardLayout == EnumCardLayout.compact ? 6.0 : widget.elevation;
     _endElevation = _startElevation / 2;
     _elevation = _startElevation;
 
@@ -90,11 +92,15 @@ class _DashboardCardState extends State<DashboardCard> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.compact) {
+    if (widget.cardLayout == EnumCardLayout.compact) {
       return compactLayout();
     }
 
-    return largeLayout();
+    if (widget.cardLayout == EnumCardLayout.largeText) {
+      return largeTextLayout();
+    }
+
+    return normalLayout();
   }
 
   /// Apply dark theme.
@@ -145,7 +151,7 @@ class _DashboardCardState extends State<DashboardCard> {
     );
   }
 
-  Widget largeLayout() {
+  Widget normalLayout() {
     return SizedBox(
       width: 180.0,
       height: 170.0,
@@ -167,7 +173,7 @@ class _DashboardCardState extends State<DashboardCard> {
           onTapDown: onTapDown,
           onTapUp: onTapUp,
           child: Padding(
-            padding: widget.compact
+            padding: widget.cardLayout == EnumCardLayout.compact
                 ? const EdgeInsets.all(12.0)
                 : const EdgeInsets.all(20.0),
             child: Column(
@@ -184,9 +190,9 @@ class _DashboardCardState extends State<DashboardCard> {
     );
   }
 
-  Widget icon() {
+  Widget icon({double? size}) {
     return Padding(
-      padding: widget.compact
+      padding: widget.cardLayout == EnumCardLayout.compact
           ? const EdgeInsets.only(right: 12.0)
           : const EdgeInsets.only(
               top: 12.0,
@@ -195,14 +201,16 @@ class _DashboardCardState extends State<DashboardCard> {
       child: Icon(
         widget.iconData,
         color: _iconColor,
+        size: size,
       ).animate(target: _shakeAnimationTarget).shake(),
     );
   }
 
   Widget texts() {
     return Column(
-      crossAxisAlignment:
-          widget.compact ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+      crossAxisAlignment: widget.cardLayout == EnumCardLayout.compact
+          ? CrossAxisAlignment.start
+          : CrossAxisAlignment.center,
       children: [
         Hero(
           tag: widget.heroKey,
@@ -291,5 +299,70 @@ class _DashboardCardState extends State<DashboardCard> {
     setState(() {
       _elevation = _startElevation;
     });
+  }
+
+  Widget largeTextLayout() {
+    return InkWell(
+      onTap: widget.onTap,
+      splashColor: widget.hoverColor,
+      onHover: onHover,
+      onTapDown: onTapDown,
+      onTapUp: onTapUp,
+      child: Padding(
+        padding: widget.cardLayout == EnumCardLayout.compact
+            ? const EdgeInsets.all(12.0)
+            : const EdgeInsets.all(20.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 24.0, top: 16.0),
+              child: icon(size: 42.0),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Hero(
+                  tag: widget.heroKey,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: Text(
+                      widget.textTitle,
+                      textAlign: TextAlign.center,
+                      style: Utils.calligraphy.title(
+                        textStyle: const TextStyle(
+                          fontSize: 72.0,
+                          fontWeight: FontWeight.w100,
+                          height: 1.2,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Opacity for dark/ligth theme auto switch.
+                Opacity(
+                  opacity: 0.6,
+                  child: Text(
+                    widget.textSubtitle,
+                    maxLines: widget.isWide ? 1 : 2,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: Utils.calligraphy.body(
+                      textStyle: const TextStyle(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

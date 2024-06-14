@@ -106,18 +106,17 @@ class _ShowcaseTextState extends State<ShowcaseText> {
 
     if (imageProvider != null && !widget.useSquareAvatar) {
       avatar = BetterAvatar(
-        imageProvider: imageProvider,
-        radius: 16.0,
-        onTap: widget.onTap,
-        heroTag: widget.docId,
-        colorFilter: _colorFilterActive
-            ? const ColorFilter.mode(
-                Colors.grey,
-                BlendMode.saturation,
-              )
-            : null,
-        margin: const EdgeInsets.only(right: 12.0),
-      );
+          imageProvider: imageProvider,
+          radius: widget.isMobileSize ? 16.0 : 18.0,
+          onTap: widget.onTap,
+          heroTag: widget.docId,
+          colorFilter: _colorFilterActive
+              ? const ColorFilter.mode(
+                  Colors.grey,
+                  BlendMode.saturation,
+                )
+              : null,
+          margin: const EdgeInsets.only(right: 12.0));
     } else if (imageProvider != null && widget.useSquareAvatar) {
       avatar = Hero(
         tag: widget.docId,
@@ -132,6 +131,7 @@ class _ShowcaseTextState extends State<ShowcaseText> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4.0),
             ),
+            margin: const EdgeInsets.only(right: 12.0),
             clipBehavior: Clip.antiAlias,
             child: Image(
               image: imageProvider,
@@ -163,6 +163,9 @@ class _ShowcaseTextState extends State<ShowcaseText> {
         child: Padding(
           padding: widget.padding,
           child: Row(
+            crossAxisAlignment: widget.isMobileSize
+                ? CrossAxisAlignment.center
+                : CrossAxisAlignment.start,
             children: [
               if (imageProvider != null) avatar,
               Expanded(
@@ -177,8 +180,10 @@ class _ShowcaseTextState extends State<ShowcaseText> {
                         overflow: TextOverflow.ellipsis,
                         style: Utils.calligraphy.body(
                           textStyle: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w400,
+                            fontSize: widget.isMobileSize ? 16.0 : 24.0,
+                            fontWeight: widget.isMobileSize
+                                ? FontWeight.w400
+                                : FontWeight.w100,
                             color: _foregroundColor,
                           ),
                         ),
@@ -189,8 +194,8 @@ class _ShowcaseTextState extends State<ShowcaseText> {
                         widget.subtitleValue,
                         style: Utils.calligraphy.body(
                             textStyle: TextStyle(
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w400,
+                          fontSize: widget.isMobileSize ? 12.0 : 18.0,
+                          fontWeight: FontWeight.w200,
                           color: _foregroundColor?.withOpacity(0.3),
                         )),
                       ),

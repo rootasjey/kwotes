@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/dot_indicator.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/topic.dart";
@@ -11,6 +12,7 @@ class TopicCard extends StatefulWidget {
     required this.topic,
     this.isDark = false,
     this.showDot = false,
+    this.showLockIcon = false,
     this.showName = true,
     this.startElevation = 0.0,
     this.backgroundColor,
@@ -22,6 +24,7 @@ class TopicCard extends StatefulWidget {
     this.shape,
     this.heroTag,
     this.onHover,
+    this.badge,
   });
 
   /// Whether to use dark theme.
@@ -30,6 +33,9 @@ class TopicCard extends StatefulWidget {
   /// Show dot indicator if true.
   /// Default: false.
   final bool showDot;
+
+  /// Show lock icon if true.
+  final bool showLockIcon;
 
   /// Show topic name below icon if true.
   /// Default: true.
@@ -67,6 +73,9 @@ class TopicCard extends StatefulWidget {
 
   /// Callback fired when a topic color is hovered.
   final void Function(Topic topicColor, bool isHover)? onHover;
+
+  /// Badge widget.
+  final Widget? badge;
 
   @override
   State<TopicCard> createState() => _TopicCardState();
@@ -140,53 +149,66 @@ class _TopicCardState extends State<TopicCard> {
           width: widget.size.width,
           height: widget.size.height,
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: Stack(
+            alignment: Alignment.center,
             children: [
-              Icon(
-                Utils.graphic.getIconDataFromTopic(topic.name),
-                color: widget.isDark ? _iconColor : null,
-                size: widget.iconSize,
-              ).animate(target: _shakeAnimationTarget).shake(),
-              if (widget.showName)
-                Padding(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child: Hero(
-                    tag: widget.heroTag ?? topic.name,
-                    child: Text(
-                      topic.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Utils.calligraphy.body(
-                        textStyle: TextStyle(
-                          fontSize: 12.0,
-                          color: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.color
-                              ?.withOpacity(0.6),
-                          fontWeight: FontWeight.w500,
-                          shadows: [
-                            Shadow(
-                              color: widget.isDark
-                                  ? topic.color.withOpacity(0.8)
-                                  : topic.color.withOpacity(0.8),
-                              offset: widget.isDark
-                                  ? const Offset(1, 1)
-                                  : const Offset(2, 2),
-                              blurRadius: widget.isDark ? 1.0 : 4.0,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    widget.showLockIcon
+                        ? TablerIcons.lock
+                        : Utils.graphic.getIconDataFromTopic(topic.name),
+                    color: widget.isDark ? _iconColor : null,
+                    size: widget.iconSize,
+                  ).animate(target: _shakeAnimationTarget).shake(),
+                  if (widget.showName)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4.0),
+                      child: Hero(
+                        tag: widget.heroTag ?? topic.name,
+                        child: Text(
+                          topic.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 12.0,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.color
+                                  ?.withOpacity(0.6),
+                              fontWeight: FontWeight.w500,
+                              shadows: [
+                                Shadow(
+                                  color: widget.isDark
+                                      ? topic.color.withOpacity(0.8)
+                                      : topic.color.withOpacity(0.8),
+                                  offset: widget.isDark
+                                      ? const Offset(1, 1)
+                                      : const Offset(2, 2),
+                                  blurRadius: widget.isDark ? 1.0 : 4.0,
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-              if (widget.showDot)
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: DotIndicator(color: topic.color, size: 4.0),
+                  if (widget.showDot)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: DotIndicator(color: topic.color, size: 4.0),
+                    ),
+                ],
+              ),
+              if (widget.badge != null)
+                Positioned(
+                  top: 0.0,
+                  right: 0.0,
+                  child: widget.badge ?? const SizedBox.shrink(),
                 ),
             ],
           ),

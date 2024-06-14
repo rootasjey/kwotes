@@ -19,6 +19,7 @@ class TopicTile extends StatefulWidget {
     this.shape,
     this.heroTag,
     this.onHover,
+    this.trailing,
   });
 
   /// Whether to use dark theme.
@@ -61,6 +62,9 @@ class TopicTile extends StatefulWidget {
   /// Callback fired when a topic color is hovered.
   final void Function(Topic topicColor, bool isHover)? onHover;
 
+  /// Trailing widget.
+  final Widget? trailing;
+
   @override
   State<TopicTile> createState() => _TopicTileState();
 }
@@ -92,6 +96,7 @@ class _TopicTileState extends State<TopicTile> {
   @override
   Widget build(BuildContext context) {
     final Topic topic = widget.topic;
+    final Widget? trailing = widget.trailing;
 
     return Card(
       margin: widget.margin,
@@ -177,6 +182,7 @@ class _TopicTileState extends State<TopicTile> {
                     ),
                   ),
                 ),
+              if (trailing != null) trailing,
             ],
           ),
         ),
