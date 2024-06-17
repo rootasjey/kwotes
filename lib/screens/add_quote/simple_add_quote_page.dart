@@ -45,6 +45,8 @@ class SimpleAddQuotePage extends StatelessWidget {
     this.onTapCancelButtonContentName,
     this.onTapCancelButtonReferenceName,
     this.onShowComplexBuilder,
+    this.submitButton,
+    this.windowSize = Size.zero,
   });
 
   /// Display "details" UI button if true.
@@ -122,6 +124,9 @@ class SimpleAddQuotePage extends StatelessWidget {
   /// Shortcuts for this page.
   final Map<SingleActivator, Intent> shortcuts;
 
+  /// Window size.
+  final Size windowSize;
+
   /// Auto detected languge string value (e.g. "en").
   final String _autoDetectedLanguage = "";
 
@@ -136,6 +141,9 @@ class SimpleAddQuotePage extends StatelessWidget {
 
   /// Save button widget.
   final Widget saveButton;
+
+  /// Save button widget.
+  final Widget? submitButton;
 
   /// Language selector.
   final Widget languageSelector;
@@ -155,8 +163,9 @@ class SimpleAddQuotePage extends StatelessWidget {
           );
 
     final BoxConstraints boxConstraints = isMobileSize
-        ? const BoxConstraints(
+        ? BoxConstraints(
             maxWidth: 500.0,
+            // maxWidth: windowSize.width,
           )
         : const BoxConstraints(
             maxWidth: 500.0,
@@ -243,21 +252,30 @@ class SimpleAddQuotePage extends StatelessWidget {
                   randomReferenceInt: randomReferenceInt,
                   onSubmitted: onSubmittedReferenceName,
                 ),
-                SliverPadding(
-                  padding: margin.add(
-                    const EdgeInsets.only(
-                      top: 12.0,
-                      bottom: 84.0,
-                    ),
-                  ),
-                  sliver: SliverToBoxAdapter(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: ConstrainedBox(
-                        constraints: boxConstraints,
-                        child: saveButton,
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: margin.add(
+                      const EdgeInsets.only(
+                        top: 12.0,
+                        bottom: 84.0,
                       ),
                     ),
+                    child: Wrap(
+                      spacing: 12.0,
+                      runSpacing: 12.0,
+                      children: [
+                        saveButton,
+                        if (submitButton != null)
+                          submitButton ?? const SizedBox.shrink(),
+                      ],
+                    ),
+                    // child: Align(
+                    //   alignment: Alignment.center,
+                    //   child: ConstrainedBox(
+                    //     constraints: boxConstraints,
+                    //     child: saveButton,
+                    //   ),
+                    // ),
                   ),
                 ),
               ],

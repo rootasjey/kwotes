@@ -15,6 +15,7 @@ import "package:kwotes/screens/add_quote/quote_language_selector.dart";
 import "package:kwotes/screens/add_quote/save_quote_button.dart";
 import "package:kwotes/screens/add_quote/simple_add_quote_page.dart";
 import "package:kwotes/screens/add_quote/snackbar_draft.dart";
+import "package:kwotes/screens/add_quote/publish_button.dart";
 import "package:kwotes/types/enums/enum_draft_quote_operation.dart";
 import "package:kwotes/types/intents/save_intent.dart";
 import "package:kwotes/types/intents/submit_intent.dart";
@@ -368,6 +369,33 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
       },
     );
 
+    final SignalBuilder<UserFirestore> submitButton = SignalBuilder(
+      signal: userSignalFirestore,
+      builder: (
+        BuildContext context,
+        UserFirestore userFirestore,
+        Widget? child,
+      ) {
+        if (quote is! DraftQuote) {
+          return const SizedBox.shrink();
+        }
+
+        // final DraftQuote draft = quote as DraftQuote;
+        if (quote.inValidation) {
+          return const SizedBox.shrink();
+        }
+
+        return PublishQuoteButton(
+          canManageQuotes: userFirestore.rights.canManageQuotes,
+          isDark: isDark,
+          isQuoteValid: isQuoteValid,
+          isMobileSize: isMobileSize,
+          onPressed: proposeQuote,
+          quote: quote,
+        );
+      },
+    );
+
     if (_showMinimalBuilder) {
       return SimpleAddQuotePage(
         authorNameController: _authorNameController,
@@ -405,6 +433,8 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
         referenceNameController: _referenceNameController,
         referenceNameFocusNode: _referenceNameFocusNode,
         saveButton: saveButton,
+        submitButton: submitButton,
+        windowSize: windowSize,
       );
     }
 
