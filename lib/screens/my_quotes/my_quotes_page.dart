@@ -3,6 +3,8 @@ import "package:flutter/material.dart";
 import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_improved_scrolling/flutter_improved_scrolling.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
+import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
+import "package:kwotes/components/buttons/new_quote_button.dart";
 import "package:kwotes/components/custom_scroll_behaviour.dart";
 import "package:kwotes/components/page_app_bar.dart";
 import "package:kwotes/globals/constants.dart";
@@ -18,7 +20,9 @@ import "package:kwotes/types/enums/enum_data_ownership.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_my_quotes_tab.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
+import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/user/user_firestore.dart";
+import "package:vibration/vibration.dart";
 import "package:wave_divider/wave_divider.dart";
 
 class MyQuotesPage extends StatefulWidget {
@@ -29,6 +33,17 @@ class MyQuotesPage extends StatefulWidget {
 }
 
 class _MyQuotesPageState extends State<MyQuotesPage> {
+  /// True if we already handled the quick action
+  /// (e.g. pull/push to trigger).
+  bool _handleQuickAction = false;
+
+  /// Previous scroll position.
+  /// Used to determine if the user is scrolling up or down.
+  double _prevPixelsPosition = 0.0;
+
+  /// Trigger offset for pull to action.
+  final double _pullTriggerOffset = -100.0;
+
   /// Current selected tab.
   EnumMyQuotesTab _selectedTab = EnumMyQuotesTab.drafts;
 
@@ -49,6 +64,7 @@ class _MyQuotesPageState extends State<MyQuotesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
     final List<Widget> bodyChildren = [
       DraftsPage(
@@ -70,9 +86,13 @@ class _MyQuotesPageState extends State<MyQuotesPage> {
       ),
     ];
 
+    final Color? foregroundColor =
+        Theme.of(context).textTheme.bodyMedium?.color;
+
     return SafeArea(
       child: Scaffold(
         body: ImprovedScrolling(
+          onScroll: onScroll,
           scrollController: _pageScrollController,
           child: ScrollConfiguration(
             behavior: const CustomScrollBehavior(),
@@ -83,7 +103,23 @@ class _MyQuotesPageState extends State<MyQuotesPage> {
                   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                   isMobileSize: isMobileSize,
                   toolbarHeight: isMobileSize ? 220.0 : 282.0,
+                  hideBackButton: true,
                   children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          onPressed: () => Beamer.of(context).beamBack(),
+                          icon: const Icon(TablerIcons.arrow_left),
+                        ),
+                        NewQuoteButton(
+                          isDark: isDark,
+                          foregroundColor: foregroundColor,
+                          verticalButtonPadding: 16.0,
+                          onTapNewQuoteButton: onGoToAddQuotePage,
+                        ),
+                      ],
+                    ),
                     MyQuotesPageHeader(
                       onTapTitle: onTapTitle,
                       selectedTab: _selectedTab,
@@ -110,6 +146,27 @@ class _MyQuotesPageState extends State<MyQuotesPage> {
     );
   }
 
+  /// Set the target variable to the new value.
+  /// Then set the value back to its original value after 1 second.
+  void boomerangQuickActionValue(bool newValue) {
+    _handleQuickAction = newValue;
+    Future.delayed(
+      const Duration(milliseconds: 1000),
+      () => _handleQuickAction = !newValue,
+    );
+  }
+
+  int getSelectedTabIndex(EnumMyQuotesTab tab) {
+    switch (tab) {
+      case EnumMyQuotesTab.drafts:
+        return 0;
+      case EnumMyQuotesTab.inValidation:
+        return 1;
+      case EnumMyQuotesTab.published:
+        return 2;
+    }
+  }
+
   /// Initialize properties.
   void initProps() async {
     final Signal<UserFirestore> signalUserFirestore =
@@ -131,23 +188,19 @@ class _MyQuotesPageState extends State<MyQuotesPage> {
     });
   }
 
+  /// Navigate to the add/edit quote page.
+  void onGoToAddQuotePage(BuildContext context) {
+    if (!Utils.passage.canAddQuote(context)) return;
+    NavigationStateHelper.quote = Quote.empty();
+    context.beamToNamed(DashboardContentLocation.addQuoteRoute);
+  }
+
   void onTapTitle() {
     _pageScrollController.animateTo(
       0.0,
       duration: const Duration(milliseconds: 300),
       curve: Curves.decelerate,
     );
-  }
-
-  int getSelectedTabIndex(EnumMyQuotesTab tab) {
-    switch (tab) {
-      case EnumMyQuotesTab.drafts:
-        return 0;
-      case EnumMyQuotesTab.inValidation:
-        return 1;
-      case EnumMyQuotesTab.published:
-        return 2;
-    }
   }
 
   void onSelectTab(EnumMyQuotesTab newTab) {
@@ -162,6 +215,28 @@ class _MyQuotesPageState extends State<MyQuotesPage> {
 
   void onPressedFab() {
     context.beamToNamed(DashboardContentLocation.addQuoteRoute);
+  }
+
+  /// Callback on scroll.
+  void onScroll(double offset) {
+    final double pixelsPosition = _pageScrollController.position.pixels;
+
+    if (pixelsPosition < _pageScrollController.position.minScrollExtent) {
+      if (_prevPixelsPosition <= pixelsPosition) {
+        return;
+      }
+
+      _prevPixelsPosition = pixelsPosition;
+      if (pixelsPosition < _pullTriggerOffset && !_handleQuickAction) {
+        boomerangQuickActionValue(true);
+        if (Utils.graphic.isMobile()) {
+          Vibration.vibrate(amplitude: 20, duration: 25);
+        }
+
+        onGoToAddQuotePage(context);
+      }
+      return;
+    }
   }
 
   /// Callback to select a language.

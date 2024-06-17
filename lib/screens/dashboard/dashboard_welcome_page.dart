@@ -133,34 +133,9 @@ class _DashboardWelcomePageState extends State<DashboardWelcomePage>
     Utils.state.refreshPremiumPlan();
   }
 
-  bool canAddQuote() {
-    final UserFirestore userFirestore =
-        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
-
-    final bool hasReachFreeLimit = userFirestore.plan == EnumUserPlan.free &&
-        userFirestore.metrics.quotes.created >= 5;
-
-    if (!userFirestore.rights.canProposeQuote || hasReachFreeLimit) {
-      if (Utils.graphic.isMobile()) {
-        Beamer.of(context, root: true).beamToNamed(
-          HomeLocation.premiumRoute,
-        );
-        return false;
-      }
-
-      Utils.graphic.showSnackbar(
-        context,
-        message: "premium.add_quote_reached_free_plan_limit".tr(),
-      );
-      return false;
-    }
-
-    return true;
-  }
-
   /// Navigate to the add/edit quote page.
   void onGoToAddQuotePage(BuildContext context) {
-    if (!canAddQuote()) return;
+    if (!Utils.passage.canAddQuote(context)) return;
     NavigationStateHelper.quote = Quote.empty();
     context.beamToNamed(DashboardContentLocation.addQuoteRoute);
   }
@@ -188,8 +163,7 @@ class _DashboardWelcomePageState extends State<DashboardWelcomePage>
           Vibration.vibrate(amplitude: 20, duration: 25);
         }
 
-        NavigationStateHelper.quote = Quote.empty();
-        context.beamToNamed(DashboardContentLocation.addQuoteRoute);
+        onGoToAddQuotePage(context);
       }
       return;
     }

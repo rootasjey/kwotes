@@ -87,7 +87,6 @@ class ListPageHeader extends StatelessWidget {
               child: TextField(
                 autofocus: focusName,
                 controller: nameController,
-                keyboardType: TextInputType.name,
                 textCapitalization: TextCapitalization.words,
                 onChanged: onNameChanged,
                 textInputAction: TextInputAction.next,

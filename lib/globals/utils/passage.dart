@@ -1,6 +1,12 @@
 import "package:beamer/beamer.dart";
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/widgets.dart";
+import "package:flutter_solidart/flutter_solidart.dart";
+import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/home_location.dart";
+import "package:kwotes/types/enums/enum_signal_id.dart";
+import "package:kwotes/types/enums/enum_user_plan.dart";
+import "package:kwotes/types/user/user_firestore.dart";
 
 class Passage {
   const Passage();
@@ -26,6 +32,32 @@ class Passage {
     }
 
     Beamer.of(context).popRoute();
+  }
+
+  /// Check if the user can add a quote.
+  bool canAddQuote(BuildContext context) {
+    final UserFirestore userFirestore =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
+
+    final bool hasReachFreeLimit = userFirestore.plan == EnumUserPlan.free &&
+        userFirestore.metrics.quotes.created >= 5;
+
+    if (!userFirestore.rights.canProposeQuote || hasReachFreeLimit) {
+      if (Utils.graphic.isMobile()) {
+        Beamer.of(context, root: true).beamToNamed(
+          HomeLocation.premiumRoute,
+        );
+        return false;
+      }
+
+      Utils.graphic.showSnackbar(
+        context,
+        message: "premium.add_quote_reached_free_plan_limit".tr(args: ["5"]),
+      );
+      return false;
+    }
+
+    return true;
   }
 
   void deepBack(BuildContext context) {

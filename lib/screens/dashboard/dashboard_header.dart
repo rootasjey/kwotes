@@ -1,8 +1,6 @@
-import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/better_avatar.dart";
-import "package:kwotes/components/better_tooltip.dart";
+import "package:kwotes/components/buttons/new_quote_button.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 
@@ -77,34 +75,11 @@ class DashboardHeader extends StatelessWidget {
               "assets/images/profile-picture-avocado.jpg",
             ),
           ),
-          BetterTooltip(
-            tooltipString: "quote.new".tr(),
-            child: TextButton.icon(
-              onPressed: () {
-                onTapNewQuoteButton?.call(context);
-              },
-              style: TextButton.styleFrom(
-                backgroundColor: isDark ? Colors.black : Colors.white,
-                foregroundColor: foregroundColor,
-                minimumSize: const Size(0.0, 0.0),
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                padding: EdgeInsets.symmetric(
-                  vertical: verticalButtonPadding,
-                  horizontal: 24.0,
-                ),
-                shape: const StadiumBorder(),
-              ),
-              icon: const Icon(TablerIcons.plus, size: 16.0),
-              label: Text(
-                "quote.name".tr(),
-                style: Utils.calligraphy.body(
-                  textStyle: const TextStyle(
-                    // fontSize: 12.0,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ),
+          NewQuoteButton(
+            isDark: isDark,
+            foregroundColor: foregroundColor,
+            verticalButtonPadding: verticalButtonPadding,
+            onTapNewQuoteButton: onTapNewQuoteButton,
           ),
         ],
       ),
