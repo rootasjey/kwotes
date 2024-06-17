@@ -1036,6 +1036,13 @@
       "description": "Les citations que j'ai publiées",
       "name": "Les miennes"
     },
+    "publish": {
+      "draft": "Publier le brouillon",
+      "name": "Publier",
+      "quote": "Publier la citation",
+      "subtitle": "Votre citation sera soumise pour validation",
+      "success": "La citation a été publiee !"
+    },
     "remove": {
       "failed": "Un problème est survenu lors du retrait de la citation.",
       "ing": "Retrait de la citation",

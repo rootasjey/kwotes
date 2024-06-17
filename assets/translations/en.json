@@ -1024,6 +1024,13 @@
       "description": "Published quotes from myself",
       "name": "Owned"
     },
+    "publish": {
+      "draft": "Publish draft",
+      "name": "Publish",
+      "quote": "Publish quote",
+      "subtitle": "Your quote will be submitted for validation",
+      "success": "Quote successfully published!"
+    },
     "remove": {
       "failed": "Failed to remove quote.",
       "ing": "Removing the quote",
