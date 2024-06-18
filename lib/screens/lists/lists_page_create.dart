@@ -90,7 +90,6 @@ class ListsPageCreate extends StatelessWidget {
                     children: [
                       TextField(
                         autofocus: show ? true : false,
-                        keyboardType: TextInputType.name,
                         textCapitalization: TextCapitalization.words,
                         onChanged: onNameChanged,
                         textInputAction: TextInputAction.next,

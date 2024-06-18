@@ -97,7 +97,6 @@ class _QuoteListTextState extends State<QuoteListText> {
             TextField(
               autofocus: true,
               controller: _nameController,
-              keyboardType: TextInputType.name,
               textCapitalization: TextCapitalization.words,
               onChanged: onNameChanged,
               onSubmitted: (String name) =>

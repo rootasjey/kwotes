@@ -96,7 +96,6 @@ class CreateListDialog extends StatelessWidget {
               controller: nameController,
               label: "name".tr(),
               hintText: "list.create.hints.names.$randomHintNumber".tr(),
-              keyboardType: TextInputType.name,
               textInputAction: TextInputAction.next,
               onChanged: onNameListChanged,
             ),
@@ -109,7 +108,6 @@ class CreateListDialog extends StatelessWidget {
                 label: "description.name".tr(),
                 hintText:
                     "list.create.hints.descriptions.$randomHintNumber".tr(),
-                keyboardType: TextInputType.name,
                 textInputAction: TextInputAction.done,
                 onSubmitted: (_) => onValidate?.call(),
               ),

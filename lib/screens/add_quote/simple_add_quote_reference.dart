@@ -78,7 +78,6 @@ class SimpleAddQuoteReference extends StatelessWidget {
               controller: nameController,
               focusNode: nameFocusNode,
               onChanged: onNameChanged,
-              keyboardType: TextInputType.name,
               textCapitalization: TextCapitalization.words,
               onSubmitted: onSubmitted,
               style: Utils.calligraphy.title(

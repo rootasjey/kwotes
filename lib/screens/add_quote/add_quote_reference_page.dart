@@ -233,7 +233,6 @@ class AddQuoteReferencePage extends StatelessWidget {
                     controller: nameController,
                     focusNode: nameFocusNode,
                     onChanged: onNameChanged,
-                    keyboardType: TextInputType.name,
                     textCapitalization: TextCapitalization.words,
                     style: Utils.calligraphy.title(
                       textStyle: TextStyle(

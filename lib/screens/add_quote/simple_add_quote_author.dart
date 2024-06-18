@@ -77,7 +77,6 @@ class SimpleAddQuoteAuthor extends StatelessWidget {
               focusNode: authorNameFocusNode,
               onChanged: onNameChanged,
               controller: nameController,
-              keyboardType: TextInputType.name,
               textCapitalization: TextCapitalization.words,
               textInputAction: TextInputAction.next,
               style: Utils.calligraphy.title(

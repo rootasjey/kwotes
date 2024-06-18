@@ -240,7 +240,6 @@ class AddQuoteAuthorPage extends StatelessWidget {
                     focusNode: nameFocusNode,
                     onChanged: onNameChanged,
                     controller: nameController,
-                    keyboardType: TextInputType.name,
                     textCapitalization: TextCapitalization.words,
                     textInputAction: TextInputAction.next,
                     style: Utils.calligraphy.title(
