@@ -220,10 +220,10 @@ class ListPageHeader extends StatelessWidget {
                   ],
                 ),
                 maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: Utils.calligraphy.title(
                   textStyle: TextStyle(
                     fontSize: isMobileSize ? 74.0 : 124.0,
-                    // fontSize: isMobileSize ? 36.0 : 74.0,
                     fontWeight: FontWeight.w200,
                     color: foregroundColor?.withOpacity(0.8),
                     shadows: [

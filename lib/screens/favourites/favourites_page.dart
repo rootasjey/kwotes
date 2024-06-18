@@ -101,7 +101,7 @@ class _FavouritesPageState extends State<FavouritesPage> with UiLoggy {
               PageAppBar(
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 isMobileSize: isMobileSize,
-                toolbarHeight: isMobileSize ? 180.0 : 242.0,
+                toolbarHeight: isMobileSize ? 140.0 : 242.0,
                 children: [
                   FavouritesPageHeader(
                     isMobileSize: isMobileSize,

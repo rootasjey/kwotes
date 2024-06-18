@@ -164,8 +164,7 @@ class SimpleAddQuotePage extends StatelessWidget {
 
     final BoxConstraints boxConstraints = isMobileSize
         ? BoxConstraints(
-            maxWidth: 500.0,
-            // maxWidth: windowSize.width,
+            maxWidth: windowSize.width,
           )
         : const BoxConstraints(
             maxWidth: 500.0,

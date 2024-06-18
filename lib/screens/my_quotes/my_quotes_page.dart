@@ -102,7 +102,7 @@ class _MyQuotesPageState extends State<MyQuotesPage> {
                 PageAppBar(
                   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                   isMobileSize: isMobileSize,
-                  toolbarHeight: isMobileSize ? 220.0 : 282.0,
+                  toolbarHeight: isMobileSize ? 190.0 : 282.0,
                   hideBackButton: true,
                   children: [
                     Row(
@@ -115,8 +115,9 @@ class _MyQuotesPageState extends State<MyQuotesPage> {
                         NewQuoteButton(
                           isDark: isDark,
                           foregroundColor: foregroundColor,
-                          verticalButtonPadding: 16.0,
+                          verticalButtonPadding: isMobileSize ? 8.0 : 16.0,
                           onTapNewQuoteButton: onGoToAddQuotePage,
+                          margin: const EdgeInsets.only(right: 8.0),
                         ),
                       ],
                     ),

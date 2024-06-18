@@ -162,7 +162,7 @@ class _ListPageState extends State<ListPage> with UiLoggy {
                   PageAppBar(
                     isMobileSize: isMobileSize,
                     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                    toolbarHeight: isMobileSize ? 216.0 : 282.0,
+                    toolbarHeight: isMobileSize ? 194.0 : 282.0,
                     children: [
                       ListPageHeader(
                         accentColor: _accentColor,
