@@ -11,6 +11,7 @@ class NewQuoteButton extends StatelessWidget {
     this.foregroundColor,
     this.verticalButtonPadding = 8.0,
     this.onTapNewQuoteButton,
+    this.margin = EdgeInsets.zero,
   });
 
   /// True if the theme is dark.
@@ -22,6 +23,9 @@ class NewQuoteButton extends StatelessWidget {
   /// Vertical button padding.
   final double verticalButtonPadding;
 
+  /// Margin.
+  final EdgeInsets margin;
+
   /// Callback fired when new quote button is tapped.
   final void Function(BuildContext context)? onTapNewQuoteButton;
 
@@ -29,25 +33,28 @@ class NewQuoteButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BetterTooltip(
       tooltipString: "quote.new".tr(),
-      child: TextButton.icon(
-        onPressed: () => onTapNewQuoteButton?.call(context),
-        style: TextButton.styleFrom(
-          backgroundColor: isDark ? Colors.black : Colors.white,
-          foregroundColor: foregroundColor,
-          minimumSize: const Size(0.0, 0.0),
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          padding: EdgeInsets.symmetric(
-            vertical: verticalButtonPadding,
-            horizontal: 24.0,
+      child: Padding(
+        padding: margin,
+        child: TextButton.icon(
+          onPressed: () => onTapNewQuoteButton?.call(context),
+          style: TextButton.styleFrom(
+            backgroundColor: isDark ? Colors.black : Colors.white,
+            foregroundColor: foregroundColor,
+            minimumSize: const Size(0.0, 0.0),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            padding: EdgeInsets.symmetric(
+              vertical: verticalButtonPadding,
+              horizontal: 24.0,
+            ),
+            shape: const StadiumBorder(),
           ),
-          shape: const StadiumBorder(),
-        ),
-        icon: const Icon(TablerIcons.plus, size: 16.0),
-        label: Text(
-          "quote.name".tr(),
-          style: Utils.calligraphy.body(
-            textStyle: const TextStyle(
-              fontWeight: FontWeight.w500,
+          icon: const Icon(TablerIcons.plus, size: 16.0),
+          label: Text(
+            "quote.name".tr(),
+            style: Utils.calligraphy.body(
+              textStyle: const TextStyle(
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ),
