@@ -90,6 +90,119 @@ class ChangelogPage extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(bottom: 8.0),
                               child: Text(
+                                "18/06/2024",
+                                style: Utils.calligraphy.body(
+                                  textStyle: TextStyle(
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.w200,
+                                    color: foregroundColor?.withOpacity(0.3),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Text(
+                                "• Update premium prices",
+                                style: Utils.calligraphy.body(
+                                  textStyle: TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w400,
+                                    color: foregroundColor?.withOpacity(0.4),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Text(
+                                "• Add new carrott badge on premium avatar",
+                                style: Utils.calligraphy.body(
+                                  textStyle: TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w400,
+                                    color: foregroundColor?.withOpacity(0.4),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Text(
+                                "• Redirect to \"My Quotes\" page after saving a quote",
+                                style: Utils.calligraphy.body(
+                                  textStyle: TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w400,
+                                    color: foregroundColor?.withOpacity(0.4),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Text(
+                                "• Add new quote button on \"My Quotes\" page",
+                                style: Utils.calligraphy.body(
+                                  textStyle: TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w400,
+                                    color: foregroundColor?.withOpacity(0.4),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Text(
+                                "• Add publish button on quote page",
+                                style: Utils.calligraphy.body(
+                                  textStyle: TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w400,
+                                    color: foregroundColor?.withOpacity(0.4),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Text(
+                                "• Fix keyboard layout issue (iOS)",
+                                style: Utils.calligraphy.body(
+                                  textStyle: TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w400,
+                                    color: foregroundColor?.withOpacity(0.4),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Divider(
+                        color: foregroundColor?.withOpacity(0.2),
+                        height: 42.0,
+                      ),
+                      Text(
+                        "Previously",
+                        style: Utils.calligraphy.body(
+                          textStyle: TextStyle(
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.w200,
+                            color: foregroundColor?.withOpacity(0.8),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Text(
                                 "14/06/2024",
                                 style: Utils.calligraphy.body(
                                   textStyle: TextStyle(
@@ -140,20 +253,6 @@ class ChangelogPage extends StatelessWidget {
                               ),
                             ),
                           ],
-                        ),
-                      ),
-                      Divider(
-                        color: foregroundColor?.withOpacity(0.2),
-                        height: 42.0,
-                      ),
-                      Text(
-                        "Previously",
-                        style: Utils.calligraphy.body(
-                          textStyle: TextStyle(
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.w200,
-                            color: foregroundColor?.withOpacity(0.8),
-                          ),
                         ),
                       ),
                       Padding(
