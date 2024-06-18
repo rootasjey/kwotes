@@ -29,6 +29,7 @@ class StorageKeys {
   static const String notificationsActivated = "notifications_activated";
   static const String quoteIdNotification = "quote_id_notification";
   static const String referenceMetadataOpened = "reference_metadata_opened";
+  static const String showSavedDraftTip = "show_saved_draft_tip";
 
   /// Data ownership on certain pages (e.g. published quotes page).
   /// Can be: `owned` or `all` (users).

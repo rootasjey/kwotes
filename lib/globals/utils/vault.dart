@@ -285,4 +285,12 @@ class Vault {
 
     return EnumFrameBorderStyle.values[index];
   }
+
+  Future<bool> getShowSavedDraftTip() async {
+    return await Glutton.vomit(StorageKeys.showSavedDraftTip, true);
+  }
+
+  void downtShowSaveDraftTip() {
+    Glutton.eat(StorageKeys.showSavedDraftTip, true);
+  }
 }

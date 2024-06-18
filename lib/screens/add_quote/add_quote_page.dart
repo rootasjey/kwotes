@@ -1322,11 +1322,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     updateQuoteDoc();
   }
 
-  /// Callback fired to (phantom) save draft.
-  /// This method does nothing really useful except notifying the user.
-  /// Shows a "propose" button to consecutively send the draft
-  /// to the global collection.
-  void onSaveDraft() {
+  void showSavedDraftTip() {
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
     final SnackBarBehavior behavior =
         isMobileSize ? SnackBarBehavior.fixed : SnackBarBehavior.floating;
@@ -1368,8 +1364,23 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
         side: BorderSide(color: Colors.green.shade100, width: 4.0),
       ),
     );
+  }
 
-    Utils.passage.back(context);
+  /// Callback fired to (phantom) save draft.
+  /// This method does nothing really useful except notifying the user.
+  /// Shows a "propose" button to consecutively send the draft
+  /// to the global collection.
+  void onSaveDraft() async {
+    final bool showTip = await Utils.vault.getShowSavedDraftTip();
+    if (showTip) {
+      showSavedDraftTip();
+    }
+
+    navigateWhenFinished();
+  }
+
+  void navigateWhenFinished() {
+    Beamer.of(context).beamToNamed(DashboardContentLocation.myQuotesRoute);
   }
 
   /// Callback fired when secondary genre has changed.
@@ -1772,16 +1783,13 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
       /// because we copied it to the global drafts collection.
       _docRef?.delete();
 
-      if (!mounted) {
-        return;
-      }
-
+      if (!mounted) return;
       Utils.graphic.showSnackbar(
         context,
         message: "quote.submit.success".tr(),
       );
 
-      Utils.passage.back(context);
+      navigateWhenFinished();
     } catch (error) {
       loggy.error(error);
       setState(() => _pageState = EnumPageState.idle);
@@ -1816,16 +1824,13 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
       await _docRef
           ?.update((NavigationStateHelper.quote as DraftQuote).toMap());
 
-      if (!mounted) {
-        return;
-      }
-
+      if (!mounted) return;
       Utils.graphic.showSnackbar(
         context,
         message: "quote.udpate.success".tr(),
       );
 
-      Utils.passage.back(context);
+      navigateWhenFinished();
     } catch (error) {
       loggy.error(error);
       setState(() => _pageState = EnumPageState.idle);
@@ -2087,7 +2092,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     await _docRef?.update(NavigationStateHelper.quote.toMap());
 
     if (!mounted) return;
-    Utils.passage.back(context);
+    navigateWhenFinished();
   }
 
   /// Update search suggestions.
@@ -2165,12 +2170,9 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
 
       // Delete draft.
       await _docRef?.delete();
+      if (!mounted) return;
 
-      if (!mounted) {
-        return;
-      }
-
-      Utils.passage.back(context);
+      navigateWhenFinished();
     } catch (error) {
       loggy.error(error);
       Utils.graphic.showSnackbar(
