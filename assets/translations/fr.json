@@ -1251,8 +1251,14 @@
     "name": "Se connecter"
   },
   "signout": {
+    "actions": {
+      "name": "Se deconnecter",
+      "no": "Non, rester connecté",
+      "yes": "Oui, se deconnecter"
+    },
     "name": "Se déconnecter",
-    "description": "Redevenir anonyme."
+    "description": "Redevenir anonyme.",
+    "question": "Etes-vous sur de vouloir vous déconnecter?"
   },
   "signup": "S'inscrire",
   "step": {

@@ -1239,8 +1239,14 @@
     "name": "Sign in"
   },
   "signout": {
+    "actions": {
+      "name": "Sign out",
+      "no": "No, stay connected",
+      "yes": "Yes, sign out"
+    },
+    "description": "Become anonymous again.",
     "name": "Sign out",
-    "description": "Become anonymous again."
+    "question": "Are you sure you want to sign out?"
   },
   "signup": "Sign up",
   "skip": "Skip",
