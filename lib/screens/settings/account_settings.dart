@@ -1,8 +1,9 @@
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
-import "package:kwotes/components/better_avatar.dart";
+import "package:kwotes/components/user_avatar.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/enums/enum_account_displayed.dart";
+import "package:kwotes/types/enums/enum_user_plan.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 
 class AccountSettings extends StatelessWidget {
@@ -89,15 +90,16 @@ class AccountSettings extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                BetterAvatar(
-                  heroTag: "user-avatar",
-                  onTap: () {},
-                  radius: 18.0,
-                  imageProvider: const AssetImage(
-                    "assets/images/profile-picture-avocado.jpg",
+                Padding(
+                  padding: const EdgeInsets.only(top: 6.0),
+                  child: UserAvatar(
+                    showBadge: userFirestore.plan == EnumUserPlan.premium,
+                    onTapUserAvatar: onTap,
+                    onLongPressUserAvatar: onTapSignout,
+                    margin: const EdgeInsets.only(right: 12.0),
                   ),
-                  margin: const EdgeInsets.only(right: 12.0),
                 ),
                 Expanded(
                   child: Column(
@@ -128,7 +130,7 @@ class AccountSettings extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  onPressed: onTapSignout,
+                  onPressed: onTap,
                   icon: const Icon(TablerIcons.arrow_right),
                 ),
               ],

@@ -99,7 +99,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   onTapUpdateEmail: onTapUpdateEmail,
                   onTapUpdatePassword: onTapUpdatePassword,
                   onTapUpdateUsername: onTapUpdateUsername,
-                  onTapSignout: onTapSignOut,
+                  onTapSignout: onConfirmSignOut,
                   onTapDeleteAccount: onTapDeleteAccount,
                   onTapAccountDisplayedValue: onTapAccountDisplayedValue,
                   userFirestore: userFirestore,
@@ -177,13 +177,25 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  /// Logout the user.
-  void onTapSignOut() async {
-    final bool success = await Utils.state.signOut();
-    if (!success) return;
-    if (!mounted) return;
+  /// Logout the user if confirmed.
+  void onConfirmSignOut() async {
+    Utils.graphic.onConfirmSignOut(
+      context,
+      isMobileSize: Utils.measurements.isMobileSize(context),
+      onCancel: (BuildContext innerContext) {
+        Navigator.of(innerContext).pop();
+      },
+      onConfirm: (BuildContext innerContext) async {
+        Navigator.of(innerContext).pop();
+        final bool success = await Utils.state.signOut();
+        if (!success) return;
+        if (!mounted) return;
 
-    Beamer.of(context, root: true).beamToReplacementNamed(HomeLocation.route);
+        Beamer.of(innerContext, root: true).beamToReplacementNamed(
+          HomeLocation.route,
+        );
+      },
+    );
   }
 
   /// Navigate to the update email page.

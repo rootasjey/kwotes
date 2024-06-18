@@ -271,6 +271,69 @@ class Graphic with UiLoggy {
     }
   }
 
+  /// Logout the user if confirmed.
+  void onConfirmSignOut(
+    BuildContext context, {
+    bool isMobileSize = false,
+    void Function(BuildContext)? onCancel,
+    void Function(BuildContext)? onConfirm,
+  }) async {
+    Utils.graphic.showAdaptiveDialog(
+      context,
+      isMobileSize: isMobileSize,
+      builder: (BuildContext adaptiveContext) {
+        return Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("signout.question".tr()),
+              const SizedBox(height: 12.0),
+              Row(
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      elevation: 2.0,
+                      shadowColor: Colors.white10,
+                      foregroundColor: Theme.of(context).primaryColor,
+                      backgroundColor:
+                          Theme.of(context).primaryColor.withOpacity(0.1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0),
+                        side: BorderSide(color: Theme.of(context).primaryColor),
+                      ),
+                    ),
+                    onPressed: onCancel == null
+                        ? null
+                        : () => onCancel(adaptiveContext),
+                    child: Text("signout.actions.no".tr()),
+                  ),
+                  const SizedBox(width: 8.0),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      elevation: 2.0,
+                      shadowColor: Constants.colors.error.withOpacity(0.1),
+                      foregroundColor: Constants.colors.delete,
+                      backgroundColor: Constants.colors.error.withOpacity(0.1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0),
+                        side: BorderSide(color: Constants.colors.delete),
+                      ),
+                    ),
+                    onPressed: onConfirm == null
+                        ? null
+                        : () => onConfirm(adaptiveContext),
+                    child: Text("signout.actions.yes".tr()),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   /// Show a dialog or a modal bottom sheet according to `isMobileSize` value.
   Future showAdaptiveDialog(
     BuildContext context, {

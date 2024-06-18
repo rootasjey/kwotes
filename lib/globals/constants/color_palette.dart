@@ -188,7 +188,7 @@ class ColorPalette {
   final Color quotes = Colors.amber.shade300;
 
   /// Color for contests.
-  final Color inValidation = Colors.indigo;
+  final Color inValidation = const Color(0xFF002875);
 
   final Color dark = const Color(0xFF161616);
 

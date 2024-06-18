@@ -14,6 +14,8 @@ class BetterAvatar extends StatefulWidget {
     this.radius = 36.0,
     this.avatarMargin = const EdgeInsets.all(4.0),
     this.onHover,
+    this.badge,
+    this.onLongPress,
   }) : super(key: key);
 
   /// True if the avatar is selected.
@@ -41,6 +43,9 @@ class BetterAvatar extends StatefulWidget {
   /// Callback fired when avatar is hovered.
   final void Function(bool isHovered)? onHover;
 
+  /// Callback fired when avatar is long pressed.
+  final void Function()? onLongPress;
+
   /// Callback fired when avatar is tapped.
   final void Function()? onTap;
 
@@ -50,6 +55,9 @@ class BetterAvatar extends StatefulWidget {
   /// Hero avatar tag.
   final Object? heroTag;
 
+  /// A badge to display on top of the avatar.
+  final Widget? badge;
+
   @override
   State<StatefulWidget> createState() => _BetterAvatarState();
 }
@@ -58,16 +66,11 @@ class _BetterAvatarState extends State<BetterAvatar>
     with TickerProviderStateMixin {
   late Animation<double> _scaleAnimation;
   late AnimationController _scaleAnimationController;
-
   late double _elevation;
-
-  // Object _heroTag = "image_hero";
 
   @override
   void initState() {
     super.initState();
-    // _heroTag = widget.heroTag ?? DateTime.now();
-
     _scaleAnimationController = AnimationController(
       lowerBound: 0.8,
       upperBound: 1.0,
@@ -104,6 +107,7 @@ class _BetterAvatarState extends State<BetterAvatar>
             height: widget.radius * 2,
             child: InkWell(
               onTap: widget.onTap,
+              onLongPress: widget.onLongPress,
               onTapDown: (final TapDownDetails details) {
                 setState(() => _elevation = widget.elevation);
               },
@@ -133,22 +137,32 @@ class _BetterAvatarState extends State<BetterAvatar>
             child: avatar,
           );
 
+    final Widget? badge = widget.badge;
+
     return ScaleTransition(
       scale: _scaleAnimation,
-      child: Padding(
+      child: Container(
         padding: widget.margin,
-        child: Container(
-          foregroundDecoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(
-              width: 2.0,
-              color: widget.selected ? widget.borderColor : Colors.transparent,
+        height: badge != null ? 42.0 : null,
+        width: badge != null ? 44.0 : null,
+        child: Stack(
+          children: [
+            Container(
+              foregroundDecoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  width: 2.0,
+                  color:
+                      widget.selected ? widget.borderColor : Colors.transparent,
+                ),
+              ),
+              child: Padding(
+                padding: widget.avatarMargin,
+                child: avatarContainer,
+              ),
             ),
-          ),
-          child: Padding(
-            padding: widget.avatarMargin,
-            child: avatarContainer,
-          ),
+            if (badge != null) badge,
+          ],
         ),
       ),
     );

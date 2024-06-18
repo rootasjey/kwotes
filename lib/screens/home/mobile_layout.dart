@@ -5,11 +5,11 @@ import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:infinite_carousel/infinite_carousel.dart";
-import "package:kwotes/components/better_avatar.dart";
 import "package:kwotes/components/context_menu_components.dart";
 import "package:kwotes/components/hero_quote.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/components/texts/random_quote_text.dart";
+import "package:kwotes/components/user_avatar.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/home_location.dart";
@@ -140,15 +140,10 @@ class MobileLayout extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      BetterAvatar(
-                        radius: 16.0,
-                        heroTag: "user-avatar",
-                        onTap: onTapUserAvatar,
-                        selected: true,
-                        borderColor: Colors.grey,
-                        imageProvider: const AssetImage(
-                          "assets/images/profile-picture-avocado.jpg",
-                        ),
+                      UserAvatar(
+                        showBadge: userFirestore.plan == EnumUserPlan.premium,
+                        onTapUserAvatar: onTapUserAvatar,
+                        onLongPressUserAvatar: () => onConfirmSignOut(context),
                       ),
                       if (userFirestore.plan != EnumUserPlan.premium) ...[
                         Padding(
@@ -299,6 +294,26 @@ class MobileLayout extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  /// Logout the user if confirmed.
+  void onConfirmSignOut(BuildContext context) async {
+    Utils.graphic.onConfirmSignOut(
+      context,
+      isMobileSize: Utils.measurements.isMobileSize(context),
+      onCancel: (BuildContext innerContext) {
+        Navigator.of(innerContext).pop();
+      },
+      onConfirm: (BuildContext innerContext) async {
+        Navigator.of(innerContext).pop();
+        final bool success = await Utils.state.signOut();
+        if (!success) return;
+        if (!innerContext.mounted) return;
+        Beamer.of(innerContext, root: true).beamToReplacementNamed(
+          HomeLocation.route,
+        );
+      },
     );
   }
 

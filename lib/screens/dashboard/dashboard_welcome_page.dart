@@ -96,6 +96,7 @@ class _DashboardWelcomePageState extends State<DashboardWelcomePage>
                       isDark: isDark,
                       isMobileSize: isMobileSize,
                       accentColor: accentColor,
+                      onLongPressUserAvatar: onConfirmSignOut,
                       onTapUsername: showSignoutBottomSheet,
                       onTapNewQuoteButton: onGoToAddQuotePage,
                       onTapUserAvatar: openSettingsPage,
@@ -131,6 +132,27 @@ class _DashboardWelcomePageState extends State<DashboardWelcomePage>
   /// Initialize page properties.
   void initProps() async {
     Utils.state.refreshPremiumPlan();
+  }
+
+  /// Logout the user if confirmed.
+  void onConfirmSignOut() async {
+    Utils.graphic.onConfirmSignOut(
+      context,
+      isMobileSize: Utils.measurements.isMobileSize(context),
+      onCancel: (BuildContext innerContext) {
+        Navigator.of(innerContext).pop();
+      },
+      onConfirm: (BuildContext innerContext) async {
+        Navigator.of(innerContext).pop();
+        final bool success = await Utils.state.signOut();
+        if (!success) return;
+        if (!mounted) return;
+
+        Beamer.of(innerContext, root: true).beamToReplacementNamed(
+          HomeLocation.route,
+        );
+      },
+    );
   }
 
   /// Navigate to the add/edit quote page.
@@ -240,9 +262,7 @@ class _DashboardWelcomePageState extends State<DashboardWelcomePage>
                       labelValue: "signout".tr(),
                       icon: const Icon(TablerIcons.logout),
                       margin: EdgeInsets.zero,
-                      onTap: () async {
-                        onSignout(context);
-                      },
+                      onTap: () => onSignout(context),
                     ),
                   ],
                 ),

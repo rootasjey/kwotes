@@ -1,7 +1,8 @@
 import "package:flutter/material.dart";
-import "package:kwotes/components/better_avatar.dart";
 import "package:kwotes/components/buttons/new_quote_button.dart";
+import "package:kwotes/components/user_avatar.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/types/enums/enum_user_plan.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 
 class DashboardHeader extends StatelessWidget {
@@ -12,6 +13,7 @@ class DashboardHeader extends StatelessWidget {
     this.isDark = false,
     this.foregroundColor,
     this.accentColor,
+    this.onLongPressUserAvatar,
     this.onTapUsername,
     this.onTapNewQuoteButton,
     this.onTapUserAvatar,
@@ -40,6 +42,9 @@ class DashboardHeader extends StatelessWidget {
   /// Callback fired when user avatar is tapped.
   final void Function()? onTapUserAvatar;
 
+  /// Callback fired when user avatar is long pressed.
+  final void Function()? onLongPressUserAvatar;
+
   /// User data.
   final UserFirestore userFirestore;
 
@@ -64,16 +69,10 @@ class DashboardHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          BetterAvatar(
-            heroTag: "user-avatar",
-            onTap: onTapUserAvatar,
-            radius: 16.0,
-            selected: true,
-            margin: EdgeInsets.zero,
-            borderColor: Colors.grey,
-            imageProvider: const AssetImage(
-              "assets/images/profile-picture-avocado.jpg",
-            ),
+          UserAvatar(
+            showBadge: userFirestore.plan == EnumUserPlan.premium,
+            onTapUserAvatar: onTapUserAvatar,
+            onLongPressUserAvatar: onLongPressUserAvatar,
           ),
           NewQuoteButton(
             isDark: isDark,
