@@ -240,9 +240,7 @@ class _PremiumDialogPageState extends State<PremiumDialogPage> with UiLoggy {
   }
 
   void presentPaywallIfNeeded() async {
-    if (!mounted) return;
     if (!Utils.graphic.isMobile()) {
-      if (!mounted) return;
       Future.delayed(1.seconds, () {
         context.beamBack();
         Utils.graphic.showSnackbar(
@@ -255,14 +253,14 @@ class _PremiumDialogPageState extends State<PremiumDialogPage> with UiLoggy {
 
     final PaywallResult paywallResult =
         await RevenueCatUI.presentPaywallIfNeeded("premium");
-    loggy.debug(paywallResult);
 
     if (!context.mounted) return;
+    final BuildContext savedContext = context;
 
     if (paywallResult == PaywallResult.purchased ||
         paywallResult == PaywallResult.restored) {
       final Signal<UserFirestore> signalFirestoreUser =
-          context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+          savedContext.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
 
       if (signalFirestoreUser.value.id.isNotEmpty) {
         signalFirestoreUser.update(
@@ -273,7 +271,6 @@ class _PremiumDialogPageState extends State<PremiumDialogPage> with UiLoggy {
       }
     }
 
-    if (!context.mounted) return;
-    context.beamBack();
+    savedContext.beamBack();
   }
 }

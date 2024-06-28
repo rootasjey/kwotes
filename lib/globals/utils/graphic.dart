@@ -768,7 +768,7 @@ class Graphic with UiLoggy {
         loggy.info("`prefix` is null probably because the user cancelled. "
             "Download cancelled.");
 
-        if (!mounted) return;
+        if (!context.mounted) return;
         Utils.graphic.showSnackbar(
           context,
           message: "download.error.cancelled".tr(),
@@ -778,7 +778,7 @@ class Graphic with UiLoggy {
 
       final String path = "$prefix/${_generateFileName(quote)}.png";
       await File(path).writeAsBytes(image);
-      if (!mounted) return;
+      if (!context.mounted) return;
 
       Utils.graphic.showSnackbar(
         context,

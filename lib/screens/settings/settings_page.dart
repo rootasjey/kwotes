@@ -189,8 +189,7 @@ class _SettingsPageState extends State<SettingsPage> {
         Navigator.of(innerContext).pop();
         final bool success = await Utils.state.signOut();
         if (!success) return;
-        if (!mounted) return;
-
+        if (!innerContext.mounted) return;
         Beamer.of(innerContext, root: true).beamToReplacementNamed(
           HomeLocation.route,
         );

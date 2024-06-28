@@ -161,11 +161,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
   }
 
   void onTapSignout() async {
+    final BuildContext savedContext = context;
     Navigator.of(context).pop();
     final bool success = await Utils.state.signOut();
     if (!success) return;
     if (!context.mounted) return;
-    Beamer.of(context, root: true).beamToReplacementNamed(HomeLocation.route);
+    Beamer.of(savedContext, root: true).beamToReplacementNamed(
+      HomeLocation.route,
+    );
   }
 
   void onTapUserAvatar() {}
