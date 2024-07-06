@@ -1,6 +1,7 @@
 import "package:adaptive_theme/adaptive_theme.dart";
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:kwotes/components/loading_view.dart";
@@ -11,6 +12,7 @@ import "package:kwotes/router/app_routes.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
+import "package:kwotes/types/user/user_firestore.dart";
 
 /// Main app class.
 class App extends StatefulWidget {
@@ -44,7 +46,7 @@ class _AppState extends State<App> {
       primaryColor: Constants.colors.primary,
       secondaryHeaderColor: Constants.colors.secondary,
       colorScheme: ColorScheme.light(
-        background: Constants.colors.lightBackground,
+        surface: Constants.colors.lightBackground,
       ),
     );
 
@@ -56,7 +58,7 @@ class _AppState extends State<App> {
       secondaryHeaderColor: Constants.colors.secondary,
       cardColor: Colors.black26,
       colorScheme: ColorScheme.dark(
-        background: Constants.colors.dark,
+        surface: Constants.colors.dark,
       ),
     );
 
@@ -69,12 +71,24 @@ class _AppState extends State<App> {
     }
 
     return Solid(
-      signals: {
-        EnumSignalId.userAuth: () => Utils.state.userAuth,
-        EnumSignalId.userFirestore: () => Utils.state.userFirestore,
-        EnumSignalId.navigationBar: () => Utils.state.showNavigationBar,
-        EnumSignalId.frameBorderColor: () => Utils.state.frameBorderColor,
-      },
+      providers: [
+        Provider<Signal<User?>>(
+          id: EnumSignalId.userAuth,
+          create: () => Utils.state.userAuth,
+        ),
+        Provider<Signal<UserFirestore>>(
+          id: EnumSignalId.userFirestore,
+          create: () => Utils.state.userFirestore,
+        ),
+        Provider<Signal<bool>>(
+          id: EnumSignalId.navigationBar,
+          create: () => Utils.state.showNavigationBar,
+        ),
+        Provider<Signal<Color>>(
+          id: EnumSignalId.frameBorderColor,
+          create: () => Utils.state.frameBorderColor,
+        ),
+      ],
       child: AdaptiveTheme(
         light: lightTheme,
         dark: darkTheme,

@@ -98,18 +98,21 @@ class PublishQuoteButton extends StatelessWidget {
               ],
             ),
           ),
-          Text(
-            "quote.publish.subtitle".tr(),
-            textAlign: TextAlign.center,
-            style: Utils.calligraphy.body(
-              textStyle: TextStyle(
-                color: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.color
-                    ?.withOpacity(0.6),
-                fontSize: 12.0,
-                fontWeight: FontWeight.w400,
+          Padding(
+            padding: const EdgeInsets.only(top: 12.0),
+            child: Text(
+              "quote.publish.subtitle".tr(),
+              textAlign: TextAlign.center,
+              style: Utils.calligraphy.body(
+                textStyle: TextStyle(
+                  color: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.color
+                      ?.withOpacity(0.6),
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
           ),

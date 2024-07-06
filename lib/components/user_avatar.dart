@@ -28,26 +28,27 @@ class UserAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BetterAvatar(
       heroTag: "user-avatar",
-      radius: 12.0,
+      radius: 16.0,
       selected: true,
       margin: margin,
       onTap: onTapUserAvatar,
       onLongPress: onLongPressUserAvatar,
-      borderColor: Constants.colors.inValidation,
+      borderColor:
+          showBadge ? Constants.colors.premium.withOpacity(0.6) : Colors.grey,
       imageProvider: const AssetImage(
-        "assets/images/orange-profile-picture.png",
+        "assets/images/profile-picture-avocado.jpg",
       ),
       badge: showBadge
           ? Positioned(
-              right: -2.0,
-              bottom: 6.0,
+              right: -4.0,
+              bottom: -3.0,
               child: Material(
                 shape: const CircleBorder(),
                 color: Colors.transparent,
                 child: Ink.image(
                   image: const AssetImage("assets/images/app_icon/64.png"),
-                  width: 18.0,
-                  height: 18.0,
+                  width: 24.0,
+                  height: 24.0,
                   fit: BoxFit.cover,
                   child: InkWell(
                     onTap: onTapUserAvatar,

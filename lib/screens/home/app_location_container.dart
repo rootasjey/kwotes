@@ -391,7 +391,7 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
       EnumSignalId.frameBorderColor,
     );
 
-    frameColorSignal.update((Color previousColor) => borderColor);
+    frameColorSignal.updateValue((Color previousColor) => borderColor);
   }
 
   /// Initialize browser url according to selected bottom bar item.

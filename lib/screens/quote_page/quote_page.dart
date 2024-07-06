@@ -216,7 +216,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   void clean() {
     if (!mounted) return;
     if (NavigationStateHelper.fullscreenQuotePage) {
-      _signalNavigationBar?.update((value) => true);
+      _signalNavigationBar?.updateValue((value) => true);
     }
   }
 
@@ -395,7 +395,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
         EnumSignalId.navigationBar,
       );
 
-      _signalNavigationBar?.update((value) => false);
+      _signalNavigationBar?.updateValue((value) => false);
     }
   }
 

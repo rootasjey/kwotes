@@ -776,7 +776,7 @@ class _HomePageState extends State<HomePage> with UiLoggy {
       EnumSignalId.frameBorderColor,
     );
 
-    appColorFrameSignal.update((value) => topic.color);
+    appColorFrameSignal.updateValue((value) => topic.color);
     Constants.colors.lastBorderColor = topic.color;
   }
 }

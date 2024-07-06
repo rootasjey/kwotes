@@ -42,9 +42,11 @@ class NewQuoteButton extends StatelessWidget {
             foregroundColor: foregroundColor,
             minimumSize: const Size(0.0, 0.0),
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            padding: EdgeInsets.symmetric(
-              vertical: verticalButtonPadding,
-              horizontal: 24.0,
+            padding: EdgeInsets.only(
+              top: verticalButtonPadding,
+              bottom: verticalButtonPadding,
+              left: 20.0,
+              right: 24.0,
             ),
             shape: const StadiumBorder(),
           ),

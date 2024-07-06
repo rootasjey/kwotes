@@ -34,19 +34,19 @@ class AppState with UiLoggy {
   }
 
   /// Firebase auth signal instance.
-  final Signal<UserAuth?> userAuth = createSignal(null);
+  final Signal<UserAuth?> userAuth = Signal(null);
 
   /// Firestore signal instance.
-  final Signal<UserFirestore> userFirestore = createSignal(
+  final Signal<UserFirestore> userFirestore = Signal(
     UserFirestore.empty(),
   );
 
   /// Whether the app should show the navigation bar
   /// (e.g. when displaying quote page).
-  final Signal<bool> showNavigationBar = createSignal(true);
+  final Signal<bool> showNavigationBar = Signal(true);
 
   /// App frame color signal.
-  final Signal<Color> frameBorderColor = createSignal(
+  final Signal<Color> frameBorderColor = Signal(
     const Color.fromRGBO(241, 237, 255, 1.0),
   );
 
@@ -67,7 +67,7 @@ class AppState with UiLoggy {
     if (userId.isEmpty) return;
 
     final bool hasPremiumPlan = await Utils.monetization.hasPremiumPlan();
-    userFirestore.update(
+    userFirestore.updateValue(
       (UserFirestore previousValue) => previousValue.copyWith(
         plan: hasPremiumPlan ? EnumUserPlan.premium : EnumUserPlan.free,
       ),
@@ -92,7 +92,7 @@ class AppState with UiLoggy {
         password: password,
       );
 
-      userAuth.update((value) => authResult.user);
+      userAuth.updateValue((value) => authResult.user);
       _listenToAuthChanges();
       _listenToFirestoreChanges();
 
@@ -105,7 +105,7 @@ class AppState with UiLoggy {
       if (userId.isNotEmpty) {
         await Utils.monetization.initOrLogin(userId);
         final bool hasPremium = await Utils.monetization.hasPremiumPlan();
-        userFirestore.update(
+        userFirestore.updateValue(
           (UserFirestore previousValue) => previousValue.copyWith(
             plan: hasPremium ? EnumUserPlan.premium : EnumUserPlan.free,
           ),
@@ -127,8 +127,8 @@ class AppState with UiLoggy {
     try {
       await Utils.vault.clearCredentials();
       await firebase_auth.FirebaseAuth.instance.signOut();
-      userAuth.update((value) => null);
-      userFirestore.update((value) => UserFirestore.empty());
+      userAuth.updateValue((value) => null);
+      userFirestore.updateValue((value) => UserFirestore.empty());
       return true;
     } catch (error) {
       loggy.error(error);
@@ -337,7 +337,7 @@ class AppState with UiLoggy {
     userAuthSubscription?.cancel();
     userAuthSubscription = firebaseAuthInstance.userChanges().listen(
       (newUserAuth) {
-        userAuth.update((value) => newUserAuth);
+        userAuth.updateValue((value) => newUserAuth);
       },
       onError: (error) {
         loggy.error(error);
@@ -345,7 +345,7 @@ class AppState with UiLoggy {
       onDone: () {
         userAuthSubscription?.cancel();
         loggy.error("Connection to firebase auth closed.");
-        userAuth.update((value) => null);
+        userAuth.updateValue((value) => null);
       },
     );
   }
@@ -370,7 +370,7 @@ class AppState with UiLoggy {
         }
 
         map["id"] = snapshot.id;
-        userFirestore.update(
+        userFirestore.updateValue(
           (UserFirestore previousValue) => UserFirestore.fromMap(map).copyWith(
             plan: previousValue.plan,
           ),
@@ -382,7 +382,7 @@ class AppState with UiLoggy {
       onDone: () {
         userFirestoreSubscription?.cancel();
         loggy.error("Connection to firestore closed.");
-        userFirestore.update((value) => UserFirestore.empty());
+        userFirestore.updateValue((value) => UserFirestore.empty());
       },
     );
   }
@@ -390,7 +390,7 @@ class AppState with UiLoggy {
   void onCustomerInfoUpdated(CustomerInfo customerInfo) {
     final EnumUserPlan updatedPlan = getUpdatedPlan(customerInfo);
 
-    userFirestore.update(
+    userFirestore.updateValue(
       (UserFirestore previousValue) => previousValue.copyWith(
         plan: updatedPlan,
       ),

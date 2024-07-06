@@ -144,6 +144,7 @@ class MobileLayout extends StatelessWidget {
                         showBadge: userFirestore.plan == EnumUserPlan.premium,
                         onTapUserAvatar: onTapUserAvatar,
                         onLongPressUserAvatar: () => onConfirmSignOut(context),
+                        margin: const EdgeInsets.only(bottom: 8.0),
                       ),
                       if (userFirestore.plan != EnumUserPlan.premium) ...[
                         Padding(

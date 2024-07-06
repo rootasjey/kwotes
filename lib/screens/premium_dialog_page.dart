@@ -263,7 +263,7 @@ class _PremiumDialogPageState extends State<PremiumDialogPage> with UiLoggy {
           savedContext.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
 
       if (signalFirestoreUser.value.id.isNotEmpty) {
-        signalFirestoreUser.update(
+        signalFirestoreUser.updateValue(
           (UserFirestore user) => user.copyWith(
             plan: EnumUserPlan.premium,
           ),

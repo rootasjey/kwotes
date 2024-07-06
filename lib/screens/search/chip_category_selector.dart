@@ -36,10 +36,9 @@ class ChipCategorySelector extends StatelessWidget {
       height: 60.0,
       padding: margin,
       color: Theme.of(context).scaffoldBackgroundColor,
-      child: Wrap(
-        spacing: 12.0,
-        runSpacing: 12.0,
-        alignment: WrapAlignment.start,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
         children: [
           EnumSearchCategory.quotes,
           EnumSearchCategory.authors,
@@ -53,31 +52,34 @@ class ChipCategorySelector extends StatelessWidget {
             selectedColor: selectedColor,
           );
 
-          return FilterChip(
-            showCheckmark: false,
-            selected: selected,
-            padding: EdgeInsets.zero,
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            labelPadding: const EdgeInsets.only(
-              right: 12.0,
-            ),
-            selectedColor: selectedColor,
-            onSelected: (bool _) => onSelectCategory?.call(category),
-            shape: StadiumBorder(
-              side: BorderSide(
-                color: getBackgroundColor(category),
+          return Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: FilterChip(
+              showCheckmark: false,
+              selected: selected,
+              padding: EdgeInsets.zero,
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              labelPadding: const EdgeInsets.only(
+                right: 12.0,
               ),
-            ),
-            avatar: CircleAvatar(
-              foregroundColor: foregroundColor,
-              backgroundColor: Colors.transparent,
-              child: Icon(getIconData(category), size: 16.0),
-            ),
-            label: Text("search.chip.${category.name}".tr()),
-            labelStyle: Utils.calligraphy.body(
-              textStyle: TextStyle(
-                color: foregroundColor,
-                fontWeight: selected ? selectedWeight : null,
+              selectedColor: selectedColor,
+              onSelected: (bool _) => onSelectCategory?.call(category),
+              shape: StadiumBorder(
+                side: BorderSide(
+                  color: getBackgroundColor(category),
+                ),
+              ),
+              avatar: CircleAvatar(
+                foregroundColor: foregroundColor,
+                backgroundColor: Colors.transparent,
+                child: Icon(getIconData(category), size: 16.0),
+              ),
+              label: Text("search.chip.${category.name}".tr()),
+              labelStyle: Utils.calligraphy.body(
+                textStyle: TextStyle(
+                  color: foregroundColor,
+                  fontWeight: selected ? selectedWeight : null,
+                ),
               ),
             ),
           );

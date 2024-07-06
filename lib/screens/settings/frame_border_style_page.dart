@@ -123,6 +123,6 @@ class _FrameBorderStylePageState extends State<FrameBorderStylePage> {
       EnumSignalId.frameBorderColor,
     );
 
-    frameColorSignal.update((Color previousColor) => borderColor);
+    frameColorSignal.updateValue((Color previousColor) => borderColor);
   }
 }

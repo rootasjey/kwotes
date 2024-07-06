@@ -143,8 +143,6 @@ class _BetterAvatarState extends State<BetterAvatar>
       scale: _scaleAnimation,
       child: Container(
         padding: widget.margin,
-        height: badge != null ? 42.0 : null,
-        width: badge != null ? 44.0 : null,
         child: Stack(
           children: [
             Container(
