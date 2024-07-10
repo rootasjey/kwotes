@@ -1,6 +1,5 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/globals/utils.dart";
 
@@ -72,12 +71,7 @@ class SigninPageHeader extends StatelessWidget {
                 ),
               ),
             ),
-          ]
-              .animate(
-                interval: const Duration(milliseconds: 25),
-              )
-              .slideY(begin: 0.2, end: 0.0)
-              .fadeIn(),
+          ],
         ),
       ),
     );

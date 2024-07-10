@@ -144,16 +144,22 @@ class _SignupPageState extends State<SignupPage> with UiLoggy {
             body: CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(
-                  child: Row(
-                    children: [
-                      CircleButton(
-                        onTap: onNavigateToSettings,
-                        tooltip: "settings.name".tr(),
-                        backgroundColor: Colors.transparent,
-                        icon: const Icon(TablerIcons.settings),
-                        margin: const EdgeInsets.only(left: 16.0, top: 36.0),
-                      ),
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 16.0, top: 16.0),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: () => context.beamBack(),
+                          icon: const Icon(TablerIcons.arrow_left),
+                        ),
+                        CircleButton(
+                          onTap: onNavigateToSettings,
+                          tooltip: "settings.name".tr(),
+                          backgroundColor: Colors.transparent,
+                          icon: const Icon(TablerIcons.settings),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 SignupPageHeader(

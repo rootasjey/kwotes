@@ -219,7 +219,7 @@ class SignupPagePasswordInputs extends StatelessWidget {
               ],
             ),
           ),
-        ].animate(delay: 75.ms).slideY(begin: 0.4, end: 0.0).fadeIn(),
+        ],
       ),
     );
   }

@@ -139,7 +139,7 @@ class SignupPageFooter extends StatelessWidget {
               child: submitButton,
             ),
           ),
-        ].animate(delay: 100.ms).slideY(begin: 0.8, end: 0.0).fadeIn(),
+        ],
       ),
     );
   }

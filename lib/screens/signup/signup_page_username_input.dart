@@ -1,6 +1,5 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:flutter_animate/flutter_animate.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 
@@ -100,7 +99,7 @@ class SignupPageUsernameInput extends StatelessWidget {
                 ),
               ),
             ),
-        ].animate(delay: 25.ms).slideY(begin: 0.2, end: 0.0).fadeIn(),
+        ],
       ),
     );
   }
