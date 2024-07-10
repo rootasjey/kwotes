@@ -1,9 +1,7 @@
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/widgets.dart";
-import "package:flutter_solidart/flutter_solidart.dart";
 import "package:kwotes/globals/utils.dart";
-import "package:kwotes/router/locations/signin_location.dart";
 import "package:kwotes/screens/author/author_page.dart";
 import "package:kwotes/screens/author/author_quotes_page.dart";
 import "package:kwotes/screens/author/edit_author_page.dart";
@@ -27,6 +25,7 @@ import "package:kwotes/screens/reference/reference_quotes_page.dart";
 import "package:kwotes/screens/settings/about/credits_page.dart";
 import "package:kwotes/screens/settings/about/terms_of_service_page.dart";
 import "package:kwotes/screens/settings/about/about_us_page.dart";
+import "package:kwotes/screens/settings/connection_page/connection_page.dart";
 import "package:kwotes/screens/settings/delete_account/delete_account_page.dart";
 import "package:kwotes/screens/settings/email/update_email_page.dart";
 import "package:kwotes/screens/settings/password/update_password_page.dart";
@@ -35,8 +34,6 @@ import "package:kwotes/screens/settings/username/update_username_page.dart";
 import "package:kwotes/screens/signin/signin_page.dart";
 import "package:kwotes/screens/signup/signup_page.dart";
 import "package:kwotes/screens/user_profile/user_profile_page.dart";
-import "package:kwotes/types/enums/enum_signal_id.dart";
-import "package:kwotes/types/user/user_firestore.dart";
 
 class DashboardLocation extends BeamLocation<BeamState> {
   static const String route = "/d";
@@ -48,18 +45,19 @@ class DashboardLocation extends BeamLocation<BeamState> {
         routeWildCard,
       ];
 
-  @override
-  List<BeamGuard> get guards => [
-        BeamGuard(
-          pathPatterns: [route, routeWildCard],
-          beamToNamed: (origin, target) => SigninLocation.route,
-          check: (BuildContext context, location) {
-            final Signal<UserFirestore> currentUser =
-                context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
-            return currentUser.value.id.isNotEmpty;
-          },
-        ),
-      ];
+  // @override
+  // List<BeamGuard> get guards => [
+  //       BeamGuard(
+  //         pathPatterns: [route, routeWildCard],
+  //         beamToNamed: (origin, target) => SigninLocation.route,
+  //         // beamToNamed: (origin, target) => SigninLocation.route,
+  //         check: (BuildContext context, location) {
+  //           final Signal<UserFirestore> currentUser =
+  //               context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+  //           return currentUser.value.id.isNotEmpty;
+  //         },
+  //       ),
+  //     ];
 
   @override
   List<BeamPage> buildPages(BuildContext context, BeamState state) {
@@ -138,6 +136,9 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
   /// Signin route location.
   static const String signinRoute = "$route/signin";
 
+  /// Connection route location.
+  static const String connectionRoute = "$route/connection";
+
   /// Signup route location.
   static const String signupRoute = "$route/signup";
   static const String updateEmailRoute = "$settingsRoute/email";
@@ -152,6 +153,7 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
         authorQuotesRoute,
         colorPaletteRoute,
         colorDetailRoute,
+        connectionRoute,
         creditsRoute,
         deleteAccountRoute,
         draftsRoute,
@@ -188,6 +190,7 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
           pathPatterns: [
             signinRoute,
             signupRoute,
+            connectionRoute,
             forgotPasswordRoute,
             settingsRoute,
             settingsTosRoute,
@@ -197,7 +200,7 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
             creditsRoute,
           ],
           guardNonMatching: true,
-          beamToNamed: (origin, target) => signinRoute,
+          beamToNamed: (origin, target) => connectionRoute,
           check: (BuildContext context, location) {
             return Utils.state.userAuthenticated;
           },
@@ -214,6 +217,13 @@ class DashboardContentLocation extends BeamLocation<BeamState> {
         title: "page_title.dashboard".tr(),
         type: BeamPageType.fadeTransition,
       ),
+      if (state.pathPatternSegments.contains(connectionRoute.split("/").last))
+        BeamPage(
+          child: const ConnectionPage(),
+          key: const ValueKey(connectionRoute),
+          title: "page_title.connection".tr(),
+          type: BeamPageType.fadeTransition,
+        ),
       if (state.pathPatternSegments.contains(signinRoute.split("/").last))
         BeamPage(
           child: const SigninPage(),

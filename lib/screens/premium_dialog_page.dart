@@ -11,6 +11,7 @@ import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/enums/enum_user_plan.dart";
@@ -240,6 +241,15 @@ class _PremiumDialogPageState extends State<PremiumDialogPage> with UiLoggy {
   }
 
   void presentPaywallIfNeeded() async {
+    final UserFirestore userFirestore =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
+
+    if (userFirestore.id.isEmpty) {
+      context.get<Signal<String>>(EnumSignalId.navigationBarPath).updateValue(
+          (prevValue) => "${DashboardLocation.route}-${DateTime.now()}");
+      return;
+    }
+
     if (!Utils.graphic.isMobile()) {
       Future.delayed(1.seconds, () {
         context.beamBack();

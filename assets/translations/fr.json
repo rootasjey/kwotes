@@ -504,6 +504,7 @@
     "changelog": "@:kwotes_leading Historique de versions",
     "color_palette": "@:kwotes_leading Palette de couleurs",
     "color_detail": "@:kwotes_leading Couleur: {}",
+    "connection": "@:kwotes_leading Connexion",
     "contact_us": "@:kwotes_leading Nous contacter",
     "credits": "@:kwotes_leading Crédits",
     "dashboard": "@:kwotes_leading Mon journal",

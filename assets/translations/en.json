@@ -503,6 +503,7 @@
     "changelog": "@:kwotes_leading Changelog",
     "color_palette": "@:kwotes_leading Color palette",
     "color_detail": "@:kwotes_leading Color: {}",
+    "connection": "@:kwotes_leading Connection",
     "contact_us": "@:kwotes_leading Contact us",
     "credits": "@:kwotes_leading Credits",
     "dashboard": "@:kwotes_leading My diary",

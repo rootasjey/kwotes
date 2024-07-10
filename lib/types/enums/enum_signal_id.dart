@@ -11,6 +11,9 @@ enum EnumSignalId {
   /// (like when it should be displayed or hidden).
   navigationBar,
 
+  /// Navigation bar path signal id.
+  navigationBarPath,
+
   /// Firebase auth signal id.
   /// Used to listen to changes in firebase authentication.
   userAuth,

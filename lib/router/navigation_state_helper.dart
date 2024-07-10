@@ -214,19 +214,19 @@ class NavigationStateHelper {
     if (!context.mounted) return;
 
     final int tabIndex = await Utils.vault.getHomePageTabIndex();
-    String routeTab = "/h";
+    String routeTab = HomeContentLocation.route;
     switch (tabIndex) {
       case 0:
-        routeTab = "/h";
+        routeTab = HomeContentLocation.route;
         break;
       case 1:
-        routeTab = "/s";
+        routeTab = SearchLocation.route;
         break;
       case 2:
-        routeTab = "/d";
+        routeTab = DashboardLocation.route;
         break;
       default:
-        routeTab = "/h";
+        routeTab = HomeContentLocation.route;
     }
 
     if (!context.mounted) return;

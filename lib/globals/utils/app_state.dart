@@ -50,6 +50,8 @@ class AppState with UiLoggy {
     const Color.fromRGBO(241, 237, 255, 1.0),
   );
 
+  final Signal<String> navigationBarPath = Signal("/h");
+
   /// Firebase auth stream subscription.
   StreamSubscription<firebase_auth.User?>? userAuthSubscription;
 

@@ -75,6 +75,9 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
     ): const EscapeIntent(),
   };
 
+  /// Last navigation bar path.
+  String _lastNavigationBarPath = "/";
+
   @override
   void initState() {
     super.initState();
@@ -89,6 +92,11 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
 
     final Signal<bool> signalNavigationBar =
         context.get<Signal<bool>>(EnumSignalId.navigationBar);
+
+    final String signalNavigationBarPath =
+        context.observe<String>(EnumSignalId.navigationBarPath);
+
+    handleNavigationBarPath(signalNavigationBarPath);
 
     final Map<Type, CallbackAction<Intent>> actions = {
       EscapeIntent: CallbackAction<EscapeIntent>(
@@ -353,31 +361,33 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
   /// Re-set the last route information of the nested beamer.
   /// Update browser url according to selected bottom bar item.
   void updateBrowserUrl(int index) {
-    switch (index) {
-      case 0:
-        final RouteInformation routeInformation =
-            NavigationStateHelper.homeRouterDelegate.currentConfiguration ??
-                RouteInformation(uri: Uri(path: HomeContentLocation.route));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      switch (index) {
+        case 0:
+          final RouteInformation routeInformation =
+              NavigationStateHelper.homeRouterDelegate.currentConfiguration ??
+                  RouteInformation(uri: Uri(path: HomeContentLocation.route));
 
-        Beamer.of(context).update(configuration: routeInformation);
-        break;
-      case 1:
-        final RouteInformation routeInformation =
-            NavigationStateHelper.searchRouterDelegate.currentConfiguration ??
-                RouteInformation(uri: Uri(path: SearchContentLocation.route));
+          Beamer.of(context).update(configuration: routeInformation);
+          break;
+        case 1:
+          final RouteInformation routeInformation =
+              NavigationStateHelper.searchRouterDelegate.currentConfiguration ??
+                  RouteInformation(uri: Uri(path: SearchContentLocation.route));
 
-        Beamer.of(context).update(configuration: routeInformation);
-        break;
-      case 2:
-        final RouteInformation routeInformation = NavigationStateHelper
-                .dashboardRouterDelegate.currentConfiguration ??
-            RouteInformation(uri: Uri(path: DashboardContentLocation.route));
+          Beamer.of(context).update(configuration: routeInformation);
+          break;
+        case 2:
+          final RouteInformation routeInformation = NavigationStateHelper
+                  .dashboardRouterDelegate.currentConfiguration ??
+              RouteInformation(uri: Uri(path: DashboardContentLocation.route));
 
-        Beamer.of(context).update(configuration: routeInformation);
-        break;
-      default:
-        break;
-    }
+          Beamer.of(context).update(configuration: routeInformation);
+          break;
+        default:
+          break;
+      }
+    });
   }
 
   /// Update frame border color according to last saved style.
@@ -426,5 +436,42 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
       _target = _target == 0.0 ? 1.0 : 0.0;
       _navigationBarVisible = !_navigationBarVisible;
     });
+  }
+
+  void handleNavigationBarPath(String navigationBarPath) {
+    if (_lastNavigationBarPath == navigationBarPath) {
+      return;
+    }
+
+    _lastNavigationBarPath = navigationBarPath;
+
+    if (navigationBarPath.startsWith("/h")) {
+      onTapBottomBarItem(0);
+      return;
+    }
+
+    if (navigationBarPath.startsWith("/s")) {
+      onTapBottomBarItem(1);
+      return;
+    }
+
+    if (navigationBarPath.startsWith("/d")) {
+      onTapBottomBarItem(2);
+      return;
+    }
+
+    // switch (navigationBarPath) {
+    //   case HomeContentLocation.route:
+    //     onTapBottomBarItem(0);
+    //     break;
+    //   case SearchLocation.route:
+    //     onTapBottomBarItem(1);
+    //     break;
+    //   case DashboardLocation.route:
+    //     onTapBottomBarItem(2);
+    //     break;
+    //   default:
+    //     break;
+    // }
   }
 }

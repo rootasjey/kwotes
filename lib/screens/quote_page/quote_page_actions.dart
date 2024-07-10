@@ -91,23 +91,20 @@ class QuotePageActions extends StatelessWidget {
           icon: const Icon(TablerIcons.share_2),
           tooltip: "quote.share.name".tr(),
         ),
-        if (authenticated) ...[
-          LikeButton(
-            color: iconColor,
-            onPressed: onToggleFavourite,
-            margin: likeButtonMargin,
-            initialLiked: quote.starred,
-            tooltip: quote.starred
-                ? "quote.unlike.name".tr()
-                : "quote.like.name".tr(),
-          ),
-          IconButton(
-            color: iconColor,
-            onPressed: onAddToList,
-            icon: const Icon(TablerIcons.playlist_add),
-            tooltip: "list.add.to".plural(1),
-          ),
-        ],
+        LikeButton(
+          color: iconColor,
+          onPressed: onToggleFavourite,
+          margin: likeButtonMargin,
+          initialLiked: quote.starred,
+          tooltip:
+              quote.starred ? "quote.unlike.name".tr() : "quote.like.name".tr(),
+        ),
+        IconButton(
+          color: iconColor,
+          onPressed: onAddToList,
+          icon: const Icon(TablerIcons.playlist_add),
+          tooltip: "list.add.to".plural(1),
+        ),
       ],
     );
   }

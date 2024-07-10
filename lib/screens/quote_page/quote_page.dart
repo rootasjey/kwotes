@@ -11,6 +11,7 @@ import "package:kwotes/actions/quote_actions.dart";
 import "package:kwotes/components/basic_shortcuts.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/quote_page/quote_page_actions.dart";
@@ -216,7 +217,9 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   void clean() {
     if (!mounted) return;
     if (NavigationStateHelper.fullscreenQuotePage) {
-      _signalNavigationBar?.updateValue((value) => true);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _signalNavigationBar?.updateValue((value) => true);
+      });
     }
   }
 
@@ -390,13 +393,15 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
 
   /// Initialize props.
   void initProps() {
-    if (NavigationStateHelper.fullscreenQuotePage) {
-      _signalNavigationBar = context.get<Signal<bool>>(
-        EnumSignalId.navigationBar,
-      );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (NavigationStateHelper.fullscreenQuotePage) {
+        _signalNavigationBar = context.get<Signal<bool>>(
+          EnumSignalId.navigationBar,
+        );
 
-      _signalNavigationBar?.updateValue((value) => false);
-    }
+        _signalNavigationBar?.updateValue((value) => false);
+      }
+    });
   }
 
   /// Callback fired to add quote to list.
@@ -590,7 +595,9 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   }
 
   /// Callback fired to share quote.
-  onShareQuote() {
+  void onShareQuote() {
+    if (!isUserSignIn()) return;
+
     showModalBottomSheet(
       context: context,
       showDragHandle: true,
@@ -605,15 +612,6 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
         return ShareQuoteBottomSheet(
           quote: _quote,
           onShareImage: onShareImage,
-          // onShareImage: (Quote quote, {bool pop = true}) =>
-          //     Utils.graphic.onOpenShareImage(
-          //   context,
-          //   pop: pop,
-          //   quote: quote,
-          //   screenshotController: _screenshotController,
-          //   textWrapSolution: _textWrapSolution,
-          //   mounted: mounted,
-          // ),
           onShareLink: (Quote quote) => Utils.graphic.onShareLink(
             context,
             quote: quote,
@@ -681,13 +679,10 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   /// Callback fired to toggle quote's favourite status
   /// from the current authenticated user perspective.
   void onToggleFavourite() async {
-    final Signal<UserFirestore> userFirestore =
-        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+    final UserFirestore userFirestore =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
 
-    if (userFirestore.value.id.isEmpty) {
-      return;
-    }
-
+    if (!isUserSignIn()) return;
     if (_quote.starred) {
       setState(() {
         _quote = _quote.copyWith(starred: false);
@@ -695,7 +690,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
 
       final bool success = await QuoteActions.removeFromFavourites(
         quote: _quote,
-        userId: userFirestore.value.id,
+        userId: userFirestore.id,
       );
 
       if (!success) {
@@ -713,7 +708,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
 
     final bool success = await QuoteActions.addToFavourites(
       quote: _quote,
-      userId: userFirestore.value.id,
+      userId: userFirestore.id,
     );
 
     if (!success) {
@@ -752,5 +747,23 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
       (size.width * 0.7) - paddingValue,
       (size.height * 0.6) - paddingValue,
     );
+  }
+
+  /// Check if user is signed in or not.
+  /// If not, navigate back to connection page.
+  /// If yes, do nothing.
+  bool isUserSignIn() {
+    final UserFirestore userFirestore =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
+
+    if (userFirestore.id.isNotEmpty) {
+      return true;
+    }
+
+    context.beamBack();
+    context.get<Signal<String>>(EnumSignalId.navigationBarPath).updateValue(
+        (prevValue) => "${DashboardLocation.route}-${DateTime.now()}");
+
+    return false;
   }
 }

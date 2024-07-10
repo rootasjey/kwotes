@@ -88,6 +88,10 @@ class _AppState extends State<App> {
           id: EnumSignalId.frameBorderColor,
           create: () => Utils.state.frameBorderColor,
         ),
+        Provider<Signal<String>>(
+          id: EnumSignalId.navigationBarPath,
+          create: () => Utils.state.navigationBarPath,
+        ),
       ],
       child: AdaptiveTheme(
         light: lightTheme,
