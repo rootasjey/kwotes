@@ -115,7 +115,7 @@ class _PremiumDialogPageState extends State<PremiumDialogPage> with UiLoggy {
                                     ),
                                     Expanded(
                                       child: Text(
-                                        "premium.name".tr(),
+                                        "premium.kwotes_plus".tr(),
                                         style: Utils.calligraphy.body(
                                           textStyle: const TextStyle(
                                             fontSize: 42.0,

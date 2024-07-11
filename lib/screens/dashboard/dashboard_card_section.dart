@@ -59,7 +59,7 @@ class DashboardCardSection extends StatelessWidget {
               iconData: TablerIcons.crown,
               isDark: isDark,
               textSubtitle: "premium.super_powers".tr(),
-              textTitle: "premium.name".tr(),
+              textTitle: "premium.kwotes_plus".tr(),
               heroKey: "premium",
               onTap: () {
                 Beamer.of(context, root: true).beamToNamed(

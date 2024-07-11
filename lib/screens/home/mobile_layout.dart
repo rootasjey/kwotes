@@ -161,7 +161,7 @@ class MobileLayout extends StatelessWidget {
                               size: 18.0,
                             ),
                             label: Text(
-                              "premium.name".tr(),
+                              "premium.kwotes_plus".tr(),
                               style: Utils.calligraphy.body(
                                 textStyle: const TextStyle(
                                   fontSize: 14.0,
