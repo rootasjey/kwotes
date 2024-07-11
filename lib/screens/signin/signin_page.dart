@@ -3,7 +3,6 @@ import "package:flutter/material.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/actions/user_actions.dart";
-import "package:kwotes/components/buttons/circle_button.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
@@ -90,14 +89,8 @@ class _SigninPageState extends State<SigninPage> with UiLoggy {
                 child: Row(
                   children: [
                     IconButton(
-                      onPressed: () => context.beamBack(),
+                      onPressed: () => Utils.passage.back(context),
                       icon: const Icon(TablerIcons.arrow_left),
-                    ),
-                    CircleButton(
-                      onTap: onNavigateToSettings,
-                      tooltip: "settings.name".tr(),
-                      backgroundColor: Colors.transparent,
-                      icon: const Icon(TablerIcons.settings),
                     ),
                   ],
                 ),

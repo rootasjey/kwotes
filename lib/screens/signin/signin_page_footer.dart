@@ -71,7 +71,7 @@ class SigninPageFooter extends StatelessWidget {
             "signin.name".tr(),
             style: Utils.calligraphy.body(
               textStyle: const TextStyle(
-                fontSize: 16.0,
+                fontSize: 14.0,
                 fontWeight: FontWeight.w500,
               ),
             ),
