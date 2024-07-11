@@ -28,8 +28,7 @@ class ConnectionPage extends StatelessWidget {
         body: CustomScrollView(
           slivers: <Widget>[
             SliverToBoxAdapter(
-              child: Container(
-                color: isDark ? primaryColor : Colors.white,
+              child: Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
@@ -38,28 +37,29 @@ class ConnectionPage extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const AppIcon(),
+                      const AppIcon(size: 54.0),
                       Text(
                         "Hi, it's Carrot again!",
                         style: Utils.calligraphy.body(
                           textStyle: const TextStyle(
-                            fontSize: 18.0,
+                            fontSize: 24.0,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
+                          top: 6.0,
                           left: 24.0,
                           right: 24.0,
                           bottom: 42.0,
                         ),
                         child: Text(
-                          "If you want to use the full app, you can create an account.\nThe choice is yours!",
+                          "If you want to use the full app, you can create an account. The choice is yours!",
                           textAlign: TextAlign.center,
                           style: Utils.calligraphy.body(
                             textStyle: const TextStyle(
-                              fontSize: 14.0,
+                              fontSize: 16.0,
                               fontWeight: FontWeight.w300,
                             ),
                           ),
@@ -77,7 +77,7 @@ class ConnectionPage extends StatelessWidget {
                           foregroundColor: foregroundColor,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 16.0,
-                            vertical: 16.0,
+                            vertical: 12.0,
                           ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.0),
@@ -93,7 +93,7 @@ class ConnectionPage extends StatelessWidget {
                               "account.create".tr(),
                               style: Utils.calligraphy.body(
                                 textStyle: const TextStyle(
-                                  fontSize: 16.0,
+                                  fontSize: 14.0,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -116,7 +116,7 @@ class ConnectionPage extends StatelessWidget {
                             foregroundColor: foregroundColor,
                             padding: const EdgeInsets.symmetric(
                               horizontal: 16.0,
-                              vertical: 16.0,
+                              vertical: 12.0,
                             ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4.0),
@@ -132,7 +132,7 @@ class ConnectionPage extends StatelessWidget {
                                 "signin.name".tr(),
                                 style: Utils.calligraphy.body(
                                   textStyle: const TextStyle(
-                                    fontSize: 16.0,
+                                    fontSize: 14.0,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),

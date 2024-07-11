@@ -9,6 +9,7 @@ import "package:kwotes/screens/author/author_quotes_page.dart";
 import "package:kwotes/screens/author/edit_author_page.dart";
 import "package:kwotes/screens/home/home_page.dart";
 import "package:kwotes/screens/home/app_location_container.dart";
+import "package:kwotes/screens/onboarding/onboarding_page.dart";
 import "package:kwotes/screens/premium_dialog_page.dart";
 import "package:kwotes/screens/quote_page/quote_page.dart";
 import "package:kwotes/screens/reference/edit_reference_page.dart";
@@ -45,6 +46,9 @@ class HomeLocation extends BeamLocation<BeamState> {
   /// Image reference location.
   static const String imageReferenceRoute = "/image/reference/:referenceId";
 
+  /// Onboarding location.
+  static const String onboardingRoute = "/onboarding";
+
   @override
   List<Pattern> get pathPatterns => [
         dashboardRoute,
@@ -56,6 +60,7 @@ class HomeLocation extends BeamLocation<BeamState> {
         imageAuthorRoute,
         imageReferenceRoute,
         premiumRoute,
+        onboardingRoute,
       ];
 
   @override
@@ -92,6 +97,14 @@ class HomeLocation extends BeamLocation<BeamState> {
           child: const PremiumDialogPage(),
           key: const ValueKey(premiumRoute),
           title: "page_title.premium".tr(),
+          type: BeamPageType.fadeTransition,
+          opaque: false,
+        ),
+      if (state.pathPatternSegments.contains("onboarding"))
+        BeamPage(
+          child: const OnboardingPage(),
+          key: const ValueKey(onboardingRoute),
+          title: "page_title.onboarding".tr(),
           type: BeamPageType.fadeTransition,
           opaque: false,
         ),

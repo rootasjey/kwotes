@@ -45,6 +45,14 @@ class Vault {
     ]);
   }
 
+  Future<bool> setBool(String key, bool value) async {
+    return await Glutton.eat(key, value);
+  }
+
+  Future<bool> getBool(String key, {bool defaultValue = false}) async {
+    return await Glutton.vomit(key, defaultValue);
+  }
+
   void setPassword(String password) async {
     await Glutton.eat(StorageKeys.password, password);
   }

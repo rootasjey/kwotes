@@ -347,8 +347,8 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
   }
 
   /// Callback fired when bottom bar item is tapped.
-  void onTapBottomBarItem(int index) {
-    if (index == _currentIndex) {
+  void onTapBottomBarItem(int index, {bool skipBackToRoot = false}) {
+    if (index == _currentIndex && !skipBackToRoot) {
       navigateBackToRoot(index);
     }
 
@@ -456,22 +456,8 @@ class _AppLocationContainerState extends State<AppLocationContainer> {
     }
 
     if (navigationBarPath.startsWith("/d")) {
-      onTapBottomBarItem(2);
+      onTapBottomBarItem(2, skipBackToRoot: true);
       return;
     }
-
-    // switch (navigationBarPath) {
-    //   case HomeContentLocation.route:
-    //     onTapBottomBarItem(0);
-    //     break;
-    //   case SearchLocation.route:
-    //     onTapBottomBarItem(1);
-    //     break;
-    //   case DashboardLocation.route:
-    //     onTapBottomBarItem(2);
-    //     break;
-    //   default:
-    //     break;
-    // }
   }
 }

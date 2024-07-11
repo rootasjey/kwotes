@@ -10,6 +10,7 @@ import "package:flutter_solidart/flutter_solidart.dart";
 import "package:infinite_carousel/infinite_carousel.dart";
 import "package:kwotes/actions/quote_actions.dart";
 import "package:kwotes/globals/constants.dart";
+import "package:kwotes/globals/constants/storage_keys.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/locations/settings_location.dart";
@@ -127,6 +128,7 @@ class _HomePageState extends State<HomePage> with UiLoggy {
   @override
   void initState() {
     super.initState();
+    initProps();
 
     // _posterBackgroundColor = Constants.colors.getRandomPastel();
     fetchRandomQuotes();
@@ -471,6 +473,20 @@ class _HomePageState extends State<HomePage> with UiLoggy {
       loggy.error(error);
       return null;
     }
+  }
+
+  /// Initializes propserties.
+  void initProps() async {
+    final bool isFirstLaunch =
+        await Utils.vault.getBool(StorageKeys.firstLaunch, defaultValue: true);
+
+    if (!isFirstLaunch) return;
+    Utils.vault.setBool(StorageKeys.firstLaunch, false);
+
+    if (!mounted) return;
+    Beamer.of(context, root: true).beamToNamed(
+      HomeLocation.onboardingRoute,
+    );
   }
 
   /// Callback fired to show/hide author arrow buttons.
