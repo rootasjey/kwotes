@@ -176,8 +176,8 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
         windowSize.width < Utils.measurements.mobileWidthTreshold;
 
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final Signal<UserFirestore> signalUserFirestore =
-        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+    final UserFirestore userFirestore =
+        context.observe<UserFirestore>(EnumSignalId.userFirestore);
 
     final EdgeInsets searchInputMargin = isMobileSize
         ? EdgeInsets.only(
@@ -216,6 +216,8 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                       onTapUserAvatar: onTapUserAvatar,
                       searchCategory: _searchCategory,
                       isMobileSize: isMobileSize,
+                      onConfirmSignOut: onConfirmSignOut,
+                      userPlan: userFirestore.plan,
                     ),
                     ChipCategoryAppBar(
                       isDark: isDark,
@@ -226,60 +228,45 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                       categorySelected: _searchCategory,
                       onSelectCategory: onSelectSearchCategory,
                     ),
-                    SignalBuilder(
-                      signal: signalUserFirestore,
-                      builder: (
-                        BuildContext context,
-                        UserFirestore userFirestore,
-                        Widget? child,
-                      ) {
-                        return SearchPageBody(
-                          authorResults: _authorResults,
-                          isDark: isDark,
-                          isMobileSize: isMobileSize,
-                          isQueryEmpty: _searchInputController.text.isEmpty,
-                          margin: const EdgeInsets.symmetric(horizontal: 6.0),
-                          onOpenAddQuoteToList: onOpenAddQuoteToList,
-                          onRefreshSearch: search,
-                          onReinitializeSearch: onClearInput,
-                          onTapQuote: onTapQuote,
-                          onTapAuthor: onTapAuthor,
-                          onTapReference: onTapReference,
-                          onToggleLike: onToggleLike,
-                          pageState: _pageState,
-                          quoteResults: _quoteResults,
-                          referenceResults: _referenceResults,
-                          searchCategory: _searchCategory,
-                          userId: userFirestore.id,
-                        );
-                      },
+                    SearchPageBody(
+                      authorResults: _authorResults,
+                      isDark: isDark,
+                      isMobileSize: isMobileSize,
+                      isQueryEmpty: _searchInputController.text.isEmpty,
+                      margin: const EdgeInsets.symmetric(horizontal: 6.0),
+                      onOpenAddQuoteToList: onOpenAddQuoteToList,
+                      onRefreshSearch: search,
+                      onReinitializeSearch: onClearInput,
+                      onTapQuote: onTapQuote,
+                      onTapAuthor: onTapAuthor,
+                      onTapReference: onTapReference,
+                      onToggleLike: onToggleLike,
+                      pageState: _pageState,
+                      quoteResults: _quoteResults,
+                      referenceResults: _referenceResults,
+                      searchCategory: _searchCategory,
+                      userId: userFirestore.id,
                     ),
-                    SignalBuilder(
-                      signal: signalUserFirestore,
-                      builder: (BuildContext context,
-                          UserFirestore userFireStore, Widget? child) {
-                        return Showcase(
-                          animateItemList: _animateItemList,
-                          authors: _authorList,
-                          isDark: isDark,
-                          isMobileSize: isMobileSize,
-                          margin: EdgeInsets.only(
-                            top: windowSize.width < 380.0 ? 54.0 : 24.0,
-                            bottom: isMobileSize ? 54.0 : 160.0,
-                            left: isMobileSize ? 24.0 : 24.0,
-                            right: isMobileSize ? 24.0 : 24.0,
-                          ),
-                          pageState: _pageState,
-                          onTapTopic: onTapTopic,
-                          onTapAuthor: onTapAuthor,
-                          onTapReference: onTapReference,
-                          references: _referenceList,
-                          searchCategory: _searchCategory,
-                          show: _searchInputController.text.isEmpty,
-                          topicColors: Constants.colors.topics,
-                          userPlan: userFireStore.plan,
-                        );
-                      },
+                    Showcase(
+                      animateItemList: _animateItemList,
+                      authors: _authorList,
+                      isDark: isDark,
+                      isMobileSize: isMobileSize,
+                      margin: EdgeInsets.only(
+                        top: windowSize.width < 380.0 ? 54.0 : 24.0,
+                        bottom: isMobileSize ? 54.0 : 160.0,
+                        left: isMobileSize ? 24.0 : 24.0,
+                        right: isMobileSize ? 24.0 : 24.0,
+                      ),
+                      pageState: _pageState,
+                      onTapTopic: onTapTopic,
+                      onTapAuthor: onTapAuthor,
+                      onTapReference: onTapReference,
+                      references: _referenceList,
+                      searchCategory: _searchCategory,
+                      show: _searchInputController.text.isEmpty,
+                      topicColors: Constants.colors.topics,
+                      userPlan: userFirestore.plan,
                     ),
                     ShowMoreButton(
                       searchCategory: _searchCategory,
@@ -1489,5 +1476,24 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
 
     setState(() => _searchCategory = searchCategory);
+  }
+
+  void onConfirmSignOut() {
+    Utils.graphic.onConfirmSignOut(
+      context,
+      isMobileSize: Utils.measurements.isMobileSize(context),
+      onCancel: (BuildContext innerContext) {
+        Navigator.of(innerContext).pop();
+      },
+      onConfirm: (BuildContext innerContext) async {
+        Navigator.of(innerContext).pop();
+        final bool success = await Utils.state.signOut();
+        if (!success) return;
+        if (!innerContext.mounted) return;
+        Beamer.of(innerContext, root: true).beamToReplacementNamed(
+          HomeLocation.route,
+        );
+      },
+    );
   }
 }

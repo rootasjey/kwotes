@@ -525,6 +525,7 @@
     "lists": "@:kwotes_leading Listes",
     "my_quotes": "@:kwotes_leading Mes citations",
     "not_found": "@:kwotes_leading 404",
+    "onboarding": "@:kwotes_leading Onboarding",
     "post": "@:kwotes_leading Post",
     "posts": "@:kwotes_leading Posts",
     "premium": "@:kwotes_leading Premium",
@@ -609,6 +610,7 @@
       "no_product_description": "Il y a aucun produit pour le moment.",
       "subtitle": "Obtenez des cadeaux spécifics an achetant des fonctionnalités uniques."
     },
+    "kwotes_plus": "Kwotes+",
     "name": "Premium",
     "opening_store": "Ouverture du magasin...",
     "payment": {

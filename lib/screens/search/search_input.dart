@@ -3,11 +3,12 @@ import "dart:ui";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
-import "package:kwotes/components/better_avatar.dart";
 import "package:kwotes/components/buttons/circle_button.dart";
+import "package:kwotes/components/user_avatar.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/enums/enum_search_category.dart";
+import "package:kwotes/types/enums/enum_user_plan.dart";
 
 /// Search input for a search page.
 class SearchInput extends StatelessWidget {
@@ -17,9 +18,11 @@ class SearchInput extends StatelessWidget {
     this.searchCategory = EnumSearchCategory.quotes,
     this.margin = EdgeInsets.zero,
     this.onChangedTextField,
+    this.onConfirmSignOut,
     this.onTapClearIconButton,
     this.onTapCancelButton,
     this.onTapUserAvatar,
+    this.userPlan = EnumUserPlan.free,
     this.inputController,
     this.focusNode,
     this.bottom,
@@ -35,11 +38,17 @@ class SearchInput extends StatelessWidget {
   /// What type of category we are searching.
   final EnumSearchCategory searchCategory;
 
+  /// User plan.
+  final EnumUserPlan userPlan;
+
   /// Search focus node.
   final FocusNode? focusNode;
 
   /// Callback fired when typed text changes.
   final void Function(String)? onChangedTextField;
+
+  /// Callback fired on long press on user avatar to sign out the user.
+  final void Function()? onConfirmSignOut;
 
   /// Callback fired when clear icon button is tapped.
   final void Function()? onTapClearIconButton;
@@ -114,16 +123,10 @@ class SearchInput extends StatelessWidget {
               Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  BetterAvatar(
-                    heroTag: "user-avatar",
-                    onTap: onTapUserAvatar,
-                    radius: 16.0,
-                    selected: true,
-                    borderColor: Colors.grey,
-                    margin: const EdgeInsets.only(right: 8.0),
-                    imageProvider: const AssetImage(
-                      "assets/images/profile-picture-avocado.jpg",
-                    ),
+                  UserAvatar(
+                    showBadge: userPlan == EnumUserPlan.premium,
+                    onTapUserAvatar: onTapUserAvatar,
+                    onLongPressUserAvatar: onConfirmSignOut,
                   ),
                   Expanded(
                     child: FractionallySizedBox(

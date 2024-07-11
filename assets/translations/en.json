@@ -524,6 +524,7 @@
     "lists": "@:kwotes_leading Lists",
     "my_quotes": "@:kwotes_leading My quotes",
     "not_found": "@:kwotes_leading 404",
+    "onboarding": "@:kwotes_leading Onboarding",
     "post": "@:kwotes_leading Post",
     "posts": "@:kwotes_leading Posts",
     "premium": "@:kwotes_leading Premium",
@@ -608,6 +609,7 @@
       "no_product_description": "There's no in-app purchase for the moment.",
       "subtitle": "Get specific gifts by paying for unique features."
     },
+    "kwotes_plus": "Kwotes+",
     "name": "Premium",
     "opening_store": "Opening store...",
     "payment": {
