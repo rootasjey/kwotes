@@ -223,6 +223,37 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
     }
   }
 
+  /// Calculate actual quote container size based on screen size.
+  Size computeWindowSize(Size size) {
+    const double paddingValue = 54.0;
+
+    if (NavigationStateHelper.isIpad) {
+      return Size(
+        (size.width * 0.7) - paddingValue,
+        (size.height * 0.5) - paddingValue,
+      );
+    }
+
+    if (size.width < 500 && size.height > 500) {
+      return Size(
+        (size.width * 0.8) - paddingValue,
+        (size.height * 0.8) - paddingValue,
+      );
+    }
+
+    if (size.width < 900 && size.height < 900) {
+      return Size(
+        (size.width) - paddingValue,
+        (size.height) - paddingValue,
+      );
+    }
+
+    return Size(
+      (size.width * 0.7) - paddingValue,
+      (size.height * 0.6) - paddingValue,
+    );
+  }
+
   /// Fetch page data.
   void fetch() {
     setState(() => _pageState = EnumPageState.loading);
@@ -402,6 +433,24 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
         _signalNavigationBar?.updateValue((value) => false);
       }
     });
+  }
+
+  /// Check if user is signed in or not.
+  /// If not, navigate back to connection page.
+  /// If yes, do nothing.
+  bool isUserSignIn() {
+    final UserFirestore userFirestore =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
+
+    if (userFirestore.id.isNotEmpty) {
+      return true;
+    }
+
+    context.beamBack();
+    context.get<Signal<String>>(EnumSignalId.navigationBarPath).updateValue(
+        (prevValue) => "${DashboardLocation.route}-${DateTime.now()}");
+
+    return false;
   }
 
   /// Callback fired to add quote to list.
@@ -716,54 +765,5 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
         _quote = _quote.copyWith(starred: false);
       });
     }
-  }
-
-  /// Calculate actual quote container size based on screen size.
-  Size computeWindowSize(Size size) {
-    const double paddingValue = 54.0;
-
-    if (NavigationStateHelper.isIpad) {
-      return Size(
-        (size.width * 0.7) - paddingValue,
-        (size.height * 0.5) - paddingValue,
-      );
-    }
-
-    if (size.width < 500 && size.height > 500) {
-      return Size(
-        (size.width * 0.8) - paddingValue,
-        (size.height * 0.8) - paddingValue,
-      );
-    }
-
-    if (size.width < 900 && size.height < 900) {
-      return Size(
-        (size.width) - paddingValue,
-        (size.height) - paddingValue,
-      );
-    }
-
-    return Size(
-      (size.width * 0.7) - paddingValue,
-      (size.height * 0.6) - paddingValue,
-    );
-  }
-
-  /// Check if user is signed in or not.
-  /// If not, navigate back to connection page.
-  /// If yes, do nothing.
-  bool isUserSignIn() {
-    final UserFirestore userFirestore =
-        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
-
-    if (userFirestore.id.isNotEmpty) {
-      return true;
-    }
-
-    context.beamBack();
-    context.get<Signal<String>>(EnumSignalId.navigationBarPath).updateValue(
-        (prevValue) => "${DashboardLocation.route}-${DateTime.now()}");
-
-    return false;
   }
 }

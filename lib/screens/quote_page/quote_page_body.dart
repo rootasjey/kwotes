@@ -177,19 +177,21 @@ class QuotePageBody extends StatelessWidget {
           ),
           if (quote.author.urls.image.isNotEmpty)
             SliverToBoxAdapter(
-              child: BetterAvatar(
-                onTap: onTapAuthor != null
-                    ? () => onTapAuthor?.call(quote.author)
-                    : null,
-                radius: 24.0,
-                imageProvider: NetworkImage(
-                  quote.author.urls.image,
-                ),
-                colorFilter: const ColorFilter.mode(
-                  Colors.grey,
-                  BlendMode.saturation,
-                ),
-              ).animate(delay: 250.ms).scale().fadeIn(),
+              child: Center(
+                child: BetterAvatar(
+                  onTap: onTapAuthor != null
+                      ? () => onTapAuthor?.call(quote.author)
+                      : null,
+                  radius: 24.0,
+                  imageProvider: NetworkImage(
+                    quote.author.urls.image,
+                  ),
+                  colorFilter: const ColorFilter.mode(
+                    Colors.grey,
+                    BlendMode.saturation,
+                  ),
+                ).animate(delay: 250.ms).scale().fadeIn(),
+              ),
             ),
           SliverToBoxAdapter(
             child: Center(
