@@ -31,6 +31,7 @@
       "does_not_exist": "Il semble que ce compte n'existe pas",
       "update": "Une erreur s'est produite lors de la mise à jour de votre compte"
     },
+    "get": "Obtenir un compte",
     "name": "Compte",
     "recover": "Récupérer mon compte"
   },

@@ -31,6 +31,7 @@
       "does_not_exist": "It seems that this account does not exist",
       "update": "An error occurred while updating your account"
     },
+    "get": "Get an account",
     "name": "Account",
     "recover": "Recover account"
   },

@@ -10,6 +10,7 @@ import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/locations/settings_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/settings/account_settings.dart";
+import "package:kwotes/screens/settings/empty_account_settings_view.dart";
 import "package:kwotes/screens/settings/settings_page_body.dart";
 import "package:kwotes/screens/settings/settings_page_header.dart";
 import "package:kwotes/types/enums/enum_account_displayed.dart";
@@ -84,7 +85,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 Widget? child,
               ) {
                 if (userFirestore.id.isEmpty) {
-                  return const SliverToBoxAdapter(child: SizedBox.shrink());
+                  return EmptyAccountSettingsView(
+                    onTapGetAnAccount: onTapGetAnAccount,
+                  );
                 }
 
                 return AccountSettings(
@@ -242,6 +245,22 @@ class _SettingsPageState extends State<SettingsPage> {
   void onTapAccount() {
     Beamer.of(context).beamToNamed(
       SettingsContentLocation.accountRoute,
+    );
+  }
+
+  /// Navigate to the connection page.
+  void onTapGetAnAccount() {
+    Beamer.of(context).popRoute();
+
+    final Signal<String> signalNavigationBarPath =
+        context.get<Signal<String>>(EnumSignalId.navigationBarPath);
+
+    signalNavigationBarPath.updateValue(
+      (String _) => "${DashboardContentLocation.route}-${DateTime.now()}",
+    );
+
+    Beamer.of(context, root: true).beamToNamed(
+      DashboardContentLocation.connectionRoute,
     );
   }
 }
