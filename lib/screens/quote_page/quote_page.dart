@@ -456,9 +456,12 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   /// Callback fired to add quote to list.
   /// Opens the add to list dialog.
   void onAddToList() {
-    final String userId =
-        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value.id;
+    final UserFirestore userFirestore =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
 
+    if (!isUserSignIn()) return;
+
+    final String userId = userFirestore.id;
     final bool isMobileSize = Utils.measurements.isMobileSize(context);
 
     Utils.graphic.showAddToListDialog(
