@@ -105,17 +105,11 @@ class PageAppBar extends StatelessWidget {
       shadowColor: shadowColor,
       backgroundColor: backgroundColor,
       automaticallyImplyLeading: false,
-      title: BackdropFilter(
-        filter: ImageFilter.blur(
-          sigmaX: 5,
-          sigmaY: 5,
-        ),
-        child: Padding(
-          padding: isMobileSize
-              ? EdgeInsets.zero
-              : const EdgeInsets.only(left: 28.0, top: 42.0),
-          child: layoutChild,
-        ),
+      title: Padding(
+        padding: isMobileSize
+            ? EdgeInsets.zero
+            : const EdgeInsets.only(left: 28.0, top: 42.0),
+        child: layoutChild,
       ),
     );
   }
