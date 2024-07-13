@@ -43,7 +43,7 @@ class ConnectionPage extends StatelessWidget {
                         style: Utils.calligraphy.body(
                           textStyle: const TextStyle(
                             fontSize: 24.0,
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
@@ -58,9 +58,10 @@ class ConnectionPage extends StatelessWidget {
                           "If you want to use the full app, you can create an account. The choice is yours!",
                           textAlign: TextAlign.center,
                           style: Utils.calligraphy.body(
-                            textStyle: const TextStyle(
+                            textStyle: TextStyle(
                               fontSize: 16.0,
                               fontWeight: FontWeight.w300,
+                              color: foregroundColor?.withOpacity(0.6),
                             ),
                           ),
                         ),

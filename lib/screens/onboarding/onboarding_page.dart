@@ -75,7 +75,7 @@ class OnboardingPage extends StatelessWidget {
                             style: Utils.calligraphy.body(
                               textStyle: const TextStyle(
                                 fontSize: 24.0,
-                                fontWeight: FontWeight.w400,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ),
@@ -90,9 +90,10 @@ class OnboardingPage extends StatelessWidget {
                               "Welcome to Kwotes. A place where you can create, customize and share inspiration",
                               textAlign: TextAlign.center,
                               style: Utils.calligraphy.body(
-                                textStyle: const TextStyle(
+                                textStyle: TextStyle(
                                   fontSize: 16.0,
                                   fontWeight: FontWeight.w300,
+                                  color: foregroundColor?.withOpacity(0.6),
                                 ),
                               ),
                             ),

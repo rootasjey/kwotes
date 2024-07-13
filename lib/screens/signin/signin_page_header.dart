@@ -57,15 +57,12 @@ class SigninPageHeader extends StatelessWidget {
                   foregroundColor: accentColor,
                   backgroundColor: accentColor.withOpacity(0.05),
                 ),
-                child: Opacity(
-                  opacity: 0.6,
-                  child: Text(
-                    "account.dont_own".tr(),
-                    style: Utils.calligraphy.code(
-                      textStyle: const TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w600,
-                      ),
+                child: Text(
+                  "account.dont_own".tr(),
+                  style: Utils.calligraphy.body(
+                    textStyle: const TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),

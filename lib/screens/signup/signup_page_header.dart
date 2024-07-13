@@ -51,15 +51,12 @@ class SignupPageHeader extends StatelessWidget {
                   foregroundColor: accentColor,
                   backgroundColor: accentColor.withOpacity(0.05),
                 ),
-                child: Opacity(
-                  opacity: 0.8,
-                  child: Text(
-                    "account.already_have".tr(),
-                    style: Utils.calligraphy.code(
-                      textStyle: const TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w600,
-                      ),
+                child: Text(
+                  "account.already_have".tr(),
+                  style: Utils.calligraphy.body(
+                    textStyle: const TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 )),
