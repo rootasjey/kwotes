@@ -417,12 +417,6 @@ class CreditsPage extends StatelessWidget {
         link: "https://pub.dev/packages/firebase_storage",
       ),
       CreditItemData(
-        title: "smooth_page_indicator",
-        subtitle: "Customizable animated page indicator "
-            "with a set of built-in effects.",
-        link: "https://pub.dev/packages/smooth_page_indicator",
-      ),
-      CreditItemData(
         title: "super_context_menu",
         subtitle: "Single context menu widget that works accross "
             "all desktop platforms, mobile platforms and web.",

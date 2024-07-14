@@ -47,7 +47,7 @@ class EmptyAccountSettingsView extends StatelessWidget {
                   ),
                   const Spacer(),
                   Text(
-                    "account.get".tr(),
+                    "account.create".tr(),
                     style: Utils.calligraphy.body(
                       textStyle: TextStyle(
                         color: foregroundColor,
