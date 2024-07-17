@@ -35,6 +35,7 @@ import "package:kwotes/types/user/user_rights.dart";
 import "package:loggy/loggy.dart";
 import "package:screenshot/screenshot.dart";
 import "package:text_wrap_auto_size/solution.dart";
+import "package:vibration/vibration.dart";
 
 class QuotePage extends StatefulWidget {
   const QuotePage({
@@ -93,6 +94,9 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   /// Timer to temporarly swap copy icon.
   Timer? _timerCopyIcon;
 
+  /// Timer to vibrate when quote is displayed.
+  Timer? _vibrationTimer;
+
   @override
   void initState() {
     super.initState();
@@ -103,6 +107,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   @override
   void dispose() {
     _timerCopyIcon?.cancel();
+    _vibrationTimer?.cancel();
     clean();
     super.dispose();
   }
@@ -173,6 +178,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
                     onDeleteQuote: canManageQuotes ? onDeleteQuote : null,
                     onDoubleTapQuote: onCopyQuote,
                     onEditQuote: canManageQuotes ? onEditQuote : null,
+                    onFinishedAnimation: onFinishedAnimation,
                     onShareImage: onShareImage,
                     onShareLink: onShareLink,
                     onShareText: onShareText,
@@ -342,10 +348,8 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
 
       await fetchAuthorAndRef(_quote);
 
-      setState(() {
-        _pageState = EnumPageState.idle;
-      });
-
+      setState(() => _pageState = EnumPageState.idle);
+      startTextVibration();
       return;
     }
 
@@ -366,9 +370,8 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
 
       await fetchAuthorAndRef(_quote);
 
-      setState(() {
-        _pageState = EnumPageState.idle;
-      });
+      setState(() => _pageState = EnumPageState.idle);
+      startTextVibration();
     } catch (error) {
       loggy.error(error);
       _pageState = EnumPageState.error;
@@ -456,6 +459,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   /// Callback fired to add quote to list.
   /// Opens the add to list dialog.
   void onAddToList() {
+    Utils.graphic.tapVibration();
     final UserFirestore userFirestore =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
 
@@ -507,6 +511,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
 
   /// Callback fired to copy quote's name.
   void onCopyQuote(Quote quote) {
+    Utils.graphic.tapVibration();
     QuoteActions.copyQuote(quote);
 
     setState(() {
@@ -646,8 +651,15 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
     );
   }
 
+  /// Callback fired when text animation is finished.
+  void onFinishedAnimation() {
+    Vibration.cancel();
+    _vibrationTimer?.cancel();
+  }
+
   /// Callback fired to share quote.
   void onShareQuote() {
+    Utils.graphic.tapVibration();
     if (!isUserSignIn()) return;
 
     showModalBottomSheet(
@@ -731,42 +743,51 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   /// Callback fired to toggle quote's favourite status
   /// from the current authenticated user perspective.
   void onToggleFavourite() async {
+    Utils.graphic.tapVibration();
     final UserFirestore userFirestore =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
 
     if (!isUserSignIn()) return;
     if (_quote.starred) {
-      setState(() {
-        _quote = _quote.copyWith(starred: false);
-      });
-
+      setState(() => _quote = _quote.copyWith(starred: false));
       final bool success = await QuoteActions.removeFromFavourites(
         quote: _quote,
         userId: userFirestore.id,
       );
 
       if (!success) {
-        setState(() {
-          _quote = _quote.copyWith(starred: true);
-        });
+        setState(() => _quote = _quote.copyWith(starred: true));
       }
 
       return;
     }
 
-    setState(() {
-      _quote = _quote.copyWith(starred: true);
-    });
-
+    setState(() => _quote = _quote.copyWith(starred: true));
     final bool success = await QuoteActions.addToFavourites(
       quote: _quote,
       userId: userFirestore.id,
     );
 
     if (!success) {
-      setState(() {
-        _quote = _quote.copyWith(starred: false);
-      });
+      setState(() => _quote = _quote.copyWith(starred: false));
     }
+  }
+
+  /// Start text vibration while animating.
+  void startTextVibration() {
+    Vibration.cancel();
+    Vibration.hasVibrator().then((bool? hasVibrator) {
+      if (hasVibrator ?? false) {
+        _vibrationTimer = Timer.periodic(
+          const Duration(milliseconds: 50),
+          (Timer timer) {
+            Vibration.vibrate(
+              pattern: [100, 90],
+              intensities: [50, 40],
+            );
+          },
+        );
+      }
+    });
   }
 }

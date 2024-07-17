@@ -130,7 +130,7 @@ class InValidationPageBody extends StatelessWidget {
                     if (triggered && !vibrated) {
                       Vibration.hasVibrator().then((bool? hasVibrator) {
                         if (hasVibrator ?? false) {
-                          Vibration.vibrate(amplitude: 20, duration: 25);
+                          Vibration.vibrate(pattern: [16], intensities: [200]);
                         }
                       });
 

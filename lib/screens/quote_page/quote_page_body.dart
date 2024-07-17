@@ -34,6 +34,7 @@ class QuotePageBody extends StatelessWidget {
     this.onDeleteQuote,
     this.onDoubleTapQuote,
     this.onEditQuote,
+    this.onFinishedAnimation,
     this.onShareImage,
     this.onShareLink,
     this.onShareText,
@@ -80,6 +81,9 @@ class QuotePageBody extends StatelessWidget {
 
   /// Callback fired when quote is edited.
   final void Function(Quote)? onEditQuote;
+
+  /// Callback fired when quote text animation has finished.
+  final void Function()? onFinishedAnimation;
 
   /// Callback fired when image is shared.
   final void Function(Quote quote)? onShareImage;
@@ -147,6 +151,7 @@ class QuotePageBody extends StatelessWidget {
                     isRepeatingAnimation: false,
                     displayFullTextOnTap: true,
                     pause: const Duration(milliseconds: 0),
+                    onFinished: onFinishedAnimation,
                     animatedTexts: [
                       FadeAnimatedText("", duration: 250.ms),
                       TypewriterAnimatedText(

@@ -18,6 +18,7 @@ import "package:kwotes/types/enums/enum_user_plan.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
 import "package:purchases_ui_flutter/purchases_ui_flutter.dart";
+import "package:vibration/vibration.dart";
 
 class PremiumDialogPage extends StatefulWidget {
   const PremiumDialogPage({super.key});
@@ -246,7 +247,7 @@ class _PremiumDialogPageState extends State<PremiumDialogPage> with UiLoggy {
 
     if (userFirestore.id.isEmpty) {
       context.get<Signal<String>>(EnumSignalId.navigationBarPath).updateValue(
-          (prevValue) => "${DashboardLocation.route}-${DateTime.now()}");
+          (String _) => "${DashboardLocation.route}-${DateTime.now()}");
       return;
     }
 
@@ -269,6 +270,11 @@ class _PremiumDialogPageState extends State<PremiumDialogPage> with UiLoggy {
 
     if (paywallResult == PaywallResult.purchased ||
         paywallResult == PaywallResult.restored) {
+      Vibration.vibrate(
+        pattern: [16],
+        intensities: [200],
+      );
+
       final Signal<UserFirestore> signalFirestoreUser =
           savedContext.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
 

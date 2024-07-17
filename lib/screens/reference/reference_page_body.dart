@@ -22,6 +22,7 @@ class ReferencePageBody extends StatelessWidget {
     this.maxHeight = double.infinity,
     this.onDoubleTapName,
     this.onDoubleTapSummary,
+    this.onFinishedAnimation,
     this.onTapSeeQuotes,
     this.onTapPoster,
     this.onToggleMetadata,
@@ -51,6 +52,9 @@ class ReferencePageBody extends StatelessWidget {
 
   /// Callback fired when the reference summary is double tapped.
   final void Function()? onDoubleTapSummary;
+
+  /// Callback fired when reference biography text animation has finished.
+  final void Function()? onFinishedAnimation;
 
   /// Callback fired when the "see related quotes" button is tapped.
   final void Function()? onTapSeeQuotes;
@@ -155,6 +159,7 @@ class ReferencePageBody extends StatelessWidget {
                   child: AnimatedTextKit(
                     isRepeatingAnimation: false,
                     displayFullTextOnTap: true,
+                    onFinished: onFinishedAnimation,
                     animatedTexts: [
                       TypewriterAnimatedText(
                         reference.summary,

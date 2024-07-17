@@ -7,10 +7,10 @@ class Constants {
   static const appName = "kwotes";
 
   /// App version.
-  static const appVersion = "3.33.0";
+  static const appVersion = "3.35.0";
 
   /// App build number.
-  static const appBuildNumber = 53;
+  static const appBuildNumber = 55;
 
   /// Last time terms of service was updated.
   static final DateTime termsOfServiceLastUpdated = DateTime(2020, 12, 12);

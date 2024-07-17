@@ -34,6 +34,7 @@ import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
 import "package:text_wrap_auto_size/solution.dart";
 import "package:text_wrap_auto_size/text_wrap_auto_size.dart";
+import "package:vibration/vibration.dart";
 
 class ReferencePage extends StatefulWidget {
   const ReferencePage({
@@ -80,6 +81,9 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
   /// Scroll controller.
   final ScrollController _scrollController = ScrollController();
 
+  /// Timer to vibrate when quote is displayed.
+  Timer? _vibrationTimer;
+
   @override
   void initState() {
     super.initState();
@@ -92,6 +96,7 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
     _tooltipController.dispose();
     _referenceSubscription?.cancel();
     _scrollController.dispose();
+    _vibrationTimer?.cancel();
     super.dispose();
   }
 
@@ -186,6 +191,7 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
       fetchReference(widget.referenceId),
     ]);
 
+    startTextVibration();
     setState(() => _pageState = EnumPageState.idle);
   }
 
@@ -489,5 +495,28 @@ class _ReferencePageState extends State<ReferencePage> with UiLoggy {
 
   void onScroll(double offset) {
     handlePullQuickAction();
+  }
+
+  /// Start text vibration while animating.
+  void startTextVibration() {
+    Vibration.cancel();
+    Vibration.hasVibrator().then((bool? hasVibrator) {
+      if (hasVibrator ?? false) {
+        _vibrationTimer = Timer.periodic(
+          const Duration(milliseconds: 50),
+          (Timer timer) {
+            Vibration.vibrate(
+              pattern: [100, 14],
+              intensities: [10, 30],
+            );
+          },
+        );
+
+        Timer(Duration(milliseconds: 10 * _reference.summary.length), () {
+          Vibration.cancel();
+          _vibrationTimer?.cancel();
+        });
+      }
+    });
   }
 }

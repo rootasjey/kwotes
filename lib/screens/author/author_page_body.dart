@@ -22,6 +22,7 @@ class AuthorPageBody extends StatelessWidget {
     this.pageState = EnumPageState.idle,
     this.onDoubleTapName,
     this.onDoubleTapSummary,
+    this.onFinishedAnimation,
     this.onTapSeeQuotes,
     this.onTapAvatar,
     this.onToggleMetadata,
@@ -54,6 +55,9 @@ class AuthorPageBody extends StatelessWidget {
 
   /// Callback fired when the author's summary is double tapped.
   final void Function()? onDoubleTapSummary;
+
+  /// Callback fired when author biography text animation has finished.
+  final void Function()? onFinishedAnimation;
 
   /// Callback fired when the author name is tapped.
   final void Function()? onTapAvatar;
@@ -155,6 +159,7 @@ class AuthorPageBody extends StatelessWidget {
                   child: AnimatedTextKit(
                     isRepeatingAnimation: false,
                     displayFullTextOnTap: true,
+                    onFinished: onFinishedAnimation,
                     animatedTexts: [
                       TypewriterAnimatedText(
                         author.summary,

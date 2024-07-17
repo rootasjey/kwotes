@@ -27,6 +27,7 @@ import "package:screenshot/screenshot.dart";
 import "package:share_plus/share_plus.dart";
 import "package:text_wrap_auto_size/solution.dart";
 import "package:text_wrap_auto_size/text_wrap_auto_size.dart";
+import "package:vibration/vibration.dart";
 
 /// Graphic utilities (everything associated with visual and UI).
 class Graphic with UiLoggy {
@@ -236,6 +237,13 @@ class Graphic with UiLoggy {
     }
 
     return null;
+  }
+
+  Future<void> tapVibration() {
+    return Vibration.vibrate(
+      pattern: [16],
+      intensities: [100],
+    );
   }
 
   /// Return true if the current platform is Android.
