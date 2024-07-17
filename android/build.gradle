@@ -6,7 +6,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.0'
+        classpath 'com.android.tools.build:gradle:8.5.0'
         // START: FlutterFire Configuration
         classpath 'com.google.gms:google-services:4.3.15'
         // END: FlutterFire Configuration
@@ -19,6 +19,19 @@ allprojects {
         google()
         mavenCentral()
     }
+    // This code is where all the magic happens and fixes the error.
+    subprojects {
+        afterEvaluate { project ->
+            if (project.hasProperty('android')) {
+                project.android {
+                    if (namespace == null) {
+                        namespace project.group
+                    }
+                }
+            }
+        }
+    }
+    // This code is where all the magic happens and fixes the error.
 }
 
 rootProject.buildDir = '../build'
