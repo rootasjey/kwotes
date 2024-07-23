@@ -20,6 +20,8 @@ class Quote {
     required this.createdAt,
     required this.updatedAt,
     required this.user,
+    required this.categories,
+    required this.tags,
     this.likes = 0,
     this.shares = 0,
   });
@@ -44,6 +46,12 @@ class Quote {
 
   /// List of topics.
   final List<String> topics;
+
+  /// List of categories.
+  final List<String> categories;
+
+  /// List of tags.
+  final List<String> tags;
 
   /// Where this quote was referenced (e.g. a movie, a book, a song).
   final Reference reference;
@@ -74,6 +82,8 @@ class Quote {
     String? quoteId,
     bool? starred,
     List<String>? topics,
+    List<String>? categories,
+    List<String>? tags,
     DateTime? createdAt,
     DateTime? updatedAt,
     UserFirestore? user,
@@ -83,12 +93,14 @@ class Quote {
   }) {
     return Quote(
       author: author ?? this.author,
+      categories: categories ?? this.categories,
       id: id ?? this.id,
       language: lang ?? this.language,
       name: name ?? this.name,
       reference: reference ?? this.reference,
       quoteId: quoteId ?? this.quoteId,
       starred: starred ?? this.starred,
+      tags: tags ?? this.tags,
       topics: topics ?? this.topics,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
@@ -105,6 +117,13 @@ class Quote {
   }) {
     final Map<String, dynamic> baseMap = {
       "author": author.toMap(minimal: true),
+      "categories": categories.fold(<String, bool>{}, (
+        Map<String, bool> previousValue,
+        String topicString,
+      ) {
+        previousValue[topicString] = true;
+        return previousValue;
+      }),
       "language": language.isEmpty ? "en" : language,
       "name": name,
       "reference": reference.toMap(minimal: true),
@@ -113,6 +132,13 @@ class Quote {
           "likes": likes,
           "shares": shares,
         },
+      "tags": tags.fold(<String, bool>{}, (
+        Map<String, bool> previousValue,
+        String topicString,
+      ) {
+        previousValue[topicString] = true;
+        return previousValue;
+      }),
       "topics": topics.fold(<String, bool>{}, (
         Map<String, bool> previousValue,
         String topicString,
@@ -134,10 +160,24 @@ class Quote {
   Map<String, dynamic> toMapFavourite() {
     return {
       "author": author.toMap(minimal: true),
+      "categories": tags.fold(<String, bool>{}, (
+        Map<String, bool> previousValue,
+        String topicString,
+      ) {
+        previousValue[topicString] = true;
+        return previousValue;
+      }),
       "language": language.isEmpty ? "en" : language,
       "name": name,
       "created_at": DateTime.now(),
       "reference": reference.toMap(minimal: true),
+      "tags": tags.fold(<String, bool>{}, (
+        Map<String, bool> previousValue,
+        String topicString,
+      ) {
+        previousValue[topicString] = true;
+        return previousValue;
+      }),
       "topics": topics.fold(<String, bool>{}, (
         Map<String, bool> previousValue,
         String topicString,
@@ -151,6 +191,7 @@ class Quote {
   factory Quote.empty() {
     return Quote(
       author: Author.empty(),
+      categories: [],
       id: "",
       language: "",
       name: "",
@@ -161,6 +202,7 @@ class Quote {
       likes: 0,
       shares: 0,
       createdAt: DateTime.now(),
+      tags: [],
       updatedAt: DateTime.now(),
       user: UserFirestore.empty(),
     );
@@ -173,10 +215,13 @@ class Quote {
 
     final Author author = Author.fromMap(map["author"]);
     final Reference reference = Reference.fromMap(map["reference"]);
-    final List<String> topics = parseTopics(map["topics"]);
+    final List<String> topics = convertArrayToMap(map["topics"]);
+    final List<String> categories = convertArrayToMap(map["categories"]);
+    final List<String> tags = convertArrayToMap(map["tags"]);
 
     return Quote(
       author: author,
+      categories: categories,
       createdAt: Utils.tictac.fromFirestore(map["created_at"]),
       updatedAt: Utils.tictac.fromFirestore(map["updated_at"]),
       id: map["id"] ?? "",
@@ -187,12 +232,13 @@ class Quote {
       shares: map["metrics"]?["shares"] ?? 0,
       quoteId: map["quoteId"] ?? "",
       starred: map["starred"] ?? false,
+      tags: tags,
       topics: topics,
       user: UserFirestore.fromMap(map["user"]),
     );
   }
 
-  static List<String> parseTopics(dynamic data) {
+  static List<String> convertArrayToMap(dynamic data) {
     final topics = <String>[];
 
     if (data == null) {
@@ -223,9 +269,10 @@ class Quote {
 
   @override
   String toString() {
-    return "Quote(author: $author, id: $id, lang: $language, name: $name, "
+    return "Quote(author: $author, categories: $categories, id: $id, "
+        "language: $language, name: $name, "
         "reference: $reference, quoteId: $quoteId, starred: $starred,"
-        "topics: $topics)";
+        "tags: $tags, topics: $topics)";
   }
 
   @override
@@ -233,24 +280,28 @@ class Quote {
     if (identical(this, other)) return true;
 
     return other.author == author &&
+        listEquals(other.categories, categories) &&
         other.id == id &&
         other.language == language &&
         other.name == name &&
         other.reference == reference &&
         other.quoteId == quoteId &&
         other.starred == starred &&
+        listEquals(other.tags, tags) &&
         listEquals(other.topics, topics);
   }
 
   @override
   int get hashCode {
     return author.hashCode ^
+        categories.hashCode ^
         id.hashCode ^
         language.hashCode ^
         name.hashCode ^
         reference.hashCode ^
         quoteId.hashCode ^
         starred.hashCode ^
+        tags.hashCode ^
         topics.hashCode;
   }
 }

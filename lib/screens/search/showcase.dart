@@ -3,6 +3,7 @@ import "package:kwotes/screens/search/showcase_authors.dart";
 import "package:kwotes/screens/search/showcase_quotes.dart";
 import "package:kwotes/screens/search/showcase_references.dart";
 import "package:kwotes/types/author.dart";
+import "package:kwotes/types/category.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_search_category.dart";
 import "package:kwotes/types/enums/enum_user_plan.dart";
@@ -25,7 +26,9 @@ class Showcase extends StatelessWidget {
     this.userPlan = EnumUserPlan.free,
     this.onTapAuthor,
     this.onTapReference,
+    this.onTapCategory,
     this.onTapTopic,
+    this.categories = const [],
   });
 
   /// Animate item if true.
@@ -65,8 +68,14 @@ class Showcase extends StatelessWidget {
   /// List of topic colors.
   final List<Topic> topicColors;
 
+  /// List of categories.
+  final List<Category> categories;
+
   /// Callback fired when reference name is tapped.
   final void Function(Reference reference)? onTapReference;
+
+  /// Callback fired when a category is tapped.
+  final void Function(Category category)? onTapCategory;
 
   /// Callback fired when a topic color is tapped.
   final void Function(Topic topicColor)? onTapTopic;
@@ -77,7 +86,8 @@ class Showcase extends StatelessWidget {
       return const SliverToBoxAdapter();
     }
 
-    if (searchCategory == EnumSearchCategory.authors) {
+    if (searchCategory == EnumSearchCategory.authors ||
+        searchCategory == EnumSearchCategory.characters) {
       return ShowcaseAuthors(
         animateItemList: animateItemList,
         authors: authors,
@@ -105,6 +115,8 @@ class Showcase extends StatelessWidget {
       isMobileSize: isMobileSize,
       margin: margin,
       topicColors: topicColors,
+      categories: categories,
+      onTapCategory: onTapCategory,
       onTapTopic: onTapTopic,
       userPlan: userPlan,
     );

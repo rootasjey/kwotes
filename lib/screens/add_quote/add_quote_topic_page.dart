@@ -19,6 +19,8 @@ class AddQuoteTopicPage extends StatelessWidget {
     this.onClearTopic,
     this.onSelected,
     this.onDeleteQuote,
+    this.onToggleCategory,
+    this.categories = const [],
     this.appBarRightChildren = const [],
   });
 
@@ -31,11 +33,16 @@ class AddQuoteTopicPage extends StatelessWidget {
   /// Callback fired when a topic is tapped.
   final void Function(Topic topic, bool selected)? onSelected;
 
+  final void Function(String category, bool selected)? onToggleCategory;
+
   /// Callback fired when "Clear topics" button is tapped.
   final void Function()? onClearTopic;
 
   /// Callback fired to delete the quote we're editing.
   final void Function()? onDeleteQuote;
+
+  /// List of categories (e.g. "Movies", "Music", "Series").
+  final List<String> categories;
 
   /// List of topics.
   final List<Topic> topics;
@@ -48,6 +55,9 @@ class AddQuoteTopicPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color? foregroundColor =
+        Theme.of(context).textTheme.bodyMedium?.color;
+
     return Scaffold(
       body: CustomScrollView(slivers: [
         SliverPadding(
@@ -104,12 +114,90 @@ class AddQuoteTopicPage extends StatelessWidget {
                 ),
               ),
             ),
+            const WaveDivider(),
+            Center(
+              child: Container(
+                padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                width: 600.0,
+                child: Text(
+                  "category.names".tr(),
+                  textAlign: TextAlign.center,
+                  style: Utils.calligraphy.body(
+                    textStyle: TextStyle(
+                      fontSize: isMobileSize ? 16.0 : 24.0,
+                      fontWeight: FontWeight.w500,
+                      color: foregroundColor?.withOpacity(0.6),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 700.0),
+                  child: Wrap(
+                    spacing: 12.0,
+                    runSpacing: 12.0,
+                    alignment: WrapAlignment.center,
+                    children: categories.map((String category) {
+                      final bool selected = NavigationStateHelper
+                          .quote.categories
+                          .any((x) => x == category);
+
+                      return ChoiceChip(
+                        selected: selected,
+                        selectedColor: Constants.colors.pastelPalette.elementAt(
+                          category.hashCode %
+                              Constants.colors.pastelPalette.length,
+                        ),
+                        onSelected: (bool newSelected) =>
+                            onToggleCategory?.call(category, newSelected),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16.0),
+                          side: BorderSide(
+                            color: foregroundColor?.withOpacity(0.2) ??
+                                Colors.transparent,
+                            width: 1.2,
+                          ),
+                        ),
+                        label: Text(
+                          "${category.characters.first.toUpperCase()}${category.substring(1)}",
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ),
+            const WaveDivider(
+              padding: EdgeInsets.symmetric(vertical: 24.0),
+            ),
+            Center(
+              child: Container(
+                padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                width: 600.0,
+                child: Text(
+                  "topics.name".tr(),
+                  textAlign: TextAlign.center,
+                  style: Utils.calligraphy.body(
+                    textStyle: TextStyle(
+                      fontSize: isMobileSize ? 16.0 : 24.0,
+                      fontWeight: FontWeight.w500,
+                      color: foregroundColor?.withOpacity(0.6),
+                    ),
+                  ),
+                ),
+              ),
+            ),
             Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 700.0),
                 child: Wrap(
                   spacing: 12.0,
                   runSpacing: 12.0,
+                  alignment: WrapAlignment.center,
                   children: topics.map((topic) {
                     final bool selected = NavigationStateHelper.quote.topics
                         .any((x) => x == topic.name);
@@ -133,45 +221,47 @@ class AddQuoteTopicPage extends StatelessWidget {
                     children: [
                       FractionallySizedBox(
                         widthFactor: 1.0,
-                        child: WaveDivider(
-                          color: Constants.colors.foregroundPalette.first
-                              .withOpacity(0.6),
-                          thickness: 2.0,
-                          padding: const EdgeInsets.only(bottom: 16.0),
+                        child: Divider(
+                          thickness: 1.2,
+                          height: 24.0,
+                          color: foregroundColor?.withOpacity(0.2) ??
+                              Colors.black38,
                         ),
                       ),
-                      Row(
-                        // spacing: 12.0,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          TextButton(
-                            onPressed: onClearTopic,
-                            style: TextButton.styleFrom(
-                              backgroundColor: Colors.pink.shade100,
-                              foregroundColor: Colors.pink,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12.0,
-                                vertical: 14.0,
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            TextButton(
+                              onPressed: onClearTopic,
+                              style: TextButton.styleFrom(
+                                backgroundColor: Colors.pink.shade100,
+                                foregroundColor: Colors.pink,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12.0,
+                                  vertical: 14.0,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.only(right: 8.0),
+                                    child: Icon(TablerIcons.clear_all),
+                                  ),
+                                  Text("quote.clear_topics".tr()),
+                                ],
                               ),
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(right: 8.0),
-                                  child: Icon(TablerIcons.clear_all),
-                                ),
-                                Text("quote.clear_topics".tr()),
-                              ],
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 12.0),
+                                child: saveButton,
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 12.0),
-                              child: saveButton,
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),

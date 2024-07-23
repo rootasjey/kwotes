@@ -41,7 +41,7 @@ class ChipCategorySelector extends StatelessWidget {
         shrinkWrap: true,
         children: [
           EnumSearchCategory.quotes,
-          EnumSearchCategory.authors,
+          EnumSearchCategory.characters,
           EnumSearchCategory.references,
         ].map((EnumSearchCategory category) {
           final bool selected = category == categorySelected;
@@ -106,6 +106,7 @@ class ChipCategorySelector extends StatelessWidget {
       case EnumSearchCategory.quotes:
         return Constants.colors.quotes.withOpacity(0.2);
       case EnumSearchCategory.authors:
+      case EnumSearchCategory.characters:
         return Constants.colors.authors.withOpacity(0.2);
       case EnumSearchCategory.references:
         return Constants.colors.references.withOpacity(0.2);
@@ -117,6 +118,7 @@ class ChipCategorySelector extends StatelessWidget {
       case EnumSearchCategory.quotes:
         return Constants.colors.quotes.withOpacity(0.2);
       case EnumSearchCategory.authors:
+      case EnumSearchCategory.characters:
         return Constants.colors.authors.withOpacity(0.2);
       case EnumSearchCategory.references:
         return Constants.colors.references.withOpacity(0.2);
@@ -129,6 +131,8 @@ class ChipCategorySelector extends StatelessWidget {
         return TablerIcons.quote;
       case EnumSearchCategory.authors:
         return TablerIcons.users;
+      case EnumSearchCategory.characters:
+        return TablerIcons.spy;
       case EnumSearchCategory.references:
         return TablerIcons.books;
     }

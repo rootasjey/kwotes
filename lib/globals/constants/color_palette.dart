@@ -207,6 +207,7 @@ class ColorPalette {
   final Color home = Colors.blue.shade300;
 
   final Color authors = Colors.blue.shade300;
+  final Color characters = Colors.indigo.shade400;
 
   final Color lightBackground = const Color.fromRGBO(239, 241, 253, 1);
   final Color likes = Colors.pink;

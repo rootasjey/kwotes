@@ -69,7 +69,9 @@ class _TopicChipState extends State<TopicChip> {
         });
       },
       child: ChoiceChip(
-        label: Text(topic.name),
+        label: Text(
+          "${topic.name.characters.first.toUpperCase()}${topic.name.substring(1)}",
+        ),
         labelStyle: Utils.calligraphy.body(
           textStyle: TextStyle(
             color: selected ? getTextColor() : null,

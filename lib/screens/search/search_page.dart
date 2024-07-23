@@ -23,6 +23,7 @@ import "package:kwotes/screens/search/show_more_button.dart";
 import "package:kwotes/screens/search/showcase.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/author.dart";
+import "package:kwotes/types/category.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_search_category.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
@@ -118,6 +119,9 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   /// List of references in alphabetical order (for showcase).
   final List<Reference> _referenceList = [];
+
+  /// List of categories.
+  final List<Category> _categories = [];
 
   /// Last fetched quote document.
   QueryDocSnapMap? _lastQuoteDocument;
@@ -250,6 +254,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                     Showcase(
                       animateItemList: _animateItemList,
                       authors: _authorList,
+                      categories: _categories,
                       isDark: isDark,
                       isMobileSize: isMobileSize,
                       margin: EdgeInsets.only(
@@ -259,6 +264,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
                         right: isMobileSize ? 24.0 : 24.0,
                       ),
                       pageState: _pageState,
+                      onTapCategory: onTapCategory,
                       onTapTopic: onTapTopic,
                       onTapAuthor: onTapAuthor,
                       onTapReference: onTapReference,
@@ -307,6 +313,9 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
     if (text.startsWith("author:") || text.startsWith("a:")) {
       onSelectSearchCategory(EnumSearchCategory.authors);
+    }
+    if (text.startsWith("character:") || text.startsWith("c:")) {
+      onSelectSearchCategory(EnumSearchCategory.characters);
     }
     if (text.startsWith("reference:") || text.startsWith("r:")) {
       onSelectSearchCategory(EnumSearchCategory.references);
@@ -461,6 +470,22 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
   }
 
+  /// Try to fetch categories in Firestore.
+  Future<void> fetchCategories() async {
+    final QuerySnapMap snapshot =
+        await FirebaseFirestore.instance.collection("categories").get();
+
+    if (snapshot.docs.isEmpty) return;
+    _categories.clear();
+
+    for (final QueryDocSnapMap doc in snapshot.docs) {
+      final Category category = Category.fromMap(doc.data());
+      _categories.add(category);
+    }
+
+    setState(() {});
+  }
+
   Future<bool> fetchLikeForUser(String quoteId) async {
     try {
       final Signal<UserFirestore> currentUser =
@@ -552,7 +577,8 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     bool reinit = false,
     bool fetchMore = false,
   }) async {
-    if (_searchCategory == EnumSearchCategory.authors) {
+    if (_searchCategory == EnumSearchCategory.authors ||
+        _searchCategory == EnumSearchCategory.characters) {
       fetchAuthors(
         reinit: reinit,
         fetchMore: fetchMore,
@@ -570,6 +596,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
     if (_searchCategory == EnumSearchCategory.quotes) {
       _hasMoreResults = false;
+      fetchCategories();
       Future.delayed(
         const Duration(seconds: 1),
         () => _animateItemList = false,
@@ -685,7 +712,8 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   /// Handle added document.
   void handleAddedDocument(DocumentSnapshotMap doc) {
-    if (_searchCategory == EnumSearchCategory.authors) {
+    if (_searchCategory == EnumSearchCategory.authors ||
+        _searchCategory == EnumSearchCategory.characters) {
       handleAddedAuthor(doc);
       return;
     }
@@ -719,7 +747,8 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   /// Handle modified document.
   void handleModifiedDocument(DocumentSnapshotMap doc) {
-    if (_searchCategory == EnumSearchCategory.authors) {
+    if (_searchCategory == EnumSearchCategory.authors ||
+        _searchCategory == EnumSearchCategory.characters) {
       handleModifiedAuthor(doc);
       return;
     }
@@ -765,7 +794,8 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   /// Handle removed document.
   void handleRemovedDocument(DocumentSnapshotMap doc) {
-    if (_searchCategory == EnumSearchCategory.authors) {
+    if (_searchCategory == EnumSearchCategory.authors ||
+        _searchCategory == EnumSearchCategory.characters) {
       handleRemovedAuthor(doc);
       return;
     }
@@ -884,6 +914,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
         onSelectSearchCategory(EnumSearchCategory.quotes);
         break;
       case "author":
+      case "character":
         onSelectSearchCategory(EnumSearchCategory.authors);
         break;
       case "reference":
@@ -916,6 +947,25 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     });
 
     fetchShowcaseData();
+  }
+
+  void onConfirmSignOut() {
+    Utils.graphic.onConfirmSignOut(
+      context,
+      isMobileSize: Utils.measurements.isMobileSize(context),
+      onCancel: (BuildContext innerContext) {
+        Navigator.of(innerContext).pop();
+      },
+      onConfirm: (BuildContext innerContext) async {
+        Navigator.of(innerContext).pop();
+        final bool success = await Utils.state.signOut();
+        if (!success) return;
+        if (!innerContext.mounted) return;
+        Beamer.of(innerContext, root: true).beamToReplacementNamed(
+          HomeLocation.route,
+        );
+      },
+    );
   }
 
   /// Callback fired to open add quote to list dialog.
@@ -1056,6 +1106,46 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       routeState: {
         "authorName": author.name,
       },
+    );
+  }
+
+  /// Callback fired when a category is tapped.
+  void onTapCategory(Category category) {
+    final UserFirestore userFirestore =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
+
+    if (userFirestore.plan == EnumUserPlan.free) {
+      Beamer.of(context, root: true).beamToNamed(
+        HomeLocation.premiumRoute,
+      );
+      return;
+    }
+
+    FocusManager.instance.primaryFocus?.unfocus();
+    _searchInputController.text = category.name;
+
+    final String path = SearchContentLocation.topicRoute.replaceFirst(
+      ":topicName",
+      category.name,
+    );
+
+    Beamer.of(context).update(
+      configuration: RouteInformation(uri: Uri(path: path)),
+    );
+
+    _lastQuoteDocument = null;
+    _searchPage = 0;
+    _pageState = EnumPageState.searching;
+    _quoteResults.clear();
+    // fetchTopic(category.name);
+    searchQuotes(category.name);
+
+    SystemChrome.setApplicationSwitcherDescription(
+      ApplicationSwitcherDescription(
+        label: "page_title.search_subject".tr(
+          args: [category.name],
+        ),
+      ),
     );
   }
 
@@ -1293,6 +1383,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
         preSearchQuotes(text);
         break;
       case EnumSearchCategory.authors:
+      case EnumSearchCategory.characters:
         preSearchAuthors(text);
         break;
       case EnumSearchCategory.references:
@@ -1348,6 +1439,7 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
         preSearchMoreQuotes(text);
         break;
       case EnumSearchCategory.authors:
+      case EnumSearchCategory.characters:
         preSearchMoreAuthors(text);
         break;
       case EnumSearchCategory.references:
@@ -1464,6 +1556,9 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       case "authors":
         searchCategory = EnumSearchCategory.authors;
         break;
+      case "characters":
+        searchCategory = EnumSearchCategory.characters;
+        break;
       case "quotes":
         searchCategory = EnumSearchCategory.quotes;
         break;
@@ -1476,24 +1571,5 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     }
 
     setState(() => _searchCategory = searchCategory);
-  }
-
-  void onConfirmSignOut() {
-    Utils.graphic.onConfirmSignOut(
-      context,
-      isMobileSize: Utils.measurements.isMobileSize(context),
-      onCancel: (BuildContext innerContext) {
-        Navigator.of(innerContext).pop();
-      },
-      onConfirm: (BuildContext innerContext) async {
-        Navigator.of(innerContext).pop();
-        final bool success = await Utils.state.signOut();
-        if (!success) return;
-        if (!innerContext.mounted) return;
-        Beamer.of(innerContext, root: true).beamToReplacementNamed(
-          HomeLocation.route,
-        );
-      },
-    );
   }
 }

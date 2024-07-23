@@ -16,6 +16,7 @@ import "package:kwotes/screens/add_quote/save_quote_button.dart";
 import "package:kwotes/screens/add_quote/simple_add_quote_page.dart";
 import "package:kwotes/screens/add_quote/snackbar_draft.dart";
 import "package:kwotes/screens/add_quote/publish_button.dart";
+import "package:kwotes/types/category.dart";
 import "package:kwotes/types/enums/enum_draft_quote_operation.dart";
 import "package:kwotes/types/intents/save_intent.dart";
 import "package:kwotes/types/intents/submit_intent.dart";
@@ -155,6 +156,9 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
   /// List of reference results for a specific search (algolia).
   final List<Reference> _referenceSearchResults = [];
 
+  /// Categories list.
+  final List<String> _categories = [];
+
   /// Shortcuts map.
   final Map<SingleActivator, Intent> _shortcuts = {
     const SingleActivator(
@@ -244,6 +248,7 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     super.initState();
     _pageViewController.addListener(onPageViewChanged);
     initProps();
+    fetchCategories();
     fetchQuoteDocument();
 
     _authorNameFocusNode.addListener(onAuthorNameFocusChanged);
@@ -508,10 +513,12 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
                       onDeleteQuote: onDeleteDraft,
                       tooltipController: _tooltipController,
                     ),
+                    categories: _categories,
                     isDark: isDark,
                     isMobileSize: isMobileSize,
                     topics: Constants.colors.topics,
                     onSelected: onTopicSelected,
+                    onToggleCategory: onToggleCategory,
                     onClearTopic: onClearTopic,
                     saveButton: saveButton,
                   ),
@@ -597,29 +604,23 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
     );
   }
 
-  /// Get active dot color.
-  Color getActiveDotColor() {
-    if (!_pageViewController.hasClients) {
-      return Constants.colors.foregroundPalette.first;
+  /// Fetch categories from firestore.
+  Future<void> fetchCategories() async {
+    final QuerySnapMap snapshot =
+        await FirebaseFirestore.instance.collection("categories").get();
+
+    if (snapshot.docs.isEmpty) {
+      return;
     }
 
-    return Constants.colors.foregroundPalette
-        .elementAt(_pageViewController.page?.toInt() ?? 0);
-  }
+    _categories.clear();
 
-  DocumentMap getDraftQuoteQuery(DraftQuote quote) {
-    final Signal<UserFirestore> userFirestoreSignal =
-        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
-
-    if (quote.inValidation) {
-      return FirebaseFirestore.instance.collection("drafts").doc(quote.id);
+    for (final QueryDocSnapMap doc in snapshot.docs) {
+      final category = Category.fromMap(doc.data());
+      _categories.add(category.name);
     }
 
-    return FirebaseFirestore.instance
-        .collection("users")
-        .doc(userFirestoreSignal.value.id)
-        .collection("drafts")
-        .doc(quote.id);
+    setState(() {});
   }
 
   /// Fetch draft quote document in firestore.
@@ -759,6 +760,31 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
       NavigationStateHelper.quote = privateDraft;
       return;
     }
+  }
+
+  /// Get active dot color.
+  Color getActiveDotColor() {
+    if (!_pageViewController.hasClients) {
+      return Constants.colors.foregroundPalette.first;
+    }
+
+    return Constants.colors.foregroundPalette
+        .elementAt(_pageViewController.page?.toInt() ?? 0);
+  }
+
+  DocumentMap getDraftQuoteQuery(DraftQuote quote) {
+    final Signal<UserFirestore> userFirestoreSignal =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore);
+
+    if (quote.inValidation) {
+      return FirebaseFirestore.instance.collection("drafts").doc(quote.id);
+    }
+
+    return FirebaseFirestore.instance
+        .collection("users")
+        .doc(userFirestoreSignal.value.id)
+        .collection("drafts")
+        .doc(quote.id);
   }
 
   String getPageTitleTooltip() {
@@ -2193,5 +2219,16 @@ class _AddQuotePageState extends State<AddQuotePage> with UiLoggy {
   void onSubmittedReferenceName(String value) {
     loggy.info("submit reference name: $value");
     onSaveDraft();
+  }
+
+  void onToggleCategory(String category, bool selected) {
+    if (selected) {
+      NavigationStateHelper.quote.categories.add(category);
+    } else {
+      NavigationStateHelper.quote.categories.remove(category);
+    }
+
+    updateQuoteDoc();
+    setState(() {});
   }
 }

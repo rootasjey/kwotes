@@ -23,6 +23,8 @@ class DraftQuote extends Quote {
     required super.reference,
     required super.quoteId,
     required super.starred,
+    required super.categories,
+    required super.tags,
     required super.topics,
     required super.createdAt,
     required super.updatedAt,
@@ -47,6 +49,8 @@ class DraftQuote extends Quote {
     Reference? reference,
     String? quoteId,
     bool? starred,
+    List<String>? categories,
+    List<String>? tags,
     List<String>? topics,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -57,6 +61,7 @@ class DraftQuote extends Quote {
   }) {
     return DraftQuote(
       author: author ?? this.author,
+      categories: categories ?? this.categories,
       id: id ?? this.id,
       language: lang ?? this.language,
       name: name ?? this.name,
@@ -65,6 +70,7 @@ class DraftQuote extends Quote {
       reference: reference ?? this.reference,
       quoteId: quoteId ?? this.quoteId,
       starred: starred ?? this.starred,
+      tags: tags ?? this.tags,
       topics: topics ?? this.topics,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
@@ -86,6 +92,8 @@ class DraftQuote extends Quote {
     Reference? reference,
     String? quoteId,
     bool? starred,
+    List<String>? categories,
+    List<String>? tags,
     List<String>? topics,
     UserFirestore? user,
   }) {
@@ -102,6 +110,8 @@ class DraftQuote extends Quote {
       reference: reference ?? super.reference,
       quoteId: quoteId ?? super.quoteId,
       starred: starred ?? super.starred,
+      categories: categories ?? super.categories,
+      tags: tags ?? super.tags,
       topics: topics ?? super.topics,
       user: user ?? super.user,
     );
@@ -113,12 +123,14 @@ class DraftQuote extends Quote {
       isOffline: false,
       inValidation: false,
       author: Author.empty(),
+      categories: [],
       id: "",
       language: "en",
       name: "",
       reference: Reference.empty(),
       quoteId: "",
       starred: false,
+      tags: [],
       topics: [],
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
@@ -137,6 +149,20 @@ class DraftQuote extends Quote {
       "language": language,
       "name": name,
       "reference": reference.toMap(),
+      "categories": categories.fold(<String, bool>{}, (
+        Map<String, bool> previousValue,
+        String topicString,
+      ) {
+        previousValue[topicString] = true;
+        return previousValue;
+      }),
+      "tags": tags.fold(<String, bool>{}, (
+        Map<String, bool> previousValue,
+        String topicString,
+      ) {
+        previousValue[topicString] = true;
+        return previousValue;
+      }),
       "topics": topics.fold(<String, bool>{}, (
         Map<String, bool> previousValue,
         String topicString,
@@ -159,10 +185,13 @@ class DraftQuote extends Quote {
       return DraftQuote.empty();
     }
 
-    final List<String> topics = Quote.parseTopics(map["topics"]);
+    final List<String> topics = Quote.convertArrayToMap(map["topics"]);
+    final List<String> categories = Quote.convertArrayToMap(map["categories"]);
+    final List<String> tags = Quote.convertArrayToMap(map["tags"]);
 
     return DraftQuote(
       author: Author.fromMap(map["author"]),
+      categories: categories,
       createdAt: Utils.tictac.fromFirestore(map["created_at"]),
       id: map["id"] ?? "",
       isOffline: map["is_offline"] ?? false,
@@ -172,6 +201,7 @@ class DraftQuote extends Quote {
       quoteId: map["quoteId"] ?? "",
       reference: Reference.fromMap(map["reference"]),
       starred: map["starred"] ?? false,
+      tags: tags,
       topics: topics,
       updatedAt: Utils.tictac.fromFirestore(map["updated_at"]),
       user: UserFirestore.fromMap(map["user"]),
