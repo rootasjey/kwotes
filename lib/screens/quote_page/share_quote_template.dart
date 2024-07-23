@@ -2,15 +2,16 @@ import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/better_avatar.dart";
-import "package:kwotes/components/buttons/colored_text_button.dart";
 import "package:kwotes/components/icons/app_icon.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/quote.dart";
+import "package:kwotes/types/topic.dart";
 import "package:screenshot/screenshot.dart";
 import "package:text_wrap_auto_size/solution.dart";
+import "package:wave_divider/wave_divider.dart";
 
-class ShareQuoteTemplate extends StatelessWidget {
+class ShareQuoteTemplate extends StatefulWidget {
   const ShareQuoteTemplate({
     super.key,
     required this.quote,
@@ -65,31 +66,45 @@ class ShareQuoteTemplate extends StatelessWidget {
   final String? fabLabelValue;
 
   @override
+  State<ShareQuoteTemplate> createState() => _ShareQuoteTemplateState();
+}
+
+class _ShareQuoteTemplateState extends State<ShareQuoteTemplate> {
+  Color _borderColor = Colors.transparent;
+
+  @override
+  void initState() {
+    super.initState();
+    initProps();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final BorderRadiusGeometry borderRadius = BorderRadius.circular(12.0);
     final Color? foregroundColor =
         Theme.of(context).textTheme.bodyMedium?.color;
-    final Color buttonBackgroundColor = borderColor ?? getTopicColor(context);
 
     return FractionallySizedBox(
-      widthFactor: isIpad ? 0.6 : 1.0,
-      heightFactor: isIpad ? 0.6 : 1.0,
+      widthFactor: widget.isIpad ? 0.6 : 1.0,
+      heightFactor: widget.isIpad ? 0.6 : 1.0,
       child: Padding(
-        padding: margin,
+        padding: widget.margin,
         child: ListView(
           shrinkWrap: true,
-          controller: scrollController,
+          controller: widget.scrollController,
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: ElevatedButton.icon(
-                onPressed: onTapShareImage,
-                icon: Icon(fabIconData ?? getFabIconData(), size: 18.0),
+                onPressed: widget.onTapShareImage,
+                icon: Icon(widget.fabIconData ?? getFabIconData(), size: 18.0),
                 label: Text(
-                  fabLabelValue ?? getFabLabelValue(),
+                  widget.fabLabelValue ?? getFabLabelValue(),
                 ),
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: buttonBackgroundColor,
+                  foregroundColor: _borderColor.computeLuminance() > 0.7
+                      ? Colors.black87
+                      : _borderColor,
                   textStyle: Utils.calligraphy.body(
                     textStyle: const TextStyle(
                       fontWeight: FontWeight.w500,
@@ -98,7 +113,7 @@ class ShareQuoteTemplate extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4.0),
                     side: BorderSide(
-                      color: borderColor ?? getTopicColor(context),
+                      color: _borderColor,
                       width: 2.0,
                     ),
                   ),
@@ -106,9 +121,9 @@ class ShareQuoteTemplate extends StatelessWidget {
               ),
             ),
             Screenshot(
-              controller: screenshotController,
+              controller: widget.screenshotController,
               child: Padding(
-                padding: isMobileSize
+                padding: widget.isMobileSize
                     ? const EdgeInsets.all(12.0)
                     : const EdgeInsets.all(42.0),
                 child: Material(
@@ -116,8 +131,9 @@ class ShareQuoteTemplate extends StatelessWidget {
                   color: Theme.of(context).scaffoldBackgroundColor,
                   shape: RoundedRectangleBorder(
                     side: BorderSide(
-                      color: borderColor ?? getTopicColor(context),
-                      width: isMobileSize ? 8.0 : 2.0,
+                      color: _borderColor,
+                      // color: widget.borderColor ?? getTopicColor(context),
+                      width: widget.isMobileSize ? 8.0 : 2.0,
                     ),
                     borderRadius: borderRadius,
                   ),
@@ -136,14 +152,14 @@ class ShareQuoteTemplate extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  quote.name,
-                                  style: textWrapSolution.style,
+                                  widget.quote.name,
+                                  style: widget.textWrapSolution.style,
                                 ),
-                                if (quote.author.urls.image.isNotEmpty)
+                                if (widget.quote.author.urls.image.isNotEmpty)
                                   BetterAvatar(
                                     radius: 24.0,
                                     imageProvider: NetworkImage(
-                                      quote.author.urls.image,
+                                      widget.quote.author.urls.image,
                                     ),
                                     colorFilter: const ColorFilter.mode(
                                       Colors.grey,
@@ -156,18 +172,19 @@ class ShareQuoteTemplate extends StatelessWidget {
                                     padding: EdgeInsets.only(
                                       left: 8.0,
                                       right: 8.0,
-                                      top: quote.author.urls.image.isEmpty
-                                          ? 24.0
-                                          : 4.0,
+                                      top:
+                                          widget.quote.author.urls.image.isEmpty
+                                              ? 24.0
+                                              : 4.0,
                                     ),
                                     child: Text(
-                                      quote.author.name,
+                                      widget.quote.author.name,
                                       textAlign: TextAlign.center,
                                       style: Utils.calligraphy.body(),
                                     ),
                                   ),
                                 ),
-                                if (quote.reference.id.isNotEmpty)
+                                if (widget.quote.reference.id.isNotEmpty)
                                   Center(
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -175,7 +192,7 @@ class ShareQuoteTemplate extends StatelessWidget {
                                         vertical: 2.0,
                                       ),
                                       child: Text(
-                                        quote.reference.name,
+                                        widget.quote.reference.name,
                                         textAlign: TextAlign.center,
                                         style: Utils.calligraphy.body(),
                                       ),
@@ -198,17 +215,129 @@ class ShareQuoteTemplate extends StatelessWidget {
                 ),
               ),
             ),
-            ColoredTextButton(
-              accentColor: foregroundColor?.withOpacity(0.4),
-              // accentColor: borderColor,
-              textValue: "back".tr(),
-              onPressed: onBack,
-              icon: const Icon(TablerIcons.arrow_back),
-              margin: const EdgeInsets.only(
-                top: 16.0,
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 8.0,
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                      "Card border color",
+                      style: Utils.calligraphy.body(
+                        textStyle: TextStyle(
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w400,
+                          color: foregroundColor?.withOpacity(0.6),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                    child: ListView(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        ...Constants.colors.topics
+                            .map(
+                              (Topic topic) => Material(
+                                shape: const CircleBorder(),
+                                clipBehavior: Clip.antiAlias,
+                                color: topic.color,
+                                child: Container(
+                                  width: 20.0,
+                                  height: 20.0,
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 8.0,
+                                  ),
+                                  child: InkWell(
+                                    onTap: () => onTapColor.call(topic.color),
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const WaveDivider(
+              padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
                 left: 16.0,
                 right: 16.0,
-                bottom: 32.0,
+                top: 8.0,
+                bottom: 64.0,
+              ),
+              child: Wrap(
+                spacing: 16.0,
+                runSpacing: 16.0,
+                children: [
+                  ActionChip(
+                    elevation: 2.0,
+                    label: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Icon(
+                            TablerIcons.arrow_back,
+                            size: 16.0,
+                            color: foregroundColor?.withOpacity(0.6),
+                          ),
+                        ),
+                        Text(
+                          "back".tr(),
+                          style: Utils.calligraphy.body(
+                            textStyle: TextStyle(
+                              fontSize: 14.0,
+                              color: foregroundColor?.withOpacity(0.6),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    onPressed: widget.onBack,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24.0),
+                      side: BorderSide(
+                        color: foregroundColor?.withOpacity(0.2) ?? Colors.grey,
+                        width: 1.2,
+                      ),
+                    ),
+                  ),
+                  ActionChip(
+                    elevation: 2.0,
+                    label: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(1.0),
+                          child: Icon(
+                            TablerIcons.download,
+                            size: 16.0,
+                            color: foregroundColor?.withOpacity(0.6),
+                          ),
+                        ),
+                      ],
+                    ),
+                    onPressed: widget.onTapShareImage,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24.0),
+                      side: BorderSide(
+                        color: foregroundColor?.withOpacity(0.2) ?? Colors.grey,
+                        width: 1.2,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -239,13 +368,25 @@ class ShareQuoteTemplate extends StatelessWidget {
 
   /// Returns quote first topic color, if any.
   Color getTopicColor(BuildContext context) {
-    if (quote.topics.isEmpty) {
+    if (widget.quote.topics.isEmpty) {
       return Colors.indigo.shade200;
     }
 
     return Constants.colors.getColorFromTopicName(
       context,
-      topicName: quote.topics.first,
+      topicName: widget.quote.topics.first,
     );
+  }
+
+  /// Initialize properties.
+  void initProps() {
+    _borderColor = widget.borderColor ?? getTopicColor(context);
+  }
+
+  /// Update quote border color.
+  void onTapColor(Color color) {
+    setState(() {
+      _borderColor = color;
+    });
   }
 }
