@@ -16,6 +16,7 @@ import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/quote_page/share_quote_template.dart";
+import "package:kwotes/types/enums/enum_category.dart";
 import "package:kwotes/types/enums/enum_color_value_type.dart";
 import "package:kwotes/types/enums/enum_main_genre.dart";
 import "package:kwotes/types/enums/enum_snackbar_type.dart";
@@ -98,6 +99,21 @@ class Graphic with UiLoggy {
       default:
         return TablerIcons.question_mark;
     }
+  }
+
+  /// Get icon data from a topic string.
+  IconData getIconDataFromCategory(String categoryString) {
+    if (categoryString == EnumCategory.movies.name) {
+      return TablerIcons.movie;
+    }
+    if (categoryString == EnumCategory.music.name) {
+      return TablerIcons.music;
+    }
+    if (categoryString == EnumCategory.series.name) {
+      return TablerIcons.device_tv;
+    }
+
+    return TablerIcons.question_mark;
   }
 
   /// Get icon data from a topic string.
@@ -240,9 +256,10 @@ class Graphic with UiLoggy {
   }
 
   Future<void> tapVibration() {
+    if (!isMobile()) return Future.value();
     return Vibration.vibrate(
       pattern: [16],
-      intensities: [100],
+      intensities: [150],
     );
   }
 
@@ -253,6 +270,15 @@ class Graphic with UiLoggy {
     }
 
     return Platform.isAndroid;
+  }
+
+  /// Return true if the current platform is iOS.
+  bool isOS() {
+    if (kIsWeb) {
+      return false;
+    }
+
+    return Platform.isIOS;
   }
 
   /// Return true if the current platform is mobile (e.g. Android or iOS).
@@ -836,6 +862,8 @@ class Graphic with UiLoggy {
           screenshotController: screenshotController,
           textWrapSolution: textWrapSolution,
           onBack: Navigator.of(context).pop,
+          // onTapColor: (color) {
+          // },
           onTapShareImage: () => Utils.graphic.onCaptureImage(
             context,
             mounted: mounted,

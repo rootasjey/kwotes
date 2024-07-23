@@ -653,8 +653,16 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
 
   /// Callback fired when text animation is finished.
   void onFinishedAnimation() {
+    if (!Utils.graphic.isMobile()) return;
     Vibration.cancel();
     _vibrationTimer?.cancel();
+
+    Future.delayed(const Duration(milliseconds: 90), () {
+      Vibration.vibrate(
+        pattern: [40, 0, 40],
+        intensities: [40, 0, 40],
+      );
+    });
   }
 
   /// Callback fired to share quote.
@@ -775,6 +783,8 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
 
   /// Start text vibration while animating.
   void startTextVibration() {
+    if (!Utils.graphic.isMobile()) return;
+
     Vibration.cancel();
     Vibration.hasVibrator().then((bool? hasVibrator) {
       if (hasVibrator ?? false) {
@@ -782,8 +792,8 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
           const Duration(milliseconds: 50),
           (Timer timer) {
             Vibration.vibrate(
-              pattern: [100, 90],
-              intensities: [50, 40],
+              pattern: [50],
+              intensities: [50],
             );
           },
         );
