@@ -1,6 +1,8 @@
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/user_avatar.dart";
+import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/enums/enum_account_displayed.dart";
 import "package:kwotes/types/enums/enum_user_plan.dart";
@@ -18,14 +20,15 @@ class AccountSettings extends StatelessWidget {
     this.dividerColor,
     this.dividerHeight = 48.0,
     this.foregroundColor,
+    this.onTap,
+    this.onTapDeleteAccount,
+    this.onTapSignout,
+    this.onTapRedeemPremiumCode,
     this.onTapUpdateEmail,
     this.onTapUpdatePassword,
     this.onTapUpdateUsername,
-    this.onTapSignout,
-    this.onTapDeleteAccount,
     this.onTapAccountDisplayedValue,
     this.enumAccountDisplayed = EnumAccountDisplayed.name,
-    this.onTap,
   });
 
   /// Animate elements on settings page if true.
@@ -52,6 +55,21 @@ class AccountSettings extends StatelessWidget {
   /// Enum representing the account displayed text value on settings page.
   final EnumAccountDisplayed enumAccountDisplayed;
 
+  /// Callback fired when the card is tapped.
+  final void Function()? onTap;
+
+  /// Callback fired when the account displayed value is tapped.
+  final void Function()? onTapAccountDisplayedValue;
+
+  /// Callback fired when "Delete account" button is tapped.
+  final void Function()? onTapDeleteAccount;
+
+  /// Callback fired when "Redeem premium code" button is tapped.
+  final void Function()? onTapRedeemPremiumCode;
+
+  /// Callback fired when "sign out" button is tapped.
+  final void Function()? onTapSignout;
+
   /// Callback fired when "Update email" button is tapped.
   final void Function()? onTapUpdateEmail;
 
@@ -61,82 +79,118 @@ class AccountSettings extends StatelessWidget {
   /// Callback fired when "Update username" button is tapped.
   final void Function()? onTapUpdateUsername;
 
-  /// Callback fired when "sign out" button is tapped.
-  final void Function()? onTapSignout;
-
-  /// Callback fired when "Delete account" button is tapped.
-  final void Function()? onTapDeleteAccount;
-
-  /// Callback fired when the account displayed value is tapped.
-  final void Function()? onTapAccountDisplayedValue;
-
-  /// Callback fired when the card is tapped.
-  final void Function()? onTap;
-
   /// User account.
   final UserFirestore userFirestore;
 
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-      child: Card(
-        elevation: 0.0,
-        margin: isMobileSize
-            ? const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0)
-            : const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(12.0),
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 6.0),
-                  child: UserAvatar(
-                    showBadge: userFirestore.plan == EnumUserPlan.premium,
-                    onTapUserAvatar: onTap,
-                    onLongPressUserAvatar: onTapSignout,
-                    margin: const EdgeInsets.only(right: 12.0),
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        userFirestore.name,
-                        style: Utils.calligraphy.body(
-                          textStyle: TextStyle(
-                            color: foregroundColor,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Card(
+            elevation: 2.0,
+            surfaceTintColor:
+                Theme.of(context).secondaryHeaderColor.withOpacity(0.1),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
+              side: BorderSide(
+                color: Theme.of(context).secondaryHeaderColor.withOpacity(1.0),
+                width: 1.0,
+              ),
+            ),
+            margin: isMobileSize
+                ? const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0)
+                : const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0),
+            child: InkWell(
+              onTap: onTap,
+              borderRadius: BorderRadius.circular(12.0),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 6.0),
+                      child: UserAvatar(
+                        showBadge: userFirestore.plan == EnumUserPlan.premium,
+                        onTapUserAvatar: onTap,
+                        onLongPressUserAvatar: onTapSignout,
+                        margin: const EdgeInsets.only(right: 12.0),
                       ),
-                      Text(
-                        userFirestore.email,
-                        style: Utils.calligraphy.body(
-                          textStyle: TextStyle(
-                            color: foregroundColor,
-                            fontSize: 12.0,
-                            fontWeight: FontWeight.w200,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            userFirestore.name,
+                            style: Utils.calligraphy.body(
+                              textStyle: TextStyle(
+                                color: foregroundColor,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ),
-                        ),
+                          Text(
+                            userFirestore.email,
+                            style: Utils.calligraphy.body(
+                              textStyle: TextStyle(
+                                color: foregroundColor,
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.w200,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    IconButton(
+                      onPressed: onTap,
+                      icon: const Icon(TablerIcons.arrow_right),
+                    ),
+                  ],
                 ),
-                IconButton(
-                  onPressed: onTap,
-                  icon: const Icon(TablerIcons.arrow_right),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
+          if (Utils.graphic.isOS() &&
+              userFirestore.plan != EnumUserPlan.premium)
+            Padding(
+              padding: isMobileSize
+                  ? const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0)
+                  : const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0),
+              child: TextButton(
+                onPressed: onTapRedeemPremiumCode,
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.amber.shade900,
+                  backgroundColor: Constants.colors.premium.withOpacity(0.1),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    side: BorderSide(
+                      color: Constants.colors.premium.withOpacity(1.0),
+                      width: 1.0,
+                    ),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 12.0,
+                    horizontal: 24.0,
+                  ),
+                ),
+                child: Text(
+                  "premium.redeem_code".tr(),
+                  style: Utils.calligraphy.body(
+                    textStyle: const TextStyle(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

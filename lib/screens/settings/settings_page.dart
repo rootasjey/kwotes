@@ -17,6 +17,7 @@ import "package:kwotes/types/enums/enum_account_displayed.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/user/user_firestore.dart";
+import "package:purchases_flutter/purchases_flutter.dart";
 
 /// Settings page.
 class SettingsPage extends StatefulWidget {
@@ -95,15 +96,16 @@ class _SettingsPageState extends State<SettingsPage> {
                   animateElements: _animateElements,
                   isDark: isDark,
                   dividerColor: dividerColor,
-                  onTap: onTapAccount,
                   enumAccountDisplayed: _enumAccountDisplayed,
                   foregroundColor: foregroundColor,
                   isMobileSize: isMobileSize,
+                  onTap: onTapAccount,
+                  onTapDeleteAccount: onTapDeleteAccount,
+                  onTapRedeemPremiumCode: onTapRedeemPremiumCode,
+                  onTapSignout: onConfirmSignOut,
                   onTapUpdateEmail: onTapUpdateEmail,
                   onTapUpdatePassword: onTapUpdatePassword,
                   onTapUpdateUsername: onTapUpdateUsername,
-                  onTapSignout: onConfirmSignOut,
-                  onTapDeleteAccount: onTapDeleteAccount,
                   onTapAccountDisplayedValue: onTapAccountDisplayedValue,
                   userFirestore: userFirestore,
                 );
@@ -151,35 +153,6 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
-  /// Apply the new selected language.
-  void onSelectLanguage(EnumLanguageSelection locale) {
-    Utils.vault.setLanguage(locale);
-    EasyLocalization.of(context)?.setLocale(Locale(locale.name));
-  }
-
-  /// Circle between name and email to display.
-  void onTapAccountDisplayedValue() {
-    setState(() {
-      _enumAccountDisplayed = _enumAccountDisplayed == EnumAccountDisplayed.name
-          ? EnumAccountDisplayed.email
-          : EnumAccountDisplayed.name;
-    });
-  }
-
-  /// Navigate to the credits page.
-  void onTapCredits() {
-    Beamer.of(context).beamToNamed(
-      DashboardContentLocation.creditsRoute,
-    );
-  }
-
-  /// Navigate to the delete account page.
-  void onTapDeleteAccount() {
-    Beamer.of(context).beamToNamed(
-      DashboardContentLocation.deleteAccountRoute,
-    );
-  }
-
   /// Logout the user if confirmed.
   void onConfirmSignOut() async {
     Utils.graphic.onConfirmSignOut(
@@ -198,6 +171,76 @@ class _SettingsPageState extends State<SettingsPage> {
         );
       },
     );
+  }
+
+  /// Apply the new selected language.
+  void onSelectLanguage(EnumLanguageSelection locale) {
+    Utils.vault.setLanguage(locale);
+    EasyLocalization.of(context)?.setLocale(Locale(locale.name));
+  }
+
+  void onTapAccount() {
+    Beamer.of(context).beamToNamed(
+      SettingsContentLocation.accountRoute,
+    );
+  }
+
+  /// Circle between name and email to display.
+  void onTapAccountDisplayedValue() {
+    setState(() {
+      _enumAccountDisplayed = _enumAccountDisplayed == EnumAccountDisplayed.name
+          ? EnumAccountDisplayed.email
+          : EnumAccountDisplayed.name;
+    });
+  }
+
+  /// Close the settings bottom sheet.
+  void onTapCloseIcon() {
+    Navigator.pop(NavigationStateHelper.rootContext ?? context);
+  }
+
+  /// Navigate to the color palette page.
+  void onTapColorPalette() {
+    Beamer.of(context).beamToNamed(
+      DashboardContentLocation.colorPaletteRoute,
+    );
+  }
+
+  /// Navigate to the credits page.
+  void onTapCredits() {
+    Beamer.of(context).beamToNamed(
+      DashboardContentLocation.creditsRoute,
+    );
+  }
+
+  /// Navigate to the delete account page.
+  void onTapDeleteAccount() {
+    Beamer.of(context).beamToNamed(
+      DashboardContentLocation.deleteAccountRoute,
+    );
+  }
+
+  /// Navigate to the connection page.
+  void onTapGetAnAccount() {
+    Beamer.of(context).popRoute();
+
+    final Signal<String> signalNavigationBarPath =
+        context.get<Signal<String>>(EnumSignalId.navigationBarPath);
+
+    signalNavigationBarPath.updateValue(
+      (String _) => "${DashboardContentLocation.route}-${DateTime.now()}",
+    );
+
+    Beamer.of(context, root: true).beamToNamed(
+      DashboardContentLocation.connectionRoute,
+    );
+  }
+
+  /// Show the redeem code bottom sheet (iOS).
+  /// Then sync purchases.
+  void onTapRedeemPremiumCode() async {
+    await Purchases.presentCodeRedemptionSheet();
+    Purchases.syncPurchases();
   }
 
   /// Navigate to the update email page.
@@ -221,46 +264,12 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  /// Navigate to the color palette page.
-  void onTapColorPalette() {
-    Beamer.of(context).beamToNamed(
-      DashboardContentLocation.colorPaletteRoute,
-    );
-  }
-
   /// Scroll to the top of the page.
   void scrollToTop() {
     _pageScrollController?.animateTo(
       0,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeIn,
-    );
-  }
-
-  /// Close the settings bottom sheet.
-  void onTapCloseIcon() {
-    Navigator.pop(NavigationStateHelper.rootContext ?? context);
-  }
-
-  void onTapAccount() {
-    Beamer.of(context).beamToNamed(
-      SettingsContentLocation.accountRoute,
-    );
-  }
-
-  /// Navigate to the connection page.
-  void onTapGetAnAccount() {
-    Beamer.of(context).popRoute();
-
-    final Signal<String> signalNavigationBarPath =
-        context.get<Signal<String>>(EnumSignalId.navigationBarPath);
-
-    signalNavigationBarPath.updateValue(
-      (String _) => "${DashboardContentLocation.route}-${DateTime.now()}",
-    );
-
-    Beamer.of(context, root: true).beamToNamed(
-      DashboardContentLocation.connectionRoute,
     );
   }
 }
