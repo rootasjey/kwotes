@@ -94,13 +94,18 @@
   "brightness": "Brightness",
   "cancel": "Cancel",
   "caracterization": "Caracterization",
-  "categories": {
-    "name": "Categories"
+  "category": {
+    "name": "Category",
+    "names": "Categories"
   },
   "changelog": {
     "description": "List of recent changes",
     "name": "Changelog",
     "version": "Version"
+  },
+  "character": {
+    "name": "Character",
+    "names": "Characters"
   },
   "close": "Close",
   "color": {
@@ -618,6 +623,7 @@
       "name": "Payment",
       "names": "Payments"
     },
+    "redeem_code": "Redeem code",
     "subscription": {
       "buying": "Buying subscription...",
       "cancel": "Cancel subscription",
@@ -1145,6 +1151,7 @@
     "chip": {
       "authors": "Authors",
       "categories": "Categories",
+      "characters": "Characters",
       "quotes": "Categories",
       "references": "References"
     },

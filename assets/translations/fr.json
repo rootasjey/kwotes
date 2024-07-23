@@ -94,13 +94,18 @@
   "brightness": "Luminosité",
   "cancel": "Annuler",
   "caracterization": "Caractérisation",
-  "categories": {
-    "name": "Categories"
+  "category": {
+    "name": "Categorie",
+    "names": "Categories"
   },
   "changelog": {
     "description": "Liste des changements récents",
     "name": "Historique des mises à jour",
     "version": "Version"
+  },
+  "character": {
+    "name": "Personnage",
+    "names": "Personnages"
   },
   "close": "Fermer",
   "color": {
@@ -619,6 +624,7 @@
       "name": "Paiement",
       "names": "Paiements"
     },
+    "redeem_code": "Récupérer le code",
     "subscription": {
       "buying": "Achat de l'abonnement...",
       "cancel": "Annuler l'abonnement",
@@ -1156,6 +1162,7 @@
     "chip": {
       "authors": "Auteurs",
       "categories": "Catégories",
+      "characters": "Personnages",
       "quotes": "Categories",
       "references": "Références"
     },
