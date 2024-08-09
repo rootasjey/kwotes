@@ -94,6 +94,13 @@
   "brightness": "Luminosité",
   "cancel": "Annuler",
   "caracterization": "Caractérisation",
+  "carrot": {
+    "ask_carrot": "Poser une question à Carrot",
+    "error": {
+      "overthought": "Carrot a trop réfléchi aujourd'hui. \nVeuillez rééssayer.",
+      "title": "Oops!"
+    }
+  },
   "category": {
     "name": "Categorie",
     "names": "Categories"

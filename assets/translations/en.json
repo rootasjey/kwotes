@@ -669,6 +669,13 @@
     "name": "Purpose",
     "the": "The Purpose"
   },
+  "carrot": {
+    "ask_carrot": "Ask Carrot",
+    "error": {
+      "overthought": "Carrot has overthought today. \nPlease try again.",
+      "title": "Oops!"
+    }
+  },
   "quit": "Quit",
   "quote": {
     "add": {
