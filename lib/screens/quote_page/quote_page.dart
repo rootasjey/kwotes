@@ -1,6 +1,7 @@
 import "dart:async";
 
 import "package:beamer/beamer.dart";
+import "package:bottom_sheet/bottom_sheet.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
@@ -14,6 +15,8 @@ import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
+import "package:kwotes/screens/quote_page/ask_carrot_button.dart";
+import "package:kwotes/screens/quote_page/explain_quote_sheet.dart";
 import "package:kwotes/screens/quote_page/quote_page_actions.dart";
 import "package:kwotes/screens/quote_page/quote_page_body.dart";
 import "package:kwotes/screens/quote_page/quote_page_container.dart";
@@ -178,7 +181,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
                     onDeleteQuote: canManageQuotes ? onDeleteQuote : null,
                     onDoubleTapQuote: onCopyQuote,
                     onEditQuote: canManageQuotes ? onEditQuote : null,
-                    onFinishedAnimation: onFinishedAnimation,
+                    onFinishedAnimation: stopVibrationTimer,
                     onShareImage: onShareImage,
                     onShareLink: onShareLink,
                     onShareText: onShareText,
@@ -208,6 +211,16 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
                       onToggleFavourite: onToggleFavourite,
                       onNavigateBack: () => Utils.passage.deepBack(context),
                       onAddToList: onAddToList,
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 120.0,
+                    left: 0.0,
+                    right: 0.0,
+                    child: Center(
+                      child: AskCarrotButton(
+                        onTap: explainQuote,
+                      ),
                     ),
                   ),
                 ],
@@ -425,6 +438,33 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
     );
   }
 
+  /// Open a bottom sheet to explain the quote.
+  void explainQuote() async {
+    showFlexibleBottomSheet(
+      context: context,
+      minHeight: 0,
+      initHeight: 0.9,
+      maxHeight: 1.0,
+      isSafeArea: true,
+      anchors: [0.0, 0.9],
+      bottomSheetColor: Colors.white,
+      bottomSheetBorderRadius: const BorderRadius.only(
+        topLeft: Radius.circular(12.0),
+        topRight: Radius.circular(12.0),
+      ),
+      builder: (
+        BuildContext context,
+        ScrollController scrollController,
+        double bottomSheetOffset,
+      ) {
+        return ExplainQuoteSheet(
+          quote: _quote,
+          scrollController: scrollController,
+        );
+      },
+    );
+  }
+
   /// Initialize props.
   void initProps() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -436,6 +476,20 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
         _signalNavigationBar?.updateValue((value) => false);
       }
     });
+  }
+
+  bool isUserPremium() {
+    final UserFirestore userFirestore =
+        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
+
+    if (userFirestore.plan == EnumUserPlan.free) {
+      Beamer.of(context, root: true).beamToNamed(
+        HomeLocation.premiumRoute,
+      );
+      return false;
+    }
+
+    return true;
   }
 
   /// Check if user is signed in or not.
@@ -652,15 +706,15 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   }
 
   /// Callback fired when text animation is finished.
-  void onFinishedAnimation() {
+  void stopVibrationTimer() {
     if (!Utils.graphic.isMobile()) return;
     Vibration.cancel();
     _vibrationTimer?.cancel();
 
     Future.delayed(const Duration(milliseconds: 90), () {
       Vibration.vibrate(
-        pattern: [40, 0, 40],
-        intensities: [40, 0, 40],
+        pattern: [40, 0, 40, 0],
+        intensities: [40, 0, 40, 0],
       );
     });
   }
@@ -699,15 +753,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   }
 
   void onShareImage(Quote quote, {bool pop = true}) {
-    final UserFirestore userFirestore =
-        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
-
-    if (userFirestore.plan == EnumUserPlan.free) {
-      Beamer.of(context, root: true).beamToNamed(
-        HomeLocation.premiumRoute,
-      );
-      return;
-    }
+    if (!isUserPremium()) return;
 
     Utils.graphic.onOpenShareImage(
       context,

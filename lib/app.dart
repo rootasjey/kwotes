@@ -2,6 +2,7 @@ import "package:adaptive_theme/adaptive_theme.dart";
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:firebase_auth/firebase_auth.dart";
+import "package:firebase_vertexai/firebase_vertexai.dart";
 import "package:flutter/material.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:kwotes/components/loading_view.dart";
@@ -135,6 +136,11 @@ class _AppState extends State<App> {
     );
 
     NavigationStateHelper.isIpad = await Utils.graphic.isIpad();
+
+    final FirebaseVertexAI vertexAI =
+        FirebaseVertexAI.instanceFor(location: "europe-west9");
+    NavigationStateHelper.generativeModel =
+        vertexAI.generativeModel(model: "gemini-1.5-flash");
 
     if (!mounted) return;
     EasyLocalization.of(context)?.setLocale(Locale(languageCode));

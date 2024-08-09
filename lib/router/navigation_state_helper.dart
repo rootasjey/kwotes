@@ -1,5 +1,7 @@
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
+// ignore: implementation_imports
+import "package:firebase_vertexai/src/vertex_model.dart";
 import "package:flutter/widgets.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
@@ -188,6 +190,8 @@ class NavigationStateHelper {
 
   /// Bottom sheet scroll controller.
   static ScrollController? bottomSheetScrollController;
+
+  static GenerativeModel? generativeModel;
 
   /// Initialize initial tab index.
   static Future<void> initInitialTabIndex({
