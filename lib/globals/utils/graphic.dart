@@ -844,8 +844,8 @@ class Graphic with UiLoggy {
     showFlexibleBottomSheet(
       context: context,
       minHeight: 0,
-      initHeight: 0.5,
-      maxHeight: 0.9,
+      initHeight: 1.0,
+      maxHeight: 1.0,
       anchors: [0.0, 0.9],
       bottomSheetBorderRadius: const BorderRadius.only(
         topLeft: Radius.circular(12.0),
