@@ -110,46 +110,64 @@ class EmptyView extends StatelessWidget {
     String description = "",
     void Function()? onRefresh,
     void Function()? onTapDescription,
+    Color? backgroundColor,
   }) {
     return Scaffold(
+      backgroundColor: backgroundColor,
       body: RefreshIndicator(
         onRefresh: () async {
           return onRefresh?.call();
         },
-        child: ListView(
-          children: <Widget>[
-            SizedBox(
-              height: MediaQuery.of(context).size.height - 100.0,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  icon ?? Container(),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                    child: Text(
-                      title,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 30.0,
-                      ),
-                    ),
-                  ),
-                  Opacity(
-                    opacity: 0.6,
-                    child: TextButton(
-                      onPressed: () {
-                        onTapDescription?.call();
-                      },
-                      child: Text(
-                        description,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 20.0,
+        child: Stack(
+          children: [
+            ListView(
+              children: <Widget>[
+                SizedBox(
+                  height: MediaQuery.of(context).size.height - 100.0,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      icon ?? Container(),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                        child: Text(
+                          title,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 30.0,
+                          ),
                         ),
                       ),
-                    ),
+                      Opacity(
+                        opacity: 0.6,
+                        child: TextButton(
+                          onPressed: () {
+                            onTapDescription?.call();
+                          },
+                          style: TextButton.styleFrom(
+                            foregroundColor:
+                                Theme.of(context).textTheme.bodyMedium?.color,
+                          ),
+                          child: Text(
+                            description,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 16.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
+              ],
+            ),
+            Positioned(
+              top: 0.0,
+              right: 0.0,
+              child: IconButton(
+                onPressed: () => Navigator.of(context).pop(),
+                icon: const Icon(TablerIcons.x),
               ),
             ),
           ],

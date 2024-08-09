@@ -52,8 +52,10 @@ class LoadingView extends StatelessWidget {
   static Widget scaffold({
     String message = "Loading...",
     EdgeInsets margin = EdgeInsets.zero,
+    Color? backgroundColor,
   }) {
     return Scaffold(
+      backgroundColor: backgroundColor,
       body: Padding(
         padding: margin,
         child: Center(
