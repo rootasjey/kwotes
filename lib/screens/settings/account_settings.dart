@@ -156,8 +156,7 @@ class AccountSettings extends StatelessWidget {
               ),
             ),
           ),
-          if (Utils.graphic.isOS() &&
-              userFirestore.plan != EnumUserPlan.premium)
+          if (Utils.graphic.isOS())
             Padding(
               padding: isMobileSize
                   ? const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0)
