@@ -22,7 +22,6 @@ import "package:kwotes/types/enums/enum_my_quotes_tab.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/user/user_firestore.dart";
-import "package:vibration/vibration.dart";
 import "package:wave_divider/wave_divider.dart";
 
 class MyQuotesPage extends StatefulWidget {
@@ -231,10 +230,7 @@ class _MyQuotesPageState extends State<MyQuotesPage> {
       _prevPixelsPosition = pixelsPosition;
       if (pixelsPosition < _pullTriggerOffset && !_handleQuickAction) {
         boomerangQuickActionValue(true);
-        if (Utils.graphic.isMobile()) {
-          Vibration.vibrate(amplitude: 20, duration: 25);
-        }
-
+        Utils.graphic.slideVibration();
         onGoToAddQuotePage(context);
       }
       return;

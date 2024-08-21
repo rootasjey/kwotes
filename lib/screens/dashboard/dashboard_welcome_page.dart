@@ -19,7 +19,6 @@ import "package:kwotes/types/enums/enum_user_plan.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
-import "package:vibration/vibration.dart";
 
 class DashboardWelcomePage extends StatefulWidget {
   /// Dashboard welcome page.
@@ -181,10 +180,7 @@ class _DashboardWelcomePageState extends State<DashboardWelcomePage>
       _prevPixelsPosition = pixelsPosition;
       if (pixelsPosition < _pullTriggerOffset && !_handleQuickAction) {
         boomerangQuickActionValue(true);
-        if (Utils.graphic.isMobile()) {
-          Vibration.vibrate(amplitude: 20, duration: 25);
-        }
-
+        Utils.graphic.tapVibration();
         onGoToAddQuotePage(context);
       }
       return;
@@ -198,10 +194,7 @@ class _DashboardWelcomePageState extends State<DashboardWelcomePage>
       _prevPixelsPosition = pixelsPosition;
       if (pixelsPosition > _pushTriggerOffset && !_handleQuickAction) {
         boomerangQuickActionValue(true);
-        if (Utils.graphic.isMobile()) {
-          Vibration.vibrate(amplitude: 20, duration: 25);
-        }
-
+        Utils.graphic.tapVibration();
         openSettingsPage();
       }
       return;

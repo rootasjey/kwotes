@@ -6,12 +6,12 @@ import "package:kwotes/components/empty_view.dart";
 import "package:kwotes/components/swipe_from_left_container.dart";
 import "package:kwotes/components/swipe_from_right_container.dart";
 import "package:kwotes/globals/constants.dart";
+import "package:kwotes/globals/utils.dart";
 import "package:kwotes/screens/search/search_quote_text.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/quote.dart";
 import "package:super_context_menu/super_context_menu.dart";
 import "package:swipeable_tile/swipeable_tile.dart";
-import "package:vibration/vibration.dart";
 
 class ReferenceQuotesPageBody extends StatelessWidget {
   const ReferenceQuotesPageBody({
@@ -153,12 +153,7 @@ class ReferenceQuotesPageBody extends StatelessWidget {
                   final bool triggered = progress.value >= 0.3;
 
                   if (triggered && !vibrated) {
-                    Vibration.hasVibrator().then((bool? hasVibrator) {
-                      if (hasVibrator ?? false) {
-                        Vibration.vibrate(amplitude: 20, duration: 25);
-                      }
-                    });
-
+                    Utils.graphic.slideVibration();
                     vibrated = true;
                   } else if (!triggered) {
                     vibrated = false;

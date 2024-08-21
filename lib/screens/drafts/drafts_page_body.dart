@@ -9,12 +9,12 @@ import "package:kwotes/components/swipe_from_left_container.dart";
 import "package:kwotes/components/swipe_from_right_container.dart";
 import "package:kwotes/components/texts/draft_quote_text.dart";
 import "package:kwotes/globals/constants.dart";
+import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/draft_quote.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_quote_text_magnitude.dart";
 import "package:super_context_menu/super_context_menu.dart";
 import "package:swipeable_tile/swipeable_tile.dart";
-import "package:vibration/vibration.dart";
 
 /// Body component page displaying a user quotes in validation.
 class DraftsPageBody extends StatelessWidget {
@@ -134,13 +134,7 @@ class DraftsPageBody extends StatelessWidget {
                       final bool triggered = progress.value >= 0.3;
 
                       if (triggered && !vibrated) {
-                        Vibration.hasVibrator().then((bool? hasVibrator) {
-                          if (hasVibrator ?? false) {
-                            Vibration.vibrate(
-                                pattern: [16], intensities: [200]);
-                          }
-                        });
-
+                        Utils.graphic.slideVibration();
                         vibrated = true;
                       } else if (!triggered) {
                         vibrated = false;

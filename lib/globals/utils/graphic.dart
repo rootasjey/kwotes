@@ -257,10 +257,35 @@ class Graphic with UiLoggy {
 
   Future<void> tapVibration() {
     if (!isMobile()) return Future.value();
-    return Vibration.vibrate(
-      pattern: [16],
-      intensities: [150],
-    );
+    try {
+      return Vibration.vibrate(
+        pattern: [16, 16],
+        intensities: [150, 15],
+        duration: 25,
+      );
+    } catch (error) {
+      return Future.value();
+    }
+  }
+
+  /// Vibrate the device when sliding a direction.
+  /// Check if the app is run on mobile and the device has vibration capability.
+  Future<void> slideVibration() {
+    if (!isMobile()) return Future.value();
+    try {
+      return Vibration.hasVibrator().then((bool? hasVibrator) {
+        if (hasVibrator ?? false) {
+          Vibration.vibrate(
+            amplitude: 20,
+            duration: 25,
+            pattern: [16, 16],
+            intensities: [200, 100],
+          );
+        }
+      });
+    } catch (error) {
+      return Future.value();
+    }
   }
 
   /// Return true if the current platform is Android.
@@ -300,7 +325,7 @@ class Graphic with UiLoggy {
       }
 
       return false;
-    } catch (e) {
+    } catch (error) {
       return false;
     }
   }
