@@ -17,7 +17,6 @@ import "package:kwotes/types/enums/enum_account_displayed.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
 import "package:kwotes/types/user/user_firestore.dart";
-import "package:purchases_flutter/purchases_flutter.dart";
 
 /// Settings page.
 class SettingsPage extends StatefulWidget {
@@ -101,7 +100,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   isMobileSize: isMobileSize,
                   onTap: onTapAccount,
                   onTapDeleteAccount: onTapDeleteAccount,
-                  onTapRedeemPremiumCode: onTapRedeemPremiumCode,
                   onTapSignout: onConfirmSignOut,
                   onTapUpdateEmail: onTapUpdateEmail,
                   onTapUpdatePassword: onTapUpdatePassword,
@@ -234,13 +232,6 @@ class _SettingsPageState extends State<SettingsPage> {
     Beamer.of(context, root: true).beamToNamed(
       DashboardContentLocation.connectionRoute,
     );
-  }
-
-  /// Show the redeem code bottom sheet (iOS).
-  /// Then sync purchases.
-  void onTapRedeemPremiumCode() async {
-    await Purchases.presentCodeRedemptionSheet();
-    Purchases.syncPurchases();
   }
 
   /// Navigate to the update email page.

@@ -15,7 +15,6 @@ import "package:kwotes/screens/dashboard/dashboard_card_section.dart";
 import "package:kwotes/screens/dashboard/dashboard_header.dart";
 import "package:kwotes/screens/quote_page/share_card.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
-import "package:kwotes/types/enums/enum_user_plan.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
@@ -50,7 +49,6 @@ class _DashboardWelcomePageState extends State<DashboardWelcomePage>
   @override
   initState() {
     super.initState();
-    initProps();
   }
 
   @override
@@ -104,7 +102,6 @@ class _DashboardWelcomePageState extends State<DashboardWelcomePage>
                     DashboardCardSection(
                       isDark: isDark,
                       isMobileSize: isMobileSize,
-                      isPremiumUser: userFirestore.plan == EnumUserPlan.premium,
                       windowSize: windowSize,
                     ),
                   ]),
@@ -126,11 +123,6 @@ class _DashboardWelcomePageState extends State<DashboardWelcomePage>
       const Duration(milliseconds: 1000),
       () => _handleQuickAction = !newValue,
     );
-  }
-
-  /// Initialize page properties.
-  void initProps() async {
-    Utils.state.refreshPremiumPlan();
   }
 
   /// Logout the user if confirmed.

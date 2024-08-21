@@ -13,7 +13,6 @@ import "package:kwotes/components/basic_shortcuts.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
-import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/quote_page/explain_quote_sheet.dart";
 import "package:kwotes/screens/quote_page/quote_page_actions.dart";
@@ -25,7 +24,6 @@ import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_draft_quote_operation.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
-import "package:kwotes/types/enums/enum_user_plan.dart";
 import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/intents/add_to_list_intent.dart";
 import "package:kwotes/types/intents/copy_intent.dart";
@@ -468,20 +466,6 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
     });
   }
 
-  bool isUserPremium() {
-    final UserFirestore userFirestore =
-        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
-
-    if (userFirestore.plan == EnumUserPlan.free) {
-      Beamer.of(context, root: true).beamToNamed(
-        HomeLocation.premiumRoute,
-      );
-      return false;
-    }
-
-    return true;
-  }
-
   /// Check if user is signed in or not.
   /// If not, navigate back to connection page.
   /// If yes, do nothing.
@@ -747,7 +731,6 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   }
 
   void onShareImage(Quote quote, {bool pop = true}) {
-    if (!isUserPremium()) return;
     Utils.graphic.onOpenShareImage(
       context,
       pop: pop,

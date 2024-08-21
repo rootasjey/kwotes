@@ -24,8 +24,6 @@ import "package:kwotes/types/enums/enum_home_category.dart";
 import "package:kwotes/types/enums/enum_language_selection.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
-import "package:kwotes/types/enums/enum_topic.dart";
-import "package:kwotes/types/enums/enum_user_plan.dart";
 import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/firestore/query_doc_snap_map.dart";
 import "package:kwotes/types/firestore/query_snap_map.dart";
@@ -33,7 +31,6 @@ import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/random_quote_document.dart";
 import "package:kwotes/types/reference.dart";
 import "package:kwotes/types/topic.dart";
-import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
 import "package:url_launcher/url_launcher.dart";
 
@@ -676,21 +673,6 @@ class _HomePageState extends State<HomePage> with UiLoggy {
 
   /// Navigate to the topic page.
   void onTapTopic(Topic topic) {
-    final bool isFreeTopic = EnumFreeTopic.values
-        .map((EnumFreeTopic x) => x.name)
-        .toList()
-        .contains(topic.name);
-
-    final UserFirestore userFirestore =
-        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
-
-    if (userFirestore.plan == EnumUserPlan.free && !isFreeTopic) {
-      Beamer.of(context, root: true).beamToNamed(
-        HomeLocation.premiumRoute,
-      );
-      return;
-    }
-
     Beamer.of(context).beamToNamed(
       HomeContentLocation.topicRoute.replaceFirst(
         ":topicName",

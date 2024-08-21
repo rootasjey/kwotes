@@ -6,7 +6,6 @@ import "package:kwotes/globals/utils/graphic.dart";
 import "package:kwotes/globals/utils/lambda.dart";
 import "package:kwotes/globals/utils/linguistic.dart";
 import "package:kwotes/globals/utils/measurements.dart";
-import "package:kwotes/globals/utils/monetization.dart";
 import "package:kwotes/globals/utils/passage.dart";
 import "package:kwotes/globals/utils/search.dart";
 import "package:kwotes/globals/utils/tic_tac.dart";
@@ -39,9 +38,6 @@ class Utils {
 
   /// Search interface.
   static final search = SearchApi();
-
-  /// Monetization interface.
-  static const monetization = Monetization();
 
   /// Application state interface.
   static final state = AppState();

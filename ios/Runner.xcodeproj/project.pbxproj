@@ -482,14 +482,14 @@
 				DEVELOPMENT_TEAM = 4486QZD2NN;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "kwotes • App";
+				INFOPLIST_KEY_CFBundleDisplayName = "kwotes • App (Beta)";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.reference";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = fr.codingbox.kwotes;
+				PRODUCT_BUNDLE_IDENTIFIER = fr.codingbox.kwotes.beta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -667,14 +667,14 @@
 				DEVELOPMENT_TEAM = 4486QZD2NN;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "kwotes • App";
+				INFOPLIST_KEY_CFBundleDisplayName = "kwotes • App (Beta)";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.reference";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = fr.codingbox.kwotes;
+				PRODUCT_BUNDLE_IDENTIFIER = fr.codingbox.kwotes.beta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -696,14 +696,14 @@
 				DEVELOPMENT_TEAM = 4486QZD2NN;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "kwotes • App";
+				INFOPLIST_KEY_CFBundleDisplayName = "kwotes • App (Beta)";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.reference";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = fr.codingbox.kwotes;
+				PRODUCT_BUNDLE_IDENTIFIER = fr.codingbox.kwotes.beta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";

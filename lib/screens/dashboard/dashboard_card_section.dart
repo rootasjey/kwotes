@@ -5,7 +5,6 @@ import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
-import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/screens/dashboard/dashboard_card.dart";
 import "package:kwotes/types/enums/enum_card_layout.dart";
 
@@ -15,16 +14,12 @@ class DashboardCardSection extends StatelessWidget {
     super.key,
     this.isMobileSize = false,
     this.isDark = false,
-    this.isPremiumUser = false,
     this.windowSize = const Size(0, 0),
   });
 
   /// True if the screen size is similar to a mobile.
   /// Adapt UI accordingly.
   final bool isMobileSize;
-
-  /// True if the user is premium.
-  final bool isPremiumUser;
 
   /// True if the theme is dark.
   final bool isDark;
@@ -52,21 +47,6 @@ class DashboardCardSection extends StatelessWidget {
             ? Axis.vertical
             : Axis.horizontal,
         children: [
-          if (!isPremiumUser)
-            DashboardCard(
-              cardLayout: cardLayout,
-              hoverColor: Constants.colors.premium,
-              iconData: TablerIcons.crown,
-              isDark: isDark,
-              textSubtitle: "premium.super_powers".tr(),
-              textTitle: "premium.kwotes_plus".tr(),
-              heroKey: "premium",
-              onTap: () {
-                Beamer.of(context, root: true).beamToNamed(
-                  HomeLocation.premiumRoute,
-                );
-              },
-            ),
           DashboardCard(
             cardLayout: cardLayout,
             hoverColor: Constants.colors.inValidation,

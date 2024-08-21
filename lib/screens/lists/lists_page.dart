@@ -13,7 +13,6 @@ import "package:kwotes/components/page_app_bar.dart";
 import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
-import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/screens/lists/lists_page_body.dart";
 import "package:kwotes/screens/lists/lists_page_create.dart";
@@ -21,7 +20,6 @@ import "package:kwotes/screens/lists/lists_page_header.dart";
 import "package:kwotes/types/alias/json_alias.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
-import "package:kwotes/types/enums/enum_user_plan.dart";
 import "package:kwotes/types/firestore/document_change_map.dart";
 import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/firestore/query_doc_snap_map.dart";
@@ -431,16 +429,6 @@ class _ListsPageState extends State<ListsPage> with UiLoggy {
 
   /// Show or hide create panel component depending on the current state.
   void onToggleCreate() {
-    final UserFirestore userFirestore =
-        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
-
-    if (userFirestore.plan == EnumUserPlan.free && _lists.isNotEmpty) {
-      Beamer.of(context, root: true).beamToNamed(
-        HomeLocation.premiumRoute,
-      );
-      return;
-    }
-
     setState(() {
       final bool newShowCreate = !_showCreate;
 

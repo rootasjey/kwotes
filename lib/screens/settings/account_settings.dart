@@ -1,8 +1,6 @@
-import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:kwotes/components/user_avatar.dart";
-import "package:kwotes/globals/constants.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/types/enums/enum_account_displayed.dart";
 import "package:kwotes/types/enums/enum_user_plan.dart";
@@ -23,7 +21,6 @@ class AccountSettings extends StatelessWidget {
     this.onTap,
     this.onTapDeleteAccount,
     this.onTapSignout,
-    this.onTapRedeemPremiumCode,
     this.onTapUpdateEmail,
     this.onTapUpdatePassword,
     this.onTapUpdateUsername,
@@ -63,9 +60,6 @@ class AccountSettings extends StatelessWidget {
 
   /// Callback fired when "Delete account" button is tapped.
   final void Function()? onTapDeleteAccount;
-
-  /// Callback fired when "Redeem premium code" button is tapped.
-  final void Function()? onTapRedeemPremiumCode;
 
   /// Callback fired when "sign out" button is tapped.
   final void Function()? onTapSignout;
@@ -156,39 +150,6 @@ class AccountSettings extends StatelessWidget {
               ),
             ),
           ),
-          if (Utils.graphic.isOS())
-            Padding(
-              padding: isMobileSize
-                  ? const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0)
-                  : const EdgeInsets.only(top: 12.0, left: 24.0, right: 24.0),
-              child: TextButton(
-                onPressed: onTapRedeemPremiumCode,
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.amber.shade900,
-                  backgroundColor: Constants.colors.premium.withOpacity(0.1),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    side: BorderSide(
-                      color: Constants.colors.premium.withOpacity(1.0),
-                      width: 1.0,
-                    ),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 12.0,
-                    horizontal: 24.0,
-                  ),
-                ),
-                child: Text(
-                  "premium.redeem_code".tr(),
-                  style: Utils.calligraphy.body(
-                    textStyle: const TextStyle(
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-              ),
-            ),
         ],
       ),
     );

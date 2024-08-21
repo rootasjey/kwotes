@@ -5,7 +5,6 @@ import "package:flutter_solidart/flutter_solidart.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
-import "package:kwotes/types/enums/enum_user_plan.dart";
 import "package:kwotes/types/user/user_firestore.dart";
 
 class Passage {
@@ -39,14 +38,8 @@ class Passage {
     final UserFirestore userFirestore =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
 
-    final bool hasReachFreeLimit = userFirestore.plan == EnumUserPlan.free &&
-        userFirestore.metrics.quotes.created >= 5;
-
-    if (!userFirestore.rights.canProposeQuote || hasReachFreeLimit) {
+    if (!userFirestore.rights.canProposeQuote) {
       if (Utils.graphic.isMobile()) {
-        Beamer.of(context, root: true).beamToNamed(
-          HomeLocation.premiumRoute,
-        );
         return false;
       }
 

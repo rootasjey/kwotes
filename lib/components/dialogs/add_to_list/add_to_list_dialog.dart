@@ -5,7 +5,6 @@ import "package:beamer/beamer.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:flutter_solidart/flutter_solidart.dart";
 import "package:kwotes/actions/user_actions.dart";
 import "package:kwotes/components/dialogs/add_to_list/add_to_list_body.dart";
 import "package:kwotes/components/dialogs/add_to_list/create_list_dialog.dart";
@@ -14,15 +13,11 @@ import "package:kwotes/components/dialogs/add_to_list/add_to_list_header.dart";
 import "package:kwotes/components/dialogs/add_to_list/add_to_list_mobile.dart";
 import "package:kwotes/components/dialogs/themed_dialog.dart";
 import "package:kwotes/globals/utils.dart";
-import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
-import "package:kwotes/types/enums/enum_signal_id.dart";
-import "package:kwotes/types/enums/enum_user_plan.dart";
 import "package:kwotes/types/firestore/query_map.dart";
 import "package:kwotes/types/firestore/query_snap_map.dart";
 import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/quote_list.dart";
-import "package:kwotes/types/user/user_firestore.dart";
 import "package:loggy/loggy.dart";
 
 class AddToListDialog extends StatefulWidget {
@@ -406,16 +401,6 @@ class _AddToListDialogState extends State<AddToListDialog> with UiLoggy {
 
   /// Show creation inputs.
   void showCreationInputs() {
-    final UserFirestore userFirestore =
-        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
-
-    if (userFirestore.plan == EnumUserPlan.free && _quoteLists.isNotEmpty) {
-      Beamer.of(context, root: true).beamToNamed(
-        HomeLocation.premiumRoute,
-      );
-      return;
-    }
-
     setState(() => _createMode = true);
   }
 }

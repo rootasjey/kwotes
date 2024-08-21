@@ -10,7 +10,6 @@ import "package:kwotes/screens/author/edit_author_page.dart";
 import "package:kwotes/screens/home/home_page.dart";
 import "package:kwotes/screens/home/app_location_container.dart";
 import "package:kwotes/screens/onboarding/onboarding_page.dart";
-import "package:kwotes/screens/premium_dialog_page.dart";
 import "package:kwotes/screens/quote_page/quote_page.dart";
 import "package:kwotes/screens/reference/edit_reference_page.dart";
 import "package:kwotes/screens/settings_dialog_page.dart";
@@ -34,9 +33,6 @@ class HomeLocation extends BeamLocation<BeamState> {
   /// Settings location for deep navigation.
   static const String settingsRoute = "/settings/*";
 
-  /// Premium location for deep navigation.
-  static const String premiumRoute = "/premium/*";
-
   /// Image location.
   static const String imageRoute = "/image/*";
 
@@ -59,7 +55,6 @@ class HomeLocation extends BeamLocation<BeamState> {
         imageRoute,
         imageAuthorRoute,
         imageReferenceRoute,
-        premiumRoute,
         onboardingRoute,
       ];
 
@@ -89,14 +84,6 @@ class HomeLocation extends BeamLocation<BeamState> {
           child: const SettingsDialogPage(),
           key: const ValueKey(settingsRoute),
           title: "page_title.settings".tr(),
-          type: BeamPageType.fadeTransition,
-          opaque: false,
-        ),
-      if (state.pathPatternSegments.contains("premium"))
-        BeamPage(
-          child: const PremiumDialogPage(),
-          key: const ValueKey(premiumRoute),
-          title: "page_title.premium".tr(),
           type: BeamPageType.fadeTransition,
           opaque: false,
         ),

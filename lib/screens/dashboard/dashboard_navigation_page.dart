@@ -1,14 +1,11 @@
 import "package:beamer/beamer.dart";
-import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
-import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
-import "package:kwotes/types/enums/enum_user_plan.dart";
 import "package:kwotes/types/intents/add_quote_intent.dart";
 import "package:kwotes/types/intents/index_intent.dart";
 import "package:kwotes/types/quote.dart";
@@ -111,20 +108,10 @@ class _DashboardNavigationPageState extends State<DashboardNavigationPage> {
     final UserFirestore userFirestore =
         context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
 
-    final bool hasReachFreeLimit = userFirestore.plan == EnumUserPlan.free &&
-        userFirestore.metrics.quotes.created >= 5;
-
-    if (!userFirestore.rights.canProposeQuote || hasReachFreeLimit) {
-      if (Utils.graphic.isMobile()) {
-        Beamer.of(context, root: true).beamToNamed(
-          HomeLocation.premiumRoute,
-        );
-        return false;
-      }
-
+    if (!userFirestore.rights.canProposeQuote) {
       Utils.graphic.showSnackbar(
         context,
-        message: "premium.add_quote_reached_free_plan_limit".tr(),
+        message: "You don't have the cannot do this action right now.",
       );
       return false;
     }

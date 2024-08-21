@@ -1,7 +1,6 @@
 import "package:beamer/beamer.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
-import "package:flutter_animate/flutter_animate.dart";
 import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_tabler_icons/flutter_tabler_icons.dart";
 import "package:infinite_carousel/infinite_carousel.dart";
@@ -146,32 +145,6 @@ class MobileLayout extends StatelessWidget {
                         onLongPressUserAvatar: () => onConfirmSignOut(context),
                         margin: const EdgeInsets.only(bottom: 8.0),
                       ),
-                      if (userFirestore.plan != EnumUserPlan.premium) ...[
-                        Padding(
-                          padding: const EdgeInsets.only(right: 16.0),
-                          child: TextButton.icon(
-                            onPressed: () => onTapPremiumIcon(context),
-                            style: TextButton.styleFrom(
-                              foregroundColor: Constants.colors.premium,
-                              backgroundColor:
-                                  Constants.colors.premium.withAlpha(30),
-                            ),
-                            icon: const Icon(
-                              TablerIcons.crown,
-                              size: 18.0,
-                            ),
-                            label: Text(
-                              "premium.kwotes_plus".tr(),
-                              style: Utils.calligraphy.body(
-                                textStyle: const TextStyle(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ).animate().shake(),
-                        ),
-                      ]
                     ],
                   ),
                 ),
@@ -315,12 +288,6 @@ class MobileLayout extends StatelessWidget {
           HomeLocation.route,
         );
       },
-    );
-  }
-
-  void onTapPremiumIcon(BuildContext context) {
-    Beamer.of(context, root: true).beamToNamed(
-      HomeLocation.premiumRoute,
     );
   }
 }

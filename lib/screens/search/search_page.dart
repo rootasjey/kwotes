@@ -27,8 +27,6 @@ import "package:kwotes/types/category.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/enums/enum_search_category.dart";
 import "package:kwotes/types/enums/enum_signal_id.dart";
-import "package:kwotes/types/enums/enum_topic.dart";
-import "package:kwotes/types/enums/enum_user_plan.dart";
 import "package:kwotes/types/firestore/document_change_map.dart";
 import "package:kwotes/types/firestore/document_snapshot_map.dart";
 import "package:kwotes/types/firestore/query_doc_snap_map.dart";
@@ -866,21 +864,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
     setState(() {});
   }
 
-  /// Check if user is premium.
-  bool isPremiumUser() {
-    final UserFirestore userFirestore =
-        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
-
-    if (userFirestore.plan == EnumUserPlan.free) {
-      Beamer.of(context, root: true).beamToNamed(
-        HomeLocation.premiumRoute,
-      );
-      return false;
-    }
-
-    return true;
-  }
-
   /// Listen to document changes.
   void listenToDocumentChanges(QueryMap query) {
     _streamSnapshot?.cancel();
@@ -1045,12 +1028,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
       return;
     }
 
-    if (!isPremiumUser()) {
-      _searchInputController.text = "";
-      _searchFocusNode.unfocus();
-      return;
-    }
-
     NavigationStateHelper.searchValue = value;
     SystemChrome.setApplicationSwitcherDescription(
       ApplicationSwitcherDescription(
@@ -1111,16 +1088,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   /// Callback fired when a category is tapped.
   void onTapCategory(Category category) {
-    final UserFirestore userFirestore =
-        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
-
-    if (userFirestore.plan == EnumUserPlan.free) {
-      Beamer.of(context, root: true).beamToNamed(
-        HomeLocation.premiumRoute,
-      );
-      return;
-    }
-
     FocusManager.instance.primaryFocus?.unfocus();
     _searchInputController.text = category.name;
 
@@ -1182,21 +1149,6 @@ class _SearchPageState extends State<SearchPage> with UiLoggy {
 
   /// Callback fired when a topic is tapped.
   void onTapTopic(Topic topic) {
-    final bool isFreeTopic = EnumFreeTopic.values
-        .map((EnumFreeTopic x) => x.name)
-        .toList()
-        .contains(topic.name);
-
-    final UserFirestore userFirestore =
-        context.get<Signal<UserFirestore>>(EnumSignalId.userFirestore).value;
-
-    if (userFirestore.plan == EnumUserPlan.free && !isFreeTopic) {
-      Beamer.of(context, root: true).beamToNamed(
-        HomeLocation.premiumRoute,
-      );
-      return;
-    }
-
     FocusManager.instance.primaryFocus?.unfocus();
     _searchInputController.text = topic.name;
 
