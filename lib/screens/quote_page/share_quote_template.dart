@@ -9,7 +9,6 @@ import "package:kwotes/types/quote.dart";
 import "package:kwotes/types/topic.dart";
 import "package:screenshot/screenshot.dart";
 import "package:text_wrap_auto_size/solution.dart";
-import "package:wave_divider/wave_divider.dart";
 
 class ShareQuoteTemplate extends StatefulWidget {
   const ShareQuoteTemplate({
@@ -55,7 +54,7 @@ class ShareQuoteTemplate extends StatefulWidget {
   /// Screenshot controller.
   final ScreenshotController screenshotController;
 
-  /// Scroll controller.
+  /// Parent scroll controller (from bottom sheet).
   final ScrollController? scrollController;
 
   /// Indicate text style (font size) for quote's name.
@@ -89,256 +88,204 @@ class _ShareQuoteTemplateState extends State<ShareQuoteTemplate> {
       heightFactor: widget.isIpad ? 0.6 : 1.0,
       child: Padding(
         padding: widget.margin,
-        child: ListView(
-          shrinkWrap: true,
-          controller: widget.scrollController,
+        child: Stack(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: ElevatedButton.icon(
-                onPressed: widget.onTapShareImage,
-                icon: Icon(widget.fabIconData ?? getFabIconData(), size: 18.0),
-                label: Text(
-                  widget.fabLabelValue ?? getFabLabelValue(),
-                ),
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: _borderColor.computeLuminance() > 0.7
-                      ? Colors.black87
-                      : _borderColor,
-                  textStyle: Utils.calligraphy.body(
-                    textStyle: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4.0),
-                    side: BorderSide(
-                      color: _borderColor,
-                      width: 2.0,
+            ListView(
+              shrinkWrap: true,
+              controller: widget.scrollController,
+              children: [
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(TablerIcons.x),
                     ),
                   ),
                 ),
-              ),
-            ),
-            Screenshot(
-              controller: widget.screenshotController,
-              child: Padding(
-                padding: widget.isMobileSize
-                    ? const EdgeInsets.all(12.0)
-                    : const EdgeInsets.all(42.0),
-                child: Material(
-                  elevation: 6.0,
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                      color: _borderColor,
-                      // color: widget.borderColor ?? getTopicColor(context),
-                      width: widget.isMobileSize ? 8.0 : 2.0,
-                    ),
-                    borderRadius: borderRadius,
-                  ),
-                  child: ClipRRect(
-                    borderRadius: borderRadius,
-                    child: Stack(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(42.0),
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(
-                              minHeight: 300.0,
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  widget.quote.name,
-                                  style: widget.textWrapSolution.style,
+                Screenshot(
+                  controller: widget.screenshotController,
+                  child: Padding(
+                    padding: widget.isMobileSize
+                        ? const EdgeInsets.all(12.0)
+                        : const EdgeInsets.all(42.0),
+                    child: Material(
+                      elevation: 6.0,
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: _borderColor,
+                          // color: widget.borderColor ?? getTopicColor(context),
+                          width: widget.isMobileSize ? 8.0 : 2.0,
+                        ),
+                        borderRadius: borderRadius,
+                      ),
+                      child: ClipRRect(
+                        borderRadius: borderRadius,
+                        child: Stack(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(42.0),
+                              child: ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  minHeight: 300.0,
                                 ),
-                                if (widget.quote.author.urls.image.isNotEmpty)
-                                  BetterAvatar(
-                                    radius: 24.0,
-                                    imageProvider: NetworkImage(
-                                      widget.quote.author.urls.image,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      widget.quote.name,
+                                      style: widget.textWrapSolution.style,
                                     ),
-                                    colorFilter: const ColorFilter.mode(
-                                      Colors.grey,
-                                      BlendMode.saturation,
-                                    ),
-                                    margin: const EdgeInsets.only(top: 24.0),
-                                  ),
-                                Center(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                      left: 8.0,
-                                      right: 8.0,
-                                      top:
-                                          widget.quote.author.urls.image.isEmpty
+                                    if (widget
+                                        .quote.author.urls.image.isNotEmpty)
+                                      BetterAvatar(
+                                        radius: 24.0,
+                                        imageProvider: NetworkImage(
+                                          widget.quote.author.urls.image,
+                                        ),
+                                        colorFilter: const ColorFilter.mode(
+                                          Colors.grey,
+                                          BlendMode.saturation,
+                                        ),
+                                        margin:
+                                            const EdgeInsets.only(top: 24.0),
+                                      ),
+                                    Center(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                          left: 8.0,
+                                          right: 8.0,
+                                          top: widget.quote.author.urls.image
+                                                  .isEmpty
                                               ? 24.0
                                               : 4.0,
+                                        ),
+                                        child: Text(
+                                          widget.quote.author.name,
+                                          textAlign: TextAlign.center,
+                                          style: Utils.calligraphy.body(),
+                                        ),
+                                      ),
                                     ),
-                                    child: Text(
-                                      widget.quote.author.name,
-                                      textAlign: TextAlign.center,
-                                      style: Utils.calligraphy.body(),
-                                    ),
-                                  ),
+                                    if (widget.quote.reference.id.isNotEmpty)
+                                      Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 8.0,
+                                            vertical: 2.0,
+                                          ),
+                                          child: Text(
+                                            widget.quote.reference.name,
+                                            textAlign: TextAlign.center,
+                                            style: Utils.calligraphy.body(),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
                                 ),
-                                if (widget.quote.reference.id.isNotEmpty)
-                                  Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0,
-                                        vertical: 2.0,
-                                      ),
-                                      child: Text(
-                                        widget.quote.reference.name,
-                                        textAlign: TextAlign.center,
-                                        style: Utils.calligraphy.body(),
-                                      ),
-                                    ),
-                                  ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                        const Positioned(
-                          bottom: 16.0,
-                          right: 16.0,
-                          child: AppIcon(
-                            size: 36.0,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 8.0,
-              ),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Text(
-                      "Card border color",
-                      style: Utils.calligraphy.body(
-                        textStyle: TextStyle(
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w400,
-                          color: foregroundColor?.withOpacity(0.6),
+                            const Positioned(
+                              bottom: 16.0,
+                              right: 16.0,
+                              child: AppIcon(
+                                size: 36.0,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 20.0,
-                    child: ListView(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        ...Constants.colors.topics
-                            .map(
-                              (Topic topic) => Material(
-                                shape: const CircleBorder(),
-                                clipBehavior: Clip.antiAlias,
-                                color: topic.color,
-                                child: Container(
-                                  width: 20.0,
-                                  height: 20.0,
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 8.0,
-                                  ),
-                                  child: InkWell(
-                                    onTap: () => onTapColor.call(topic.color),
-                                  ),
-                                ),
-                              ),
-                            )
-                            .toList(),
-                      ],
-                    ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 8.0,
                   ),
-                ],
-              ),
-            ),
-            const WaveDivider(
-              padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 16.0,
-                right: 16.0,
-                top: 8.0,
-                bottom: 64.0,
-              ),
-              child: Wrap(
-                spacing: 16.0,
-                runSpacing: 16.0,
-                children: [
-                  ActionChip(
-                    elevation: 2.0,
-                    label: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: Icon(
-                            TablerIcons.arrow_back,
-                            size: 16.0,
-                            color: foregroundColor?.withOpacity(0.6),
-                          ),
-                        ),
-                        Text(
-                          "back".tr(),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "Card border color",
                           style: Utils.calligraphy.body(
                             textStyle: TextStyle(
                               fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
                               color: foregroundColor?.withOpacity(0.6),
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                    onPressed: widget.onBack,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24.0),
-                      side: BorderSide(
-                        color: foregroundColor?.withOpacity(0.2) ?? Colors.grey,
-                        width: 1.2,
                       ),
-                    ),
-                  ),
-                  ActionChip(
-                    elevation: 2.0,
-                    label: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(1.0),
-                          child: Icon(
-                            TablerIcons.download,
-                            size: 16.0,
-                            color: foregroundColor?.withOpacity(0.6),
-                          ),
+                      SizedBox(
+                        height: 20.0,
+                        child: ListView(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                            ...Constants.colors.topics
+                                .map(
+                                  (Topic topic) => Material(
+                                    shape: const CircleBorder(),
+                                    clipBehavior: Clip.antiAlias,
+                                    color: topic.color,
+                                    child: Container(
+                                      width: 20.0,
+                                      height: 20.0,
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 8.0,
+                                      ),
+                                      child: InkWell(
+                                        onTap: () =>
+                                            onTapColor.call(topic.color),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 28.0,
+                    right: 28.0,
+                    top: 27.0,
+                  ),
+                  child: ElevatedButton.icon(
                     onPressed: widget.onTapShareImage,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24.0),
-                      side: BorderSide(
-                        color: foregroundColor?.withOpacity(0.2) ?? Colors.grey,
-                        width: 1.2,
+                    icon: Icon(widget.fabIconData ?? getFabIconData(),
+                        size: 18.0),
+                    label: Text(
+                      widget.fabLabelValue ?? getFabLabelValue(),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: _borderColor.computeLuminance() > 0.7
+                          ? Colors.black87
+                          : _borderColor,
+                      textStyle: Utils.calligraphy.body(
+                        textStyle: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0),
+                        side: BorderSide(
+                          color: _borderColor,
+                          width: 2.0,
+                        ),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),
