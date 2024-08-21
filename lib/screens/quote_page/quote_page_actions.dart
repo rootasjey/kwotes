@@ -62,9 +62,7 @@ class QuotePageActions extends StatelessWidget {
 
     // It seems that the button is not fully centered
     // on android. This fixes it.
-    final EdgeInsets likeButtonMargin = Utils.graphic.isMobile()
-        ? const EdgeInsets.only(top: 8.0)
-        : const EdgeInsets.only(top: 2.0);
+    final EdgeInsets likeButtonMargin = getLikeButtonMargin();
 
     return Wrap(
       direction: direction,
@@ -107,5 +105,17 @@ class QuotePageActions extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  EdgeInsets getLikeButtonMargin() {
+    if (Utils.graphic.isOS()) {
+      return const EdgeInsets.only(top: 4.0);
+    }
+
+    if (Utils.graphic.isMobile()) {
+      return const EdgeInsets.only(top: 8.0);
+    }
+
+    return const EdgeInsets.only(top: 2.0);
   }
 }

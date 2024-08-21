@@ -15,7 +15,6 @@ import "package:kwotes/globals/utils.dart";
 import "package:kwotes/router/locations/dashboard_location.dart";
 import "package:kwotes/router/locations/home_location.dart";
 import "package:kwotes/router/navigation_state_helper.dart";
-import "package:kwotes/screens/quote_page/ask_carrot_button.dart";
 import "package:kwotes/screens/quote_page/explain_quote_sheet.dart";
 import "package:kwotes/screens/quote_page/quote_page_actions.dart";
 import "package:kwotes/screens/quote_page/quote_page_body.dart";
@@ -124,7 +123,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
       quote: _quote,
       windowSize: quoteContainerSize,
       style: Utils.calligraphy.body(),
-      maxFontSize: windowSize.width < 300 ? 18.0 : null,
+      maxFontSize: windowSize.width < 300 ? 35.0 : 35.0,
     );
 
     final bool isMobileSize =
@@ -181,6 +180,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
                     onDeleteQuote: canManageQuotes ? onDeleteQuote : null,
                     onDoubleTapQuote: onCopyQuote,
                     onEditQuote: canManageQuotes ? onEditQuote : null,
+                    onExplainQuote: onExplainQuote,
                     onFinishedAnimation: stopVibrationTimer,
                     onShareImage: onShareImage,
                     onShareLink: onShareLink,
@@ -211,16 +211,6 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
                       onToggleFavourite: onToggleFavourite,
                       onNavigateBack: () => Utils.passage.deepBack(context),
                       onAddToList: onAddToList,
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 120.0,
-                    left: 0.0,
-                    right: 0.0,
-                    child: Center(
-                      child: AskCarrotButton(
-                        onTap: explainQuote,
-                      ),
                     ),
                   ),
                 ],
@@ -439,7 +429,7 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   }
 
   /// Open a bottom sheet to explain the quote.
-  void explainQuote() async {
+  void onExplainQuote() async {
     showFlexibleBottomSheet(
       context: context,
       minHeight: 0,
@@ -706,8 +696,12 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   }
 
   /// Callback fired when text animation is finished.
-  void stopVibrationTimer() {
+  void stopVibrationTimer() async {
     if (!Utils.graphic.isMobile()) return;
+    if (await Vibration.hasVibrator() ?? false) {
+      return;
+    }
+
     Vibration.cancel();
     _vibrationTimer?.cancel();
 
@@ -754,7 +748,6 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
 
   void onShareImage(Quote quote, {bool pop = true}) {
     if (!isUserPremium()) return;
-
     Utils.graphic.onOpenShareImage(
       context,
       pop: pop,
@@ -828,8 +821,11 @@ class _QuotePageState extends State<QuotePage> with UiLoggy {
   }
 
   /// Start text vibration while animating.
-  void startTextVibration() {
+  void startTextVibration() async {
     if (!Utils.graphic.isMobile()) return;
+    if (await Vibration.hasVibrator() ?? false) {
+      return;
+    }
 
     Vibration.cancel();
     Vibration.hasVibrator().then((bool? hasVibrator) {

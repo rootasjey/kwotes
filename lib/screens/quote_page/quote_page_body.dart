@@ -7,6 +7,7 @@ import "package:kwotes/components/better_avatar.dart";
 import "package:kwotes/components/context_menu_components.dart";
 import "package:kwotes/components/loading_view.dart";
 import "package:kwotes/globals/utils.dart";
+import "package:kwotes/screens/quote_page/ask_carrot_button.dart";
 import "package:kwotes/types/author.dart";
 import "package:kwotes/types/enums/enum_page_state.dart";
 import "package:kwotes/types/quote.dart";
@@ -34,6 +35,7 @@ class QuotePageBody extends StatelessWidget {
     this.onDeleteQuote,
     this.onDoubleTapQuote,
     this.onEditQuote,
+    this.onExplainQuote,
     this.onFinishedAnimation,
     this.onShareImage,
     this.onShareLink,
@@ -81,6 +83,9 @@ class QuotePageBody extends StatelessWidget {
 
   /// Callback fired when quote is edited.
   final void Function(Quote)? onEditQuote;
+
+  /// Open a bottom sheet to explain the quote.
+  final void Function()? onExplainQuote;
 
   /// Callback fired when quote text animation has finished.
   final void Function()? onFinishedAnimation;
@@ -283,6 +288,14 @@ class QuotePageBody extends StatelessWidget {
                   )
                   .fadeIn(),
             ),
+          SliverToBoxAdapter(
+            child: Center(
+              child: AskCarrotButton(
+                onTap: onExplainQuote,
+                margin: const EdgeInsets.only(top: 12.0),
+              ),
+            ),
+          ),
         ],
       ),
     );
