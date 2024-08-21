@@ -78,11 +78,7 @@ class ShowcaseQuotes extends StatelessWidget {
                     child: WaveDivider(
                       waveHeight: 2.0,
                       waveWidth: 5.0,
-                      color: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.color
-                          ?.withOpacity(0.2),
+                      color: foregroundColor?.withOpacity(0.2),
                     ),
                   )
                       .animate(
@@ -152,12 +148,10 @@ class ShowcaseQuotes extends StatelessWidget {
               ),
             ),
             SliverToBoxAdapter(
-              child: Divider(
+              child: WaveDivider(
+                waveHeight: 2.0,
+                waveWidth: 5.0,
                 color: foregroundColor?.withOpacity(0.2),
-                height: 42.0,
-                indent: 12.0,
-                endIndent: 12.0,
-                thickness: 1.5,
               ),
             ),
             SliverList.separated(
@@ -167,11 +161,7 @@ class ShowcaseQuotes extends StatelessWidget {
                   child: WaveDivider(
                     waveHeight: 2.0,
                     waveWidth: 5.0,
-                    color: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.color
-                        ?.withOpacity(0.2),
+                    color: foregroundColor?.withOpacity(0.2),
                   ),
                 )
                     .animate(

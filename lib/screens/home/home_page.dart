@@ -129,8 +129,6 @@ class _HomePageState extends State<HomePage> with UiLoggy {
   void initState() {
     super.initState();
     initProps();
-
-    // _posterBackgroundColor = Constants.colors.getRandomPastel();
     fetchRandomQuotes();
 
     if (NavigationStateHelper.latestAddedReferences.isEmpty) {
@@ -366,6 +364,66 @@ class _HomePageState extends State<HomePage> with UiLoggy {
     }
 
     return "en";
+  }
+
+  /// Fetch last added quotes.
+  Future<void> fetchLastAddedQuotes({bool forceRefresh = false}) async {
+    if (await shouldSkipFetch(forceRefresh: forceRefresh)) {
+      _subRandomQuotes.isEmpty
+          ? setState(
+              () => _subRandomQuotes.addAll(
+                NavigationStateHelper.randomQuotes.sublist(1),
+              ),
+            )
+          : null;
+      updateAppFrameColor(NavigationStateHelper.randomQuotes.first);
+      return;
+    }
+
+    final String currentLanguage = await getLanguage();
+
+    setState(() {
+      _pageState = _pageState != EnumPageState.loading
+          ? EnumPageState.loadingRandomQuotes
+          : EnumPageState.loading;
+
+      _subRandomQuotes.clear();
+      NavigationStateHelper.randomQuotes.clear();
+      NavigationStateHelper.lastRandomQuoteLanguage = currentLanguage;
+    });
+
+    try {
+      final String language = await Utils.linguistic.getLanguage();
+      final QuerySnapMap quoteSnapshot = await FirebaseFirestore.instance
+          .collection("quotes")
+          .where("language", isEqualTo: language)
+          .limit(_maxQuoteCount)
+          .orderBy("created_at", descending: true)
+          .get();
+
+      if (quoteSnapshot.size == 0) {
+        setState(() => _pageState = EnumPageState.idle);
+        return;
+      }
+
+      for (final doc in quoteSnapshot.docs) {
+        final Json data = doc.data();
+        data["id"] = doc.id;
+
+        final Quote quote = Quote.fromMap(data);
+        if (quote.author.id == Constants.skippingAuthor) continue;
+        NavigationStateHelper.randomQuotes.add(quote);
+      }
+
+      _subRandomQuotes.addAll(NavigationStateHelper.randomQuotes.sublist(1));
+
+      if (!mounted) return;
+      setState(() => _pageState = EnumPageState.idle);
+    } catch (error) {
+      loggy.error(error);
+      if (!mounted) return;
+      setState(() => _pageState = EnumPageState.idle);
+    }
   }
 
   /// Fetches random quotes.
